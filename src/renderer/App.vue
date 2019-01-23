@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    Electron Application
+    <div class="text-indigo text-lg text-center">
+      Electron Application
+    </div>
   </div>
 </template>
 

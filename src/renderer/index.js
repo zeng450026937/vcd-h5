@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
+import './plugins/ant-design';
 import './plugins/electron';
 
 Vue.config.productionTip = false;

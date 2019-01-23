@@ -6,6 +6,16 @@ module.exports = {
     index : 'src/renderer/index.js',
   },
 
+  css : {
+    loaderOptions : {
+      postcss : {
+      },
+      less : {
+        javascriptEnabled : true,
+      },
+    },
+  },
+
   chainWebpack : (config) => {
     config.module
       .noParse(/^(vue|vue-router|apollosip|apollortc|vuem)$/);
