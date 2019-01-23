@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
-    <div class="text-indigo text-lg text-center">
-      Electron Application
-    </div>
-  </div>
+  <a-layout id="app" class="h-full">
+    <router-view name="header"/>
+    <router-view name="sidebar"/>
+    <router-view/>
+  </a-layout>
 </template>
 
 <script>
@@ -22,6 +22,7 @@ export default {
 
 <style lang="less">
   #app {
+    background-image: url('./assets/bg.jpg');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-attachment: fixed;
