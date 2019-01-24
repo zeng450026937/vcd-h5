@@ -4,9 +4,8 @@ import rtc from '../../rtc';
 export default {
   data() {
     return {
-      serverType      : 'yms',
-      loginType       : 'login',
-      forceServerMenu : false,
+      serverType : 'yms',
+      loginType  : 'login',
     };
   },
   methods : {

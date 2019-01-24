@@ -12,9 +12,9 @@
         <div class="flex items-center text-white mr-4">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
-              <a-menu-item key="cloud" class="py-2 ">亿联云视讯服务器（个人版）</a-menu-item>
+              <a-menu-item key="cloud" class="py-2 ">云服务版</a-menu-item>
 
-              <a-menu-item key="yms" class="py-2">亿联YMS视频会议服务器（企业版）</a-menu-item>
+              <a-menu-item key="yms" class="py-2">企业版</a-menu-item>
             </a-menu>
             <span class="ant-dropdown-link cursor-pointer">
               {{ serverText }}
@@ -111,8 +111,8 @@ export default {
   computed : {
     serverText() {
       const textMap = {
-        cloud : '亿联云视讯服务器（个人版）',
-        yms   : '亿联YMS视频会议服务器（企业版）',
+        cloud : '云服务版',
+        yms   : '企业版',
       };
 
       return textMap[this.$model.login.serverType] || '请选择服务器';

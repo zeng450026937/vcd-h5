@@ -16,11 +16,6 @@ const router = new Router({
       },
       children : [
         {
-          name      : 'login-preview',
-          path      : 'preview',
-          component : () => import(/* webpackChunkName: "login-preview" */ '@/renderer/components/login/LoginPreview.vue'),
-        },
-        {
           name      : 'login-cloud',
           path      : 'cloud',
           component : () => import(/* webpackChunkName: "login-cloud" */ '@/renderer/components/login/CloudLogin.vue'),
@@ -127,28 +122,6 @@ const router = new Router({
           component : () => import(/* webpackChunkName: "main-feedback" */ '@/renderer/views/MainFeedback.vue'),
         },
         {
-          name      : 'main-file',
-          path      : 'file',
-          component : () => import(/* webpackChunkName: "main-meeting" */ '@/renderer/views/MainFile.vue'),
-          children  : [
-            {
-              name      : 'recent-file',
-              path      : 'recent',
-              component : () => import(/* webpackChunkName: "recent-file" */ '@/renderer/components/file/RecentFile.vue'),
-            },
-            {
-              name      : 'local-file',
-              path      : 'local',
-              component : () => import(/* webpackChunkName: "local-file" */ '@/renderer/components/file/LocalFile.vue'),
-            },
-            {
-              name      : 'remote-file',
-              path      : 'remote',
-              component : () => import(/* webpackChunkName: "remote-file" */ '@/renderer/components/file/RemoteFile.vue'),
-            },
-          ],
-        },
-        {
           name      : 'main-setting',
           path      : 'setting',
           component : () => import(/* webpackChunkName: "main-meeting" */ '@/renderer/views/MainSetting.vue'),
@@ -210,7 +183,7 @@ const router = new Router({
     },
     {
       path     : '*',
-      redirect : '/login/preview',
+      redirect : '/login/cloud',
     },
   ],
 });

@@ -92,7 +92,6 @@ export default {
         { icon: 'calendar', route: 'calendar' },
         { icon: 'contacts', route: 'contact' },
         { icon: 'setting', route: 'setting' },
-        // { icon: 'file-text', route: 'file' },
         { spacer: true },
         { icon: 'question-circle', isBottom: true, route: 'feedback' },
       ],

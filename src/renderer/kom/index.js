@@ -5,7 +5,6 @@ import shared from './shared';
 import login from './login';
 import config from './config';
 import account from './account';
-import dialer from './dialer';
 import calendar from './calendar';
 import contact from './contact';
 import meeting from './meeting';
@@ -47,7 +46,6 @@ const data = {
   login,
   config,
   account,
-  dialer,
   calendar,
   contact,
   meeting,
@@ -65,6 +63,7 @@ const data = {
 
 provide(kom, data);
 
+// noinspection JSUnresolvedVariable
 window.kom = kom;
 
 export default kom;
