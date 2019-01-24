@@ -17,9 +17,16 @@ app.on('ready', () => {
       },
     },
     {
+      type: 'separator',
+    },
+    {
       label: '显示主面板',
       role: 'restore',
+      type: 'separator',
       click: restoreWindow,
+    },
+    {
+      type: 'separator',
     },
     {
       label: '注销',
