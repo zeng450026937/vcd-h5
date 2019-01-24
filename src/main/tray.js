@@ -12,6 +12,7 @@ app.on('ready', () => {
     {
       label: '加入会议',
       role: 'join',
+      type: 'separator',
       click: () => {
       
       },
@@ -19,6 +20,7 @@ app.on('ready', () => {
     {
       label: '显示主面板',
       role: 'restore',
+      type: 'separator',
       click: restoreWindow,
     },
     {
