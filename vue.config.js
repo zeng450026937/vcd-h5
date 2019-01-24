@@ -2,6 +2,8 @@ const path = require('path');
 
 module.exports = {
 
+  productionSourceMap : false,
+
   pages : {
     index : 'src/renderer/index.js',
   },
