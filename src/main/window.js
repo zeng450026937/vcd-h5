@@ -2,6 +2,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { format as formatUrl } from 'url';
+import {handleSquirrelEvent} from "./squirrelUpdater";
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -71,14 +72,54 @@ export function createWindow(option) {
   return window;
 }
 
+let handlingSquirrelEvent = false;
 
-app.on('activate', () => {
-  // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createWindow();
+if (process.argv.length > 1) {
+  const arg = process.argv[1];
+  const promise = handleSquirrelEvent(arg);
+  if (promise) {
+    handlingSquirrelEvent = true;
+    promise
+      .catch(e => {
+        log.error(`Failed handling Squirrel event: ${arg}`, e)
+      })
+      .then(() => {
+        app.quit()
+      })
   }
-});
+}
 
-app.on('ready', () => {
-  mainWindow = createWindow();
-});
+let gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus()
+    }
+  });
+  
+  app.on('activate', () => {
+    // on macOS it is common to re-create a window even after all windows have been closed
+    if (mainWindow == null) {
+      mainWindow = createWindow();
+    }
+  });
+  
+  app.on('ready', () => {
+    if (handlingSquirrelEvent) return;
+    mainWindow = createWindow();
+    
+  });
+}
+
+
+
+
+
+
+
+

@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { app, BrowserWindow, Menu, Tray } from 'electron';
+import {app, BrowserWindow, Menu, Tray} from 'electron';
 /* eslint-enable import/no-extraneous-dependencies */
 import path from 'path';
-import { mainWindow } from './window';
+import {mainWindow} from './window';
 
 let mainTray;
 
@@ -10,43 +10,39 @@ app.on('ready', () => {
   mainTray = new Tray(path.resolve(__public, 'favicon.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
-      role  : 'reload',
-      click : () => {
-        const all = BrowserWindow.getAllWindows();
-
-        all.forEach((target) => {
-          target.webContents.reload();
-        });
+      label: '加入会议',
+      role: 'join',
+      click: () => {
+      
       },
     },
     {
-      role  : 'forcereload',
-      click : () => {
-        const all = BrowserWindow.getAllWindows();
-
-        all.forEach((target) => {
-          target.webContents.reloadIgnoringCache();
-        });
+      label: '显示主面板',
+      role: 'restore',
+      click: restoreWindow,
+    },
+    {
+      label: '注销',
+      role: 'logout',
+      click: () => {
+      
       },
     },
     {
-      role  : 'toggledevtools',
-      click : () => {
-        const all = BrowserWindow.getAllWindows();
-
-        all.forEach((target) => {
-          target.webContents.toggleDevTools();
-        });
-      },
-    },
-    {
-      role : 'quit',
+      label: '退出',
+      role: 'quit',
+      click: () => {
+        app.quit();
+      }
     },
   ]);
-
+  
   mainTray.setToolTip(process.env.VUE_APP_TITLE);
   mainTray.setContextMenu(contextMenu);
-  mainTray.on('click', () => {
-    if (!mainWindow.isVisible()) mainWindow.show();
-  });
+  mainTray.on('click', restoreWindow);
 });
+
+const restoreWindow = () => {
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.focus()
+};
