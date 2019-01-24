@@ -12,6 +12,7 @@ app.on('ready', () => {
     {
       label: '加入会议',
       role: 'join',
+      type: 'separator',
       click: () => {
       
       },
