@@ -1,6 +1,6 @@
 // modules are order sensitive
-import './app';
 import './window';
+import './app';
 import './tray';
 import './power-sb';
 import './updater';

@@ -1,8 +1,8 @@
 {
-  "name": "vcd-h5",
+  "name": "vcd",
   "version": "1.0.0-alpha",
-  "title": "VCD-H5",
-  "description": "VCD Developed by H5",
+  "title": "VC Desktop",
+  "description": "VC Desktop Developed by H5",
   "author": {
     "name": "Team 7",
     "email": "server-app@yealink.com"
@@ -21,6 +21,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "serve:electron": "vue-cli-service serve:electron",
+    "pack:electron": "vue-cli-service pack:electron",
     "build:electron": "vue-cli-service build:electron",
     "dev": "yarn serve:electron",
     "sync": "node script/sync.js"
@@ -31,6 +32,7 @@
     "date-format": "^2.0.0",
     "electron-updater": "^4.0.6",
     "event-kit": "^2.5.3",
+    "fs-extra": "^7.0.1",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "lodash": "^4.17.11",
@@ -55,7 +57,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "babel-plugin-transform-imports": "^1.5.1",
-    "electron": "^3.0.10",
+    "electron": "^4.0.2",
     "tailwindcss": "^0.7.3",
     "vue-template-compiler": "^2.5.21"
   },
