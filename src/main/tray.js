@@ -2,8 +2,14 @@
 import { app, BrowserWindow, Menu, Tray } from 'electron';
 /* eslint-enable import/no-extraneous-dependencies */
 import path from 'path';
+import { mainWindow } from './window';
 
 let mainTray;
+
+function restoreWindow() {
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.focus();
+}
 
 app.on('ready', () => {
   mainTray = new Tray(path.resolve(__public, 'favicon.png'));
@@ -19,7 +25,7 @@ app.on('ready', () => {
     {
       label : '显示主面板',
       role  : 'restore',
-      click : () => {},
+      click : restoreWindow,
     },
     {
       type : 'separator',
@@ -37,4 +43,5 @@ app.on('ready', () => {
   
   mainTray.setToolTip(process.env.VUE_APP_TITLE);
   mainTray.setContextMenu(contextMenu);
+  mainTray.on('click', restoreWindow);
 });

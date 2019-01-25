@@ -5,6 +5,8 @@ import { format as formatUrl } from 'url';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
+export let mainWindow;
+
 export function createWindow(option) {
   const window = new BrowserWindow({
     option,
@@ -63,6 +65,7 @@ export function createWindow(option) {
     options.nodeintegration = false;
     options.nodeIntegrationInWorker = false;
   });
-
+  mainWindow = window;
+  
   return window;
 }
