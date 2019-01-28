@@ -1,6 +1,7 @@
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
+import { LOGIN, MAIN } from '../router/constants';
 
 const wait = async(timeout = 0) => new Promise((resolve) => {
   if (timeout) {
@@ -41,15 +42,15 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(1000); // 添加延时 增加体验
-          router.push('/main');
+          router.push(MAIN.CONTACT_CORPORATE);
         }
         else if (once === 'registered' && val === 'disconnected') {
         // 退出状态
-          router.push('/login');
+          router.push(LOGIN.LOGIN_CONTENT);
         }
         else {
         // 未登录状态
-          router.push('/login/yms');
+          router.push(LOGIN.YMS_LOGIN);
         }
         if (this.loginPopup) popup.destroy(this.loginPopup);
       }
@@ -71,7 +72,6 @@ export default {
         if (this.enterPopup) popup.destroy(this.enterPopup);
         if (val === 'connected') {
           // 成功入会状态
-          console.warn('成功入会');
           router.push('/conference');
         }
         else if (once === 'connected' && val === 'disconnected') {

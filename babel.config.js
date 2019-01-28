@@ -11,10 +11,6 @@ module.exports = {
           transform         : 'lodash/${member}',
           preventFullImport : true,
         },
-        'ant-design-vue' : {
-          transform         : 'ant-design-vue/es5/${member}',
-          preventFullImport : false,
-        },
       },
     ],
   ],

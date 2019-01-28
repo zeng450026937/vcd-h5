@@ -55,6 +55,10 @@ const TEXT_STYLE = {
     color    : '',
     template : '%o',
   },
+  function : {
+    color    : '',
+    template : '%o',
+  },
 };
 
 const genLogHeader = (loggingEvent, timezoneOffset) => {

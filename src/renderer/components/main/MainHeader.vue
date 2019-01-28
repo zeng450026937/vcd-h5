@@ -1,53 +1,40 @@
 <template>
-  <a-layout id="main-header" class="flex-no-grow">
-    <a-layout-header class="px-8 h-12">
-      <div class="flex flex-row h-full">
-        <div class="flex flex-row text-white items-center flex-no-grow">
-          <complex-avatar :image="randomAvatar()"
-                          size="large"
-                          badgeIcon="phone"
-                          badge
-                          badge-status="online"/>
-        </div>
-        <div class="flex-grow dragable"></div>
-        <div class="flex flex-row flex-no-grow text-white items-center cursor-pointer">
-          <a-icon type="minus" class="text-lg mx-2"/>
-          <a-icon type="border" class="text-lg mx-6"/>
-          <a-icon type="close" class="text-lg mx-2 hover:text-red"/>
-        </div>
-      </div>
-    </a-layout-header>
+  <a-layout id="app-header" class="select-none" :class="{[`bg-${bgColor}`]: true}">
+    <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2 py-px">
+      <a-icon type="minus" class="text-sm mx-3 text-grey-dark hover:text-indigo no-dragable" @click="clickMinimize"/>
+      <a-icon type="border" class="text-sm mx-2 text-grey-dark hover:text-indigo no-dragable" @click="clickMaximize"/>
+      <a-icon type="close" class="text-sm mx-3 text-grey-dark hover:text-red no-dragable" @click="clickClose"/>
+    </div>
   </a-layout>
 </template>
 
 <script>
-import ComplexAvatar from '../shared/ComplexAvatar.vue';
-
 export default {
-  name       : 'MainHeader',
-  components : {
-    ComplexAvatar,
-  },
-  data() {
-    return {
-      menuStatus : false,
-    };
-  },
-  computed : {
-
-  },
-  methods : {
-    randomAvatar() {
-      return 'http://img2.touxiang.cn/file/20170614/03130f686db2220fc3a252eec01d2eb6.jpg';
+  name  : 'MainHeader',
+  props : {
+    title : {
+      type    : String,
+      default : '',
+    },
+    bgColor : {
+      type    : String,
+      default : 'white',
     },
   },
-  watch : {
+  methods : {
+    clickMinimize() {
+      this.$dispatch('sys.minimize');
+    },
+    clickMaximize() {
+      this.$dispatch('sys.maximize');
+    },
+    clickClose() {
+      this.$dispatch('sys.close');
+    },
   },
 };
 </script>
 
-<style scoped lang="less">
-  #login-header {
-    background: rgba(0, 0, 0, 0.4);
-  }
+<style scoped>
+
 </style>

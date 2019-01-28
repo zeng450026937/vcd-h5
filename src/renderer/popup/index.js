@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import PlainModal from '../components/shared/plain-modal';
+import PlainModal from './plain-modal';
 
 import Popup from './lib';
 

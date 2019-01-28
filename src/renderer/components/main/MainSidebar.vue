@@ -14,7 +14,7 @@
             <div class="flex flex-col w-48">
               <div class="flex flex-col items-center">
                 <div class="text-center">
-                  <complex-avatar
+                  <common-avatar
                       class="cursor-pointer"
                       :image="randomAvatar()"
                       :size="32"
@@ -48,7 +48,7 @@
             </div>
           </template>
           <div>
-            <complex-avatar
+            <common-avatar
                 class="cursor-pointer"
                 :image="randomAvatar()"
                 :size="32"
@@ -78,48 +78,60 @@
 </template>
 
 <script>
-import ComplexAvatar from '../shared/ComplexAvatar.vue';
+import CommonAvatar from '../Shared/CommonAvatar.vue';
+import { LOGIN, MAIN, MODULE_NAME } from '../../router/constants';
+
+const avatarList = [
+  'http://img2.touxiang.cn/file/20170614/03130f686db2220fc3a252eec01d2eb6.jpg',
+  'http://img2.touxiang.cn/file/20170614/67058cc84dcd9c68ec2367073a7b098a.jpg',
+  'http://img2.touxiang.cn/file/20170614/7e5717b1ca44b3c22794ceb55ff9dfa0.jpg',
+  'http://img2.touxiang.cn/file/20170614/cd3c756eaf54e20172c7d36f5c029320.jpg',
+  'http://img2.touxiang.cn/file/20170614/ce471bee343843b4b6a1b9e0b7615957.jpg',
+  'http://img2.touxiang.cn/file/20170616/9b732f6fecbbbad8006f8c8c7b8be392.jpg',
+  'http://img2.touxiang.cn/file/20170616/33c46a5d4ed3c2ee7b7fb6a9256ba8f2.jpg',
+  'http://img2.touxiang.cn/file/20170616/a86490ed047755f9280213c8554f65af.jpg',
+  'http://img2.touxiang.cn/file/20170616/0b01a74167c13eed138d698aba43fe20.jpg',
+];
 
 export default {
   name       : 'MainSidebar',
   components : {
-    ComplexAvatar,
+    CommonAvatar,
   },
   data() {
     return {
       sidebarItems : [
-        { icon: 'team', isTop: true, route: 'meeting' },
-        { icon: 'calendar', route: 'calendar' },
-        { icon: 'contacts', route: 'contact' },
-        { icon: 'setting', route: 'setting' },
+        { icon: 'team', name: MODULE_NAME.MEETING, isTop: true, route: MAIN.MEETING_INSTANCE },
+        { icon: 'calendar', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
+        { icon: 'contacts', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
+        { icon: 'setting', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
         { spacer: true },
-        { icon: 'question-circle', isBottom: true, route: 'feedback' },
+        { icon: 'question-circle', isBottom: true, route: MAIN.FEEDBACK },
       ],
       headMenuVisible : false,
     };
   },
   computed : {
     currentSidebar() {
-      const routePath = this.$route.path;
+      const { owner } = this.$route.meta;
 
-      return this.sidebarItems.findIndex((s) => routePath.indexOf(s.route) >= 0);
+      return this.sidebarItems.findIndex((s) => owner === s.name);
     },
   },
   methods : {
     randomAvatar() {
-      return 'http://img2.touxiang.cn/file/20170614/03130f686db2220fc3a252eec01d2eb6.jpg';
+      return avatarList[2];
     },
     clickMenu(sidebar, index) {
-      console.warn();
-      const route = `/main/${this.sidebarItems[index].route}`;
+      const { route } = this.sidebarItems[index];
 
-      if (!this.$router.currentRoute.path.startsWith(route)) {
+      if (this.$router.currentRoute.meta.owner !== route.name) {
         this.$router.push(route);
       }
     },
     clickLogout() {
       this.$rtc.account.signout();
-      this.$router.push('/login');
+      this.$router.push(LOGIN.LOGIN_CONTENT);
     },
   },
 };

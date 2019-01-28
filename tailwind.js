@@ -317,7 +317,7 @@ module.exports = {
     tighter : '1.125rem', // 18px
     tight   : '1.25rem', // 20px
     normal  : '1.375rem', // 22px
-    loose   : '1.5rem', // 34px
+    loose   : '1.5rem', // 24px
   },
 
 
