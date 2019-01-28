@@ -12,7 +12,7 @@
         <div class="flex items-center mr-4">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
-              <a-menu-item key="cloud" class="py-2 ">云服务器版</a-menu-item>
+              <a-menu-item key="cloud" class="py-2 ">云服务版</a-menu-item>
 
               <a-menu-item key="yms" class="py-2">企业版</a-menu-item>
             </a-menu>

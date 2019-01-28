@@ -169,6 +169,29 @@ const router = new Router({
       ],
     },
     {
+      name      : 'conference',
+      path      : '/conference',
+      component : () => import(/* webpackChunkName: "layoutConference" */ '@/renderer/views/LayoutConference.vue'),
+      children  : [
+        {
+          name       : 'conferenceContent',
+          path       : 'content',
+          components : {
+            header  : () => import(/* webpackChunkName: "conferenceHeader" */ '@/renderer/components/Conference/ConferenceHeader.vue'),
+            sidebar : () => import(/* webpackChunkName: "mainSidebar" */ '@/renderer/components/Main/MainSidebar.vue'),
+            default : () => import(/* webpackChunkName: "layoutConferenceContent" */ '@/renderer/views/LayoutConferenceContent.vue'),
+          },
+          children : [
+            {
+              name      : 'conferenceDrawer',
+              path      : 'tabs',
+              component : () => import(/* webpackChunkName: "conferenceDrawer" */ '@/renderer/components/Conference/ConferenceDrawer.vue'),
+            },
+          ],
+        },
+      ],
+    },
+    {
       path     : '*',
       redirect : LOGIN.YMS_LOGIN,
     },

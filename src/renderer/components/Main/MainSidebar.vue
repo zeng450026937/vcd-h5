@@ -63,13 +63,14 @@
         <template v-for="(sidebar, index) in sidebarItems">
           <div v-if="sidebar.spacer" :key="index" class="flex flex-grow"></div>
           <div v-else :key="index"
-               class="no-dragable cursor-pointer w-full flex items-center justify-center h-12"
-               :class="{'mb-3':sidebar.isBottom,
+               class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
+               :class="{'mb-2':sidebar.isBottom,
                         'mt-2':sidebar.isTop,
                        'bg-indigo':currentSidebar === index,
                        'hover:text-indigo': currentSidebar !== index}"
                @click="clickMenu(sidebar, index)">
             <a-icon :type="sidebar.icon" class="text-sm"/>
+            <span class="text-3xs font-thin mt-2">{{sidebar.text}}</span>
           </div>
         </template>
       </div>
@@ -101,19 +102,19 @@ export default {
   data() {
     return {
       sidebarItems : [
-        { icon: 'team', name: MODULE_NAME.MEETING, isTop: true, route: MAIN.MEETING_INSTANCE },
-        { icon: 'calendar', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
-        { icon: 'contacts', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
-        { icon: 'setting', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
+        { icon: 'team', text: '会议', name: MODULE_NAME.MEETING, isTop: true, route: MAIN.MEETING_INSTANCE },
+        { icon: 'calendar', text: '日程', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
+        { icon: 'contacts', text: '联系人', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
+        { icon: 'setting', text: '设置', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
         { spacer: true },
-        { icon: 'question-circle', isBottom: true, route: MAIN.FEEDBACK },
+        { icon: 'question-circle', text: '反馈', isBottom: true, route: MAIN.FEEDBACK },
       ],
       headMenuVisible : false,
     };
   },
   computed : {
     currentSidebar() {
-      const { owner } = this.$route.meta;
+      const { owner } = this.$route.meta || MODULE_NAME.MEETING;
 
       return this.sidebarItems.findIndex((s) => owner === s.name);
     },

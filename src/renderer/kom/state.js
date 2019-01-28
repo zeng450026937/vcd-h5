@@ -1,7 +1,7 @@
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
-import { LOGIN, MAIN } from '../router/constants';
+import { LOGIN, MAIN, CONFERENCE } from '../router/constants';
 
 const wait = async(timeout = 0) => new Promise((resolve) => {
   if (timeout) {
@@ -72,7 +72,7 @@ export default {
         if (this.enterPopup) popup.destroy(this.enterPopup);
         if (val === 'connected') {
           // 成功入会状态
-          router.push('/conference');
+          router.push(CONFERENCE.CONFERENCE_MAIN);
         }
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态

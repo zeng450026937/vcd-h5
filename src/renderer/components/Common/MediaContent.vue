@@ -14,7 +14,7 @@
             >{{videoInput.label}}</a-select-option>
           </a-select>
           <div class="mt-3 h-32 relative">
-            <video-view class="w-full h-full bg-white"/>
+            <video-view class="w-full h-full bg-white" object-fit="cover"/>
           </div>
         </div>
       </div>

@@ -3,9 +3,9 @@
             class="absolute overflow-hidden video-content-wrapper w-full h-full">
     <video
         :id="videoId"
-        class="video-content w-full h-full"
+        class="video-content"
         autoplay loop
-        style="object-fit: cover"
+        :style="{'object-fit': objectFit}"
     ></video>
   </a-layout>
 </template>
@@ -17,6 +17,10 @@ export default {
     source : {
       type    : String,
       default : 'local', // local remote screen
+    },
+    objectFit : {
+      type    : String,
+      default : 'contain',
     },
   },
   data() {
@@ -49,15 +53,22 @@ export default {
     onVideoStreamChanged(stream) {
       if (!stream) return;
       this.videoElement = document.getElementById(this.videoId);
-      this.videoElement.srcObject = stream;
+      if (this.videoElement) {
+        this.videoElement.srcObject = stream;
+      }
     },
     initStream() {
-      if (this.videoStream) return;
+      if (this.videoStream) {
+        if (!this.videoElement) this.onVideoStreamChanged(this.videoStream);
+        
+        return;
+      }
       switch (this.source) {
         case 'local':
           this.$rtc.media.localMedia.acquireStream();
           break;
-        case 'remote': break;
+        case 'remote':
+          break;
         case 'screen': break;
         default: break;
       }
@@ -76,6 +87,10 @@ export default {
   .video-content-wrapper {
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
+    .video-content {
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>

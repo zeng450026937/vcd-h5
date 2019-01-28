@@ -1,0 +1,77 @@
+<template>
+  <div id="conference-drawer"
+            class="shadow h-full"
+            style="width: 280px">
+    <div class="flex flex-col h-full">
+      <div class="h-10">
+        <div class="header flex w-full h-full border-b px-4">
+          <div class="flex flex-grow h-full items-center">
+            <a-icon type="close" class="cursor-pointer hover:text-red"
+                    @click="closeDrawer"/>
+          </div>
+          <div class="flex h-full items-center">
+            <template v-for="(tab, index) in tabList">
+              <a-icon :key="index" :type="tab.icon"
+                      class="ml-5 cursor-pointer"
+                      :class="{'text-indigo': currentTab === tab.is,
+                    'hover:text-indigo-light': currentTab !== tab.is}"
+                      @click="currentTab = tab.is"/>
+            </template>
+          </div>
+        </div>
+      </div>
+      <div class="flex h-full">
+        <component :is="currentTab"></component>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import TabInviting from './TabInviting.vue';
+import TabMemberView from './TabMemberView.vue';
+import TabChatting from './TabChatting.vue';
+import TabSetting from './TabSetting.vue';
+
+import { CONFERENCE } from '../../router/constants';
+
+export default {
+  name       : 'ConferenceDrawer',
+  components : {
+    TabInviting,
+    TabMemberView,
+    TabChatting,
+    TabSetting,
+  },
+  data() {
+    const tabList = [
+      { icon: 'user-add', is: 'TabInviting' },
+      { icon: 'team', is: 'TabMemberView' },
+      { icon: 'message', is: 'TabChatting' },
+      { icon: 'setting', is: 'TabSetting' },
+    ];
+
+    return {
+      currentTab : '',
+      tabList,
+    };
+  },
+  created() {
+    const { tab } = this.$router.currentRoute.query;
+
+    this.currentTab = tab || this.tabList[0].is;
+  },
+  mounted() {
+    console.warn(this.$router);
+  },
+  methods : {
+    closeDrawer() {
+      this.$router.push(CONFERENCE.CONFERENCE_MAIN);
+    },
+  },
+};
+</script>
+
+<style scoped>
+
+</style>

@@ -104,7 +104,7 @@
       </div>
       <a-divider class="m-0"/>
       <div class="my-2 flex justify-center items-center">
-        <a-button class="w-1/3 mx-2" icon="video-camera" type="primary">视频加入</a-button>
+        <a-button class="w-1/3 mx-2" icon="video-camera" type="primary" @click="enterMeeting">视频加入</a-button>
         <a-button class="w-1/3 mx-2" icon="phone" type="primary">音频加入</a-button>
       </div>
       <div>
@@ -115,8 +115,8 @@
       </plain-modal>
     </div>
     </div>
-    <div v-else class="flex">
-      <no-found class="mt-10" text="暂未选择日程信息"/>
+    <div v-else class="flex justify-center mt-10">
+      <no-found class="mt-10 text-grey" text="暂未选择日程信息"/>
     </div>
   </a-layout>
 </template>
@@ -143,6 +143,12 @@ export default {
   methods : {
     clickOk() {
       this.$refs.deleteModal.visible = false;
+    },
+    enterMeeting() {
+      this.$dispatch('meeting.joinMeeting', {
+        number : this.currentEvent.conferenceNumber,
+        pin    : this.currentEvent.attendeePin,
+      });
     },
   },
 };
