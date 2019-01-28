@@ -12,7 +12,7 @@
           <div class="flex h-full items-center">
             <template v-for="(tab, index) in tabList">
               <a-icon :key="index" :type="tab.icon"
-                      class="ml-5 cursor-pointer"
+                      class="ml-6 cursor-pointer"
                       :class="{'text-indigo': currentTab === tab.is,
                     'hover:text-indigo-light': currentTab !== tab.is}"
                       @click="currentTab = tab.is"/>
@@ -62,7 +62,6 @@ export default {
     this.currentTab = tab || this.tabList[0].is;
   },
   mounted() {
-    console.warn(this.$router);
   },
   methods : {
     closeDrawer() {

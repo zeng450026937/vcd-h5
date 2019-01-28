@@ -44,13 +44,15 @@
       <div class="local-video-content">
         <conference-local-video/>
       </div>
+      <conference-notice/>
     </div>
   </a-layout>
 </template>
 
 <script>
-  import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
-  import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
+import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
+import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
+import ConferenceNotice from './ConferenceNotice.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
@@ -71,6 +73,7 @@ export default {
   components : {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
+    ConferenceNotice,
   },
   mounted() {
   },
