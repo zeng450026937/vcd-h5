@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import { MAIN } from '../../router/constants';
+
 export default {
   name  : 'MainNav',
   props : {
@@ -35,45 +37,41 @@ export default {
       currentRoute : null,
     };
   },
+  computed : {
+  },
   created() {
     this.initNav();
   },
   methods : {
     initNav() {
-      this.currentRoute = this.currentRoute || this.$router.currentRoute;
-      const nav = this.currentRoute.path.split('/')[2];
+      this.currentNav = 0;
+      this.currentRoute = this.$router.currentRoute;
+      const nav = this.currentRoute.meta.owner;
 
       switch (nav) {
         case 'meeting':
           this.navs = [
-            { icon: 'plus-square', route: 'instance', text: '即时会议', isTop: true },
-            { icon: 'export', route: 'enter', text: '加入会议' },
-            { icon: 'profile', route: 'record', text: '通话记录' },
-            { icon: 'phone', route: 'dial', text: '拨号' },
+            { icon: 'plus-square', route: MAIN.MEETING_INSTANCE, text: '即时会议', isTop: true },
+            { icon: 'export', route: MAIN.MEETING_ENTER, text: '加入会议' },
+            { icon: 'profile', route: MAIN.CALL_RECORD, text: '通话记录' },
+            { icon: 'phone', route: MAIN.DIAL_PLATE, text: '拨号' },
           ];
           break;
         case 'contact':
           this.navs = [
-            { icon: 'solution', route: 'corporate', text: '企业联系人', bg: 'blue', isTop: true },
-            { icon: 'star', route: 'frequent', text: '常用联系人', bg: 'yellow-dark' },
-            { icon: 'environment', route: 'local', text: '本地联系人', bg: 'teal' },
-          ];
-          break;
-        case 'file':
-          this.navs = [
-            { icon: 'folder', route: 'recent', text: '最近录制文件', isTop: true },
-            { icon: 'hdd', route: 'local', text: '本地录制文件' },
-            { icon: 'cloud', route: 'remote', text: '云录制文件' },
+            { icon: 'solution', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', bg: 'blue', isTop: true },
+            { icon: 'star', route: MAIN.CONTACT_FREQUENT, text: '常用联系人', bg: 'yellow-dark' },
+            { icon: 'environment', route: MAIN.CONTACT_LOCAL, text: '本地联系人', bg: 'teal' },
           ];
           break;
         case 'setting':
           this.navs = [
-            { icon: 'idcard', route: 'account', text: '个人资料', isTop: true },
-            { icon: 'appstore', route: 'common', text: '通用' },
-            { icon: 'team', route: 'conference', text: '会议' },
-            { icon: 'phone', route: 'audio', text: '音频' },
-            { icon: 'video-camera', route: 'video', text: '视频' },
-            { icon: 'info-circle', route: 'about', text: '关于' },
+            { icon: 'idcard', route: MAIN.SETTING_ACCOUNT, text: '个人资料', isTop: true },
+            { icon: 'appstore', route: MAIN.SETTING_COMMON, text: '通用' },
+            { icon: 'team', route: MAIN.SETTING_CONFERENCE, text: '会议' },
+            { icon: 'phone', route: MAIN.SETTING_AUDIO, text: '音频' },
+            { icon: 'video-camera', route: MAIN.SETTING_VIDEO, text: '视频' },
+            { icon: 'info-circle', route: MAIN.ABOUT_US, text: '关于' },
           ];
           break;
         default: break;
@@ -87,11 +85,15 @@ export default {
   watch : {
     currentNav : {
       handler(val) {
-        console.warn(this.currentRoute);
         if (!this.currentRoute) return;
-        this.$router.push(`${this.currentRoute.path}/${this.navs[val].route}`);
+        this.$router.push(this.navs[val].route);
       },
       immediate : true,
+    },
+    $route(val) {
+      if (val.meta.owner !== this.currentRoute.meta.owner) {
+        this.initNav();
+      }
     },
   },
 };
