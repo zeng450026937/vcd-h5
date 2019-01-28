@@ -3,7 +3,6 @@
     <a-locale-provider :locale="locale">
       <router-view />
     </a-locale-provider>
-    <div></div>
   </div>
 </template>
 
