@@ -80,9 +80,11 @@ export default {
           router.push(CONFERENCE.CONFERENCE_MAIN);
         }
         else if (once === 'connected' && val === 'disconnected') {
-          this.isInConferenceView = false;
           // 退出会议状态
-          router.push(this.sidebarStatus.preRoute.path);
+          if (this.isInConferenceView) {
+            router.push(this.sidebarStatus.preRoute.path);
+            this.isInConferenceView = false;
+          }
         }
         else {
           // 未入会状态

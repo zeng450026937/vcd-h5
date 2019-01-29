@@ -1,6 +1,8 @@
 <template>
   <a-layout id="video-view"
-            class="absolute overflow-hidden video-content-wrapper w-full h-full">
+            class="overflow-hidden video-content-wrapper"
+            :class="{[`${position} video-content-wrapper-${position}`]: true,
+            'w-full h-full': position === 'absolute'}">
     <video
         :id="videoId"
         class="video-content"
@@ -11,6 +13,7 @@
 </template>
 
 <script>
+// TODO the code may mass , rebuild next year
 export default {
   name  : 'VideoView',
   props : {
@@ -21,6 +24,10 @@ export default {
     objectFit : {
       type    : String,
       default : 'contain',
+    },
+    position : {
+      type    : String,
+      default : 'absolute',
     },
   },
   data() {
@@ -85,12 +92,16 @@ export default {
 
 <style scoped lang="less">
   .video-content-wrapper {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    &-absolute {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .video-content {
+        height: 100%;
+      }
+    }
     .video-content {
       width: 100%;
-      height: 100%;
     }
   }
 </style>

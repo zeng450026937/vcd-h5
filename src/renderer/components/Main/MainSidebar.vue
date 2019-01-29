@@ -134,7 +134,7 @@ export default {
   },
   methods : {
     randomAvatar() {
-      return avatarList[3];
+      return avatarList[0];
     },
     clickMenu(sidebar, index) {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {
