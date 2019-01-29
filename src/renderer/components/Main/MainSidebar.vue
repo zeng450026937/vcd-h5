@@ -113,21 +113,33 @@ export default {
     };
   },
   computed : {
+    isInConferenceView : {
+      get() {
+        return this.$model.state.isInConferenceView;
+      },
+      set(val) {
+        this.$model.state.isInConferenceView = val;
+      },
+    },
+    confStatus() {
+      return this.$rtc.conference.status;
+    },
     currentSidebar() {
-      const { owner } = this.$route.meta || MODULE_NAME.MEETING;
+      const owner = this.confStatus === 'connected' && this.isInConferenceView
+        ? this.$model.state.sidebarStatus.preRoute.meta.owner
+        : this.$route.meta.owner || MODULE_NAME.MEETING;
 
       return this.sidebarItems.findIndex((s) => owner === s.name);
     },
   },
   methods : {
     randomAvatar() {
-      return avatarList[2];
+      return avatarList[3];
     },
     clickMenu(sidebar, index) {
-      const { route } = this.sidebarItems[index];
-
-      if (this.$router.currentRoute.meta.owner !== route.name) {
-        this.$router.push(route);
+      if (this.$router.currentRoute.meta.owner !== sidebar.name) {
+        this.$router.push(sidebar.route);
+        this.isInConferenceView = false;
       }
     },
     clickLogout() {

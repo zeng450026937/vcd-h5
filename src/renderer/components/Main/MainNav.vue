@@ -19,14 +19,22 @@
       <a-icon :type="nav.icon" class="text-base text-indigo-dark"/>
       <span class="ml-3 text-sm">{{nav.text}}</span>
     </div>
+    <div class="flex flex-grow"></div>
+    <div v-if="showMiniVideo" class="mt-3 h-32 relative" style="border: 1px solid #1D212F;">
+      <main-nav-mini-video/>
+    </div>
   </a-layout>
 </template>
 
 <script>
 import { MAIN } from '../../router/constants';
+import MainNavMiniVideo from './MainNavMiniVideo.vue';
 
 export default {
-  name  : 'MainNav',
+  name       : 'MainNav',
+  components : {
+    MainNavMiniVideo,
+  },
   props : {
   },
   data() {
@@ -38,6 +46,20 @@ export default {
     };
   },
   computed : {
+    isInConferenceView : {
+      get() {
+        return this.$model.state.isInConferenceView;
+      },
+      set(val) {
+        this.$model.state.isInConferenceView = val;
+      },
+    },
+    confStatus() {
+      return this.$rtc.conference.status;
+    },
+    showMiniVideo() {
+      return !this.isInConferenceView && this.confStatus === 'connected';
+    },
   },
   created() {
     this.initNav();

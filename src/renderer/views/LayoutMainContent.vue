@@ -1,13 +1,13 @@
 <template>
   <a-layout id="main-contact" class="h-full">
-    <a-row class="h-full">
-      <a-col v-if="!hideNav" :span="6" class="h-full bg-grey-lighter">
-        <component :is="currentNav"/>
-      </a-col>
-      <a-col :span="hideNav ? 24 : 18" class="h-full bg-white">
+    <div class="flex h-full">
+      <div v-if="!hideNav" class="h-full bg-grey-lighter">
+        <component style="width: 240px;" :is="currentNav"/>
+      </div>
+      <div class="flex w-full h-full bg-white">
         <router-view/>
-      </a-col>
-    </a-row>
+      </div>
+    </div>
   </a-layout>
 </template>
 

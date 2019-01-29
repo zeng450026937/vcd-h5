@@ -15,16 +15,13 @@
         <div class="flex flex-grow"></div>
         <div class="flex justify-center py-5 items-center">
           <div class="button-content flex h-12 items-center z-10">
-            <a-button shape="circle"
-                      size="large" icon="video-camera"
+            <a-button shape="circle" icon="video-camera"
                       class="w-12 h-12 text-xl text-white mx-2"
             ></a-button>
-            <a-button shape="circle"
-                      size="large" icon="phone"
+            <a-button shape="circle" icon="phone"
                       class="w-12 h-12 text-xl text-white mx-2"
             ></a-button>
-            <a-button shape="circle"
-                      size="large" icon="share-alt"
+            <a-button shape="circle" icon="share-alt"
                       class="w-12 h-12 text-xl text-white mx-2"
             ></a-button>
             <a-popover
@@ -46,15 +43,14 @@
                   <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
                 </div>
               </div>
-              <a-button shape="circle"
-                        size="large" icon="ellipsis"
+              <a-button shape="circle" icon="ellipsis"
                         class="w-12 h-12 text-xl text-white mx-2"
                         @click="showMorePanel = !showMorePanel"
               ></a-button>
             </a-popover>
-            <a-button shape="circle"
-                      size="large" icon="export"
+            <a-button shape="circle" icon="export"
                       class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
+                      @click="leaveConference"
             ></a-button>
           </div>
         </div>
@@ -102,6 +98,9 @@ export default {
   methods : {
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
+    },
+    leaveConference() {
+      this.$rtc.conference.leave();
     },
   },
   watch : {

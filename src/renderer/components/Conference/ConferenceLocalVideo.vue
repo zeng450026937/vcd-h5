@@ -3,12 +3,18 @@
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
     <remote-video source="local" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
-      <div class="video-mask opacity-0 group-hover:opacity-100"></div>
-      <div class="video-controls opacity-0 group-hover:opacity-100">
+      <div class="video-mask group-hover:opacity-100"
+           :class="{'opacity-0': videoCursor !== 0}"></div>
+      <div class="video-controls group-hover:opacity-100"
+           :class="{'opacity-0': videoCursor !== 0}">
         <div class="flex px-4" :class="{[`pt-${videoCursor === 0 ? 1 : 3}`]: true}">
-          <a-icon type="fullscreen" class="text-xl text-white" @click="switchShrinkOrExpand"/>
+          <a-icon v-if="videoCursor !== 0" type="fullscreen" class="text-xl text-white" @click="switchShrinkOrExpand"/>
           <a-icon type="down-square" class="text-xl text-white ml-4" @click="switchMaxOrMin"/>
         </div>
+      </div>
+      <div v-if="videoCursor === 0"
+           class="video-title h-full flex items-center text-white mx-4">
+        <span class="z-10 text-xs">本地视频</span>
       </div>
     </template>
   </div>
