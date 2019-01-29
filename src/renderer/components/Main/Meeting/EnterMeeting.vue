@@ -9,7 +9,7 @@
     <div class="flex justify-center h-full">
       <div style="width: 480px" class="flex flex-col" v-if="!showSetting">
         <div style="height: 270px" class="relative flex">
-          <video-view class="w-full h-full bg-white"/>
+          <video-view class="w-full h-full bg-white" object-fit="cover"/>
           <div class="flex self-end w-full justify-center">
             <div class="flex mb-4">
               <a-button type="primary" shape="circle"
@@ -55,7 +55,7 @@
               <a-icon slot="prefix" type='hdd' class="text-grey-dark"/>
             </a-input>
           </div>
-          <a-button type="primary" class="mt-8 mb-5 w-1/2">立即加入</a-button>
+          <a-button type="primary" class="mt-8 mb-5 w-1/2" @click="enterMeeting">立即加入</a-button>
         </div>
       </div>
       <div style="width: 480px;background-color: #ffffff0a"

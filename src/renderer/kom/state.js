@@ -1,7 +1,7 @@
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
-import { LOGIN, MAIN } from '../router/constants';
+import { LOGIN, MAIN, CONFERENCE } from '../router/constants';
 
 const wait = async(timeout = 0) => new Promise((resolve) => {
   if (timeout) {
@@ -14,8 +14,10 @@ const wait = async(timeout = 0) => new Promise((resolve) => {
 export default {
   data() {
     return {
-      loginPopup : null, // 登录中的 popup 提示
-      enterPopup : null, // 正在进入会议的 popup 提示
+      loginPopup         : null, // 登录中的 popup 提示
+      enterPopup         : null, // 正在进入会议的 popup 提示
+      sidebarStatus      : {}, // 记录入会前的 sidebar 的状态信息
+      isInConferenceView : false,
     };
   },
   computed : {
@@ -71,11 +73,18 @@ export default {
       else {
         if (this.enterPopup) popup.destroy(this.enterPopup);
         if (val === 'connected') {
+          // 记住入会前的路由状态
+          this.sidebarStatus.preRoute = router.currentRoute;
+          this.isInConferenceView = true;
           // 成功入会状态
-          router.push('/conference');
+          router.push(CONFERENCE.CONFERENCE_MAIN);
         }
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态
+          if (this.isInConferenceView) {
+            router.push(this.sidebarStatus.preRoute.path);
+            this.isInConferenceView = false;
+          }
         }
         else {
           // 未入会状态

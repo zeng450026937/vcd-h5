@@ -12,10 +12,10 @@ export const getMainWindow = () => mainWindow;
 export function createWindow(option) {
   const window = new BrowserWindow({
     option,
-    width           : 1024,
-    minWidth        : 1024,
-    height          : 576,
-    minHeight       : 576,
+    width           : 1120,
+    minWidth        : 1120,
+    height          : 630,
+    minHeight       : 630,
     show            : true,
     frame           : false,
     resizable       : true,

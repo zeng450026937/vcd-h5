@@ -84,7 +84,7 @@ export default {
   data() {
     return {
       visible   : false,
-      proxy     : '10.200.112.165',
+      proxy     : '',
       proxyPort : 5060,
     };
   },

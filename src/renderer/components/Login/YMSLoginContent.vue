@@ -104,6 +104,7 @@ export default {
         pin     : data.pin,
         server  : data.server,
       });
+      this.$refs.loginDrawer.proxy = data.proxy;
     },
     onAccountSelect(val) {
       this.updateForm(this.accountList.find((a) => a.account === val));
@@ -117,8 +118,9 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
+            console.warn(this.$refs.loginDrawer)
             const loginData = Object.assign({}, values, {
-              proxy     : '10.200.112.165',
+              proxy     : this.$refs.loginDrawer.proxy,
               proxyPort : 5060,
             });
 
