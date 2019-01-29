@@ -141,6 +141,9 @@ export default {
         this.$router.push(sidebar.route);
         this.isInConferenceView = false;
       }
+      if (this.confStatus === 'connected') {
+        this.$model.state.sidebarStatus.preRoute = this.$router.currentRoute;
+      }
     },
     clickLogout() {
       this.$rtc.account.signout();

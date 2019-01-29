@@ -25,6 +25,8 @@
 </template>
 
 <script>
+
+// FIXME the currentNav should be set by route
 import { MAIN } from '../../router/constants';
 import MainNavMiniVideo from './MainNavMiniVideo.vue';
 

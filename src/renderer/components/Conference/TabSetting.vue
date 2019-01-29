@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="tab-setting" class="h-full">
+  <a-layout id="tab-setting" class="h-full bg-white">
     设置页面
   </a-layout>
 </template>

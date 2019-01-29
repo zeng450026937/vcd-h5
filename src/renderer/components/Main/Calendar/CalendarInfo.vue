@@ -6,7 +6,7 @@
           <div class="flex flex-col px-5 h-full">
             <div class="py-5 border-b">
               <div class="flex items-center">
-                <div class="text-base text-black flex flex-grow truncate">
+                <div class="w-1 text-base text-black flex flex-grow truncate">
                   <span class="truncate">{{currentEvent.subject}}</span>
                 </div>
                 <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2">复制信息</span>
