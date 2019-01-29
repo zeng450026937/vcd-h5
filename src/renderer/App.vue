@@ -26,7 +26,7 @@ export default {
 
 <style lang="less">
   #app {
-    background-image: url("https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg");
+    background-image: url("./assets/bg.svg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-attachment: fixed;

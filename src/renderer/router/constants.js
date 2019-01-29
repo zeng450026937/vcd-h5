@@ -36,8 +36,11 @@ export const MAIN = {
   ABOUT_US           : '/main/content/aboutUs',
   // feedback
   FEEDBACK           : '/main/content/feedback',
+
 };
 
 export const CONFERENCE = {
-
+  // conference
+  CONFERENCE_MAIN   : '/conference/content',
+  CONFERENCE_DRAWER : '/conference/content/tabs',
 };

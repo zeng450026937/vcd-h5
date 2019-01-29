@@ -1,22 +1,33 @@
 <template>
   <a-layout id="video-view"
-            class="absolute overflow-hidden video-content-wrapper w-full h-full">
+            class="overflow-hidden video-content-wrapper"
+            :class="{[`${position} video-content-wrapper-${position}`]: true,
+            'w-full h-full': position === 'absolute'}">
     <video
         :id="videoId"
-        class="video-content w-full h-full"
+        class="video-content"
         autoplay loop
-        style="object-fit: cover"
+        :style="{'object-fit': objectFit}"
     ></video>
   </a-layout>
 </template>
 
 <script>
+// TODO the code may mass , rebuild next year
 export default {
   name  : 'VideoView',
   props : {
     source : {
       type    : String,
       default : 'local', // local remote screen
+    },
+    objectFit : {
+      type    : String,
+      default : 'contain',
+    },
+    position : {
+      type    : String,
+      default : 'absolute',
     },
   },
   data() {
@@ -32,7 +43,7 @@ export default {
   },
   computed : {
     videoId() {
-      return `${this.source}-video`;
+      return `${this.source}-video-${Date.now()}`;
     },
     videoStream() {
       const streamMap = {
@@ -49,15 +60,22 @@ export default {
     onVideoStreamChanged(stream) {
       if (!stream) return;
       this.videoElement = document.getElementById(this.videoId);
-      this.videoElement.srcObject = stream;
+      if (this.videoElement) {
+        this.videoElement.srcObject = stream;
+      }
     },
     initStream() {
-      if (this.videoStream) return;
+      if (this.videoStream) {
+        if (!this.videoElement) this.onVideoStreamChanged(this.videoStream);
+        
+        return;
+      }
       switch (this.source) {
         case 'local':
           this.$rtc.media.localMedia.acquireStream();
           break;
-        case 'remote': break;
+        case 'remote':
+          break;
         case 'screen': break;
         default: break;
       }
@@ -74,8 +92,16 @@ export default {
 
 <style scoped lang="less">
   .video-content-wrapper {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%)
+    &-absolute {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .video-content {
+        height: 100%;
+      }
+    }
+    .video-content {
+      width: 100%;
+    }
   }
 </style>

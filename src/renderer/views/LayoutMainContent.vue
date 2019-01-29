@@ -1,25 +1,28 @@
 <template>
   <a-layout id="main-contact" class="h-full">
-    <a-row class="h-full">
-      <a-col v-if="!hideNav" :span="6" class="h-full bg-grey-lighter">
-        <component :is="currentNav"/>
-      </a-col>
-      <a-col :span="hideNav ? 24 : 18" class="h-full bg-white">
+    <div class="flex h-full">
+      <div v-if="!hideNav" class="flex flex-col h-full bg-grey-lighter">
+        <component style="width: 240px;" :is="currentNav"/>
+        <main-nav-mini-video style="width: 240px;"/>
+      </div>
+      <div class="flex w-full h-full bg-white">
         <router-view/>
-      </a-col>
-    </a-row>
+      </div>
+    </div>
   </a-layout>
 </template>
 
 <script>
 import MainNav from '../components/Main/MainNav.vue';
 import CalendarNav from '../components/Main/Calendar/CalendarNav.vue';
+import MainNavMiniVideo from '../components/Main/MainNavMiniVideo.vue';
 import { MODULE_NAME, MAIN } from '../router/constants';
 
 export default {
   name       : 'MainContact',
   components : {
     MainNav,
+    MainNavMiniVideo,
   },
   data() {
     return {
