@@ -5,7 +5,9 @@ import { format as formatUrl } from 'url';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-export let mainWindow;
+let mainWindow;
+
+export const getMainWindow = () => mainWindow;
 
 export function createWindow(option) {
   const window = new BrowserWindow({

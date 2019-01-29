@@ -1,7 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { app } from 'electron';
-import { mainWindow, createWindow } from './window';
+import { getMainWindow, createWindow } from './window';
 import handleSquirrelEvent from './squirrelUpdater';
+
+let mainWindow = getMainWindow();
 
 let handlingSquirrelEvent = false;
 
@@ -51,7 +53,7 @@ if (!handlingSquirrelEvent) {
     app.on('activate', () => {
       // // on macOS it is common to re-create a window even after all windows have been closed
       if (mainWindow == null) {
-        createWindow();
+        mainWindow = createWindow();
       }
     });
     
@@ -59,7 +61,7 @@ if (!handlingSquirrelEvent) {
       if (handlingSquirrelEvent) {
         return;
       }
-      createWindow();
+      mainWindow = createWindow();
     });
     
     

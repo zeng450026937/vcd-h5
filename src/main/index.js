@@ -4,3 +4,4 @@ import './app';
 import './tray';
 import './power-sb';
 import './updater';
+import './system';

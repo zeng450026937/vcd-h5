@@ -1,18 +1,17 @@
-import {Emitter, Disposable} from 'event-kit';
-import {remote} from 'electron'
-import {sendWillQuitSync} from '../mainProcessProxy'
+import { Emitter, Disposable } from 'event-kit';
+import { remote } from 'electron';
+import { sendWillQuitSync } from '../mainProcessProxy';
 
 const autoUpdater = remote.autoUpdater;
 
 const UpdateStatus = {
-  CheckingForUpdates: 0,     // 开始检查更新
-  UpdateAvailable: 1,     // 发现一个可用更新
-  UpdateNotAvailable: 2,     // 没有可用更新
-  UpdateReady: 3,     // 更新下载完成
+  CheckingForUpdates : 0, // 开始检查更新
+  UpdateAvailable    : 1, // 发现一个可用更新
+  UpdateNotAvailable : 2, // 没有可用更新
+  UpdateReady        : 3, // 更新下载完成
 };
 
 class Updater {
-  
   constructor() {
     this.status = UpdateStatus.UpdateNotAvailable;
     this.lastSuccessfulCheck = null;
@@ -30,15 +29,13 @@ class Updater {
     autoUpdater.on('update-not-available', updateNotAvailable);
     autoUpdater.on('update-downloaded', updateDownloaded);
     
-    window.addEventListener('beforeunload', function () {
+    window.addEventListener('beforeunload', () => {
       autoUpdater.removeListener('error', autoUpdaterError);
       autoUpdater.removeListener('checking-for-update', checkingForUpdate);
       autoUpdater.removeListener('update-available', updateAvailable);
       autoUpdater.removeListener('update-not-available', updateNotAvailable);
       autoUpdater.removeListener('update-downloaded', updateDownloaded);
-      
     });
-    
   }
   
   onAutoUpdaterError(error) {
@@ -72,10 +69,12 @@ class Updater {
   checkForUpdates() {
     if (this.status === UpdateStatus.UpdateReady) return;
     try {
-      const url = `http://10.200.112.103:5014/update/win32/1.0.0`;
-      autoUpdater.setFeedURL({url});
+      const url = `${process.env.VUE_APP_UPDATE_URL}`;
+
+      autoUpdater.setFeedURL({ url });
       autoUpdater.checkForUpdates();
-    } catch (e) {
+    }
+    catch (e) {
       this.emitError(e);
     }
   }
@@ -100,13 +99,13 @@ class Updater {
   }
   
   onDidChange(callback) {
-    this.emitter.on('did-change', callback)
+    this.emitter.on('did-change', callback);
   }
   
   get state() {
     return {
-      status: this.status,
-      lastSuccessfulCheck: this.lastSuccessfulCheck,
+      status              : this.status,
+      lastSuccessfulCheck : this.lastSuccessfulCheck,
     };
   }
   

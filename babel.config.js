@@ -13,5 +13,11 @@ module.exports = {
         },
       },
     ],
+    [
+      '@babel/proposal-export-default-from',
+    ],
+    [
+      '@babel/plugin-proposal-export-namespace-from',
+    ],
   ],
 };

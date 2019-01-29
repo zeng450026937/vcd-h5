@@ -2,11 +2,13 @@
 import { app, BrowserWindow, Menu, Tray } from 'electron';
 /* eslint-enable import/no-extraneous-dependencies */
 import path from 'path';
-import { mainWindow } from './window';
+import { getMainWindow } from './window';
 
 let mainTray;
 
 function restoreWindow() {
+  const mainWindow = getMainWindow();
+
   if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.focus();
 }
