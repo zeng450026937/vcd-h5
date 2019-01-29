@@ -43,7 +43,7 @@ export default {
   },
   computed : {
     videoId() {
-      return `${this.source}-video`;
+      return `${this.source}-video-${Date.now()}`;
     },
     videoStream() {
       const streamMap = {

@@ -60,6 +60,7 @@
 <script>
 import VideoView from './VideoView.vue';
 
+// TODO combine mediaContent & TabSettingMedia
 export default {
   name       : 'MediaContent',
   components : {
