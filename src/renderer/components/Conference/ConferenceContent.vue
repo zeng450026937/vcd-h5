@@ -27,10 +27,31 @@
                       size="large" icon="share-alt"
                       class="w-12 h-12 text-xl text-white mx-2"
             ></a-button>
-            <a-button shape="circle"
-                      size="large" icon="ellipsis"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
+            <a-popover
+                trigger="click"
+                v-model="showMorePanel"
+                overlayClassName="more-panel-popover"
+            >
+              <div slot="content" class="popover-content text-white">
+                <div class="h-8 w-full px-3 popover-content-item flex items-center">
+                  <a-icon type="phone" theme="filled" class="text-base"/>
+                  <span class="ml-3 text-xs">切换为音频通话</span>
+                </div>
+                <div class="h-8 w-full px-3 popover-content-item flex items-center">
+                  <a-icon type="appstore" theme="filled" class="text-base"/>
+                  <span class="ml-3 text-xs">拨号版</span>
+                </div>
+                <div class="h-8 w-full px-3 popover-content-item flex items-center">
+                  <a-icon type="sound" theme="filled" class="text-base"/>
+                  <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
+                </div>
+              </div>
+              <a-button shape="circle"
+                        size="large" icon="ellipsis"
+                        class="w-12 h-12 text-xl text-white mx-2"
+                        @click="showMorePanel = !showMorePanel"
+              ></a-button>
+            </a-popover>
             <a-button shape="circle"
                       size="large" icon="export"
                       class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
@@ -67,7 +88,8 @@ export default {
 
     return {
       tabList,
-      showHeader : true,
+      showHeader    : true,
+      showMorePanel : false,
     };
   },
   components : {
@@ -93,7 +115,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 #conference-content {
   .header {
     background-image: linear-gradient(-180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.00) 98%);
@@ -110,4 +132,33 @@ export default {
     transform: translate(-100%, -100%);
   }
 }
+  .more-panel-popover {
+    .ant-popover-arrow {
+      z-index: -1;
+      background: rgba(0,0,0,0.65);
+    }
+    .ant-popover-inner {
+      background: rgba(0,0,0,0.65);
+    }
+    .ant-popover-inner-content {
+      padding: 4px 0;
+      .popover-content {
+        width: 180px;
+        height: 96px;
+        .popover-content-item {
+          cursor: pointer;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+          }
+          .ant-slider-rail, .ant-slider-track,.ant-slider-step {
+            height: 2px;
+          }
+          .ant-slider-handle {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+  }
 </style>
