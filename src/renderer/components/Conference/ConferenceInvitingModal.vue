@@ -135,10 +135,10 @@ export default {
       this.$refs.contactTree.checkedKeys = [];
     },
     copyConferenceInfo() {
-      this.showCopySuccess  = true;
-      setTimeout(()=> {
-        this.showCopySuccess = false
-      }, 3000)
+      this.showCopySuccess = true;
+      setTimeout(() => {
+        this.showCopySuccess = false;
+      }, 3000);
     },
   },
 };
