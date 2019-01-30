@@ -5,6 +5,8 @@
         <div v-if="showHeader" class="header flex flex-col h-12 dragable z-10">
           <div class="flex items-center h-full text-white self-end px-4 no-dragable">
             <a-icon type="fullscreen" class="cursor-pointer hover:text-indigo"/>
+            <a-icon type="user-add" class="ml-6 cursor-pointer hover:text-indigo-light"
+                    @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
               <a-icon :key="index" :type="tab.icon"
                       class="ml-6 cursor-pointer hover:text-indigo-light"
@@ -62,6 +64,7 @@
         <conference-local-video/>
       </div>
       <conference-notice/>
+      <conference-inviting-modal ref="invitingModal"/>
     </div>
   </a-layout>
 </template>
@@ -70,13 +73,14 @@
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
+import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
   name : 'ConferenceContent',
   data() {
     const tabList = [
-      { icon: 'user-add', comp: 'TabInviting' },
+      // { icon: 'user-add', comp: 'TabInviting' },
       { icon: 'team', comp: 'TabMemberView' },
       { icon: 'message', comp: 'TabChatting' },
       { icon: 'setting', comp: 'TabSetting' },
@@ -92,10 +96,14 @@ export default {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
     ConferenceNotice,
+    ConferenceInvitingModal,
   },
   mounted() {
   },
   methods : {
+    showInviteModal() {
+      this.$refs.invitingModal.visible = true;
+    },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
     },
