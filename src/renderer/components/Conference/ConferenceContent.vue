@@ -2,7 +2,7 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full">
       <div class="flex flex-col h-full">
-        <div v-if="showHeader" class="header flex flex-col h-12 dragable z-10">
+        <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
           <div class="flex items-center h-full text-white self-end px-4 no-dragable">
             <a-icon type="fullscreen" class="cursor-pointer hover:text-indigo"/>
             <a-icon type="user-add" class="ml-6 cursor-pointer hover:text-indigo-light"
@@ -15,7 +15,8 @@
           </div>
         </div>
         <div class="flex flex-grow"></div>
-        <div class="flex justify-center py-5 items-center">
+        <!--TODO hard code modify after year-->
+        <div class="flex justify-center py-5 items-center" :class="{'mb-40': !isInConferenceMain}">
           <div class="button-content flex h-12 items-center z-10">
             <a-button shape="circle" icon="video-camera"
                       class="w-12 h-12 text-xl text-white mx-2"
@@ -88,8 +89,8 @@ export default {
 
     return {
       tabList,
-      showHeader    : true,
-      showMorePanel : false,
+      isInConferenceMain : true,
+      showMorePanel      : false,
     };
   },
   components : {
@@ -114,7 +115,7 @@ export default {
   watch : {
     $route : {
       handler(val) {
-        this.showHeader = val.path === CONFERENCE.CONFERENCE_MAIN;
+        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
       },
       immediate : true,
     },
