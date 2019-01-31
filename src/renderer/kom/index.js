@@ -19,6 +19,8 @@ import device from './setting/device';
 import state from './state';
 //
 import middles from './middle';
+// conference
+import chat from './conference/chat';
 
 Vue.use(Vuem);
 
@@ -52,6 +54,7 @@ const data = {
   sys,
   state,
   storage,
+  chat,
   setting : {
     $selfValue : setting,
     call,

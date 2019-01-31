@@ -38,8 +38,8 @@
             <span class="mx-3">邮箱</span>
             <span>{{user.email || '暂无邮箱'}}</span>
           </div>
-          <div class="mt-3 flex leading-tight items-center">
-            <a-icon type="home"></a-icon>
+          <div class="mt-3 flex leading-tight items-start">
+            <a-icon type="home" class="leading-tight"></a-icon>
             <span class="mx-3 whitespace-no-wrap">部门</span>
             <a class="text-indigo hover:underline"
                @click="clickDept(user.parent.fullPath)">{{user.parent.fullPath | fullName}}</a>

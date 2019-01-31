@@ -65,10 +65,8 @@ export default {
       }
     },
     initStream() {
-      if (this.videoStream) {
-        if (!this.videoElement) this.onVideoStreamChanged(this.videoStream);
-        
-        return;
+      if (this.videoStream && !this.videoElement) {
+        this.onVideoStreamChanged(this.videoStream);
       }
       switch (this.source) {
         case 'local':

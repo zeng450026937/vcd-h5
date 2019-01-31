@@ -2,9 +2,11 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full">
       <div class="flex flex-col h-full">
-        <div v-if="showHeader" class="header flex flex-col h-12 dragable z-10">
+        <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
           <div class="flex items-center h-full text-white self-end px-4 no-dragable">
             <a-icon type="fullscreen" class="cursor-pointer hover:text-indigo"/>
+            <a-icon type="user-add" class="ml-6 cursor-pointer hover:text-indigo-light"
+                    @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
               <a-icon :key="index" :type="tab.icon"
                       class="ml-6 cursor-pointer hover:text-indigo-light"
@@ -13,7 +15,8 @@
           </div>
         </div>
         <div class="flex flex-grow"></div>
-        <div class="flex justify-center py-5 items-center">
+        <!--TODO hard code modify after year-->
+        <div class="flex justify-center py-5 items-center" :class="{'mb-40': !isInConferenceMain}">
           <div class="button-content flex h-12 items-center z-10">
             <a-button shape="circle" icon="video-camera"
                       class="w-12 h-12 text-xl text-white mx-2"
@@ -50,7 +53,7 @@
             </a-popover>
             <a-button shape="circle" icon="export"
                       class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
-                      @click="leaveConference"
+                      @click="showLeaveModal"
             ></a-button>
           </div>
         </div>
@@ -62,6 +65,8 @@
         <conference-local-video/>
       </div>
       <conference-notice/>
+      <conference-inviting-modal ref="invitingModal"/>
+      <conference-leaving-modal ref="leavingModal"/>
     </div>
   </a-layout>
 </template>
@@ -70,13 +75,15 @@
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
+import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
+import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
   name : 'ConferenceContent',
   data() {
     const tabList = [
-      { icon: 'user-add', comp: 'TabInviting' },
+      // { icon: 'user-add', comp: 'TabInviting' },
       { icon: 'team', comp: 'TabMemberView' },
       { icon: 'message', comp: 'TabChatting' },
       { icon: 'setting', comp: 'TabSetting' },
@@ -84,29 +91,35 @@ export default {
 
     return {
       tabList,
-      showHeader    : true,
-      showMorePanel : false,
+      isInConferenceMain : true,
+      showMorePanel      : false,
     };
   },
   components : {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
     ConferenceNotice,
+    ConferenceInvitingModal,
+    ConferenceLeavingModal,
   },
   mounted() {
   },
   methods : {
+    showInviteModal() {
+      this.$refs.invitingModal.visible = true;
+    },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
     },
-    leaveConference() {
-      this.$rtc.conference.leave();
+    showLeaveModal() {
+      this.$refs.leavingModal.visible = true;
+      // this.$rtc.conference.leave();
     },
   },
   watch : {
     $route : {
       handler(val) {
-        this.showHeader = val.path === CONFERENCE.CONFERENCE_MAIN;
+        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
       },
       immediate : true,
     },

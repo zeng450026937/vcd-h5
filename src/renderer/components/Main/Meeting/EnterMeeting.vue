@@ -6,8 +6,8 @@
         <app-header bg-color="indigo-darker"/>
       </div>
     </div>
-    <div class="flex justify-center h-full">
-      <div style="width: 480px" class="flex flex-col" v-if="!showSetting">
+    <div class="flex justify-center items-center h-full">
+      <div style="width: 480px;height: 506px;" class="flex flex-col" v-if="!showSetting">
         <div style="height: 270px" class="relative flex">
           <video-view class="w-full h-full bg-white" object-fit="cover"/>
           <div class="flex self-end w-full justify-center">
@@ -28,8 +28,8 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-center" style="background-color: #ffffff0a">
-          <div class="w-1/2 mt-5">
+        <div class="flex flex-col items-center px-24" style="background-color: #ffffff0a">
+          <div class="mt-5 w-full">
             <a-input
                 v-model="meetingInfo.number"
                 placeholder='Meeting ID'
@@ -38,7 +38,7 @@
             </a-input>
           </div>
 
-          <div class="w-1/2 mt-5">
+          <div class="mt-5 w-full">
             <a-input
                 v-model="meetingInfo.pin"
                 placeholder='Password(Optional)'
@@ -47,7 +47,7 @@
               <a-icon slot="prefix" type='lock' class="text-grey-dark"/>
             </a-input>
           </div>
-          <div class="w-1/2 mt-5">
+          <div class="mt-5 w-full">
             <a-input
                 v-model="meetingInfo.server"
                 placeholder='Server address'
@@ -55,14 +55,16 @@
               <a-icon slot="prefix" type='hdd' class="text-grey-dark"/>
             </a-input>
           </div>
-          <a-button type="primary" class="mt-8 mb-5 w-1/2" @click="enterMeeting">立即加入</a-button>
+          <a-button type="primary" class="mt-6 mb-5" block @click="enterMeeting">立即加入</a-button>
         </div>
       </div>
-      <div style="width: 480px;background-color: #ffffff0a"
-           class="flex flex-col mb-9" v-else>
-        <media-content class="mt-10"/>
+      <div style="width: 480px;height: 506px;background-color: #ffffff0a"
+           class="flex flex-col mb-9 justify-center" v-else>
+        <div class="mt-4 px-20">
+          <media-content/>
+        </div>
         <div class="flex self-end w-full justify-center">
-          <div class="flex mb-5">
+          <div class="flex mt-4">
             <a-button type="primary">确定</a-button>
             <a-button class="ml-4" @click="showSetting = false">取消</a-button>
           </div>

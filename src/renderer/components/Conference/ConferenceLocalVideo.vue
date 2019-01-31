@@ -8,8 +8,9 @@
       <div class="video-controls group-hover:opacity-100"
            :class="{'opacity-0': videoCursor !== 0}">
         <div class="flex px-4" :class="{[`pt-${videoCursor === 0 ? 1 : 3}`]: true}">
-          <a-icon v-if="videoCursor !== 0" type="fullscreen" class="text-xl text-white" @click="switchShrinkOrExpand"/>
-          <a-icon type="down-square" class="text-xl text-white ml-4" @click="switchMaxOrMin"/>
+          <a-icon v-if="videoCursor !== 0" type="fullscreen" class="text-base text-white"
+                  @click="switchShrinkOrExpand"/>
+          <a-icon type="down-square" class="text-base text-white ml-4" @click="switchMaxOrMin"/>
         </div>
       </div>
       <div v-if="videoCursor === 0"

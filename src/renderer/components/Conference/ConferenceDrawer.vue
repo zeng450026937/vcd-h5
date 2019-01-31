@@ -1,6 +1,6 @@
 <template>
   <div id="conference-drawer"
-            class="shadow h-full"
+            class="shadow h-full bg-white"
             style="width: 280px">
     <div class="flex flex-col h-full">
       <div class="h-10">
@@ -10,6 +10,9 @@
                     @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
+            <a-icon type="user-add"
+                    class="ml-6 cursor-pointer hover:text-indigo-light"
+                    @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
               <a-icon :key="index" :type="tab.icon"
                       class="ml-6 cursor-pointer"
@@ -28,7 +31,7 @@
 </template>
 
 <script>
-import TabInviting from './TabInviting.vue';
+import TabLockConference from './TabLockConference.vue';
 import TabMemberView from './TabMemberView.vue';
 import TabChatting from './TabChatting.vue';
 import TabSetting from './TabSetting.vue';
@@ -38,14 +41,14 @@ import { CONFERENCE } from '../../router/constants';
 export default {
   name       : 'ConferenceDrawer',
   components : {
-    TabInviting,
+    TabLockConference,
     TabMemberView,
     TabChatting,
     TabSetting,
   },
   data() {
     const tabList = [
-      { icon: 'user-add', is: 'TabInviting' },
+      { icon: 'lock', is: 'TabLockConference' },
       { icon: 'team', is: 'TabMemberView' },
       { icon: 'message', is: 'TabChatting' },
       { icon: 'setting', is: 'TabSetting' },
@@ -64,6 +67,11 @@ export default {
   mounted() {
   },
   methods : {
+    showInviteModal() {
+      // FIXME ugly way
+      this.$parent.$children[0].$refs.invitingModal.visible = true;
+      // console.warn(this.$refs);
+    },
     closeDrawer() {
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
     },
