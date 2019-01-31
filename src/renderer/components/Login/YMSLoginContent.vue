@@ -1,68 +1,81 @@
 <template>
-  <a-layout id="yms-login" class="col-flex justify-center items-center bg-transparent">
-    <div class="flex flex-grow"></div>
-    <div class="top text-center">
-      <div class="header">
-        <span class="text-4xl font-semibold">Yealink VCD</span>
-      </div>
-      <div class="mt-4 text-grey-darker">登录获得更佳体验</div>
-    </div>
-    <div style="width: 368px;" class="mt-6">
-      <a-form @submit="handleLogin" :autoFormCreate="(form)=>{this.form = form}">
-        <a-form-item
-            fieldDecoratorId="account">
-          <a-auto-complete
-              class="certain-category-search w-full"
-              :dropdownMatchSelectWidth="false"
-              size="large"
-              optionLabelProp="value"
-              @select="onAccountSelect"
-              @search="handleSearch"
-          >
-            <template slot="dataSource">
-              <a-select-option v-for="item in searchResult" :key="item.account" :value="item.account" class="group">
-                <div class="flex items-center px-2 py-2">
-                  <span class="certain-search-item-count">{{item.account}}</span>
-                  <div class="flex flex-grow"></div>
-                  <a-icon type="close" class="flex text-red opacity-0 group-hover:opacity-100"
-                          @click.stop="deleteAccount(item)"/>
-                </div>
-              </a-select-option>
-            </template>
-            <a-input placeholder='电话或电子邮件' size="large" >
-              <a-icon slot="prefix" type="user"/>
-            </a-input>
-          </a-auto-complete>
-        </a-form-item>
-        <a-form-item
-            fieldDecoratorId="pin">
-          <a-input type='password' placeholder='密码' size="large">
-            <a-icon slot="prefix" type='lock'/>
-          </a-input>
-        </a-form-item>
-        <a-form-item
-            fieldDecoratorId="server">
-          <a-input placeholder='服务器地址' size="large">
-            <a-icon slot="prefix" type='cloud' />
-          </a-input>
-        </a-form-item>
-        <div class="flex justify-between">
-          <a-checkbox>记住密码</a-checkbox>
-          <a-checkbox>自动登录</a-checkbox>
+  <a-layout id="yms-login" class="h-full bg-transparent">
+    <div class="flex flex-col items-center justify-center h-full">
+      <div class="flex flex-col bg-white shadow" style="width: 480px;height: 538px;">
+        <div class="flex items-center justify-center w-full bg-indigo" style="height: 160px;">
+          <span class="text-4xl font-semibold text-white">Yealink</span>
         </div>
-        <a-form-item class="mt-6 mb-4">
-          <a-button size="large" type="primary" htmlType="submit" block>登录</a-button>
-        </a-form-item>
-        <a-form-item>
-          <a-button size="large" @click="joinMeeting" block>加入会议</a-button>
-        </a-form-item>
-      </a-form>
-    </div>
-    <div class="flex flex-grow"></div>
-    <div class="flex mb-2">
-      <span class="cursor-pointer">忘记密码</span>
-      <span class="cursor-pointer mx-3" @click="registerAccount">注册账号</span>
-      <span class="cursor-pointer" @click="openSetting">登录设置</span>
+        <div class="flex flex-col pt-10 px-24">
+          <a-form @submit="handleLogin" :autoFormCreate="(form)=>{this.form = form}">
+            <a-form-item
+                fieldDecoratorId="account">
+              <a-auto-complete
+                  class="certain-category-search w-full"
+                  :dropdownMatchSelectWidth="false"
+                  optionLabelProp="value"
+                  @select="onAccountSelect"
+                  @search="handleSearch"
+              >
+                <template slot="dataSource">
+                  <a-select-option v-for="item in searchResult" :key="item.account" :value="item.account" class="group">
+                    <div class="flex items-center px-2 py-2">
+                      <span class="certain-search-item-count">{{item.account}}</span>
+                      <div class="flex flex-grow"></div>
+                      <a-icon type="close" class="flex text-red opacity-0 group-hover:opacity-100"
+                              @click.stop="deleteAccount(item)"/>
+                    </div>
+                  </a-select-option>
+                </template>
+                <a-input placeholder='电话或电子邮件'>
+                  <a-icon slot="prefix" type="user"/>
+                </a-input>
+              </a-auto-complete>
+            </a-form-item>
+            <a-form-item
+                fieldDecoratorId="pin">
+              <a-input type='password' placeholder='密码'>
+                <a-icon slot="prefix" type='lock'/>
+              </a-input>
+            </a-form-item>
+            <a-form-item
+                fieldDecoratorId="server"
+                class="mb-2">
+              <a-input placeholder='服务器地址'>
+                <a-icon slot="prefix" type='hdd' />
+              </a-input>
+            </a-form-item>
+            <div class="flex justify-between">
+              <a-checkbox>记住密码</a-checkbox>
+              <a-checkbox>自动登录</a-checkbox>
+            </div>
+            <a-form-item class="mt-9 mb-0">
+              <div class="flex">
+                <div class="w-1/2 mr-2">
+                  <a-button @click="joinMeeting" block>加入会议</a-button>
+                </div>
+                <div class="w-1/2 ml-2">
+                  <a-button type="primary" htmlType="submit" block>登录</a-button>
+                </div>
+              </div>
+            </a-form-item>
+          </a-form>
+          <div class="mt-5 text-xs text-center text-black-lightest">
+            <span class="cursor-pointer leading-tight">忘记密码</span>
+            <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+            <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
+            <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+            <span class="cursor-pointer leading-tight" @click="openSetting">登录设置</span>
+          </div>
+          <div>
+            <p class="text-xs text-center leading-tight mt-5">
+              点击登录则代表您同意<span class="text-indigo">《用户协议》</span>和<span class="text-indigo">《隐私政策》</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="flex mt-4 items-center">
+        <p class="text-xs text-white leading-tight">Copyright © 2018 Yealink Inc. All rights reserved.</p>
+      </div>
     </div>
     <yms-login-content-drawer ref="loginDrawer"/>
   </a-layout>
@@ -147,7 +160,10 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
   #yms-login {
+    .ant-form-item{
+      margin-bottom: 12px;
+    }
   }
 </style>
