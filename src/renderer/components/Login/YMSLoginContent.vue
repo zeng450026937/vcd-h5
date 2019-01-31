@@ -85,6 +85,7 @@
 
 import { cloneDeep, debounce } from 'lodash';
 import YmsLoginContentDrawer from './YMSLoginContentDrawer.vue';
+import { LOGIN } from '../../router/constants';
 
 export default {
   name       : 'YMSLogin',
@@ -131,7 +132,7 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
-            console.warn(this.$refs.loginDrawer)
+            console.warn(this.$refs.loginDrawer);
             const loginData = Object.assign({}, values, {
               proxy     : this.$refs.loginDrawer.proxy,
               proxyPort : 5060,
@@ -148,6 +149,7 @@ export default {
     registerAccount() {
     },
     joinMeeting() {
+      this.$router.push(LOGIN.YMS_MEETING);
     },
     deleteAccount(val) {
       this.$storage.deleteItem('ACCOUNT_LIST', val.account, 'account');

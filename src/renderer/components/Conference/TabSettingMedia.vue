@@ -11,7 +11,7 @@
           >{{videoInput.label}}
           </a-select-option>
         </a-select>
-        <div class="mt-2 relative">
+        <div v-if="showVideo" class="mt-2 relative">
           <video-view class="w-full h-full bg-white" position="relative" object-fit="cover"/>
         </div>
       </div>
@@ -27,7 +27,7 @@
           </a-select-option>
         </a-select>
         <a-slider :defaultValue="30" class="my-0 mt-1 mx-0 dragable"/>
-        <span class="text-xs text-grey-darkest">麦克风测试</span>
+        <span class="test-mic-text text-xs text-grey-darkest">麦克风测试</span>
       </div>
 
       <div class="flex flex-col mt-5">
@@ -42,8 +42,8 @@
           </a-select-option>
         </a-select>
         <div class="mt-2 flex items-center">
-          <a-icon type="play-circle" class="text-indigo"/>
-          <span class="ml-1 text-xs text-grey-darkest">播放测试音频</span>
+          <a-icon type="play-circle" class="test-audio-text text-indigo"/>
+          <span class="test-audio-text ml-1 text-xs text-grey-darkest">播放测试音频</span>
         </div>
       </div>
       <a-button type="primary" block class="mt-5">保存</a-button>
@@ -58,6 +58,12 @@ export default {
   name       : 'TabSettingMedia',
   components : {
     VideoView,
+  },
+  props : {
+    showVideo : {
+      type    : Boolean,
+      default : true,
+    },
   },
   computed : {
     videoInput : {
