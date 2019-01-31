@@ -1,6 +1,6 @@
 <template>
   <div id="conference-drawer"
-            class="shadow h-full"
+            class="shadow h-full bg-white"
             style="width: 280px">
     <div class="flex flex-col h-full">
       <div class="h-10">
