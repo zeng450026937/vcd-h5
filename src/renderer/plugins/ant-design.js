@@ -6,7 +6,7 @@ import Antd, { Icon } from 'ant-design-vue';
 const AIcon = Icon.createFromIconfontCN({
   scriptUrl : '//at.alicdn.com/t/font_1011898_736f1lugy5q.js', // 在 iconfont.cn 上生成
 });
-// Example: -> <v-icon slot="prefix" type="icon-bendilianxiren"/>
+// Example: -> <ad-icon slot="prefix" type="icon-bendilianxiren"/>
 
 Vue.use(Antd);
 Vue.component('ad-icon', AIcon);
