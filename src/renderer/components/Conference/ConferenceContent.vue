@@ -53,7 +53,7 @@
             </a-popover>
             <a-button shape="circle" icon="export"
                       class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
-                      @click="leaveConference"
+                      @click="showLeaveModal"
             ></a-button>
           </div>
         </div>
@@ -66,6 +66,7 @@
       </div>
       <conference-notice/>
       <conference-inviting-modal ref="invitingModal"/>
+      <conference-leaving-modal ref="leavingModal"/>
     </div>
   </a-layout>
 </template>
@@ -75,6 +76,7 @@ import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
+import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
@@ -98,6 +100,7 @@ export default {
     ConferenceLocalVideo,
     ConferenceNotice,
     ConferenceInvitingModal,
+    ConferenceLeavingModal,
   },
   mounted() {
   },
@@ -108,8 +111,9 @@ export default {
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
     },
-    leaveConference() {
-      this.$rtc.conference.leave();
+    showLeaveModal() {
+      this.$refs.leavingModal.visible = true;
+      // this.$rtc.conference.leave();
     },
   },
   watch : {
