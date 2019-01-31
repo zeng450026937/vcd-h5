@@ -17,9 +17,9 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <div class="m-4 h-full bg-white">
+      <div class="flex m-4 h-full bg-white">
         <a-table align="center"
-                 class="px-1 bg-white h-full"
+                 class="px-1 bg-white h-full w-full"
                  :columns="recordColumns"
                  :dataSource="recordList"
         >

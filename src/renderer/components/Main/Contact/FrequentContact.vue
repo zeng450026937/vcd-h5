@@ -103,7 +103,7 @@
 
           </div>
           <div>
-            <div class="flex h-14 border-t justify-center">
+            <div class="flex h-12 border-t justify-center items-center">
               <a-button type="primary" class="mx-2" @click="ensure">确定</a-button>
               <a-button class="mx-2" @click="showDrawer = false">取消</a-button>
             </div>
