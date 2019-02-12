@@ -12,7 +12,7 @@
              }"
              @click="clickCalendar(event)">
           <div class="text-sm truncate">{{event.subject}}</div>
-          <div class="mt-3 text-sm truncate">ID: {{event.conferenceNumber}}</div>
+          <div class="mt-3 text-xs truncate">ID: {{event.conferenceNumber}}</div>
           <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.expiryTime}}</div>
         </div>
       </div>

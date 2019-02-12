@@ -12,13 +12,16 @@
       </div>
       <a-divider class="my-0"/>
       <div class="h-full m-4 bg-white flex items-center">
-        <div class="w-1/2 h-full flex flex-col p-10">
-          <a-input defaultValue="号码" v-model="callNumber">
-            <a-icon slot="suffix"
-                    type="close"
-                    class="text-sm text-grey cursor-pointer hover:text-red"
-                    @click="callNumber = ''"/>
-          </a-input>
+        <div class="w-2/5 h-full flex flex-col p-10">
+          <div class="flex items-center">
+            <a-input defaultValue="号码" v-model="callNumber">
+              <a-iconfont slot="suffix"
+                          type="icon-guanbi"
+                          class="text-sm text-grey cursor-pointer hover:text-red"
+                          @click="callNumber = ''"/>
+            </a-input>
+            <a-iconfont type="icon-huishan" class="text-2xl ml-3"/>
+          </div>
           <span class="text-indigo cursor-pointer text-center text-xs mt-3"
                 @click="$refs.contactDrawer.visible = true">添加为本地联系人</span>
           <div class="flex flex-wrap mt-3">
@@ -36,12 +39,16 @@
             </div>
           </div>
           <div class="flex mt-8 w-full">
-            <a-button type="primary" icon="video-camera" class="w-1/2"/>
-            <a-button type="primary" icon="phone" class="ml-4 w-1/2"/>
+            <a-button type="primary" class="w-1/2">
+              <a-iconfont type="icon-shipin"/>
+            </a-button>
+            <a-button type="primary" class="ml-4 w-1/2">
+              <a-iconfont type="icon-yuyin"/>
+            </a-button>
           </div>
         </div>
         <a-divider type="vertical" class="h-full mx-0"/>
-        <div class="w-1/2 h-full">
+        <div class="w-3/5 h-full">
           <div class="h-full flex flex-col">
             <div class="mx-2 my-3">拨号搜素结果（6）</div>
             <a-divider class="my-0"/>
@@ -59,13 +66,13 @@
                   </div>
                   <div class="flex flex-grow"></div>
                   <div class="flex">
-                    <a-icon class="opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
+                    <a-iconfont class="opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
                             theme="filled"
-                            type="video-camera"></a-icon>
-                    <a-icon class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
+                            type="video-camera"></a-iconfont>
+                    <a-iconfont class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
                             theme="filled"
-                            type="phone"></a-icon>
-                    <a-icon type="ellipsis"
+                            type="phone"></a-iconfont>
+                    <a-iconfont type="ellipsis"
                             class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"/>
                   </div>
                 </div>

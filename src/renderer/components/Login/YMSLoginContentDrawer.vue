@@ -13,12 +13,10 @@
           <div class="flex h-full flex-col px-5">
             <span class="mb-3 leading-normal mt-2">代理服务器设置</span>
             <a-input v-model="proxy" placeholder='地址'>
-              <a-icon slot="prefix" type='global'/>
             </a-input>
             <div class="mt-4"></div>
 
             <a-input v-model="proxyPort" placeholder='端口'>
-              <a-icon slot="prefix" type='api'/>
             </a-input>
             <div class="flex mt-10">
               <a-button class='w-1/2 mr-1'

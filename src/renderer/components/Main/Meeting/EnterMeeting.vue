@@ -13,18 +13,24 @@
           <div class="flex self-end w-full justify-center">
             <div class="flex mb-4">
               <a-button type="primary" shape="circle"
-                        size="large" icon="video-camera"
+                        size="large"
                         class="w-12 h-12 text-xl bg-grey-darkest text-white"
-              ></a-button>
+              >
+                <a-iconfont type="icon-shexiangtou"/>
+              </a-button>
               <a-button type="primary" shape="circle"
-                        size="large" icon="phone"
+                        size="large"
                         class="w-12 h-12 text-xl bg-grey-darkest text-white mx-4"
-              ></a-button>
+              >
+                <a-iconfont type="icon-maikefeng"/>
+              </a-button>
               <a-button type="primary" shape="circle"
-                        size="large" icon="setting"
+                        size="large"
                         class="w-12 h-12 text-xl bg-grey-darkest text-white"
                         @click="showSetting = true"
-              ></a-button>
+              >
+                <a-iconfont type="icon-kongzhi"/>
+              </a-button>
             </div>
           </div>
         </div>
@@ -34,7 +40,7 @@
                 v-model="meetingInfo.number"
                 placeholder='Meeting ID'
             >
-              <a-icon slot="prefix" type='team' class="text-grey-dark"/>
+              <a-iconfont slot="prefix" type='icon-ID' class="text-grey-dark"/>
             </a-input>
           </div>
 
@@ -44,7 +50,7 @@
                 placeholder='Password(Optional)'
                 type="password"
             >
-              <a-icon slot="prefix" type='lock' class="text-grey-dark"/>
+              <a-iconfont slot="prefix" type='icon-mima' class="text-grey-dark"/>
             </a-input>
           </div>
           <div class="mt-5 w-full">
@@ -52,7 +58,7 @@
                 v-model="meetingInfo.server"
                 placeholder='Server address'
             >
-              <a-icon slot="prefix" type='hdd' class="text-grey-dark"/>
+              <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-grey-dark"/>
             </a-input>
           </div>
           <a-button type="primary" class="mt-6 mb-5" block @click="enterMeeting">立即加入</a-button>

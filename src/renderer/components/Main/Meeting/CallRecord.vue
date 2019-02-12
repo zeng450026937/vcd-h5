@@ -23,7 +23,7 @@
                  :columns="recordColumns"
                  :dataSource="recordList"
         >
-          <!--<span slot="titleLastTime">持续时间 <a-icon type="clock-circle" /></span>-->
+          <!--<span slot="titleLastTime">持续时间 <a-iconfont type="clock-circle" /></span>-->
           <div class="flex items-center" slot="name" slot-scope="text, record">
             <div class="cursor-pointer ml-4">
               <a-avatar v-if="record.type.startsWith('audio')" class="bg-indigo-dark">{{text.substr(-2,2)}}</a-avatar>
@@ -35,18 +35,18 @@
           <div class="flex items-center"
                slot="type" slot-scope="text"
                :class="text|typeFilter|klass">
-            <a-icon :type='text|typeFilter|icon'
+            <a-iconfont :type='text|typeFilter|icon'
                     class="text-sm"
                     theme="filled"/>
             <span class="ml-2 text-xs">{{text|typeFilter|text}}</span>
           </div>
 
           <div class="flex justify-center text-sm" slot="operation" slot-scope="text, record">
-            <a-icon type='video-camera' theme="filled"
+            <a-iconfont type='icon-shipin'
                     class="text-indigo cursor-pointer hover:text-blue"/>
-            <a-icon type='phone' theme="filled"
+            <a-iconfont type='icon-yuyin'
                     class="text-indigo cursor-pointer hover:text-blue mx-5"/>
-            <a-icon type='right'
+            <a-iconfont type='icon-right'
                     class="text-indigo cursor-pointer hover:text-blue"
                     @click="clickMore"/>
           </div>
@@ -159,32 +159,32 @@ export default {
     typeFilter(type) {
       const typeMap = {
         'video-miss' : {
-          icon  : 'video-camera',
+          icon  : 'icon-shipin',
           klass : { 'text-red': true },
           text  : '未接',
         },
         'audio-miss' : {
-          icon  : 'phone',
+          icon  : 'icon-yuyin',
           klass : { 'text-red': true },
           text  : '未接',
         },
         'audio-out' : {
-          icon  : 'phone',
+          icon  : 'icon-yuyinhuchu',
           klass : { 'text-blue': true },
           text  : '呼出',
         },
         'video-out' : {
-          icon  : 'video-camera',
+          icon  : 'icon-shipinhuchu',
           klass : { 'text-blue': true },
           text  : '呼出',
         },
         'audio-in' : {
-          icon  : 'phone',
+          icon  : 'icon-yuyinhuru',
           klass : { 'text-blue': true },
           text  : '呼入',
         },
         'video-in' : {
-          icon  : 'video-camera',
+          icon  : 'icon-shipinhuru',
           klass : { 'text-blue': true },
           text  : '呼入',
         },

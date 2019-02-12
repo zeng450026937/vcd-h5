@@ -4,7 +4,7 @@
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <a-icon  type="left"
+            <a-iconfont  type="left"
                      class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
                      @click="goBack"/>
             <span>通话详情</span>
@@ -73,13 +73,13 @@
 
         <div class="flex justify-center py-2 border-t w-full">
           <a-button class="ml-4"
-                    type="primary"
-                    icon="video-camera">
+                    type="primary">
+            <a-iconfont type="icon-shipin"/>
             视频通话
           </a-button>
           <a-button class="ml-4"
-                    type="primary"
-                    icon="phone">
+                    type="primary">
+            <a-iconfont type="icon-yuyin"/>
             音频通话
           </a-button>
         </div>

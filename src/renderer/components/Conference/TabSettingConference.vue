@@ -5,13 +5,13 @@
         <span class="text-sm leading-tight">画面布局</span>
         <div class="flex mt-3 justify-between px-1">
           <div class="layout layout-one-more">
-
+            <a-iconfont type="icon-n"/>
           </div>
           <div class="layout layout-average">
-
+            <a-iconfont type="icon-dengfen" />
           </div>
           <div class="layout layout-one">
-
+            <a-iconfont type="icon-danfangquanping" />
           </div>
         </div>
       </div>
@@ -35,8 +35,15 @@ export default {
     display: flex;
     width: 64px;
     height: 36px;
-    background-color: pink;
     cursor: pointer;
+    .anticon {
+      width: 100%;
+      color: #999999;
+      svg{
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 }
 </style>

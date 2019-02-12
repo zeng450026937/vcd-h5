@@ -5,11 +5,11 @@
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <a-icon  v-if="!selectedGroup.isRoot" type="left"
+            <a-iconfont  v-if="!selectedGroup.isRoot" type="left"
                      class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
                      @click="goBack"/>
             <span>{{selectedGroup.name}}</span>
-            <a-icon v-if="selectedGroup.isRoot"
+            <a-iconfont v-if="selectedGroup.isRoot"
                     class="ml-4 text-indigo cursor-pointer no-dragable"
                     type="folder-add"
                     theme="filled" @click="addGroup"/>
@@ -36,16 +36,16 @@
             <a-dropdown slot-scope="{item}"
                         slot="more"
                         :trigger="['click']">
-              <a-icon type="ellipsis"
+              <a-iconfont type="icon-gengduo"
                       class="mr-2 text-indigo cursor-pointer text-sm"
                       @click.stop="moreOption(item)"/>
               <a-menu slot="overlay" v-if="item.isGroup">
                 <a-menu-item @click="editGroup(item)">
-                  <a-icon type="edit" />
+                  <a-iconfont type="edit" />
                   <span>编辑分组</span>
                 </a-menu-item>
                 <a-menu-item @click="deleteGroup(item)">
-                  <a-icon type="delete" />
+                  <a-iconfont type="delete" />
                   <span>删除分组</span>
                 </a-menu-item>
               </a-menu>
@@ -78,7 +78,7 @@
               </div>
               <div class="flex w-1/2">
                 <div class="flex w-1/6 justify-center items-center">
-                  <a-icon type="right" class="text-grey text-2xl cursor-pointer"/>
+                  <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
                 </div>
                 <div class="w-5/6 shadow-md flex flex-col">
                   <div class="border-b">

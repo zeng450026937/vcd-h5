@@ -3,20 +3,21 @@
     <div class="relative h-full w-full">
       <div class="flex flex-col h-full">
         <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
-          <div class="flex items-center h-full text-white self-end px-4 no-dragable">
-            <a-icon type="fullscreen" class="cursor-pointer hover:text-indigo"/>
-            <a-icon type="user-add" class="ml-6 cursor-pointer hover:text-indigo-light"
+          <div class="flex items-center h-full text-white self-end px-5 no-dragable">
+            <a-iconfont type="icon-quanping" class="cursor-pointer hover:text-indigo text-base"/>
+            <a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
+            <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo-light text-base"
                     @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
-              <a-icon :key="index" :type="tab.icon"
-                      class="ml-6 cursor-pointer hover:text-indigo-light"
+              <a-iconfont :key="index" :type="tab.icon"
+                      class="ml-5 cursor-pointer hover:text-indigo-light text-base"
                       @click="openDrawer(tab)"/>
             </template>
           </div>
         </div>
         <div class="flex flex-grow"></div>
         <!--TODO hard code modify after year-->
-        <conference-controls/>
+        <conference-controls ref="conferenceControls"/>
       </div>
       <div class="remote-video-content absolute h-full w-full pin-t pin-r">
         <conference-remote-video/>
@@ -40,9 +41,9 @@ export default {
   name : 'ConferenceContent',
   data() {
     const tabList = [
-      { icon: 'team', comp: 'TabMemberView' },
-      { icon: 'message', comp: 'TabChatting' },
-      { icon: 'setting', comp: 'TabSetting' },
+      { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView' },
+      { icon: 'icon-liaotian', comp: 'TabChatting' },
+      { icon: 'icon-kongzhi', comp: 'TabSetting' },
     ];
 
     return {
@@ -60,7 +61,7 @@ export default {
   },
   methods : {
     showInviteModal() {
-      this.$refs.invitingModal.visible = true;
+      this.$refs.conferenceControls.$refs.invitingModal.visible = true;
     },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
