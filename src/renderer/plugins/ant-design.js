@@ -1,9 +1,15 @@
 import Vue from 'vue';
 import '@/renderer/stylus/antd.less';
 import '@/renderer/stylus/tailwind.less';
-import Antd from 'ant-design-vue';
+import Antd, { Icon } from 'ant-design-vue';
+
+const AIcon = Icon.createFromIconfontCN({
+  scriptUrl : '//at.alicdn.com/t/font_1011898_736f1lugy5q.js', // 在 iconfont.cn 上生成
+});
+// Example: -> <ad-icon slot="prefix" type="icon-bendilianxiren"/>
 
 Vue.use(Antd);
+Vue.component('ad-icon', AIcon);
 // import {
 //   Button, Layout, Icon, Tooltip,
 //   Dropdown, Avatar, Spin, AutoComplete, Input,
@@ -28,7 +34,8 @@ Vue.use(Antd);
 // const BreadcrumbItem = Breadcrumb.Item;
 // const FormItem = Form.Item;
 //
-// const components = [ Button, Button.Group, Layout, Icon, Tooltip, Dropdown, Avatar, Spin, AutoComplete, Input,
+// const components = [ Button, Button.Group, Layout, Icon,
+//   Tooltip, Dropdown, Avatar, Spin, AutoComplete, Input,
 //   Menu, MenuItem, MenuDivider, Popover, Badge, Tabs, TabsTabPane, List,
 //   ListItem, ListItemMeta, Tag, Tag.CheckableTag, MenuSubMenu, Row, Col,
 //   Card, CardGrid, CardMeta, DatePicker, RangePicker, Radio, RadioGroup,

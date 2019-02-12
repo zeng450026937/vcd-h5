@@ -2,9 +2,11 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full">
       <div class="flex flex-col h-full">
-        <div v-if="showHeader" class="header flex flex-col h-12 dragable z-10">
+        <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
           <div class="flex items-center h-full text-white self-end px-4 no-dragable">
             <a-icon type="fullscreen" class="cursor-pointer hover:text-indigo"/>
+            <a-icon type="user-add" class="ml-6 cursor-pointer hover:text-indigo-light"
+                    @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
               <a-icon :key="index" :type="tab.icon"
                       class="ml-6 cursor-pointer hover:text-indigo-light"
@@ -13,47 +15,8 @@
           </div>
         </div>
         <div class="flex flex-grow"></div>
-        <div class="flex justify-center py-5 items-center">
-          <div class="button-content flex h-12 items-center z-10">
-            <a-button shape="circle" icon="video-camera"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
-            <a-button shape="circle" icon="phone"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
-            <a-button shape="circle" icon="share-alt"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
-            <a-popover
-                trigger="click"
-                v-model="showMorePanel"
-                overlayClassName="more-panel-popover"
-            >
-              <div slot="content" class="popover-content text-white">
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="phone" theme="filled" class="text-base"/>
-                  <span class="ml-3 text-xs">切换为音频通话</span>
-                </div>
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="appstore" theme="filled" class="text-base"/>
-                  <span class="ml-3 text-xs">拨号版</span>
-                </div>
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="sound" theme="filled" class="text-base"/>
-                  <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
-                </div>
-              </div>
-              <a-button shape="circle" icon="ellipsis"
-                        class="w-12 h-12 text-xl text-white mx-2"
-                        @click="showMorePanel = !showMorePanel"
-              ></a-button>
-            </a-popover>
-            <a-button shape="circle" icon="export"
-                      class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
-                      @click="leaveConference"
-            ></a-button>
-          </div>
-        </div>
+        <!--TODO hard code modify after year-->
+        <conference-controls/>
       </div>
       <div class="remote-video-content absolute h-full w-full pin-t pin-r">
         <conference-remote-video/>
@@ -70,13 +33,13 @@
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
+import ConferenceControls from './ConferenceControls.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
   name : 'ConferenceContent',
   data() {
     const tabList = [
-      { icon: 'user-add', comp: 'TabInviting' },
       { icon: 'team', comp: 'TabMemberView' },
       { icon: 'message', comp: 'TabChatting' },
       { icon: 'setting', comp: 'TabSetting' },
@@ -84,29 +47,29 @@ export default {
 
     return {
       tabList,
-      showHeader    : true,
-      showMorePanel : false,
+      isInConferenceMain : true,
     };
   },
   components : {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
     ConferenceNotice,
+    ConferenceControls,
   },
   mounted() {
   },
   methods : {
+    showInviteModal() {
+      this.$refs.invitingModal.visible = true;
+    },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
-    },
-    leaveConference() {
-      this.$rtc.conference.leave();
     },
   },
   watch : {
     $route : {
       handler(val) {
-        this.showHeader = val.path === CONFERENCE.CONFERENCE_MAIN;
+        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
       },
       immediate : true,
     },

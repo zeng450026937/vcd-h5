@@ -19,7 +19,8 @@
                     class="text-sm text-grey cursor-pointer hover:text-red"
                     @click="callNumber = ''"/>
           </a-input>
-          <span class="text-indigo cursor-pointer text-center text-xs mt-3" @click="showDrawer = true">添加为本地联系人</span>
+          <span class="text-indigo cursor-pointer text-center text-xs mt-3"
+                @click="$refs.contactDrawer.visible = true">添加为本地联系人</span>
           <div class="flex flex-wrap mt-3">
             <div class="my-2 w-1/3 text-center"
                  v-for="n in dialPanel"
@@ -75,74 +76,77 @@
       </div>
     </div>
     <div>
-      <a-drawer
-          title="添加为本地联系人"
-          :closable="false"
-          width=360
-          placement="right"
-          @close="showDrawer = false"
-          :visible="showDrawer"
-          wrapClassName="call-record-info-drawer"
-      >
-        <div class="flex h-full flex-col flex-grow mx-5">
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">姓名</a-col>
-            <a-col :span="20">
-              <a-input
-                  placeholder='姓名'
-              >
-              </a-input>
-            </a-col>
-          </a-row>
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">账号</a-col>
-            <a-col :span="20">
-              <a-input
-                  placeholder='账号'
-              >
-              </a-input>
-            </a-col>
-          </a-row>
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">手机</a-col>
-            <a-col :span="20">
-              <a-input
-                  placeholder='手机'
-              >
-              </a-input>
-            </a-col>
-          </a-row>
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">邮箱</a-col>
-            <a-col :span="20">
-              <a-input
-                  placeholder='邮箱'
-              >
-              </a-input>
-            </a-col>
-          </a-row>
+      <local-contact-drawer ref="contactDrawer"/>
+      <!--<a-drawer-->
+          <!--title="添加为本地联系人"-->
+          <!--:closable="false"-->
+          <!--width=360-->
+          <!--placement="right"-->
+          <!--@close="showDrawer = false"-->
+          <!--:visible="showDrawer"-->
+          <!--wrapClassName="call-record-info-drawer"-->
+      <!--&gt;-->
+        <!--<div class="flex h-full flex-col flex-grow mx-5">-->
+          <!--<a-row class="mt-5 flex items-center">-->
+            <!--<a-col :span="4">姓名</a-col>-->
+            <!--<a-col :span="20">-->
+              <!--<a-input-->
+                  <!--placeholder='姓名'-->
+              <!--&gt;-->
+              <!--</a-input>-->
+            <!--</a-col>-->
+          <!--</a-row>-->
+          <!--<a-row class="mt-5 flex items-center">-->
+            <!--<a-col :span="4">账号</a-col>-->
+            <!--<a-col :span="20">-->
+              <!--<a-input-->
+                  <!--placeholder='账号'-->
+              <!--&gt;-->
+              <!--</a-input>-->
+            <!--</a-col>-->
+          <!--</a-row>-->
+          <!--<a-row class="mt-5 flex items-center">-->
+            <!--<a-col :span="4">手机</a-col>-->
+            <!--<a-col :span="20">-->
+              <!--<a-input-->
+                  <!--placeholder='手机'-->
+              <!--&gt;-->
+              <!--</a-input>-->
+            <!--</a-col>-->
+          <!--</a-row>-->
+          <!--<a-row class="mt-5 flex items-center">-->
+            <!--<a-col :span="4">邮箱</a-col>-->
+            <!--<a-col :span="20">-->
+              <!--<a-input-->
+                  <!--placeholder='邮箱'-->
+              <!--&gt;-->
+              <!--</a-input>-->
+            <!--</a-col>-->
+          <!--</a-row>-->
 
-        </div>
-        <div class="flex h-12 border-t justify-center items-center">
-          <a-button @click="showEditDrawer = false" type="primary">
-            确定
-          </a-button>
-          <a-button @click="showEditDrawer = false" class="ml-4">
-            取消
-          </a-button>
-        </div>
-      </a-drawer>
+        <!--</div>-->
+        <!--<div class="flex h-12 border-t justify-center items-center">-->
+          <!--<a-button @click="showEditDrawer = false" type="primary">-->
+            <!--确定-->
+          <!--</a-button>-->
+          <!--<a-button @click="showEditDrawer = false" class="ml-4">-->
+            <!--取消-->
+          <!--</a-button>-->
+        <!--</div>-->
+      <!--</a-drawer>-->
     </div>
   </a-layout>
 </template>
 
 <script>
 import AppHeader from '../MainHeader.vue';
+import LocalContactDrawer from '../Contact/LocalContactDrawer.vue';
 
 export default {
   name       : 'DialPlate',
   components : {
     AppHeader,
+    LocalContactDrawer,
   },
   data() {
     return {
@@ -161,7 +165,6 @@ export default {
         { num: '#', alpha: '' },
       ],
       callNumber : '',
-      showDrawer : false,
     };
   },
 };

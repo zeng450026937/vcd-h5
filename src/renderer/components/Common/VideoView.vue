@@ -43,7 +43,7 @@ export default {
   },
   computed : {
     videoId() {
-      return `${this.source}-video`;
+      return `${this.source}-video-${Date.now()}`;
     },
     videoStream() {
       const streamMap = {
@@ -65,10 +65,8 @@ export default {
       }
     },
     initStream() {
-      if (this.videoStream) {
-        if (!this.videoElement) this.onVideoStreamChanged(this.videoStream);
-        
-        return;
+      if (this.videoStream && !this.videoElement) {
+        this.onVideoStreamChanged(this.videoStream);
       }
       switch (this.source) {
         case 'local':

@@ -2,8 +2,8 @@
   <div id="conference-header" class="bg-indigo-darker h-9">
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable w-1 mr-12">
-        <a-icon type="safety" class="text-white text-base mr-3"/>
-        <a-icon type="wifi" class="text-white text-base mr-3"/>
+        <a-icon type="safety" class="text-white text-base mr-4"/>
+        <a-icon type="wifi" class="text-white text-base mr-4"/>
         <span class="text-white text-xs leading-tight truncate">{{subject}}（ID：{{conferenceId}}）</span>
       </div>
       <div class="flex items-center">

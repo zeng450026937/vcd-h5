@@ -1,15 +1,15 @@
 <template>
-  <div id="login-header" style="z-index: 10;">
-    <div class="px-2 h-12 select-none">
+  <div id="login-header">
+    <div class="px-2 h-9 select-none">
       <div class="flex flex-row h-full">
-        <div class="flex flex-row items-center flex-no-grow">
-          <a-icon type="cloud" class="text-2xl ml-1"/>
-          <div class="ml-4 text-base">
-            Yealink VC Desktop
+        <div class="flex flex-row items-center text-white flex-no-grow">
+          <!--<a-icon type="cloud" class="text-2xl ml-1"/>-->
+          <div class="ml-4 text-xl font-bold">
+            Yealink
           </div>
         </div>
         <div class="flex-grow dragable"></div>
-        <div class="flex items-center mr-4">
+        <div class="flex items-center mr-4 text-white">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
               <a-menu-item key="cloud" class="py-2 ">云服务版</a-menu-item>
@@ -22,7 +22,7 @@
             </span>
           </a-dropdown>
         </div>
-        <div class="flex flex-row flex-no-grow items-center cursor-pointer">
+        <div class="flex flex-row flex-no-grow items-center cursor-pointer text-white">
 
           <a-dropdown v-model="helpStatus" :trigger="['click']">
             <a-menu slot="overlay" @click.self="handleHelpClick">
@@ -33,11 +33,11 @@
                     class="ant-dropdown-link mx-2 text-base h-full flex items-center"/>
           </a-dropdown>
 
-          <a-icon type="minus" class="text-sm mx-3 text-grey-dark hover:text-indigo no-dragable"
+          <a-icon type="minus" class="text-sm mx-3 hover:text-indigo no-dragable"
                   @click="clickMinimize"/>
-          <a-icon type="border" class="text-sm mx-2 text-grey-dark hover:text-indigo no-dragable"
+          <a-icon type="border" class="text-sm mx-2 hover:text-indigo no-dragable"
                   @click="clickMaximize"/>
-          <a-icon type="close" class="text-sm mx-3 text-grey-dark hover:text-red no-dragable"
+          <a-icon type="close" class="text-sm mx-3 hover:text-red no-dragable"
                   @click="clickClose"/>
         </div>
       </div>
@@ -113,4 +113,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+  #login-header {
+    background-image: linear-gradient(-180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.00) 98%);
+  }
 </style>

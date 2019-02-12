@@ -77,7 +77,7 @@ export default {
   props : {
     type : { // add edit
       type    : String,
-      default : '',
+      default : 'add',
     },
   },
   data() {

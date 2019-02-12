@@ -69,18 +69,18 @@
                                 class="text-indigo cursor-pointer text-sm"/>
                       </div>
                       <template v-if="item.parent.isUser">
-                        <div class="mt-3 ">
+                        <div class="flex items-center mt-3 ">
                           <a-icon type="phone"></a-icon>
                           <span class="mx-3">手机</span>
                           <span>{{item.phone}}</span>
                         </div>
-                        <div class="mt-3">
+                        <div class="flex mt-3 items-center">
                           <a-icon type="mail"></a-icon>
                           <span class="mx-3">邮箱</span>
                           <span>{{item.email || '暂无邮箱'}}</span>
                         </div>
-                        <div class="mt-3 flex">
-                          <a-icon type="home"></a-icon>
+                        <div class="mt-3 flex items-start">
+                          <a-icon type="home" class="leading-tight"></a-icon>
                           <span class="mx-3 whitespace-no-wrap">部门</span>
                           <span class="text-indigo">{{item | fullName}}</span>
                         </div>
