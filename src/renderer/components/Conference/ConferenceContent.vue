@@ -16,47 +16,7 @@
         </div>
         <div class="flex flex-grow"></div>
         <!--TODO hard code modify after year-->
-        <div class="flex justify-center py-5 items-center" :class="{'mb-40': !isInConferenceMain}">
-          <div class="button-content flex h-12 items-center z-10">
-            <a-button shape="circle" icon="video-camera"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
-            <a-button shape="circle" icon="phone"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
-            <a-button shape="circle" icon="share-alt"
-                      class="w-12 h-12 text-xl text-white mx-2"
-            ></a-button>
-            <a-popover
-                trigger="click"
-                v-model="showMorePanel"
-                overlayClassName="more-panel-popover"
-            >
-              <div slot="content" class="popover-content text-white">
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="phone" theme="filled" class="text-base"/>
-                  <span class="ml-3 text-xs">切换为音频通话</span>
-                </div>
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="appstore" theme="filled" class="text-base"/>
-                  <span class="ml-3 text-xs">拨号版</span>
-                </div>
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="sound" theme="filled" class="text-base"/>
-                  <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
-                </div>
-              </div>
-              <a-button shape="circle" icon="ellipsis"
-                        class="w-12 h-12 text-xl text-white mx-2"
-                        @click="showMorePanel = !showMorePanel"
-              ></a-button>
-            </a-popover>
-            <a-button shape="circle" icon="export"
-                      class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
-                      @click="showLeaveModal"
-            ></a-button>
-          </div>
-        </div>
+        <conference-controls/>
       </div>
       <div class="remote-video-content absolute h-full w-full pin-t pin-r">
         <conference-remote-video/>
@@ -65,8 +25,6 @@
         <conference-local-video/>
       </div>
       <conference-notice/>
-      <conference-inviting-modal ref="invitingModal"/>
-      <conference-leaving-modal ref="leavingModal"/>
     </div>
   </a-layout>
 </template>
@@ -75,15 +33,13 @@
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
-import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
-import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
+import ConferenceControls from './ConferenceControls.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
   name : 'ConferenceContent',
   data() {
     const tabList = [
-      // { icon: 'user-add', comp: 'TabInviting' },
       { icon: 'team', comp: 'TabMemberView' },
       { icon: 'message', comp: 'TabChatting' },
       { icon: 'setting', comp: 'TabSetting' },
@@ -92,15 +48,13 @@ export default {
     return {
       tabList,
       isInConferenceMain : true,
-      showMorePanel      : false,
     };
   },
   components : {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
     ConferenceNotice,
-    ConferenceInvitingModal,
-    ConferenceLeavingModal,
+    ConferenceControls,
   },
   mounted() {
   },
@@ -110,10 +64,6 @@ export default {
     },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
-    },
-    showLeaveModal() {
-      this.$refs.leavingModal.visible = true;
-      // this.$rtc.conference.leave();
     },
   },
   watch : {
