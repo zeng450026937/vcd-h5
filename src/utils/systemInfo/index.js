@@ -1,7 +1,14 @@
 const si = require('systeminformation/lib/system');
 
-export default async() => {
-  const info = await si.system().catch((e) => Promise.reject(e));
 
-  return new Promise((resolve) => resolve(info));
+export function system() {
+  return new Promise(async(resolve) => {
+    const info = await si.system();
+
+    resolve(info);
+  });
+}
+
+export default {
+  system,
 };
