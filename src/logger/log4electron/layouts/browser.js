@@ -147,6 +147,7 @@ const browserLayout = (loggingEvent, timezoneOffset) => {
   return {
     templates : templateList,
     params    : paramList,
+    level     : loggingEvent.level.levelContent,
   };
 };
 

@@ -1,9 +1,15 @@
+import loggerDB from '../../../utils/database/loggerDB';
+
 const consoleLog = console.log.bind(console);
 
 function consoleAppender(layout, timezoneOffset) {
   return (loggingEvent) => {
     const result = layout(loggingEvent, timezoneOffset);
 
+    loggerDB.add({
+      timestamp : new Date().valueOf(),
+      result,
+    });
     consoleLog(result.templates.join(''), ...result.params);
   };
 }
