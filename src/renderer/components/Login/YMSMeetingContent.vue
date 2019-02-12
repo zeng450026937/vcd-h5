@@ -3,7 +3,7 @@
     <div class="flex h-full flex-col">
       <div v-if="!isInSetting" class="enter-meeting-content self-end rounded-sm">
         <div class="flex justify-end">
-          <a-icon type='setting' class="text-lg cursor-pointer text-white"
+          <a-iconfont type='icon-kongzhi' class="text-lg cursor-pointer text-white"
                   @click="isInSetting = true"/>
         </div>
         <h2 class="text-white mt-4">加入会议</h2>
@@ -12,14 +12,14 @@
               v-model="meetingData.account"
               placeholder='会议ID'
           >
-            <a-icon slot="prefix" type='team'/>
+            <a-iconfont slot="prefix" type='icon-ID'/>
           </a-input>
-          <div class="mt-6">
+          <div class="mt-5">
             <a-input
                 v-model="meetingData.pin"
                 placeholder='会议密码(选填)'
             >
-              <a-icon slot="prefix" type='lock'/>
+              <a-iconfont slot="prefix" type='icon-mima'/>
             </a-input>
           </div>
           <div class="mt-5">
@@ -27,7 +27,7 @@
                 v-model="meetingData.server"
                 placeholder='服务器'
             >
-              <a-icon slot="prefix" type='cloud'/>
+              <a-iconfont slot="prefix" type='icon-fuwuqi'/>
             </a-input>
           </div>
         </div>
@@ -37,10 +37,10 @@
         </div>
       </div>
       <div v-else class="setting-content self-end rounded-sm">
-        <div class="text-white mt-1 text-xs">
-          <a-icon type="left" class="cursor-pointer" @click="isInSetting = false"/>
+        <div class="text-white">
+          <a-iconfont type="icon-left" class="cursor-pointer text-base" @click="isInSetting = false"/>
         </div>
-        <div class="setting-media-content mt-6">
+        <div class="setting-media-content mt-5">
           <tab-setting-media :show-video="false"/>
         </div>
       </div>
@@ -48,10 +48,13 @@
     </div>
     <div class="flex flex-grow"></div>
     <div class="flex justify-center pb-5">
-      <a-button ghost shape="circle" icon="video-camera" class="text-xl w-12 h-12 mx-4 bg-grey-darker"/>
-      <a-button ghost class="w-12 h-12 text-xl mx-4 bg-grey-darker"
-                shape="circle"
-                icon="phone"/>
+      <a-button ghost shape="circle" class="text-xl w-12 h-12 mx-4 bg-black-lightest">
+        <a-iconfont type="icon-shexiangtou"/>
+      </a-button>
+      <a-button ghost class="w-12 h-12 text-xl mx-4 bg-black-lightest"
+                shape="circle">
+        <a-iconfont type="icon-maikefeng"/>
+      </a-button>
     </div>
   </a-layout>
 </template>
@@ -75,7 +78,7 @@ export default {
         proxy       : '10.86.112.165',
       },
       showProxyItem : false,
-      isInSetting   : true,
+      isInSetting   : false,
       muteAudio     : false,
       muteVideo     : false,
     };
@@ -114,7 +117,7 @@ export default {
 <style lang="less">
   #yms-meeting {
     .enter-meeting-content, .setting-content {
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.65);
       width: 320px;
       height: 420px;
       margin-top: 70px;

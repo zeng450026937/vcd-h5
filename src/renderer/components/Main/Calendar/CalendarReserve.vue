@@ -169,16 +169,20 @@
                     <div class="flex flex-col p-3">
                       <span>点击头像改变参会者权限</span>
                       <div class="mt-3">
-                        <a-avatar size="small" icon="user" class="bg-orange"/>
+                        <a-avatar size="small" class="bg-orange">
+                          <a-iconfont type="icon-ren" />
+                        </a-avatar>
                         <span class="ml-2">访客</span>
                       </div>
                       <div class="mt-2">
-                        <a-avatar size="small" icon="user" class="bg-grey"/>
+                        <a-avatar size="small" class="bg-grey">
+                          <a-iconfont type="icon-ren" />
+                        </a-avatar>
                         <span class="ml-2">访客</span>
                       </div>
                     </div>
                   </template>
-                  <a-icon type="question-circle" class="text-indigo-dark cursor-pointer" theme="filled"/>
+                  <a-iconfont type="icon-tishi" class="text-indigo-dark cursor-pointer"/>
                 </a-popover>
               </div>
             </div>
@@ -232,7 +236,7 @@
               </div>
               <div class="flex w-1/2">
                 <div class="flex w-1/6 justify-center items-center">
-                  <a-icon type="right" class="text-grey text-2xl cursor-pointer"/>
+                  <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
                 </div>
                 <div class="w-5/6 shadow-md flex flex-col">
                   <div class="border-b">

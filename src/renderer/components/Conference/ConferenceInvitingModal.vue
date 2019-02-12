@@ -31,7 +31,7 @@
                             @onCheck="onCheck"></contact-tree>
             </div>
             <div class="flex mx-3 justify-center items-center">
-              <a-icon type="right" class="text-grey text-2xl cursor-pointer"/>
+              <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
             </div>
             <div class="flex w-1/2 bg-white overflow-hidden shadow">
               <div class="w-full flex flex-col">

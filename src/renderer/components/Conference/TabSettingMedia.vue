@@ -2,7 +2,7 @@
   <a-layout id="tab-setting-media" class="bg-white">
     <div class="flex flex-col select-none px-4">
       <div class="flex flex-col">
-        <span>摄像头</span>
+        <span class="leading-tight">摄像头</span>
         <a-select defaultValue="请选择摄像头"
                   v-model="videoInput" class="mt-2">
           <a-select-option v-for="videoInput in videoInputList"
@@ -17,7 +17,7 @@
       </div>
 
       <div class="flex flex-col mt-5">
-        <span>麦克风</span>
+        <span class="leading-normal">麦克风</span>
         <a-select defaultValue="请选择麦克风"
                   v-model="audioInput" class="mt-2">
           <a-select-option v-for="audioInput in audioInputList"
@@ -27,11 +27,11 @@
           </a-select-option>
         </a-select>
         <a-slider :defaultValue="30" class="my-0 mt-1 mx-0 dragable"/>
-        <span class="test-mic-text text-xs text-grey-darkest">麦克风测试</span>
+        <span class="test-mic-text leading-tight text-xs text-grey-darkest">麦克风测试</span>
       </div>
 
       <div class="flex flex-col mt-5">
-        <span>扬声器</span>
+        <span class="leading-normal">扬声器</span>
 
         <a-select defaultValue="请选择扬声器"
                   v-model="audioOutput" class="mt-2">
@@ -42,11 +42,11 @@
           </a-select-option>
         </a-select>
         <div class="mt-2 flex items-center">
-          <a-icon type="play-circle" class="test-audio-text text-indigo"/>
-          <span class="test-audio-text ml-1 text-xs text-grey-darkest">播放测试音频</span>
+          <a-iconfont type="icon-bofang" class="test-audio-text text-indigo text-base"/>
+          <span class="test-audio-text ml-1 text-xs text-grey-darkest leading-tight">播放测试音频</span>
         </div>
       </div>
-      <a-button type="primary" block class="mt-5">保存</a-button>
+      <!--<a-button type="primary" block class="mt-5">保存</a-button>-->
     </div>
   </a-layout>
 </template>

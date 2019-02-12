@@ -12,10 +12,10 @@
       </div>
       <a-divider class="my-0"/>
       <a-row class="flex h-full m-4 shadow">
-        <a-col :span="10" class="h-full overflow-y-auto border-r">
+        <a-col :span="9" class="h-full overflow-y-auto border-r">
           <calendar-list/>
         </a-col>
-        <a-col :span="14" class="h-full overflow-y-auto">
+        <a-col :span="15" class="h-full overflow-y-auto">
           <calendar-info/>
         </a-col>
       </a-row>

@@ -1,5 +1,5 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron';
 
 export function sendWillQuitSync() {
-	ipcRenderer.sendSync('will-quit')
+  ipcRenderer.sendSync('will-quit');
 }

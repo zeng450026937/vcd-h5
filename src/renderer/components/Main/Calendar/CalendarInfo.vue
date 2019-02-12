@@ -7,7 +7,7 @@
             <div class="py-5 border-b">
               <div class="flex items-center">
                 <div class="w-1 text-base text-black flex flex-grow truncate">
-                  <span class="truncate">{{currentEvent.subject}}</span>
+                  <span class="truncate leading-loose">{{currentEvent.subject}}</span>
                 </div>
                 <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2">复制信息</span>
                 <a-popover placement="bottomRight" trigger="click"
@@ -25,10 +25,10 @@
                       </div>
                     </div>
                   </template>
-                  <a-icon type="qrcode" class="ml-3 text-indigo cursor-pointer"/>
+                  <a-iconfont type="icon-erweima" class="ml-3 text-indigo cursor-pointer"/>
                 </a-popover>
               </div>
-              <div class="flex flex-col text-xs mt-4">
+              <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">时间</span>
                   <span>{{currentEvent.startTime}} - {{currentEvent.expiryTime}}</span>
@@ -88,10 +88,11 @@
                       <template slot-scope="{item}">
                         <div class="flex items-center mb-2">
                           <a-avatar size="small"
-                                    icon="user"
-                                    :class="{'bg-orange': item.role === 'organizer'}"/>
-                          <span class="ml-1">参会成员</span>
-                          <span class="ml-1">({{item['display-text']}})</span>
+                                    :class="{'bg-orange': item.role === 'organizer'}">
+                            <a-iconfont type="icon-ren"/>
+                          </a-avatar>
+                          <span class="ml-1 leading-tight">参会成员</span>
+                          <span class="ml-1 leading-tight">({{item['display-text']}})</span>
                         </div>
                       </template>
                     </recycle-scroller>
@@ -104,8 +105,9 @@
       </div>
       <a-divider class="m-0"/>
       <div class="my-2 flex justify-center items-center">
-        <a-button class="w-1/3 mx-2" icon="video-camera" type="primary" @click="enterMeeting">视频加入</a-button>
-        <a-button class="w-1/3 mx-2" icon="phone" type="primary">音频加入</a-button>
+        <a-button class="w-1/3 mx-2" type="primary"
+                  @click="enterMeeting"><a-iconfont type="icon-shipin"/>视频加入</a-button>
+        <a-button class="w-1/3 mx-2" type="primary"><a-iconfont type="icon-yuyin"/>音频加入</a-button>
       </div>
       <div>
       <plain-modal ref="deleteModal"

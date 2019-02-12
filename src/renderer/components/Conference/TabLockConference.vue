@@ -11,7 +11,8 @@
         </a-select>
         <a-radio class="mt-3">受邀成员</a-radio>
       </template>
-      <a-button type="primary" icon="lock" class="mt-16" @click="lockOrUnlockConference">
+      <a-button type="primary" class="mt-16" @click="lockOrUnlockConference">
+        <a-iconfont :type="isConferenceLocked ? 'icon-jiesuo' : 'icon-suoding'"/>
       {{isConferenceLocked ? '解锁会议' : '锁定会议'}}
       </a-button>
     </div>

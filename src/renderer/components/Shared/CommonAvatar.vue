@@ -6,7 +6,7 @@
     <template v-else>
       <a-avatar :icon="icon" :src="image" :shape="shape" :size="size">{{displayName}}</a-avatar>
       <div class="avatar-badge rounded-full flex justify-center items-center" :class="badgeClasses">
-        <a-icon v-if="badgeIcon" :type="badgeIcon" class="text-xs text-white"></a-icon>
+        <a-iconfont v-if="badgeIcon" :type="badgeIcon" class="text-xs text-white"></a-iconfont>
       </div>
     </template>
   </div>

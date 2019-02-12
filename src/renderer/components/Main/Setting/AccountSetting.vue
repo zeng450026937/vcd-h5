@@ -23,7 +23,7 @@
                   class="text-xs leading-tight text-black-lighter whitespace-normal"
               >这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字</span>
             </div>
-            <a-icon type="form" class="ml-2 text-indigo cursor-pointer leading-tight"/>
+            <a-iconfont type="icon-bianji" class="ml-2 text-indigo cursor-pointer text-base"/>
           </div>
         </div>
         <div class="flex flex-grow"></div>
@@ -53,7 +53,7 @@
       <div class="mt-5 leading-normal">
         <span class="opacity-75">企业</span>
         <span class="ml-3">厦门亿联网络技术股份有限公司</span>
-        <a-icon class="ml-3 text-indigo cursor-pointer" type="interation" />
+        <a-iconfont class="ml-3 text-indigo cursor-pointer" type="icon-qiehuan" />
       </div>
       <div class="mt-20">
         <a-button type="primary">编辑</a-button>

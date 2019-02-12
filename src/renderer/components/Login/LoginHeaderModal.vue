@@ -27,7 +27,7 @@
               @change="handleChange"
           >
             <div v-if="fileList.length < 3">
-              <a-icon type="plus" class="text-2xl" />
+              <a-iconfont type="plus" class="text-2xl" />
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>
@@ -83,6 +83,9 @@ export default {
 .login-header-modal {
   display: flex;
   align-items: center;
+  .ant-modal {
+    top: 0 !important;
+  }
   .ant-modal-header {
     padding: 12px 16px;
   }

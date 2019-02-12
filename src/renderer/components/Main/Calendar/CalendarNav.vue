@@ -5,7 +5,7 @@
             v-model="searchText"
             placeholder='搜索联系人'
         >
-          <a-icon slot="suffix" type='search' class="text-grey"/>
+          <a-iconfont slot="suffix" type='icon-sousuo' class="text-lg text-grey"/>
         </a-input>
     </div>
     <div>
@@ -26,7 +26,8 @@
     <div class="flex flex-col items-center mt-4 px-3">
       <a-button type="primary" block
                 class="cursor-pointer h-9"
-                @click="reserveMeeting" icon="schedule">
+                @click="reserveMeeting">
+        <a-iconfont type="icon-yuyuehuiyi"/>
         预约会议
       </a-button>
     </div>

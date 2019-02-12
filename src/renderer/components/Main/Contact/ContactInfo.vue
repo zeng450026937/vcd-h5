@@ -23,24 +23,20 @@
       </div>
       <div class="flex flex-col my-2 text-xs">
         <div class="mt-3 leading-tight">
-          <a-icon type="user"></a-icon>
-          <span class="mx-3 truncate">账号</span>
+          <span class="mr-3 truncate">账号</span>
           <span >{{user.ip || user.account}}</span>
         </div>
         <template v-if="user.parent.isUser">
           <div class="mt-3 leading-tight items-center">
-            <a-icon type="phone"></a-icon>
-            <span class="mx-3">电话</span>
+            <span class="mr-3">电话</span>
             <span>{{user.phone}}</span>
           </div>
           <div class="mt-3 leading-tight items-center">
-            <a-icon type="mail"></a-icon>
-            <span class="mx-3">邮箱</span>
+            <span class="mr-3">邮箱</span>
             <span>{{user.email || '暂无邮箱'}}</span>
           </div>
           <div class="mt-3 flex leading-tight items-start">
-            <a-icon type="home" class="leading-tight"></a-icon>
-            <span class="mx-3 whitespace-no-wrap">部门</span>
+            <span class="mr-3 whitespace-no-wrap">部门</span>
             <a class="text-indigo hover:underline"
                @click="clickDept(user.parent.fullPath)">{{user.parent.fullPath | fullName}}</a>
           </div>

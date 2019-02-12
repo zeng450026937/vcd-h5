@@ -22,7 +22,9 @@
               <a-textarea v-model="message.content" placeholder="请输入您将要发送的消息" class="h-full"/>
             </div>
             <div class="w-1/6 bg-grey-light">
-              <a-button type="primary" class="w-full h-full p-0 text-xs" @click="sendMessage">发送</a-button>
+              <a-button type="primary" class="w-full h-full p-0 text-xs" @click="sendMessage">
+                <a-iconfont type="icon-fasong" class="text-base"/>
+              </a-button>
             </div>
           </div>
         </div>

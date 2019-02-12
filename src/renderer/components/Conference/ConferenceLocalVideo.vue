@@ -3,14 +3,15 @@
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
     <remote-video source="local" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
-      <div class="video-mask group-hover:opacity-100"
-           :class="{'opacity-0': videoCursor !== 0}"></div>
       <div class="video-controls group-hover:opacity-100"
-           :class="{'opacity-0': videoCursor !== 0}">
-        <div class="flex px-4" :class="{[`pt-${videoCursor === 0 ? 1 : 3}`]: true}">
-          <a-icon v-if="videoCursor !== 0" type="fullscreen" class="text-base text-white"
+           :class="{'opacity-0 h-10': videoCursor !== 0}">
+        <div class="flex px-4 justify-end" :class="{[`pt-${videoCursor === 0 ? 2 : 3}`]: true}">
+          <a-iconfont v-if="videoCursor !== 0"
+                      :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'" class="text-base text-white"
                   @click="switchShrinkOrExpand"/>
-          <a-icon type="down-square" class="text-base text-white ml-4" @click="switchMaxOrMin"/>
+          <a-iconfont :type="videoCursor === 0 ? 'icon-zhankai' : 'icon-yincang'"
+                      class="text-base text-white ml-4"
+                      @click="switchMaxOrMin"/>
         </div>
       </div>
       <div v-if="videoCursor === 0"
@@ -70,21 +71,15 @@ export default {
 <style lang="less">
   #conference-local-video {
     border: 1px solid #1D212F;
-    .video-mask {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      background-color: rgba(0,0,0,0.65);
-    }
     .video-controls {
       position: absolute;
       top: 0;
       left: 100%;
-      transform: translateX(-100%);
       cursor: pointer;
+      width: 100%;
+      transform: translateX(-100%);
+      background-image: linear-gradient(-180deg, #000000 3%, rgba(0,0,0,0.00) 98%);
+      transition: opacity ease-in-out .5s;
     }
   }
   .conference-local-video { // min shrink normal expand

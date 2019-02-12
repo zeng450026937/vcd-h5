@@ -12,10 +12,11 @@
     <a-divider class="my-0"/>
     <div class="flex flex-col h-full m-4 bg-white p-5 text-center">
       <div class="mt-9">
-        <a-avatar class="cursor-pointer hover:shadow bg-indigo-lighter"
+        <a-avatar class="cursor-pointer rounded-lg hover:shadow bg-green-dark"
                   shape="square"
-                  icon="cloud"
-                  :size="128"/>
+                  :size="128">
+          <span class="text-xl font-bold">Yealink</span>
+        </a-avatar>
       </div>
       <div class="mt-6 text-base">
         Yealink VC Desktop
@@ -33,6 +34,9 @@
       <div class="text-indigo text-xs text-center mt-10">
         <span class="cursor-pointer">用户协议</span>
         <span class="cursor-pointer ml-8">隐私政策</span>
+      </div>
+      <div class="flex mt-8 justify-center">
+        <p class="text-xs text-black-lightest leading-tight">Copyright © 2018 Yealink Inc. All rights reserved.</p>
       </div>
     </div>
   </a-layout>

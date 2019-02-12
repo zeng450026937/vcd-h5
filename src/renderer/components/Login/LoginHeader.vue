@@ -2,23 +2,20 @@
   <div id="login-header">
     <div class="px-2 h-9 select-none">
       <div class="flex flex-row h-full">
-        <div class="flex flex-row items-center text-white flex-no-grow">
-          <!--<a-icon type="cloud" class="text-2xl ml-1"/>-->
-          <div class="ml-4 text-xl font-bold">
-            Yealink
-          </div>
+        <div class="flex items-center">
+          <span class="text-xl text-white font-bold ml-2">Yealink</span>
         </div>
         <div class="flex-grow dragable"></div>
-        <div class="flex items-center mr-4 text-white">
+        <div class="flex items-center mr-4 text-white text-xs">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
-              <a-menu-item key="cloud" class="py-2 ">云服务版</a-menu-item>
+              <a-menu-item key="cloud" class="py-2 text-xs">云服务版</a-menu-item>
 
-              <a-menu-item key="yms" class="py-2">企业版</a-menu-item>
+              <a-menu-item key="yms" class="py-2 text-xs">企业版</a-menu-item>
             </a-menu>
             <span class="ant-dropdown-link cursor-pointer">
               {{ serverText }}
-              <a-icon :type="menuStatus ? 'caret-up': 'caret-down'" class="text-base" />
+              <a-iconfont :type="menuStatus ? 'icon-up1': 'icon-down'" class="text-base ml-1" />
             </span>
           </a-dropdown>
         </div>
@@ -29,15 +26,15 @@
               <a-menu-item key="cloud" class="px-6">帮助</a-menu-item>
               <a-menu-item key="yms" class="px-6" @click="reportIssues">反馈</a-menu-item>
             </a-menu>
-            <a-icon type="question-circle"
-                    class="ant-dropdown-link mx-2 text-base h-full flex items-center"/>
+            <a-iconfont type="icon-fankui"
+                    class="ant-dropdown-link mr-6 text-base h-full flex items-center"/>
           </a-dropdown>
 
-          <a-icon type="minus" class="text-sm mx-3 hover:text-indigo no-dragable"
+          <a-iconfont type="icon-zuixiaohua" class="mx-2 text-base hover:text-indigo no-dragable"
                   @click="clickMinimize"/>
-          <a-icon type="border" class="text-sm mx-2 hover:text-indigo no-dragable"
+          <a-iconfont type="icon-zuidahua" class="mx-2 text-base hover:text-indigo no-dragable"
                   @click="clickMaximize"/>
-          <a-icon type="close" class="text-sm mx-3 hover:text-red no-dragable"
+          <a-iconfont type="icon-guanbi" class="mx-2 text-base hover:text-red no-dragable"
                   @click="clickClose"/>
         </div>
       </div>

@@ -6,16 +6,16 @@
       <div class="h-10">
         <div class="header flex w-full h-full border-b px-4">
           <div class="flex flex-grow h-full items-center">
-            <a-icon type="close" class="cursor-pointer hover:text-red"
+            <a-iconfont type="icon-guanbi" class="cursor-pointer text-grey-darker hover:text-red text-base"
                     @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
-            <a-icon type="user-add"
-                    class="ml-6 cursor-pointer hover:text-indigo-light"
+            <a-iconfont type="icon-tianjialianxiren"
+                    class="ml-4 cursor-pointer text-grey-darker hover:text-indigo-light text-base"
                     @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
-              <a-icon :key="index" :type="tab.icon"
-                      class="ml-6 cursor-pointer"
+              <a-iconfont :key="index" :type="tab.icon"
+                      class="ml-4 cursor-pointer text-grey-darker text-base"
                       :class="{'text-indigo': currentTab === tab.is,
                     'hover:text-indigo-light': currentTab !== tab.is}"
                       @click="currentTab = tab.is"/>
@@ -48,10 +48,10 @@ export default {
   },
   data() {
     const tabList = [
-      { icon: 'lock', is: 'TabLockConference' },
-      { icon: 'team', is: 'TabMemberView' },
-      { icon: 'message', is: 'TabChatting' },
-      { icon: 'setting', is: 'TabSetting' },
+      { icon: 'icon-suoding', is: 'TabLockConference' },
+      { icon: 'icon-chengyuanliebiao', is: 'TabMemberView' },
+      { icon: 'icon-liaotian', is: 'TabChatting' },
+      { icon: 'icon-kongzhi', is: 'TabSetting' },
     ];
 
     return {
