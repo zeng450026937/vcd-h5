@@ -85,11 +85,6 @@ export default {
       return !this.isInConferenceView && this.confStatus === 'connected';
     },
   },
-  destroyed() {
-    if (this.$rtc.media.localMedia.stream) {
-      this.$rtc.media.localMedia.releaseStream();
-    }
-  },
   methods : {
     leaveConference() {
       this.$rtc.conference.leave();
@@ -97,18 +92,6 @@ export default {
     expandVideoContent() {
       this.isInConferenceView = true;
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
-    },
-  },
-  watch : {
-    showMiniVideo : {
-      handler(val) {
-        if (val) {
-          this.$nextTick(()=> {
-            this.$rtc.media.localMedia.acquireStream();
-          })
-        }
-      },
-      immediate : true,
     },
   },
 };
