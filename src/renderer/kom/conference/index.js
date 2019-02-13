@@ -33,6 +33,7 @@ export default {
       if (!this.currentUser) return null;
       
       const { ingress } = this.currentUser.getAudioFilter();
+
       let status = ingress ? ingress['#text'] : 'unblock';
       
       if (this.profile === 'demonstrator' && status === 'block'
@@ -65,6 +66,36 @@ export default {
       const { ingress } = this.currentUser.getAudioFilter();
       
       return ingress ? ingress['@blockby'] : 'client';
+    },
+    memberList() {
+      const { userList } = rtc.conference.information.users;
+      // 主持人
+      const presenterList = userList.filter((user) => user.isPresenter());
+      // 访客
+      const visitorList = userList.filter((user) => !user.isPresenter() && !user.isOnHold());
+
+      return [
+        {
+          title : `主持人 (${presenterList.length})`,
+          list  : presenterList,
+        },
+        {
+          title : `访客 (${visitorList.length})`,
+          list  : visitorList,
+        },
+      ];
+    },
+    waitingList() {
+      const { userList } = rtc.conference.information.users;
+      // 等待大厅
+
+      return userList.filter((user) => user.isOnHold());
+    },
+    speakApplyList() {
+      const { userList } = rtc.conference.information.users;
+      // 申请发言
+
+      return userList.filter((user) => user.isAudioApplicant()) || [];
     },
   },
   methods : {
@@ -185,37 +216,6 @@ export default {
         //   color   : 'info',
         // };
       }
-    },
-
-    async getMemberList() {
-      const { userList } = rtc.conference.information.users;
-      // 主持人
-      const presenterList = userList.filter((user) => user.isPresenter());
-      // 访客
-      const visitorList = userList.filter((user) => !user.isPresenter() && !user.isOnHold());
-      
-      return [
-        {
-          title : `主持人 (${presenterList.length})`,
-          list  : presenterList,
-        },
-        {
-          title : `访客 (${visitorList.length})`,
-          list  : visitorList,
-        },
-      ];
-    },
-    async getWaitingList() {
-      const { userList } = rtc.conference.information.users;
-      // 等待大厅
-
-      return userList.filter((user) => user.isOnHold());
-    },
-    async getSpeakApplyList() {
-      const { userList } = rtc.conference.information.users;
-      // 申请发言
-    
-      return userList.filter((user) => user.isAudioApplicant()) || [];
     },
 
     /**

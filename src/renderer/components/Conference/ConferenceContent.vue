@@ -61,7 +61,7 @@ export default {
   },
   methods : {
     showInviteModal() {
-      this.$refs.conferenceControls.$refs.invitingModal.visible = true;
+      // this.$refs.conferenceControls.$refs.invitingModal.visible = true;
     },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
