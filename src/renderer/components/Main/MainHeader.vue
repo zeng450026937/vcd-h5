@@ -1,9 +1,12 @@
 <template>
   <a-layout id="app-header" class="select-none" :class="{[`bg-${bgColor}`]: true}">
     <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2 py-px">
-      <a-iconfont type="minus" class="text-sm mx-3 text-grey-dark hover:text-indigo no-dragable" @click="clickMinimize"/>
-      <a-iconfont type="border" class="text-sm mx-2 text-grey-dark hover:text-indigo no-dragable" @click="clickMaximize"/>
-      <a-iconfont type="close" class="text-sm mx-3 text-grey-dark hover:text-red no-dragable" @click="clickClose"/>
+      <a-iconfont type="icon-zuixiaohua"
+                  class="text-base mx-3 text-grey-dark hover:text-indigo no-dragable" @click="clickMinimize"/>
+      <a-iconfont type="icon-zuidahua"
+                  class="text-base mx-1 text-grey-dark hover:text-indigo no-dragable" @click="clickMaximize"/>
+      <a-iconfont type="icon-guanbi"
+                  class="text-base mx-3 text-grey-dark hover:text-red no-dragable" @click="clickClose"/>
     </div>
   </a-layout>
 </template>

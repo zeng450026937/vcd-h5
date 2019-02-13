@@ -68,10 +68,10 @@
             <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
             <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
             <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
-            <span class="cursor-pointer leading-tight" @click="openSetting">登录设置</span>
+            <span class="cursor-pointer leading-tight" @click="openSetting">设置</span>
           </div>
           <div>
-            <p class="text-xs text-center leading-tight mt-5">
+            <p class="text-xs text-center leading-tight mt-5 text-black-lightest">
               点击登录则代表您同意<span class="text-indigo">《用户协议》</span>和<span class="text-indigo">《隐私政策》</span>
             </p>
           </div>

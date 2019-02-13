@@ -15,7 +15,7 @@
             </a-menu>
             <span class="ant-dropdown-link cursor-pointer">
               {{ serverText }}
-              <a-iconfont :type="menuStatus ? 'icon-up1': 'icon-down'" class="text-base ml-1" />
+              <a-iconfont :type="menuStatus ? 'icon-up': 'icon-down'" class="text-base ml-1" />
             </span>
           </a-dropdown>
         </div>
