@@ -6,7 +6,7 @@ export default {
     return {
       noticeTextList     : [],
       isLocalUnmuteAudio : false,
-      // isApplyAllow       : false,
+      selectedMember     : '',
     };
   },
   computed : {

@@ -69,7 +69,7 @@ export default {
   methods : {
     showInviteModal() {
       // FIXME ugly way
-      this.$parent.$children[0].$refs.invitingModal.visible = true;
+      // this.$parent.$children[0].$refs.invitingModal.visible = true;
       // console.warn(this.$refs);
     },
     closeDrawer() {

@@ -1,6 +1,8 @@
 <template>
   <div id="member-list-item">
-    <div class="flex h-14 items-center px-4">
+    <div class="flex h-14 items-center px-4 cursor-pointer"
+         :class="{'member-selected': isSelected}"
+         @click="selectMember">
       <div class="relative">
         <a-avatar class="bg-indigo">
           {{item.displayText.substr(-2, 2)}}
@@ -124,6 +126,9 @@ export default {
     };
   },
   computed : {
+    isSelected() {
+      return this.$model.conference.selectedMember === this.item.uid;
+    },
     currentIsPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
     },
@@ -257,6 +262,9 @@ export default {
     showDeviceInfo() { // 显示设备详情
       this.isShowDeviceInfo = true;
     },
+    selectMember() {
+      this.$model.conference.selectedMember = this.item.uid;
+    },
   },
 };
 </script>
@@ -296,6 +304,9 @@ export default {
       left: 50%;
       border-radius: 50%;
       transform: translate(-50%, -50%);
+    }
+    .member-selected {
+      background-color: #D6DAEB;
     }
   }
 
