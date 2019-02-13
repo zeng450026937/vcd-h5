@@ -134,7 +134,8 @@ export default {
   },
   methods : {
     randomAvatar() {
-      return avatarList[0];
+      // TODO DELETE
+      return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
     },
     clickMenu(sidebar, index) {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {

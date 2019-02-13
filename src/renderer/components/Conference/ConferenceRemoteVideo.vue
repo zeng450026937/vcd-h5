@@ -31,6 +31,9 @@ export default {
 
 <style lang="less">
 #conference-remote-video {
+  #video-view {
+    background-color: #1b1f2d;
+  }
   .remote-video-content-shrink {
     .video-content {
       height: auto;
