@@ -9,10 +9,10 @@ import kom from './kom';
 import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
-import updater from './updater';
+// import updater from './updater';
 
 Vue.config.productionTip = false;
-updater.checkForUpdates();
+// updater.checkForUpdates();
 
 const root = new Vue({
   router,

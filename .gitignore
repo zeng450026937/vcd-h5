@@ -1,8 +1,11 @@
 # --
 node_modules
+**/node_modules
 /dist
 /out
-/lib
+/lib/apollo-rtc
+/lib/apollo-sip
+/lib/apollo-vuem
 /plugins
 
 # Log files
