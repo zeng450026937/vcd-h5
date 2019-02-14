@@ -1,6 +1,5 @@
 // import loggerDB from '../../../utils/database/loggerDB';
 import { ipcRenderer } from 'electron';
-import log from '../../../main/log';
 
 const consoleLog = console.log.bind(console);
 

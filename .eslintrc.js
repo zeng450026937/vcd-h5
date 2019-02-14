@@ -13,6 +13,10 @@ module.exports = {
   globals : {
     __public : true,
     __static : true,
+    __DARWIN__: true,
+    __WIN32__: true,
+    __LINUX__: true,
+    logger: true,
   },
   rules : {
     'no-console'            : process.env.NODE_ENV === 'production' ? 2 : 0,
@@ -46,6 +50,8 @@ module.exports = {
     'generator-star-spacing'    : 2,
     'guard-for-in'              : 2,
     'import/no-mutable-exports' : 0,
+    'import/prefer-default-export': 0,
+    'import/no-extraneous-dependencies': 0,
     indent                      : [ 2, 2, {
       SwitchCase : 1,
     } ],

@@ -1,9 +1,10 @@
-import * as Path from 'path';
-import * as winston from 'winston';
+import Path from 'path';
+import winston from 'winston';
 import { ensureDir } from 'fs-extra';
-import getLogDirectoryPath from '../utils/getLogPath';
+import { app } from 'electron';
+import { getLogDirectoryPath } from '../get-log-path';
 
-require('winston-daily-rotate-file');
+// require('winston-daily-rotate-file');
 
 const MaxLogFiles = 14;
 
@@ -11,28 +12,27 @@ function getLogFilePath(directory) {
   const channel = 'alpha';
   const fileName = `vc-desktop.${channel}.log`;
 
-  
   return Path.join(directory, fileName);
 }
 
 
 function initializeWinston(path) {
-  const fileLogger = new winston.transports.DailyRotateFile({
-    filename         : path,
-    handleExceptions : false,
-    json             : false,
-    datePattern      : 'YYYY-MM-DD',
-    prepend          : true,
-    level            : 'debug',
-    maxFiles         : MaxLogFiles,
-  });
+  // const fileLogger = new winston.transports.DailyRotateFile({
+  //   filename         : path,
+  //   handleExceptions : false,
+  //   json             : false,
+  //   datePattern      : 'YYYY-MM-DD',
+  //   prepend          : true,
+  //   level            : 'debug',
+  //   maxFiles         : MaxLogFiles,
+  // });
 
   const consoleLogger = new winston.transports.Console({
     level : process.env.NODE_ENV === 'development' ? 'debug' : 'error',
   });
 
   winston.configure({
-    transports : [ consoleLogger, fileLogger ],
+    transports : [ consoleLogger ],
   });
 
   return winston.log;
@@ -66,21 +66,11 @@ function getLogger() {
   return loggerPromise;
 }
 
-export default async function log(level, message) {
+export async function log(level, message) {
   try {
     const logger = await getLogger();
 
-    await new Promise((resolve, reject) => {
-      logger(level, message, (error) => {
-        if (error) {
-          reject(error);
-        }
-        else {
-          console.log('success');
-          resolve();
-        }
-      });
-    });
+    logger(level, message);
   }
   catch (error) {
     /**

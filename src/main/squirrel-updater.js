@@ -16,7 +16,7 @@ const exeName = Path.basename(process.execPath);
 const rootAppDir = Path.resolve(appFolder, '..');
 const updateDotExe = Path.resolve(Path.join(rootAppDir, 'Update.exe'));
 
-export default function handleSquirrelEvent(eventName) {
+export function handleSquirrelEvent(eventName) {
   switch (eventName) {
     case '--squirrel-install':
       return handleInstalled();

@@ -8,5 +8,5 @@ import browserLogger from './test/test-browser';
 
 // ApolloSIP.Logger.Observer = browserLogger;
 //
-window.logger = browserLogger;
+// window.logger = browserLogger;
 export default log4electron;

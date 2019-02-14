@@ -1,5 +1,6 @@
+import '../logger/renderer/install';
+
 import Vue from 'vue';
-import '../logger';
 import App from './App.vue';
 import router from './router';
 import rtc from './rtc';
@@ -10,11 +11,21 @@ import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
 // import updater from './updater';
+import { sendReady } from './mainProcessProxy';
 
 Vue.config.productionTip = false;
 // updater.checkForUpdates();
 
-const root = new Vue({
+const startTime = performance.now();
+
+new Vue({
+  mixins : [
+    {
+      mounted() {
+        sendReady(performance.now() - startTime);
+      },
+    },
+  ],
   router,
   kom,
   i18n,
@@ -23,5 +34,3 @@ const root = new Vue({
   popup,
   render : (h) => h(App),
 }).$mount('#app');
-
-export default root;
