@@ -86,6 +86,9 @@ export default {
 
       return this.$rtc.conference.information.users.currentUser.isShareAvariable();
     },
+    hasLocalScreenStream() {
+      return !!this.$rtc.conference.shareChannel.localStream;
+    },
     audioIcon() {
       const iconMap = {
         block      : { icon: 'icon-maikefengjinyong', color: 'red' },
@@ -117,6 +120,11 @@ export default {
   },
   methods : {
     showScreenShareModal() {
+      if (this.hasLocalScreenStream) {
+        this.$rtc.conference.shareChannel.disconnect();
+        
+        return;
+      }
       this.$refs.shareModal.visible = true;
     },
     showLeaveModal() {

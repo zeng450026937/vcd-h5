@@ -5,7 +5,8 @@
         <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
           <div class="flex items-center h-full text-white self-end px-5 no-dragable">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
-                        class="cursor-pointer hover:text-indigo text-base"/>
+                        class="cursor-pointer hover:text-indigo text-base"
+                        @click="openShareWindow"/>
             <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
             <a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
             <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo-light text-base"
@@ -27,7 +28,7 @@
       <div class="local-video-content">
         <conference-local-video/>
       </div>
-      <div v-if="hasScreenStream" class="share-video-content">
+      <div v-if="hasScreenStream && !isshareWindowOpen" class="share-video-content">
         <conference-share-video/>
       </div>
       <conference-notice/>
@@ -55,6 +56,8 @@ export default {
     return {
       tabList,
       isInConferenceMain : true,
+      shareWindow        : null,
+      isshareWindowOpen  : false,
     };
   },
   components : {
@@ -73,6 +76,16 @@ export default {
   mounted() {
   },
   methods : {
+    openShareWindow() {
+      const option = 'width=528,height=297,directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
+
+      this.shareWindow = window.open('/window.html', 'screenShare', option);
+      this.isshareWindowOpen = true;
+
+      this.shareWindow.onbeforeunload = () => {
+        this.isshareWindowOpen = this.shareWindow.closed;
+      };
+    },
     showInviteModal() {
       this.$refs.conferenceControls.$refs.invitingModal.visible = true;
     },

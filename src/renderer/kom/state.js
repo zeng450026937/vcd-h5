@@ -48,7 +48,7 @@ export default {
         }
         else if (once === 'registered' && val === 'disconnected') {
         // 退出状态
-          router.push(LOGIN.LOGIN_CONTENT);
+          router.push(LOGIN.YMS_LOGIN);
         }
         else {
         // 未登录状态

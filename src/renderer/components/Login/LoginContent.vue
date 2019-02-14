@@ -8,7 +8,7 @@
 export default {
   name : 'LoginContent',
   mounted() {
-    this.$router.push('/login/loginContent/yms');
+    // this.$router.push('/login/loginContent/ymsLogin');
   },
 };
 </script>
