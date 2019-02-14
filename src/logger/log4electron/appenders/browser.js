@@ -13,9 +13,9 @@ function consoleAppender(layout, timezoneOffset) {
     //   result,
     // });
     // log('info', result.templates.join(''), ...result.params);
-    ipcRenderer.send('log', result.level, JSON.stringify(result));
+    // ipcRenderer.send('log', result.level, JSON.stringify(result));
 
-    // consoleLog(result.templates.join(''), ...result.params);
+    consoleLog(result.templates.join(''), ...result.params);
   };
 }
 

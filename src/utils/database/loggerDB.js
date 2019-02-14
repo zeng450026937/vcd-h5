@@ -29,7 +29,7 @@ class LoggerDB {
   getLogByLevel(start, end, level) {
     return new Promise((resolve) => {
       this.getLogBetweenTime(start, end).then((res) => {
-        resolve(res.filter((item) => item.result.result.level === level));
+        resolve(res.filter((item) => item.result.level === level));
       });
     });
   }

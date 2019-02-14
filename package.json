@@ -63,6 +63,8 @@
     "babel-jest": "^23.6.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "electron": "^4.0.2",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "tailwindcss": "^0.7.3",
     "vue-template-compiler": "^2.5.21"
   },
