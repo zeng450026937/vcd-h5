@@ -20,6 +20,7 @@
       <!--分享辅流-->
       <a-button shape="circle"
                 class="w-12 h-12 text-xl text-white mx-2"
+                @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
       <a-popover
@@ -54,6 +55,7 @@
     </div>
     <conference-inviting-modal ref="invitingModal"/>
     <conference-leaving-modal ref="leavingModal"/>
+    <screen-share-modal ref="shareModal"/>
   </div>
 </template>
 
@@ -61,12 +63,14 @@
 import { CONFERENCE } from '../../router/constants';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
+import ScreenShareModal from './ScreenShareModal.vue';
 
 export default {
   name       : 'ConferenceControls',
   components : {
     ConferenceInvitingModal,
     ConferenceLeavingModal,
+    ScreenShareModal,
   },
   data() {
     return {
@@ -81,6 +85,9 @@ export default {
       if (!currentUser) return false;
 
       return this.$rtc.conference.information.users.currentUser.isShareAvariable();
+    },
+    hasLocalScreenStream() {
+      return !!this.$rtc.conference.shareChannel.localStream;
     },
     audioIcon() {
       const iconMap = {
@@ -112,6 +119,14 @@ export default {
     },
   },
   methods : {
+    showScreenShareModal() {
+      if (this.hasLocalScreenStream) {
+        this.$rtc.conference.shareChannel.disconnect();
+        
+        return;
+      }
+      this.$refs.shareModal.visible = true;
+    },
     showLeaveModal() {
       this.$refs.leavingModal.visible = true;
     },

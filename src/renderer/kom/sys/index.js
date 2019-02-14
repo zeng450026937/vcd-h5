@@ -11,6 +11,7 @@ export default {
       hostname : os.hostname(),
       os       : os.type(),
       version  : remote.app.getVersion(),
+      remote,
     };
   },
   methods : {

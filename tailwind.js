@@ -920,7 +920,7 @@ module.exports = {
     borderColors         : [ 'hover', 'focus' ],
     borderRadius         : [ ],
     borderStyle          : [ ],
-    borderWidths         : [ ],
+    borderWidths         : [ 'hover' ],
     cursor               : [ ],
     display              : [ ],
     flexbox              : [ ],

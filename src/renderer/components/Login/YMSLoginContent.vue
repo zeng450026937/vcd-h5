@@ -136,7 +136,6 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
-            console.warn(this.$refs.loginDrawer);
             const loginData = Object.assign({}, values, {
               proxy     : this.$refs.loginDrawer.proxy,
               proxyPort : 5060,

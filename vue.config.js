@@ -5,7 +5,13 @@ module.exports = {
   productionSourceMap : false,
 
   pages : {
-    index : 'src/renderer/index.js',
+    index  : 'src/renderer/index.js',
+    window : {
+      entry    : 'src/window/index.js',
+      template : 'public/window.html',
+      title    : 'window',
+      filename : 'window.html',
+    },
   },
 
   css : {

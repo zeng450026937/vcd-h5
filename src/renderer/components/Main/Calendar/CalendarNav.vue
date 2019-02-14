@@ -27,7 +27,7 @@
       <a-button type="primary" block
                 class="cursor-pointer h-9"
                 @click="reserveMeeting">
-        <a-iconfont type="icon-yuyuehuiyi"/>
+        <a-iconfont type="icon-yuyuehuiyi" class="text-base"/>
         预约会议
       </a-button>
     </div>

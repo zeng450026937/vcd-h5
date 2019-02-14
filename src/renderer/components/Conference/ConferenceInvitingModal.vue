@@ -115,6 +115,7 @@ export default {
     },
     deleteContact(contact) {
       const { checkedKeys } = this.$refs.contactTree;
+
       let parent = contact;
       const i = this.selectedContact.findIndex((c) => c.id === contact.id);
 
