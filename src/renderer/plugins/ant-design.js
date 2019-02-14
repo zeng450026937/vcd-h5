@@ -3,13 +3,13 @@ import '@/renderer/stylus/antd.less';
 import '@/renderer/stylus/tailwind.less';
 import Antd, { Icon } from 'ant-design-vue';
 
-const AIcon = Icon.createFromIconfontCN({
-  scriptUrl : '//at.alicdn.com/t/font_1011898_736f1lugy5q.js', // 在 iconfont.cn 上生成
+const AIconFont = Icon.createFromIconfontCN({
+  scriptUrl : 'https://at.alicdn.com/t/font_1011898_3snln87b1f9.js', // 在 iconfont.cn 上生成
 });
-// Example: -> <ad-icon slot="prefix" type="icon-bendilianxiren"/>
+// Example: -> <a-iconfont slot="prefix" type="icon-bendilianxiren"/>
 
 Vue.use(Antd);
-Vue.component('ad-icon', AIcon);
+Vue.component(AIconFont.name, AIconFont); // AIconFont.name => a-iconfont
 // import {
 //   Button, Layout, Icon, Tooltip,
 //   Dropdown, Avatar, Spin, AutoComplete, Input,

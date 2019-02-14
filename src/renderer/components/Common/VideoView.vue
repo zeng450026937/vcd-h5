@@ -39,7 +39,16 @@ export default {
     this.initStream();
   },
   destroyed() {
-    if (this.videoStream) this.$rtc.media.localMedia.releaseStream();
+    // if (this.videoStream) this.$rtc.media.localMedia.releaseStream();
+    switch (this.source) {
+      case 'local':
+        this.$rtc.media.localMedia.releaseStream();
+        break;
+      case 'remote':
+        break;
+      case 'screen': break;
+      default: break;
+    }
   },
   computed : {
     videoId() {
@@ -59,8 +68,10 @@ export default {
   methods : {
     onVideoStreamChanged(stream) {
       if (!stream) return;
-      this.videoElement = document.getElementById(this.videoId);
-      if (this.videoElement) {
+      if (!this.videoElement) {
+        this.videoElement = document.getElementById(this.videoId);
+      }
+      if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.srcObject = stream;
       }
     },

@@ -1,4 +1,6 @@
-import loggerDB from '../../../utils/database/loggerDB';
+// import loggerDB from '../../../utils/database/loggerDB';
+import { ipcRenderer } from 'electron';
+import log from '../../../main/log';
 
 const consoleLog = console.log.bind(console);
 
@@ -6,11 +8,14 @@ function consoleAppender(layout, timezoneOffset) {
   return (loggingEvent) => {
     const result = layout(loggingEvent, timezoneOffset);
 
-    loggerDB.add({
-      timestamp : new Date().valueOf(),
-      result,
-    });
-    consoleLog(result.templates.join(''), ...result.params);
+    // loggerDB.add({
+    //   timestamp : new Date().valueOf(),
+    //   result,
+    // });
+    // log('info', result.templates.join(''), ...result.params);
+    ipcRenderer.send('log', result.level, JSON.stringify(result));
+
+    // consoleLog(result.templates.join(''), ...result.params);
   };
 }
 

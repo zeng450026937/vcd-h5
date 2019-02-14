@@ -30,6 +30,8 @@ import dateFormat from 'date-format';
 //  |   String    |    #333     |
 //  |   Array     |    default  |
 //  |   Object    |    default  |
+//  |   Function  |    default  |
+//  |   Undefined |    default  |
 //
 //  VERSION 1 BY yl1730
 //  新增内容 : 输出LOG的时候支持占位符 模板占位符 %t
@@ -56,6 +58,10 @@ const TEXT_STYLE = {
     template : '%o',
   },
   function : {
+    color    : '',
+    template : '%o',
+  },
+  undefined : {
     color    : '',
     template : '%o',
   },

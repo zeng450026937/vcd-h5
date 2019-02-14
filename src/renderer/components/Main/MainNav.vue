@@ -6,7 +6,7 @@
             v-model="searchText"
             placeholder='搜索联系人'
         >
-          <a-icon slot="suffix" type='search' class="text-lg text-grey"/>
+          <a-iconfont slot="suffix" type='icon-sousuo' class="text-lg text-grey"/>
         </a-input>
       </div>
     </div>
@@ -16,7 +16,7 @@
          'hover:bg-grey-lighter': currentNav !== index}"
          v-for="(nav, index) in navs"
          :key="index" @click="clickNav(nav, index)">
-      <a-icon :type="nav.icon" class="text-base text-indigo-dark"/>
+      <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"/>
       <span class="ml-3 text-sm">{{nav.text}}</span>
     </div>
     <div class="flex flex-grow"></div>
@@ -59,27 +59,27 @@ export default {
       switch (nav) {
         case 'meeting':
           this.navs = [
-            { icon: 'plus-square', route: MAIN.MEETING_INSTANCE, text: '即时会议', isTop: true },
-            { icon: 'export', route: MAIN.MEETING_ENTER, text: '加入会议' },
-            { icon: 'profile', route: MAIN.CALL_RECORD, text: '通话记录' },
-            { icon: 'phone', route: MAIN.DIAL_PLATE, text: '拨号' },
+            { icon: 'icon-jishihuiyi', route: MAIN.MEETING_INSTANCE, text: '即时会议', isTop: true },
+            { icon: 'icon-jiaruhuiyi', route: MAIN.MEETING_ENTER, text: '加入会议' },
+            { icon: 'icon-tonghuajilu', route: MAIN.CALL_RECORD, text: '通话记录' },
+            { icon: 'icon-bohao', route: MAIN.DIAL_PLATE, text: '拨号' },
           ];
           break;
         case 'contact':
           this.navs = [
-            { icon: 'solution', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', bg: 'blue', isTop: true },
-            { icon: 'star', route: MAIN.CONTACT_FREQUENT, text: '常用联系人', bg: 'yellow-dark' },
-            { icon: 'environment', route: MAIN.CONTACT_LOCAL, text: '本地联系人', bg: 'teal' },
+            { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', bg: 'blue', isTop: true },
+            { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人', bg: 'yellow-dark' },
+            { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人', bg: 'teal' },
           ];
           break;
         case 'setting':
           this.navs = [
-            { icon: 'idcard', route: MAIN.SETTING_ACCOUNT, text: '个人资料', isTop: true },
-            { icon: 'appstore', route: MAIN.SETTING_COMMON, text: '通用' },
-            { icon: 'team', route: MAIN.SETTING_CONFERENCE, text: '会议' },
-            { icon: 'phone', route: MAIN.SETTING_AUDIO, text: '音频' },
-            { icon: 'video-camera', route: MAIN.SETTING_VIDEO, text: '视频' },
-            { icon: 'info-circle', route: MAIN.ABOUT_US, text: '关于' },
+            { icon: 'icon-gerenziliao', route: MAIN.SETTING_ACCOUNT, text: '个人资料', isTop: true },
+            { icon: 'icon-tongyong', route: MAIN.SETTING_COMMON, text: '通用' },
+            { icon: 'icon-huiyishi', route: MAIN.SETTING_CONFERENCE, text: '会议' },
+            { icon: 'icon-maikefeng', route: MAIN.SETTING_AUDIO, text: '音频' },
+            { icon: 'icon-shexiangtou', route: MAIN.SETTING_VIDEO, text: '视频' },
+            { icon: 'icon-guanyu', route: MAIN.ABOUT_US, text: '关于' },
           ];
           break;
         default: break;

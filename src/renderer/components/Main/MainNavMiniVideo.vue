@@ -7,12 +7,13 @@
         <div class="flex flex-grow"></div>
         <div class="flex justify-center py-3 items-center">
           <div class="button-content flex h-8 items-center z-10">
-            <a-button shape="circle" icon="video-camera"
+            <a-button shape="circle"
                       class="text-white mx-2"
-            ></a-button>
-            <a-button shape="circle" icon="phone"
+            ><a-iconfont type="icon-shexiangtou"/></a-button>
+            <a-button shape="circle"
                       class="text-white mx-2"
-            ></a-button>
+            ><a-iconfont type="icon-maikefeng"/></a-button>
+
             <a-popover
                 trigger="click"
                 v-model="showMorePanel"
@@ -20,27 +21,27 @@
             >
               <div slot="content" class="popover-content text-white">
                 <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="phone" theme="filled" class="text-base"/>
+                  <a-iconfont type="icon-maikefeng" class="text-base"/>
                   <span class="ml-3 text-xs">切换为音频通话</span>
                 </div>
                 <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="appstore" theme="filled" class="text-base"/>
-                  <span class="ml-3 text-xs">拨号版</span>
+                  <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
+                  <span class="ml-3 text-xs">拨号盘</span>
                 </div>
                 <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-icon type="sound" theme="filled" class="text-base"/>
+                  <a-iconfont type="icon-yangshengqi" class="text-base"/>
                   <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
                 </div>
               </div>
-              <a-button shape="circle" icon="ellipsis"
+              <a-button shape="circle"
                         class="text-white mx-2"
                         @click="showMorePanel = !showMorePanel"
-              ></a-button>
+              ><a-iconfont type="icon-gengduo"/></a-button>
             </a-popover>
-            <a-button shape="circle" icon="export"
+            <a-button shape="circle"
                       class="text-white mx-2 bg-red-light"
                       @click="leaveConference"
-            ></a-button>
+            ><a-iconfont type="icon-guaduan"/></a-button>
           </div>
         </div>
       </div>
@@ -84,11 +85,6 @@ export default {
       return !this.isInConferenceView && this.confStatus === 'connected';
     },
   },
-  destroyed() {
-    if (this.$rtc.media.localMedia.stream) {
-      this.$rtc.media.localMedia.releaseStream();
-    }
-  },
   methods : {
     leaveConference() {
       this.$rtc.conference.leave();
@@ -96,18 +92,6 @@ export default {
     expandVideoContent() {
       this.isInConferenceView = true;
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
-    },
-  },
-  watch : {
-    showMiniVideo : {
-      handler(val) {
-        if (val) {
-          this.$nextTick(()=> {
-            this.$rtc.media.localMedia.acquireStream();
-          })
-        }
-      },
-      immediate : true,
     },
   },
 };

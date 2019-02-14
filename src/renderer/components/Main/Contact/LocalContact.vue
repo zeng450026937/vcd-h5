@@ -6,8 +6,8 @@
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
             <span>本地联系人</span>
-            <a-icon class="ml-4 text-indigo cursor-pointer no-dragable"
-                    type="user-add"
+            <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
+                    type="icon-tianjialianxiren"
                     @click="addLocalContact"/>
           </div>
           <div class="flex flex-grow"></div>
@@ -25,15 +25,15 @@
                         slot="more"
                         @click.stop=""
                         :trigger="['click']">
-              <a-icon type="ellipsis"
-                      class="mr-2 text-indigo cursor-pointer text-sm"/>
+              <a-iconfont type="icon-gengduo"
+                      class="mr-2 text-indigo cursor-pointer text-base"/>
               <a-menu slot="overlay">
                 <a-menu-item @click="editContact(item)">
-                  <a-icon type="edit" />
+                  <a-iconfont type="icon-bianji" />
                   <span>编辑该联系人</span>
                 </a-menu-item>
                 <a-menu-item @click="deleteContact(item)">
-                  <a-icon type="delete" />
+                  <a-iconfont type="icon-shanchu" />
                   <span>删除该联系人</span>
                 </a-menu-item>
               </a-menu>

@@ -1,7 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import { getMainWindow, createWindow } from './window';
 import handleSquirrelEvent from './squirrelUpdater';
+import now from './now';
+import writeLog from './log';
+
+const launchTime = now();
+
+let readyTime = 0;
 
 let mainWindow = getMainWindow();
 
@@ -61,7 +67,28 @@ if (!handlingSquirrelEvent) {
       if (handlingSquirrelEvent) {
         return;
       }
+      readyTime = now() - launchTime;
+      const startLoad = now();
+
+      let loadTime = 0;
+
+      let _rendererReadyTime = 0;
+
       mainWindow = createWindow();
+
+      mainWindow.webContents.once('did-start-loading', () => {
+        loadTime = now() - startLoad;
+      });
+      ipcMain.once('renderer-ready', (_readyTime) => {
+        _rendererReadyTime = _readyTime;
+      });
+      // mainWindow.webContents.once('did-finish-load', () => {
+      //   mainWindow.sendLaunchTimingStats({
+      //     mainReadyTime     : readyTime,
+      //     loadTime,
+      //     rendererReadyTime : _rendererReadyTime,
+      //   });
+      // });
     });
     
     
@@ -84,3 +111,17 @@ if (!handlingSquirrelEvent) {
     });
   }
 }
+
+const levelMap = {
+  ERROR : 'error',
+  WARN  : 'warn',
+  INFO  : 'info',
+  DEBUG : 'debug',
+};
+
+ipcMain.on(
+  'log',
+  (event, level, message) => {
+    writeLog(levelMap[level], message);
+  }
+);

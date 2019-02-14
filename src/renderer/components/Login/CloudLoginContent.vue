@@ -24,26 +24,26 @@
                 <div class="flex items-center px-2 py-2">
                   <span class="certain-search-item-count">{{item.account}}</span>
                   <div class="flex flex-grow"></div>
-                  <a-icon type="close" class="flex text-red opacity-0 group-hover:opacity-100"
+                  <a-iconfont type="close" class="flex text-red opacity-0 group-hover:opacity-100"
                           @click.stop="deleteAccount(item)"/>
                 </div>
               </a-select-option>
             </template>
             <a-input placeholder='电话或电子邮件' size="large" >
-              <a-icon slot="prefix" type="user"/>
+              <a-iconfont slot="prefix" type="user"/>
             </a-input>
           </a-auto-complete>
         </a-form-item>
         <a-form-item
             fieldDecoratorId="pin">
           <a-input type='password' placeholder='密码' size="large">
-            <a-icon slot="prefix" type='lock'/>
+            <a-iconfont slot="prefix" type='lock'/>
           </a-input>
         </a-form-item>
         <a-form-item
             fieldDecoratorId="server">
           <a-input placeholder='服务器地址' size="large">
-            <a-icon slot="prefix" type='cloud' />
+            <a-iconfont slot="prefix" type='cloud' />
           </a-input>
         </a-form-item>
         <div class="flex justify-between">

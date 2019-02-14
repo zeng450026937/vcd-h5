@@ -31,7 +31,7 @@
           >{{mic.label}}</a-select-option>
         </a-select>
         <div class="text-indigo mt-2 flex items-center">
-          <a-icon type="play-circle" />
+          <a-iconfont type="icon-bofang" />
           <span class="ml-1 text-xs">播放测试音频</span>
         </div>
       </div>

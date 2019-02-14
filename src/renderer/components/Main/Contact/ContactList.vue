@@ -27,7 +27,7 @@
 
               <a-popover
                   placement="rightTop"
-                  trigger="hover"
+                  trigger="click"
                   slot="avatar"
                   overlayClassName="avatar-popover">
                 <template v-if="!item.isGroup" slot="content">
@@ -57,31 +57,29 @@
 
                     <div class="flex flex-col px-5 py-3 text-xs">
                       <div class="flex items-center">
-                        <a-icon type="user"></a-icon>
-                        <span class="mx-3 truncate">账号</span>
+                        <!--<a-iconfont type="icon-ren"></a-iconfont>-->
+                        <span class="mr-3 truncate">账号</span>
                         <span>{{item.ip || item.account}}</span>
                         <div class="flex flex-grow"></div>
-                        <a-icon theme="filled"
-                                type="video-camera"
-                                class="mr-4 text-indigo cursor-pointer text-sm"/>
-                        <a-icon theme="filled"
-                                type="phone"
-                                class="text-indigo cursor-pointer text-sm"/>
+                        <a-iconfont type="icon-shipin"
+                                    class="mr-4 text-indigo cursor-pointer text-base"/>
+                        <a-iconfont type="icon-yuyin"
+                                    class="text-indigo cursor-pointer text-base"/>
                       </div>
                       <template v-if="item.parent.isUser">
                         <div class="flex items-center mt-3 ">
-                          <a-icon type="phone"></a-icon>
-                          <span class="mx-3">手机</span>
+                          <!--<a-iconfont type="phone"></a-iconfont>-->
+                          <span class="mr-3">手机</span>
                           <span>{{item.phone}}</span>
                         </div>
                         <div class="flex mt-3 items-center">
-                          <a-icon type="mail"></a-icon>
-                          <span class="mx-3">邮箱</span>
+                          <!--<a-iconfont type="mail"></a-iconfont>-->
+                          <span class="mr-3">邮箱</span>
                           <span>{{item.email || '暂无邮箱'}}</span>
                         </div>
                         <div class="mt-3 flex items-start">
-                          <a-icon type="home" class="leading-tight"></a-icon>
-                          <span class="mx-3 whitespace-no-wrap">部门</span>
+                          <!--<a-iconfont type="home" class="leading-tight"></a-iconfont>-->
+                          <span class="mr-3 whitespace-no-wrap">部门</span>
                           <span class="text-indigo">{{item | fullName}}</span>
                         </div>
                       </template>
@@ -103,24 +101,22 @@
             </a-list-item-meta>
             <div class="opacity-0 group-hover:opacity-100 flex justify-around"
                  :class="{'opacity-100': selectedContact.id === item.id}">
-              <a-icon v-if="videoIcon"
-                      theme="filled"
-                      type="video-camera"
-                      class="mr-3 text-indigo cursor-pointer text-sm"
+              <a-iconfont v-if="videoIcon"
+                      type="icon-shipin"
+                      class="mr-3 text-indigo cursor-pointer text-base"
                       @click.stop="doVideo(item)"/>
-              <a-icon v-if="audioIcon"
-                      theme="filled"
-                      type="phone"
-                      class="mr-3 text-indigo cursor-pointer text-sm"
+              <a-iconfont v-if="audioIcon"
+                      type="icon-yuyin"
+                      class="mr-3 text-indigo cursor-pointer text-base"
                       @click.stop="doAudio(item)"/>
-              <a-icon v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
-                      type="ellipsis"
-                      class="mr-2 text-indigo cursor-pointer text-sm"
+              <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
+                      type="icon-gengduo"
+                      class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="moreOption(item)"/>
               <slot name="more" :item="item"></slot>
-              <a-icon v-if="deleteIcon"
-                      type="close"
-                      class="mr-2 text-indigo cursor-pointer text-sm"
+              <a-iconfont v-if="deleteIcon"
+                      type="icon-guanbi"
+                      class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="deleteContact(item)"/>
             </div>
           </a-list-item>

@@ -21,28 +21,31 @@
                     <div class="flex items-center px-2 py-2">
                       <span class="certain-search-item-count">{{item.account}}</span>
                       <div class="flex flex-grow"></div>
-                      <ad-icon type="close" class="flex text-red opacity-0 group-hover:opacity-100"
-                              @click.stop="deleteAccount(item)"/>
+                      <a-iconfont
+                          type="icon-guanbi"
+                          class="flex text-red opacity-0 group-hover:opacity-100"
+                          @click.stop="deleteAccount(item)"
+                      ></a-iconfont>
                     </div>
                   </a-select-option>
                 </template>
                 <a-input placeholder='电话或电子邮件'>
-                  <ad-icon slot="prefix" type="icon-dianhua"/>
-                  <!--<a-icon slot="prefix" type="user"/>-->
+                  <a-iconfont slot="prefix" type="icon-dianhua"/>
+                  <!--<a-iconfont slot="prefix" type="user"/>-->
                 </a-input>
               </a-auto-complete>
             </a-form-item>
             <a-form-item
                 fieldDecoratorId="pin">
               <a-input type='password' placeholder='密码'>
-                <ad-icon slot="prefix" type='icon-mima'/>
+                <a-iconfont slot="prefix" type='icon-mima'/>
               </a-input>
             </a-form-item>
             <a-form-item
                 fieldDecoratorId="server"
                 class="mb-2">
               <a-input placeholder='服务器地址'>
-                <ad-icon slot="prefix" type='icon-fuwuqi' />
+                <a-iconfont slot="prefix" type='icon-fuwuqi' />
               </a-input>
             </a-form-item>
             <div class="flex justify-between">
@@ -65,10 +68,10 @@
             <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
             <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
             <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
-            <span class="cursor-pointer leading-tight" @click="openSetting">登录设置</span>
+            <span class="cursor-pointer leading-tight" @click="openSetting">设置</span>
           </div>
           <div>
-            <p class="text-xs text-center leading-tight mt-5">
+            <p class="text-xs text-center leading-tight mt-5 text-black-lightest">
               点击登录则代表您同意<span class="text-indigo">《用户协议》</span>和<span class="text-indigo">《隐私政策》</span>
             </p>
           </div>

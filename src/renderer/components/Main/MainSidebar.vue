@@ -25,7 +25,7 @@
                 <div class="my-1 font-semibold">匿名</div>
                 <div class="mb-1">VCS产品线-软件开发部</div>
                 <div class="mb-1 text-grey cursor-pointer hover:text-grey-dark">
-                  <a-icon type="edit"/>
+                  <a-iconfont type="edit"/>
                   编辑个性签名
                 </div>
               </div>
@@ -69,7 +69,7 @@
                        'bg-indigo':currentSidebar === index,
                        'hover:text-indigo': currentSidebar !== index}"
                @click="clickMenu(sidebar, index)">
-            <a-icon :type="sidebar.icon" class="text-sm"/>
+            <a-iconfont :type="sidebar.icon" class="text-base"/>
             <span class="text-3xs font-thin mt-2">{{sidebar.text}}</span>
           </div>
         </template>
@@ -102,12 +102,12 @@ export default {
   data() {
     return {
       sidebarItems : [
-        { icon: 'team', text: '会议', name: MODULE_NAME.MEETING, isTop: true, route: MAIN.MEETING_INSTANCE },
-        { icon: 'calendar', text: '日程', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
-        { icon: 'contacts', text: '联系人', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
-        { icon: 'setting', text: '设置', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
+        { icon: 'icon-huiyi', text: '会议', name: MODULE_NAME.MEETING, isTop: true, route: MAIN.MEETING_INSTANCE },
+        { icon: 'icon-richeng', text: '日程', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
+        { icon: 'icon-lianxiren', text: '联系人', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
+        { icon: 'icon-shezhi', text: '设置', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
         { spacer: true },
-        { icon: 'question-circle', text: '反馈', isBottom: true, route: MAIN.FEEDBACK },
+        { icon: 'icon-fankui', text: '反馈', isBottom: true, route: MAIN.FEEDBACK },
       ],
       headMenuVisible : false,
     };
@@ -134,7 +134,8 @@ export default {
   },
   methods : {
     randomAvatar() {
-      return avatarList[0];
+      // TODO DELETE
+      return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
     },
     clickMenu(sidebar, index) {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {
