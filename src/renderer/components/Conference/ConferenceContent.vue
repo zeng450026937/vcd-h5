@@ -4,7 +4,9 @@
       <div class="flex flex-col h-full">
         <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
           <div class="flex items-center h-full text-white self-end px-5 no-dragable">
-            <a-iconfont type="icon-quanping" class="cursor-pointer hover:text-indigo text-base"/>
+            <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
+                        class="cursor-pointer hover:text-indigo text-base"/>
+            <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
             <a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
             <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo-light text-base"
                     @click="showInviteModal"/>
@@ -25,6 +27,9 @@
       <div class="local-video-content">
         <conference-local-video/>
       </div>
+      <div v-if="hasScreenStream" class="share-video-content">
+        <conference-share-video/>
+      </div>
       <conference-notice/>
     </div>
   </a-layout>
@@ -33,6 +38,7 @@
 <script>
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
+import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
 import ConferenceControls from './ConferenceControls.vue';
 import { CONFERENCE } from '../../router/constants';
@@ -54,8 +60,15 @@ export default {
   components : {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
+    ConferenceShareVideo,
     ConferenceNotice,
     ConferenceControls,
+  },
+  computed : {
+    hasScreenStream() {
+      return this.$rtc.conference.shareChannel.remoteStream
+        || this.$rtc.conference.shareChannel.localStream;
+    },
   },
   mounted() {
   },
@@ -93,6 +106,12 @@ export default {
     left: 100%;
     top: 100%;
     transform: translate(-100%, -100%);
+  }
+  .share-video-content {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    transform: translateY(-100%);
   }
 }
   .more-panel-popover {

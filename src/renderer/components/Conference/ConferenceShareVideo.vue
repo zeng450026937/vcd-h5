@@ -1,14 +1,14 @@
 <template>
-  <div id="conference-local-video" class="relative group"
+  <div id="conference-share-video" class="relative group"
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
-    <video-view source="local" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
+    <video-view source="screen" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
       <div class="video-controls group-hover:opacity-100"
            :class="{'opacity-0 h-10': videoCursor !== 0}">
         <div class="flex px-4 justify-end" :class="{[`pt-${videoCursor === 0 ? 2 : 3}`]: true}">
           <a-iconfont v-if="videoCursor !== 0"
                       :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'" class="text-base text-white"
-                  @click="switchShrinkOrExpand"/>
+                      @click="switchShrinkOrExpand"/>
           <a-iconfont :type="videoCursor === 0 ? 'icon-zhankai' : 'icon-yincang'"
                       class="text-base text-white ml-4"
                       @click="switchMaxOrMin"/>
@@ -16,7 +16,7 @@
       </div>
       <div v-if="videoCursor === 0"
            class="video-title h-full flex items-center text-white mx-4">
-        <span class="z-10 text-xs">本地视频</span>
+        <span class="z-10 text-xs">辅流分享</span>
       </div>
     </template>
   </div>
@@ -27,7 +27,7 @@ import VideoView from '../Common/VideoView.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
-  name       : 'ConferenceLocalVideo',
+  name       : 'ConferenceShareVideo',
   components : {
     VideoView,
   },
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <style lang="less">
-  #conference-local-video {
+  #conference-share-video {
     border: 1px solid #1D212F;
     .video-controls {
       position: absolute;
