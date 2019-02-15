@@ -54,6 +54,11 @@ export default {
       return this.displayName || this.targetUser || '未知用户';
     },
   },
+  watch : {
+    displayName(cur, once) {
+      this.targetUser = cur || once;
+    },
+  },
 };
 </script>
 

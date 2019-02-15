@@ -5,12 +5,18 @@ module.exports = {
   productionSourceMap : false,
 
   pages : {
-    index  : 'src/renderer/index.js',
+    index       : 'src/renderer/index.js',
     shareScreen : {
       entry    : 'src/window/shareScreen.js',
       template : 'public/shareScreen.html',
       title    : 'shareScreen',
       filename : 'shareScreen.html',
+    },
+    ringing : {
+      entry    : 'src/window/ringing.js',
+      template : 'public/ringing.html',
+      title    : 'ringing',
+      filename : 'ringing.html',
     },
   },
 
