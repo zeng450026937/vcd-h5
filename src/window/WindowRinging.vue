@@ -8,12 +8,14 @@
         <!--视频（接听）-->
         <a-button shape="circle"
                   class="control-btn w-10 h-10 text-xl text-white mx-2"
+                  @click="answerCall"
         >
           <a-iconfont type="icon-shexiangtou"/>
         </a-button>
         <!--麦克风（接听）-->
         <a-button shape="circle"
                   class="control-btn w-10 h-10 text-xl text-white mx-2"
+                  @click="answerCall"
         >
           <a-iconfont type="icon-maikefeng"/>
         </a-button>
@@ -39,6 +41,11 @@ export default {
   },
   methods : {
     hangUp() {
+      this.rtc.call.decline().catch(() => {});
+      window.close();
+    },
+    answerCall() {
+      this.rtc.call.answer().catch(() => {});
       window.close();
     },
   },

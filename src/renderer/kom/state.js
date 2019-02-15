@@ -94,7 +94,7 @@ export default {
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态
           if (this.isInConferenceView) {
-            router.push(this.sidebarStatus.preRoute.path);
+            if(this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
             this.isInConferenceView = false;
           }
         }
@@ -127,7 +127,7 @@ export default {
       }
       else if (once && val === 'disconnected') {
         await wait(1000); // 添加延时 增加体验
-        router.push(this.sidebarStatus.preRoute.path);
+        if(this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
       }
     },
   },
