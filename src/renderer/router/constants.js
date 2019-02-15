@@ -44,3 +44,10 @@ export const CONFERENCE = {
   CONFERENCE_MAIN   : '/conference/content',
   CONFERENCE_DRAWER : '/conference/content/tabs',
 };
+
+export const CALL = {
+  // call
+  CALL_CONNECTING : '/call/content/connecting',
+  CALL_CONNECTED  : '/call/content/connected',
+  CALL_DRAWER     : '/call/content/tabs',
+};

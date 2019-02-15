@@ -1,11 +1,13 @@
 <template>
-  <div id="conference-header" class="bg-indigo-darker h-9">
+  <div id="call-header" class="bg-indigo-darker h-9">
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
-        <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
-        <a-iconfont :type="`icon-signal-${signal}`" class="text-white text-base mr-4"/>
-        <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
-        <span class="text-white text-xs leading-tight truncate">{{subject}}（ID：{{conferenceId}}）</span>
+        <template v-if="callStatus === 'connected'">
+          <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
+          <a-iconfont :type="`icon-signal-${signal}`" class="text-white text-base mr-4"/>
+          <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
+        </template>
+        <span class="text-white text-xs leading-tight truncate">{{title}}</span>
       </div>
       <div class="flex items-center">
         <a-iconfont type="icon-zuixiaohua"
@@ -31,26 +33,41 @@ const secondsToHms = (d) => {
 };
 
 export default {
-  name : 'ConferenceHeader',
+  name : 'CallHeader',
   data() {
     return {
-      duration : '00:00:00',
-      signal   : 1,
+      targetUser : '',
+      duration   : '00:00:00',
+      signal     : 1,
     };
   },
   computed : {
-    description() {
-      return this.$rtc.conference.information.description;
+    title() {
+      const titleMap = {
+        connecting   : `正在呼叫 ${this.userName}`,
+        connected    : `正在与 ${this.userName} 进行通话`,
+        ringing      : `${this.userName} 正在来电`,
+        disconnected : `与 ${this.userName} 的通话已结束`,
+      };
+
+      return titleMap[this.callStatus] || '当前通话已失效';
     },
-    conferenceId() {
-      return this.description.conferenceId;
+    callStatus() {
+      return this.$model.state.callStatus;
     },
-    subject() {
-      return this.description.subject;
+    displayName() {
+      const remoteIdentity = this.callStatus !== 'disconnected'
+        ? this.$rtc.call.remoteIdentity
+        || this.$rtc.call.incoming[0].remoteIdentity : null;
+
+      return remoteIdentity && (remoteIdentity.display_name
+        || remoteIdentity.uri.user);
+    },
+    userName() {
+      return this.displayName || this.targetUser || '未知用户';
     },
   },
   mounted() {
-    this.initSignal();
   },
   destroyed() {
     if (this.durationTimer) clearInterval(this.durationTimer);
@@ -58,11 +75,11 @@ export default {
   methods : {
     initSignal() {
       // 初始化信号
-      this.$rtc.conference.getStats().then((val) => {
+      this.$rtc.call.getStats().then((val) => {
         this.signal = 1; // TODO val.media.quality;
       });
 
-      // 设置会议进行时间
+      // 设置通话进行时间
       const meetTime = new Date();
 
       this.durationTimer = setInterval(() => {
@@ -79,6 +96,16 @@ export default {
     },
     clickClose() {
       this.$dispatch('sys.close');
+    },
+  },
+  watch : {
+    displayName(cur, once) {
+      this.targetUser = cur || once;
+    },
+    callStatus(cur, once) {
+      if (cur === 'connected') {
+        this.initSignal();
+      }
     },
   },
 };

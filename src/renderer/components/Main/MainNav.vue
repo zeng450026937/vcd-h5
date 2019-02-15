@@ -84,6 +84,7 @@ export default {
           break;
         default: break;
       }
+      this.currentNav = this.navs.findIndex((n) => n.route === this.currentRoute.path);
     },
     clickNav(nav, index) {
       this.currentNav = index;

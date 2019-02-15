@@ -121,11 +121,26 @@ export default {
         this.$model.state.isInConferenceView = val;
       },
     },
+    isInCallView : {
+      get() {
+        return this.$model.state.isInCallView;
+      },
+      set(val) {
+        this.$model.state.isInCallView = val;
+      },
+    },
     confStatus() {
       return this.$rtc.conference.status;
     },
+    callStatus() {
+      return this.$model.state.callStatus;
+    },
+    notInMain() {
+      return (this.confStatus === 'connected' && this.isInConferenceView)
+        || (this.callStatus !== 'disconnected' && this.isInCallView);
+    },
     currentSidebar() {
-      const owner = this.confStatus === 'connected' && this.isInConferenceView
+      const owner = this.notInMain
         ? this.$model.state.sidebarStatus.preRoute.meta.owner
         : this.$route.meta.owner || MODULE_NAME.MEETING;
 

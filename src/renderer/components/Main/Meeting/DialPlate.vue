@@ -14,13 +14,16 @@
       <div class="h-full m-4 bg-white flex items-center">
         <div class="w-2/5 h-full flex flex-col p-10">
           <div class="flex items-center">
-            <a-input defaultValue="号码" v-model="callNumber">
+            <a-input id="number-input"
+                     defaultValue="号码"
+                     :value="callNumber"
+                     @input="inputNumber">
               <a-iconfont slot="suffix"
                           type="icon-guanbi"
                           class="text-sm text-grey cursor-pointer hover:text-red"
-                          @click="callNumber = ''"/>
+                          @click="clearNumber"/>
             </a-input>
-            <a-iconfont type="icon-huishan" class="text-2xl ml-3"/>
+            <a-iconfont type="icon-huishan" class="text-2xl ml-3 cursor-pointer" @click="removeTailNumber"/>
           </div>
           <span class="text-indigo cursor-pointer text-center text-xs mt-3"
                 @click="$refs.contactDrawer.visible = true">添加为本地联系人</span>
@@ -29,7 +32,8 @@
                  v-for="n in dialPanel"
                  :key="n.num">
               <div class="flex justify-center">
-                <div class="rounded w-14 h-14 border cursor-pointer hover:text-blue hover:border-blue">
+                <div class="rounded w-14 h-14 border cursor-pointer hover:text-blue hover:border-indigo"
+                     @click="clickNumber(n.num)">
                   <div class="flex flex-col justify-center items-center h-full">
                     <span class="text-xl">{{n.num}}</span>
                     <span class="text-xs text-grey-darker">{{n.alpha}}</span>
@@ -42,7 +46,8 @@
             <a-button type="primary" class="w-1/2">
               <a-iconfont type="icon-shipin"/>
             </a-button>
-            <a-button type="primary" class="ml-4 w-1/2">
+            <a-button type="primary" class="ml-4 w-1/2"
+                      @click="audioCall">
               <a-iconfont type="icon-yuyin"/>
             </a-button>
           </div>
@@ -67,11 +72,9 @@
                   <div class="flex flex-grow"></div>
                   <div class="flex">
                     <a-iconfont class="opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
-                            theme="filled"
-                            type="video-camera"></a-iconfont>
+                            type="icon-shipin"></a-iconfont>
                     <a-iconfont class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
-                            theme="filled"
-                            type="phone"></a-iconfont>
+                            type="icon-yuyin"></a-iconfont>
                     <a-iconfont type="ellipsis"
                             class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"/>
                   </div>
@@ -84,63 +87,6 @@
     </div>
     <div>
       <local-contact-drawer ref="contactDrawer"/>
-      <!--<a-drawer-->
-          <!--title="添加为本地联系人"-->
-          <!--:closable="false"-->
-          <!--width=360-->
-          <!--placement="right"-->
-          <!--@close="showDrawer = false"-->
-          <!--:visible="showDrawer"-->
-          <!--wrapClassName="call-record-info-drawer"-->
-      <!--&gt;-->
-        <!--<div class="flex h-full flex-col flex-grow mx-5">-->
-          <!--<a-row class="mt-5 flex items-center">-->
-            <!--<a-col :span="4">姓名</a-col>-->
-            <!--<a-col :span="20">-->
-              <!--<a-input-->
-                  <!--placeholder='姓名'-->
-              <!--&gt;-->
-              <!--</a-input>-->
-            <!--</a-col>-->
-          <!--</a-row>-->
-          <!--<a-row class="mt-5 flex items-center">-->
-            <!--<a-col :span="4">账号</a-col>-->
-            <!--<a-col :span="20">-->
-              <!--<a-input-->
-                  <!--placeholder='账号'-->
-              <!--&gt;-->
-              <!--</a-input>-->
-            <!--</a-col>-->
-          <!--</a-row>-->
-          <!--<a-row class="mt-5 flex items-center">-->
-            <!--<a-col :span="4">手机</a-col>-->
-            <!--<a-col :span="20">-->
-              <!--<a-input-->
-                  <!--placeholder='手机'-->
-              <!--&gt;-->
-              <!--</a-input>-->
-            <!--</a-col>-->
-          <!--</a-row>-->
-          <!--<a-row class="mt-5 flex items-center">-->
-            <!--<a-col :span="4">邮箱</a-col>-->
-            <!--<a-col :span="20">-->
-              <!--<a-input-->
-                  <!--placeholder='邮箱'-->
-              <!--&gt;-->
-              <!--</a-input>-->
-            <!--</a-col>-->
-          <!--</a-row>-->
-
-        <!--</div>-->
-        <!--<div class="flex h-12 border-t justify-center items-center">-->
-          <!--<a-button @click="showEditDrawer = false" type="primary">-->
-            <!--确定-->
-          <!--</a-button>-->
-          <!--<a-button @click="showEditDrawer = false" class="ml-4">-->
-            <!--取消-->
-          <!--</a-button>-->
-        <!--</div>-->
-      <!--</a-drawer>-->
     </div>
   </a-layout>
 </template>
@@ -171,8 +117,47 @@ export default {
         { num: '0', alpha: '+' },
         { num: '#', alpha: '' },
       ],
-      callNumber : '',
+      callNumber : '0001',
     };
+  },
+  methods : {
+    clickNumber(num) {
+      this.callNumber = this.callNumber === null ? num : this.callNumber += num;
+      document.getElementById('number-input').focus();
+    },
+    inputNumber(e) {
+      this.callNumber = e.target.value;
+    },
+    clearNumber() {
+      this.callNumber = '';
+      document.getElementById('number-input').focus();
+    },
+    removeTailNumber(context) {
+      context.target.onmousedown = function(e) {
+        // 阻止默认事件
+        if (e && e.preventDefault) { e.preventDefault(); }
+      };
+
+      const obj = document.getElementById('number-input');
+      const start = obj.selectionStart;
+      const end = obj.selectionEnd;
+
+      const cutStart = start === end ? start - 1 : start;
+
+      this.callNumber = this.callNumber.substr(0, cutStart)
+        + this.callNumber.substr(end, this.callNumber.length);
+
+      obj.value = this.callNumber;
+      obj.focus();
+      obj.selectionStart = cutStart;
+      obj.selectionEnd = cutStart;
+
+      return false;
+    },
+    audioCall() {
+      if (!this.callNumber) return;
+      this.$dispatch('call.doAudioCall', this.callNumber);
+    },
   },
 };
 </script>

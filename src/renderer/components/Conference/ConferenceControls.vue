@@ -4,7 +4,7 @@
       <!--视频控制-->
       <a-button :disabled="videoDisabled"
                 shape="circle"
-                class="w-12 h-12 text-xl text-white mx-2"
+                class="w-12 h-12 text-2xl text-white mx-2"
                 @click="onVideoBtnClick"
       >
         <a-iconfont :type="videoIcon.icon" :class="{[`text-${videoIcon.color}`] : true}"/>
@@ -12,14 +12,14 @@
       <!--音频-->
       <a-button :disabled="audioDisabled"
                 shape="circle"
-                class="w-12 h-12 text-xl text-white mx-2"
+                class="w-12 h-12 text-2xl text-white mx-2"
                 @click="onAudioBtnClick"
       >
         <a-iconfont :type="audioIcon.icon" :class="{[`text-${audioIcon.color}`] : true}"/>
       </a-button>
       <!--分享辅流-->
       <a-button shape="circle"
-                class="w-12 h-12 text-xl text-white mx-2"
+                class="w-12 h-12 text-2xl text-white mx-2"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -43,13 +43,13 @@
           </div>
         </div>
         <a-button shape="circle"
-                  class="w-12 h-12 text-xl text-white mx-2"
+                  class="w-12 h-12 text-2xl text-white mx-2"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
-                class="w-12 h-12 text-xl text-white mx-2 bg-red-light"
+                class="w-12 h-12 text-2xl border-transparent text-white mx-2 bg-red-light"
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
     </div>

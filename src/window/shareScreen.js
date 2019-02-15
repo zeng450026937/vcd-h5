@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Window from './Window.vue';
+import Window from './WindowShareScreen.vue';
 import '../renderer/plugins/ant-design';
 import '../renderer/plugins/electron';
 

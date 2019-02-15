@@ -1,7 +1,7 @@
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
-import { LOGIN, MAIN, CONFERENCE } from '../router/constants';
+import { LOGIN, MAIN, CONFERENCE, CALL } from '../router/constants';
 
 const wait = async(timeout = 0) => new Promise((resolve) => {
   if (timeout) {
@@ -18,6 +18,7 @@ export default {
       enterPopup         : null, // 正在进入会议的 popup 提示
       sidebarStatus      : {}, // 记录入会前的 sidebar 的状态信息
       isInConferenceView : false,
+      isInCallView       : false,
     };
   },
   computed : {
@@ -25,6 +26,17 @@ export default {
     loginStatus : () => rtc.account.status,
     // 会议状态 disconnected connecting connected disconnected
     confStatus  : () => rtc.conference.status,
+    // 通话状态 ringing connecting connected disconnected
+    // connecting   : 呼叫
+    // connected    : 通话中
+    // ringing      : 来电
+    // disconnected : 通话结束
+    callStatus() {
+      if (rtc.call.ringing) return 'ringing';
+      else if (rtc.call.connecting) return 'connecting';
+      else if (rtc.call.connected) return 'connected';
+      else return 'disconnected';
+    },
   },
   methods : {
     async handleLogin(val, once) {
@@ -44,7 +56,7 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(1000); // 添加延时 增加体验
-          router.push(MAIN.CONTACT_CORPORATE);
+          router.push(MAIN.DIAL_PLATE);
         }
         else if (once === 'registered' && val === 'disconnected') {
         // 退出状态
@@ -91,6 +103,26 @@ export default {
         }
       }
     },
+    async handleCall(val, once) {
+      if (val === 'ringing') { // 来电
+
+      }
+      else if (val === 'connecting') {
+        this.sidebarStatus.preRoute = router.currentRoute;
+        this.isInCallView = true;
+
+        router.push(CALL.CALL_CONNECTING);
+      }
+      else if (val === 'connected') {
+        this.isInCallView = true;
+
+        router.push(CALL.CALL_CONNECTED);
+      }
+      else if (once && val === 'disconnected') {
+        await wait(1000); // 添加延时 增加体验
+        router.push(this.sidebarStatus.preRoute.path);
+      }
+    },
   },
   watch : {
     loginStatus : {
@@ -99,6 +131,10 @@ export default {
     },
     confStatus : {
       handler   : 'handleEnterMeeting',
+      immediate : true,
+    },
+    callStatus : {
+      handler   : 'handleCall',
       immediate : true,
     },
   },

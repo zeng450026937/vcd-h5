@@ -79,7 +79,7 @@ export default {
     openShareWindow() {
       const option = 'width=528,height=297,directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
 
-      this.shareWindow = window.open('/window.html', 'screenShare', option);
+      this.shareWindow = window.open('/shareScreen.html', 'screenShare', option);
       this.isshareWindowOpen = true;
       this.shareWindow.onbeforeunload = () => {
         // FIXME TMP SOLUTION

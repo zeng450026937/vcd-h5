@@ -6,11 +6,11 @@ module.exports = {
 
   pages : {
     index  : 'src/renderer/index.js',
-    window : {
-      entry    : 'src/window/index.js',
-      template : 'public/window.html',
-      title    : 'window',
-      filename : 'window.html',
+    shareScreen : {
+      entry    : 'src/window/shareScreen.js',
+      template : 'public/shareScreen.html',
+      title    : 'shareScreen',
+      filename : 'shareScreen.html',
     },
   },
 

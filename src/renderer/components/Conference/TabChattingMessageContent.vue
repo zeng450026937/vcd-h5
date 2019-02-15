@@ -1,6 +1,6 @@
 <template>
   <a-layout id="tab-chatting-message-content" class="h-full bg-white">
-    <div class="flex flex-col overflow-y-auto pb-10">
+    <div class="flex flex-col-reverse overflow-y-auto pb-10">
       <template v-for="(message, index) in messageRecordList">
         <div :key="index">
           <div class="flex flex-col p-3">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash';
 
 export default {
   name : 'TabChattingMessageContent',
@@ -37,7 +38,7 @@ export default {
   },
   computed : {
     messageRecordList() {
-      return this.$model.chat.messageRecordList;
+      return cloneDeep(this.$model.chat.messageRecordList).reverse();
     },
   },
 };

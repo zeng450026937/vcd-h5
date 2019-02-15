@@ -192,6 +192,35 @@ const router = new Router({
       ],
     },
     {
+      name      : 'call',
+      path      : '/call',
+      component : () => import(/* webpackChunkName: "layoutCall" */ '@/renderer/views/LayoutCall.vue'),
+      children  : [
+        {
+          name       : 'callContent',
+          path       : 'content',
+          components : {
+            header  : () => import(/* webpackChunkName: "conferenceHeader" */ '@/renderer/components/Call/CallHeader.vue'),
+            sidebar : () => import(/* webpackChunkName: "mainSidebar" */ '@/renderer/components/Main/MainSidebar.vue'),
+            drawer  : () => import(/* webpackChunkName: "conferenceDrawer" */ '@/renderer/components/Call/CallDrawer.vue'),
+            default : () => import(/* webpackChunkName: "layoutConferenceContent" */ '@/renderer/views/LayoutCallContent.vue'),
+          },
+          children : [
+            {
+              name      : 'callConnecting',
+              path      : 'connecting',
+              component : () => import(/* webpackChunkName: "callConnecting" */ '@/renderer/components/Call//CallConnectingContent.vue'),
+            },
+            {
+              name      : 'callConnected',
+              path      : 'connected',
+              component : () => import(/* webpackChunkName: "callConnected" */ '@/renderer/components/Call//CallConnectedContent.vue'),
+            },
+          ],
+        },
+      ],
+    },
+    {
       path     : '*',
       redirect : LOGIN.YMS_LOGIN,
     },

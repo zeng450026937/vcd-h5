@@ -12,7 +12,7 @@ import sys from './sys';
 import storage from './storage';
 //
 import setting from './setting';
-import call from './setting/call';
+import settingCall from './setting/call';
 import normal from './setting/normal';
 import internet from './setting/internet';
 import device from './setting/device';
@@ -24,6 +24,8 @@ import chat from './conference/chat';
 import stat from './conference/stat';
 import conference from './conference';
 import share from './conference/share';
+// call
+import call from './call';
 
 Vue.use(Vuem);
 
@@ -61,9 +63,10 @@ const data = {
   stat,
   conference,
   share,
+  call,
   setting : {
     $selfValue : setting,
-    call,
+    call       : settingCall,
     normal,
     device,
     internet,
