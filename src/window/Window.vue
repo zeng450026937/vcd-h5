@@ -1,9 +1,11 @@
 <template>
   <a-layout id="window">
-    <div class="window-header flex justify-end items-center h-10 dragable">
+    <div class="window-header flex justify-end items-center h-10 dragable z-10">
       <div class="flex no-dragable">
-        <a-iconfont type="icon-quanping" class="mr-4 text-base text-white"/>
-        <a-iconfont type="icon-hebingfuliu" class="mr-4 text-base text-white"/>
+        <a-iconfont type="icon-quanping" class="mr-4 text-base text-white cursor-pointer"
+                    @click="maxWindow"/>
+        <a-iconfont type="icon-hebingfuliu" class="mr-4 text-base text-white cursor-pointer"
+                    @click="closeWindow"/>
       </div>
     </div>
     <video id="window-share-video" autoplay loop></video>
@@ -41,6 +43,12 @@ export default {
       if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.srcObject = stream;
       }
+    },
+    closeWindow() {
+      window.close();
+    },
+    maxWindow() {
+
     },
   },
   watch : {

@@ -81,9 +81,11 @@ export default {
 
       this.shareWindow = window.open('/window.html', 'screenShare', option);
       this.isshareWindowOpen = true;
-
       this.shareWindow.onbeforeunload = () => {
-        this.isshareWindowOpen = this.shareWindow.closed;
+        // FIXME TMP SOLUTION
+        setTimeout(() => {
+          this.isshareWindowOpen = !this.shareWindow.closed;
+        }, 100);
       };
     },
     showInviteModal() {
