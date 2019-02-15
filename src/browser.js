@@ -2,14 +2,12 @@ import './logger/main/install';
 
 import { app, Menu, ipcMain, BrowserWindow, shell, Tray } from 'electron';
 import { AppWindow } from './main/app-window';
-import { AppTray } from './main/app-tray';
 import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
 import { showUncaughtException } from './main/show-uncaught-exception';
 import { log as writeLog } from './logger/winston';
 
 let mainWindow = null;
-let mainTray = null;
 
 const launchTime = now();
 
@@ -98,26 +96,6 @@ function createWindow() {
   mainWindow = window;
 }
 
-function restoreWindow() {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
-    }
-
-    if (!mainWindow.isVisible()) {
-      mainWindow.show();
-    }
-
-    mainWindow.focus();
-  }
-}
-
-function createTray() {
-  mainTray = new AppTray();
-
-  mainTray.onClick(restoreWindow);
-}
-
 let hasInstanceLock = false;
 
 if (!handlingSquirrelEvent) {
@@ -128,7 +106,9 @@ if (!handlingSquirrelEvent) {
   }
   else {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
-      restoreWindow();
+      if (mainWindow) {
+        mainWindow.restoreWindow();
+      }
     });
         
     app.on('ready', () => {
@@ -139,7 +119,6 @@ if (!handlingSquirrelEvent) {
       readyTime = now() - launchTime;
       
       createWindow();
-      createTray();
 
       ipcMain.on(
         'log',
