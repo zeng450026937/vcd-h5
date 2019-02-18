@@ -1,5 +1,5 @@
 <template>
-  <div id="login-header">
+  <div id="login-header" class="z-10">
     <div class="px-2 h-9 select-none">
       <div class="flex flex-row h-full">
         <div class="flex items-center">

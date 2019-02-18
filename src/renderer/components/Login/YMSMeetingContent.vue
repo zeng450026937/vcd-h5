@@ -1,72 +1,83 @@
 <template>
-  <a-layout id="yms-meeting" class="bg-transparent h-full">
-    <div class="flex h-full flex-col">
-      <div v-if="!isInSetting" class="enter-meeting-content self-end rounded-sm">
-        <div class="flex justify-end">
-          <a-iconfont type='icon-kongzhi' class="text-lg cursor-pointer text-white"
-                  @click="isInSetting = true"/>
-        </div>
-        <h2 class="text-white mt-4">加入会议</h2>
-        <div class="mt-10 flex flex-col">
-          <a-input
-              v-model="meetingData.account"
-              placeholder='会议ID'
-          >
-            <a-iconfont slot="prefix" type='icon-ID'/>
-          </a-input>
-          <div class="mt-5">
-            <a-input
-                v-model="meetingData.pin"
-                placeholder='会议密码(选填)'
-            >
-              <a-iconfont slot="prefix" type='icon-mima'/>
-            </a-input>
+  <a-layout id="yms-meeting" class="bg-indigo-darker h-full">
+    <div class="h-full z-10 flex flex-col">
+      <div class="flex h-full flex-col">
+        <div v-if="!isInSetting" class="enter-meeting-content self-end rounded-sm">
+          <div class="flex justify-end">
+            <a-iconfont type='icon-kongzhi' class="text-lg cursor-pointer text-white"
+                        @click="isInSetting = true"/>
           </div>
-          <div class="mt-5">
+          <h2 class="text-white mt-4">加入会议</h2>
+          <div class="mt-10 flex flex-col">
             <a-input
-                v-model="meetingData.server"
-                placeholder='服务器'
+                v-model="meetingData.account"
+                placeholder='会议ID'
             >
-              <a-iconfont slot="prefix" type='icon-fuwuqi'/>
+              <a-iconfont slot="prefix" type='icon-ID' class="text-base text-black9"/>
             </a-input>
+            <div class="mt-5">
+              <a-input
+                  v-model="meetingData.pin"
+                  placeholder='会议密码(选填)'
+                  type='password'
+              >
+                <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
+              </a-input>
+            </div>
+            <div class="mt-5">
+              <a-input
+                  v-model="meetingData.server"
+                  placeholder='服务器'
+              >
+                <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
+              </a-input>
+            </div>
+          </div>
+          <div class="mt-10 flex flex-col">
+            <a-button type="primary" block @click="joinMeeting">加入</a-button>
+            <a-button block class="mt-5" @click="returnLogin">返回登陆</a-button>
           </div>
         </div>
-        <div class="mt-10 flex flex-col">
-          <a-button type="primary" block>登陆</a-button>
-          <a-button block class="mt-5" @click="returnLogin">返回登陆</a-button>
+        <div v-else class="setting-content self-end rounded-sm">
+          <div class="text-white">
+            <a-iconfont type="icon-left" class="cursor-pointer text-base" @click="isInSetting = false"/>
+          </div>
+          <div class="setting-media-content mt-5">
+            <tab-setting-media :show-video="false"/>
+          </div>
         </div>
       </div>
-      <div v-else class="setting-content self-end rounded-sm">
-        <div class="text-white">
-          <a-iconfont type="icon-left" class="cursor-pointer text-base" @click="isInSetting = false"/>
-        </div>
-        <div class="setting-media-content mt-5">
-          <tab-setting-media :show-video="false"/>
-        </div>
+      <div class="flex flex-grow"></div>
+      <div class="flex justify-center pb-5">
+        <a-button ghost shape="circle"
+                  class="text-xl w-12 h-12 mx-4 bg-black-lightest"
+                  @click="triggerVideo">
+          <a-iconfont :type="videoIcon"/>
+        </a-button>
+        <a-button ghost class="w-12 h-12 text-xl mx-4 bg-black-lightest"
+                  shape="circle"
+                  @click="triggerAudio">
+          <a-iconfont :type="audioIcon"/>
+        </a-button>
       </div>
-      <!--<media-content/>-->
     </div>
-    <div class="flex flex-grow"></div>
-    <div class="flex justify-center pb-5">
-      <a-button ghost shape="circle" class="text-xl w-12 h-12 mx-4 bg-black-lightest">
-        <a-iconfont type="icon-shexiangtou"/>
-      </a-button>
-      <a-button ghost class="w-12 h-12 text-xl mx-4 bg-black-lightest"
-                shape="circle">
-        <a-iconfont type="icon-maikefeng"/>
-      </a-button>
+    <video-view v-if="videoOn" class="z-0 bg-indigo-darker"/>
+    <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
+      <a-iconfont type="icon-huiyishi" class="display-icon"/>
     </div>
   </a-layout>
 </template>
 
 <script>
 import TabSettingMedia from '../Conference/TabSettingMedia.vue';
+import VideoView from '../Common/VideoView.vue';
 import { LOGIN } from '../../router/constants';
 
 export default {
   name       : 'YMAMeeting',
   components : {
     TabSettingMedia,
+    VideoView,
   },
   data() {
     return {
@@ -84,6 +95,31 @@ export default {
     };
   },
   computed : {
+    audioOn : {
+      get() {
+        return this.$model.meeting.audioOn;
+      },
+      set(val) {
+        this.$model.meeting.audioOn = val;
+      },
+    },
+    videoOn : {
+      get() {
+        return this.$model.meeting.videoOn;
+      },
+      set(val) {
+        this.$model.meeting.videoOn = val;
+      },
+    },
+    localStream() {
+      return this.$rtc.media.localMedia.stream;
+    },
+    videoIcon() {
+      return this.videoOn ? 'icon-shexiangtou' : 'icon-shexiangtoujinyong';
+    },
+    audioIcon() {
+      return this.audioOn ? 'icon-maikefeng' : 'icon-maikefengjinyong';
+    },
     meetingBtnClasses() {
       return {};
     },
@@ -95,6 +131,9 @@ export default {
     },
   },
   methods : {
+    joinMeeting() {
+      this.$dispatch('meeting.joinMeeting', this.meetingData);
+    },
     returnLogin() {
       this.$router.push(LOGIN.YMS_LOGIN);
     },
@@ -105,10 +144,10 @@ export default {
       this.$router.push('/login/yms');
     },
     triggerAudio() {
-
+      this.audioOn = !this.audioOn;
     },
     triggerVideo() {
-
+      this.videoOn = !this.videoOn;
     },
   },
 };
@@ -130,16 +169,34 @@ export default {
         #tab-setting-media {
           background-color: transparent !important;
           color: white !important;
+
           > div {
             padding: 0 !important;
           }
+
           .test-mic-text {
             color: white !important;
           }
+
           .test-audio-text {
             color: white !important;
           }
         }
+      }
+    }
+
+    .ant-input {
+      padding-left: 36px;
+    }
+    .local-video-bg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      .display-icon {
+        opacity: 0.4;
+        color: white;
+        font-size: 84px;
       }
     }
   }

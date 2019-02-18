@@ -26,7 +26,7 @@
           >{{audioInput.label}}
           </a-select-option>
         </a-select>
-        <a-slider :defaultValue="30" class="my-0 mt-1 mx-0 dragable"/>
+        <a-progress :percent="volume" :showInfo="false" :strokeWidth=2 />
         <span class="test-mic-text leading-tight text-xs text-grey-darkest">麦克风测试</span>
       </div>
 
@@ -42,7 +42,9 @@
           </a-select-option>
         </a-select>
         <div class="mt-2 flex items-center">
-          <a-iconfont type="icon-bofang" class="test-audio-text text-indigo text-base"/>
+          <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
+                      class="test-audio-text text-indigo text-base cursor-pointer"
+                      @click="playTestMusic"/>
           <span class="test-audio-text ml-1 text-xs text-grey-darkest leading-tight">播放测试音频</span>
         </div>
       </div>
@@ -59,6 +61,11 @@ export default {
   components : {
     VideoView,
   },
+  date() {
+    return {
+      isPlaying : false,
+    };
+  },
   props : {
     showVideo : {
       type    : Boolean,
@@ -66,6 +73,9 @@ export default {
     },
   },
   computed : {
+    volume() {
+      return this.$rtc.media.localMedia.volume;
+    },
     videoInput : {
       get() {
         return this.$model.setting.device.videoInput;
@@ -100,23 +110,22 @@ export default {
       return this.$model.setting.device.audioOutputList;
     },
   },
+  methods : {
+    playTestMusic() {
+      this.isPlaying = !this.isPlaying;
+    },
+  },
 };
 </script>
 
 <style lang="less">
   #tab-setting-media {
-    .ant-slider {
-      .ant-slider-rail {
-        height: 2px;
-      }
-      .ant-slider-track {
-        height: 2px;
-      }
-      .ant-slider-step {
-        height: 2px;
-      }
-      .ant-slider-handle {
-        display: none;
+    .ant-progress {
+      .ant-progress-inner {
+        background-color: rgba(153, 153, 153, 0.5);
+        .ant-progress-bg {
+          background-color: #FFF;
+        }
       }
     }
   }

@@ -36,17 +36,18 @@
         </a-form-item>
         <a-form-item
             fieldDecoratorId="pin">
-          <a-tooltip
-              :visible="isCapsLockOn"
-              trigger="focus"
-              placement="bottomLeft">
-            <template slot="title">
-              <span>大写锁定已打开</span>
-            </template>
             <a-input @keypress="passwordInputted" type='password' placeholder='密码'>
-              <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
+              <a-tooltip
+                  slot="prefix"
+                  :visible="isCapsLockOn"
+                  trigger="focus"
+                  placement="bottomLeft">
+                <template slot="title">
+                  <span>大写锁定已打开</span>
+                </template>
+                <a-iconfont type='icon-mima' class="text-base text-black9"/>
+              </a-tooltip>
             </a-input>
-          </a-tooltip>
         </a-form-item>
         <a-form-item
             fieldDecoratorId="server"
