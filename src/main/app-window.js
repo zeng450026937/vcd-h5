@@ -104,14 +104,18 @@ export class AppWindow extends BaseWindow {
     /* eslint-disable no-shadow */
     // window.open('', 'media')
     this.window.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
-      if (frameName === 'media') {
-        options.minWidth = 300;
-        options.minHeight = 300;
-        options.webPreferences.experimentalFeatures = false;
-        options.webPreferences.nativeWindowOpen = false;
-        options.webPreferences.nodeintegration = false;
-        options.webPreferences.nodeIntegrationInWorker = false;
+      if (frameName === 'screen-share') {
+        options.minWidth = 528;
+        options.minHeight = 297;
       }
+      else {
+        options.minWidth = 0;
+        options.minHeight = 0;
+      }
+      options.webPreferences.experimentalFeatures = false;
+      options.webPreferences.nativeWindowOpen = false;
+      options.webPreferences.nodeintegration = false;
+      options.webPreferences.nodeIntegrationInWorker = false;
     });
     /* eslint-enable no-shadow */
 
