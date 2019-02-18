@@ -1,4 +1,4 @@
-import { Emitter, Disposable } from 'event-kit';
+import { EventEmitter } from 'events';
 import { remote } from 'electron';
 import { sendWillQuitSync } from '../mainProcessProxy';
 
@@ -11,11 +11,12 @@ const UpdateStatus = {
   UpdateReady        : 3, // 更新下载完成
 };
 
-class Updater {
+class Updater extends EventEmitter {
   constructor() {
+    super();
+
     this.status = UpdateStatus.UpdateNotAvailable;
     this.lastSuccessfulCheck = null;
-    this.emitter = new Emitter();
     
     const autoUpdaterError = this.onAutoUpdaterError.bind(this);
     const checkingForUpdate = this.onCheckingForUpdate.bind(this);
@@ -80,8 +81,8 @@ class Updater {
   }
   
   quitAndInstallUpdate() {
-    autoUpdater.quitAndInstall();
     sendWillQuitSync();
+    autoUpdater.quitAndInstall();
   }
   
   touchLastChecked() {
@@ -90,16 +91,16 @@ class Updater {
   
   emitError(error) {
     console.log(error);
-    this.emitter.emit('error', error);
+    this.emit('error', error);
   }
   
   emitDidChange() {
     console.log(this.state);
-    this.emitter.emit('did-change', this.state);
+    this.emit('did-change', this.state);
   }
   
   onDidChange(callback) {
-    this.emitter.on('did-change', callback);
+    this.on('did-change', callback);
   }
   
   get state() {
