@@ -77,7 +77,7 @@ export default {
   },
   methods : {
     openShareWindow() {
-      const option = 'width=528,height=297,directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
+      const option = 'width=528,height=297,minWidth=528,minHeight=297,directories=no,resizable,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
 
       this.shareWindow = window.open('/shareScreen.html', 'screenShare', option);
       this.isshareWindowOpen = true;

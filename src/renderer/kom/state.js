@@ -1,6 +1,8 @@
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
+import storage, { LOGIN_STORAGE } from '../storage';
+
 import { LOGIN, MAIN, CONFERENCE, CALL } from '../router/constants';
 
 const wait = async(timeout = 0) => new Promise((resolve) => {
@@ -58,13 +60,11 @@ export default {
           await wait(1000); // 添加延时 增加体验
           router.push(MAIN.DIAL_PLATE);
         }
-        else if (once === 'registered' && val === 'disconnected') {
-        // 退出状态
-          router.push(LOGIN.YMS_LOGIN);
-        }
         else {
         // 未登录状态
-          router.push(LOGIN.YMS_LOGIN);
+          const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE);
+
+          router.push(serverType === 'cloud' ? LOGIN.CLOUD_LOGIN : LOGIN.YMS_LOGIN);
         }
         if (this.loginPopup) popup.destroy(this.loginPopup);
       }
@@ -94,7 +94,7 @@ export default {
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态
           if (this.isInConferenceView) {
-            if(this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
+            if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
             this.isInConferenceView = false;
           }
         }
@@ -127,7 +127,7 @@ export default {
       }
       else if (once && val === 'disconnected') {
         await wait(1000); // 添加延时 增加体验
-        if(this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
+        if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
       }
     },
   },

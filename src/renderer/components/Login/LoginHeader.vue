@@ -13,7 +13,7 @@
 
               <a-menu-item key="yms" class="py-2 text-xs">企业版</a-menu-item>
             </a-menu>
-            <span class="ant-dropdown-link cursor-pointer">
+            <span class="ant-dropdown-link cursor-pointer text-xs leading-tight">
               {{ serverText }}
               <a-iconfont :type="menuStatus ? 'icon-up': 'icon-down'" class="text-base ml-1" />
             </span>
@@ -45,6 +45,7 @@
 
 <script>
 import LoginHeaderModal from './LoginHeaderModal.vue';
+import { LOGIN } from '../../router/constants';
 
 export default {
   name       : 'LoginHeader',
@@ -55,7 +56,6 @@ export default {
     return {
       menuStatus : false,
       helpStatus : false,
-
     };
   },
   computed : {
@@ -66,9 +66,6 @@ export default {
       };
 
       return textMap[this.$model.login.serverType] || '请选择服务器';
-    },
-    inPreview() {
-      return this.$route.name === 'login-preview';
     },
     loginType() {
       return this.$model.login.loginType;
@@ -86,16 +83,15 @@ export default {
     },
     handleHelpClick() {},
     handleMenuClick({ key }) {
-      if (!this.inPreview) {
-        // 如果不是在预览页面
-        const pre = this.loginType === 'login' ? '' : 'm-';
-        const routeMap = {
-          cloud : `/login/loginContent/${pre}cloud`,
-          yms   : `/login/loginContent/${pre}yms`,
-        };
+      const ROUTE_MAP = this.loginType === 'login' ? {
+        cloud : LOGIN.CLOUD_LOGIN,
+        yms   : LOGIN.YMS_LOGIN,
+      } : {
+        cloud : LOGIN.CLOUD_MEETING,
+        yms   : LOGIN.YMS_MEETING,
+      };
 
-        this.$router.push(routeMap[key]);
-      }
+      this.$router.push(ROUTE_MAP[key]);
       this.$model.login.serverType = key;
       this.menuStatus = false;
     },

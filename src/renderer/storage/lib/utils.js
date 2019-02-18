@@ -1,19 +1,15 @@
 export const isJson = (str) => {
-  if (typeof str === 'string') {
-    try {
-      const obj = JSON.parse(str);
+  try {
+    JSON.parse(str);
 
-
-      return typeof obj === 'object' && obj;
-    }
-    catch (e) {
-      return false;
-    }
+    return true;
   }
-
-  return false;
+  catch (e) {
+    return false;
+  }
 };
 
 export const toString = (json) => (typeof json === 'object' ? JSON.stringify(json) : json);
 
+// so that we can get number and boolean
 export const toJSON = (str) => (isJson(str) ? JSON.parse(str) : str);

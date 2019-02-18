@@ -1,4 +1,5 @@
 import log4electron from '../../../logger';
+import ERROR_MAP from './constant';
 
 const logger = log4electron.getLogger('BROWSER');
 
@@ -8,7 +9,9 @@ const errorNotice = async(ctx, next) => {
   }
   catch (e) {
     logger.error(e);
-    ctx.vm.$message.error(e.message);
+    const errorKey = e.cause || (e.data && e.data.cause);
+
+    ctx.vm.$message.error(ERROR_MAP[errorKey] || e.message);
     throw e;
   }
 };

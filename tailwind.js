@@ -47,17 +47,20 @@ View the full documentation at https://tailwindcss.com.
 const colors = {
   transparent : 'transparent',
 
-  black            : '#22292f',
-  'black-lighter'  : '#333333',
-  'black-lightest' : '#666666',
-  'grey-darkest'   : '#3d4852',
-  'grey-darker'    : '#606f7b',
-  'grey-dark'      : '#8795a1',
-  grey             : '#b8c2cc',
-  'grey-light'     : '#DADEED',
-  'grey-lighter'   : '#EEEEEE',
-  'grey-lightest'  : '#f8fafc',
-  white            : '#ffffff',
+  black  : '#000000',
+  black3 : '#333333',
+  black6 : '#666666',
+  black7 : '#777777',
+  black9 : '#999999',
+
+  'grey-darkest'  : '#3d4852',
+  'grey-darker'   : '#606f7b',
+  'grey-dark'     : '#8795a1',
+  grey            : '#b8c2cc',
+  'grey-light'    : '#DADEED',
+  'grey-lighter'  : '#EEEEEE',
+  'grey-lightest' : '#f8fafc',
+  white           : '#ffffff',
 
   'red-darkest'  : '#3b0d0c',
   'red-darker'   : '#621b18',
@@ -85,7 +88,7 @@ const colors = {
 
   'green-darkest'  : '#0f2f21',
   'green-darker'   : '#1a4731',
-  'green-dark'     : '#1f9d55',
+  'green-dark'     : '#06B676',
   green            : '#38c172',
   'green-light'    : '#51d88a',
   'green-lighter'  : '#a2f5bf',
@@ -99,13 +102,6 @@ const colors = {
   'teal-lighter'  : '#a0f0ed',
   'teal-lightest' : '#e8fffe',
 
-  'blue-darkest'  : '#12283a',
-  'blue-darker'   : '#1c3d5a',
-  'blue-dark'     : '#2779bd',
-  blue            : '#3490dc',
-  'blue-light'    : '#6cb2eb',
-  'blue-lighter'  : '#bcdefa',
-  'blue-lightest' : '#eff8ff',
 
   'indigo-darkest'  : '#191e38',
   'indigo-darker'   : '#252B41',
@@ -116,21 +112,6 @@ const colors = {
   'indigo-lighter'  : '#93A3DD',
   'indigo-lightest' : '#e6e8ff',
 
-  'purple-darkest'  : '#21183c',
-  'purple-darker'   : '#382b5f',
-  'purple-dark'     : '#794acf',
-  purple            : '#9561e2',
-  'purple-light'    : '#a779e9',
-  'purple-lighter'  : '#d6bbfc',
-  'purple-lightest' : '#f3ebff',
-
-  'pink-darkest'  : '#451225',
-  'pink-darker'   : '#6f213f',
-  'pink-dark'     : '#eb5286',
-  pink            : '#f66d9b',
-  'pink-light'    : '#fa7ea8',
-  'pink-lighter'  : '#ffbbca',
-  'pink-lightest' : '#ffebef',
 
 };
 
@@ -314,11 +295,12 @@ module.exports = {
   */
 
   leading : {
-    none    : 1,
-    tighter : '1.125rem', // 18px
-    tight   : '1.25rem', // 20px
-    normal  : '1.375rem', // 22px
-    loose   : '1.5rem', // 24px
+    none     : 1,
+    tightest : '1rem',
+    tighter  : '1.125rem', // 18px
+    tight    : '1.25rem', // 20px
+    normal   : '1.375rem', // 22px
+    loose    : '1.5rem', // 24px
   },
 
 
@@ -464,6 +446,7 @@ module.exports = {
     sm      : '.125rem',
     default : '.25rem',
     lg      : '.5rem',
+    lger    : '.75rem',
     full    : '9999px',
   },
 

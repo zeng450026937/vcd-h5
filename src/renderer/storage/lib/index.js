@@ -6,10 +6,10 @@ export default class VueStorage {
     this.storage = options.storage || [];
     this.dbName = options.dbName;
     this.version = options.version || 'V1';
-    this.init();
+    this._init();
   }
 
-  init(storage = this.storage) {
+  _init(storage = this.storage) {
     if (!storage || !Array.isArray(storage)) return;
     storage.forEach((s) => {
       if (!s.key && s.type === Array) console.warn(`it is better to provide key for ${s.store}`);

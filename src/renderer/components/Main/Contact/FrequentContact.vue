@@ -5,13 +5,13 @@
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <a-iconfont  v-if="!selectedGroup.isRoot" type="left"
+            <a-iconfont  v-if="!selectedGroup.isRoot" type="icon-left"
                      class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
                      @click="goBack"/>
             <span>{{selectedGroup.name}}</span>
             <a-iconfont v-if="selectedGroup.isRoot"
                     class="ml-4 text-indigo cursor-pointer no-dragable"
-                    type="folder-add"
+                    type="icon-tianjiafenzu"
                     theme="filled" @click="addGroup"/>
           </div>
           <div class="flex flex-grow"></div>
