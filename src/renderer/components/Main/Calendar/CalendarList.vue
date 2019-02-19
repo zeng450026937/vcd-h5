@@ -16,13 +16,21 @@
           <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.expiryTime}}</div>
         </div>
       </div>
+      <div v-if="!eventList || eventList.length <= 0">
+        <common-empty class="mt-20 text-grey" text="暂无日程信息"/>
+      </div>
     </div>
   </a-layout>
 </template>
 
 <script>
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
+
 export default {
-  name : 'CalendarList',
+  name       : 'CalendarList',
+  components : {
+    CommonEmpty,
+  },
   data() {
     return {
 
@@ -32,9 +40,17 @@ export default {
     eventList() {
       return this.$model.calendar.currentDateEvents;
     },
-    currentEvent() {
-      return this.$model.calendar.currentEvent;
+    currentEvent : {
+      get() {
+        return this.$model.calendar.currentEvent;
+      },
+      set(val) {
+        this.$model.calendar.currentEvent = val;
+      },
     },
+  },
+  mounted() {
+
   },
   methods : {
     meetingStatus(startTime, expiryTime) {
@@ -51,6 +67,16 @@ export default {
     },
     clickCalendar(event) {
       this.$model.calendar.currentEvent = event;
+    },
+  },
+  watch : {
+    eventList(val, once) {
+      if ((!once || once.length <= 0) && !this.currentEvent.scheduleId) {
+        this.currentEvent = this.eventList[0] || {};
+      }
+      else if (!val || val.length <= 0) {
+        this.currentEvent = {};
+      }
     },
   },
 };

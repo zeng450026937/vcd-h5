@@ -10,11 +10,11 @@ import kom from './kom';
 import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
-import updater from './updater';
+// import updater from './updater';
 import { sendReady } from './mainProcessProxy';
 
 Vue.config.productionTip = false;
-updater.checkForUpdates();
+// updater.checkForUpdates();
 
 const startTime = performance.now();
 

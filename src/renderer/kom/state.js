@@ -58,7 +58,7 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(2000); // 添加延时 增加体验
-          router.push(MAIN.DIAL_PLATE);
+          router.push(MAIN.CALENDAR_VIEW);
         }
         else {
         // 未登录状态
@@ -93,6 +93,7 @@ export default {
         }
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态
+          // TODO 点击左侧导航 然后返回会议页面 最后退出路由出错
           if (this.isInConferenceView) {
             if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
             this.isInConferenceView = false;

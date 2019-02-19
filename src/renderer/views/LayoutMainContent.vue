@@ -6,7 +6,9 @@
         <main-nav-mini-video style="width: 240px;"/>
       </div>
       <div class="flex h-full bg-white"
-            style="width: calc( 100% - 240px );">
+            :style="{
+              width: hideNav ? '100%' : 'calc( 100% - 240px )'
+            }">
         <router-view/>
       </div>
     </div>

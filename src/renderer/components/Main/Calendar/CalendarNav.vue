@@ -54,6 +54,12 @@ export default {
       return this.$model.calendar.formatCalendar || [];
     },
   },
+  mounted() {
+    this.$nextTick(() => {
+      // TODO TMP
+      // this.$refs.calendar.$children[0].$children[0].$children[0].$children[0].onToday();
+    });
+  },
   methods : {
     reserveMeeting() {
       this.$router.push(MAIN.CALENDAR_RESERVE);

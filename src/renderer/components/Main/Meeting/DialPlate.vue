@@ -171,7 +171,6 @@ export default {
       } ]);
     },
     showAddLocalContact() {
-      // if (!this.callNumber) return;
       this.$refs.contactDrawer.visible = true;
       this.$refs.contactDrawer.$nextTick(() => {
         this.$refs.contactDrawer.form.setFieldsValue({
