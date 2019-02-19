@@ -73,7 +73,7 @@ export default {
     return {
       enterPopup      : '',
       checkedKeys     : [],
-      selectedContact : [],
+      selectedContact : [ ],
     };
   },
   methods : {

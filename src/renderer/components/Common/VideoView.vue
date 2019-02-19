@@ -9,6 +9,10 @@
         autoplay loop
         :style="{'object-fit': objectFit}"
     ></video>
+    <div v-if="!videoStream" class="loading-notice absolute">
+      <a-spin size="large"/>
+      <span class="ml-6 text-indigo text-xl">正在加载视频...</span>
+    </div>
   </a-layout>
 </template>
 
@@ -68,7 +72,7 @@ export default {
   methods : {
     onVideoStreamChanged(stream) {
       if (!stream) return;
-      if (!this.videoElement) {
+      if (!this.videoElement) { // TODO update DOM to refs
         this.videoElement = document.getElementById(this.videoId);
       }
       if (this.videoElement && this.videoElement.srcObject !== stream) {
@@ -101,7 +105,7 @@ export default {
 
 <style scoped lang="less">
   .video-content-wrapper {
-    &-absolute {
+    &-absolute, .loading-notice {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);

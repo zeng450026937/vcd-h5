@@ -2,7 +2,7 @@
   <a-layout id="tab-setting-media" class="bg-white">
     <div class="flex flex-col select-none px-4">
       <div class="flex flex-col">
-        <span class="leading-tight">摄像头</span>
+        <span class="leading-normal">摄像头</span>
         <a-select defaultValue="请选择摄像头"
                   v-model="videoInput" class="mt-2">
           <a-select-option v-for="videoInput in videoInputList"
@@ -11,8 +11,10 @@
           >{{videoInput.label}}
           </a-select-option>
         </a-select>
-        <div v-if="showVideo" class="mt-2 relative">
-          <video-view class="w-full h-full bg-white" position="relative" object-fit="cover"/>
+        <div v-if="showVideo" class="mt-2 relative" style="height: 158px;">
+          <video-view class="w-full h-full bg-white"
+                      position="absolute"
+                      object-fit="cover"/>
         </div>
       </div>
 
@@ -26,8 +28,8 @@
           >{{audioInput.label}}
           </a-select-option>
         </a-select>
-        <a-progress :percent="volume" :showInfo="false" :strokeWidth=2 />
-        <span class="test-mic-text leading-tight text-xs text-grey-darkest">麦克风测试</span>
+        <a-progress class="leading-none" :percent="volume" :showInfo="false" :strokeWidth=2 />
+        <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
       </div>
 
       <div class="flex flex-col mt-5">
@@ -41,11 +43,11 @@
           >{{audioOutput.label}}
           </a-select-option>
         </a-select>
-        <div class="mt-2 flex items-center">
+        <div class="mt-2 flex items-center text-indigo">
           <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
-                      class="test-audio-text text-indigo text-base cursor-pointer"
+                      class="test-audio-text text-base cursor-pointer"
                       @click="playTestMusic"/>
-          <span class="test-audio-text ml-1 text-xs text-grey-darkest leading-tight">播放测试音频</span>
+          <span class="test-audio-text ml-1 text-xs leading-tight">播放测试音频</span>
         </div>
       </div>
       <!--<a-button type="primary" block class="mt-5">保存</a-button>-->
@@ -61,7 +63,7 @@ export default {
   components : {
     VideoView,
   },
-  date() {
+  data() {
     return {
       isPlaying : false,
     };
@@ -119,14 +121,4 @@ export default {
 </script>
 
 <style lang="less">
-  #tab-setting-media {
-    .ant-progress {
-      .ant-progress-inner {
-        background-color: rgba(153, 153, 153, 0.5);
-        .ant-progress-bg {
-          background-color: #FFF;
-        }
-      }
-    }
-  }
 </style>

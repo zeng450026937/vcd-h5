@@ -49,19 +49,19 @@
       </div>
       <div class="flex flex-grow"></div>
       <div class="flex justify-center pb-5">
-        <a-button ghost shape="circle"
-                  class="text-xl w-12 h-12 mx-4 bg-black-lightest"
+        <a-button shape="circle"
+                  class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
                   @click="triggerVideo">
-          <a-iconfont :type="videoIcon"/>
+          <a-iconfont :type="videoIcon" class="text-white"/>
         </a-button>
-        <a-button ghost class="w-12 h-12 text-xl mx-4 bg-black-lightest"
+        <a-button class="controls-btn w-12 h-12 text-xl mx-4 border-transparent"
                   shape="circle"
                   @click="triggerAudio">
-          <a-iconfont :type="audioIcon"/>
+          <a-iconfont :type="audioIcon" class="text-white"/>
         </a-button>
       </div>
     </div>
-    <video-view v-if="videoOn" class="z-0 bg-indigo-darker"/>
+    <video-view v-if="!muteVideo" class="z-0 bg-indigo-darker"/>
     <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
       <a-iconfont type="icon-huiyishi" class="display-icon"/>
     </div>
@@ -90,35 +90,33 @@ export default {
       },
       showProxyItem : false,
       isInSetting   : false,
-      muteAudio     : false,
-      muteVideo     : false,
     };
   },
   computed : {
-    audioOn : {
+    muteAudio : {
       get() {
-        return this.$model.meeting.audioOn;
+        return this.$rtc.media.localMedia.muteAudio;
       },
       set(val) {
-        this.$model.meeting.audioOn = val;
+        this.$rtc.media.localMedia.muteAudio = val;
       },
     },
-    videoOn : {
+    muteVideo : {
       get() {
-        return this.$model.meeting.videoOn;
+        return this.$rtc.media.localMedia.muteVideo;
       },
       set(val) {
-        this.$model.meeting.videoOn = val;
+        this.$rtc.media.localMedia.muteVideo = val;
       },
     },
     localStream() {
       return this.$rtc.media.localMedia.stream;
     },
     videoIcon() {
-      return this.videoOn ? 'icon-shexiangtou' : 'icon-shexiangtoujinyong';
+      return this.muteVideo ? 'icon-shexiangtoujinyong' : 'icon-shexiangtou' ;
     },
     audioIcon() {
-      return this.audioOn ? 'icon-maikefeng' : 'icon-maikefengjinyong';
+      return this.muteAudio ? 'icon-maikefengjinyong' : 'icon-maikefeng';
     },
     meetingBtnClasses() {
       return {};
@@ -144,10 +142,10 @@ export default {
       this.$router.push('/login/yms');
     },
     triggerAudio() {
-      this.audioOn = !this.audioOn;
+      this.muteAudio = !this.muteAudio;
     },
     triggerVideo() {
-      this.videoOn = !this.videoOn;
+      this.muteVideo = !this.muteVideo;
     },
   },
 };
@@ -188,6 +186,9 @@ export default {
     .ant-input {
       padding-left: 36px;
     }
+    .controls-btn {
+      background: rgba(0,0,0,0.65);
+    }
     .local-video-bg {
       position: absolute;
       left: 50%;
@@ -197,6 +198,16 @@ export default {
         opacity: 0.4;
         color: white;
         font-size: 84px;
+      }
+    }
+    #tab-setting-media {
+      .ant-progress {
+        .ant-progress-inner {
+          background-color: rgba(153, 153, 153, 0.5);
+          .ant-progress-bg {
+            background-color: #FFF;
+          }
+        }
       }
     }
   }

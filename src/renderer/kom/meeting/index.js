@@ -5,8 +5,6 @@ export default {
   data() {
     return {
       meetingRecord : storage.query('MEETING_INFO_RECORD') || {},
-      audioOn       : true,
-      videoOn       : true,
     };
   },
   methods : {
@@ -17,8 +15,6 @@ export default {
 
       conference.number = number;
       conference.pin = pin;
-      conference.audio = this.audioOn;
-      conference.video = this.videoOn;
 
       return conference.join().then(() => {
         this.meetingRecord = {
@@ -28,5 +24,6 @@ export default {
         storage.insert('MEETING_INFO_RECORD', this.meetingRecord);
       }).catch(() => {});
     },
+
   },
 };
