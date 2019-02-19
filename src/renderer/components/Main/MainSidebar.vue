@@ -22,7 +22,7 @@
                       badge-status="online"
                       badgeSize="sm"/>
                 </div>
-                <div class="my-1 font-semibold">匿名</div>
+                <div class="my-1 font-semibold">{{userInfo.userName}}</div>
                 <div class="mb-1">VCS产品线-软件开发部</div>
                 <div class="mb-1 text-grey cursor-pointer hover:text-grey-dark">
                   <a-iconfont type="edit"/>
@@ -113,6 +113,11 @@ export default {
     };
   },
   computed : {
+    userInfo() {
+      return {
+        userName : this.$rtc.account.username,
+      };
+    },
     isInConferenceView : {
       get() {
         return this.$model.state.isInConferenceView;

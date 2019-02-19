@@ -1,33 +1,50 @@
 <template>
   <a-layout id="contact-tree" class="h-full bg-white">
-    <a-input-search
-        placeholder="搜索"
-        class="h-10 mb-2"
-    ></a-input-search>
+
+    <a-input v-model="searchText"
+             placeholder="搜索"
+             class="h-10 mb-2"
+             @change="onChange">
+      <div slot="suffix">
+        <a-iconfont
+            type="icon-guanbi"
+            class="text-sm text-black9 text-base cursor-pointer mr-2"
+            @click="searchText = ''"/>
+        <a-iconfont
+            type="icon-sousuo"
+            class="text-sm text-black9 text-base hover:text-red"/>
+      </div>
+
+    </a-input>
     <div class="overflow-y-auto h-full px-2">
       <a-tree
           checkable
-          :autoExpandParent="autoExpandParent"
+          class="contact-tree"
           v-model="checkedKeys"
-          @check="onCheck"
+          :autoExpandParent="autoExpandParent"
+          :expandedKeys="expandedKeys"
           :selectedKeys="selectedKeys"
           :treeData="treeData"
-          class="contact-tree"
           :loadData="onLoadData"
+          @check="onCheck"
+          @expand="onExpand"
       >
         <div slot="title" slot-scope="contact" class="flex h-full items-center">
-          <a-avatar v-if="!contact.parent.isUser"
-                    :icon="contact.avatar"
-                    :size="32"
-                    class="text-white bg-indigo-dark"/>
-          <a-avatar v-if="contact.parent.isUser"
-                    :size="32"
-                    :class="{[`bg-${contact.avatar}`]: true}"
-          >{{contact.name.substr(-2, 2)}}
-          </a-avatar>
+          <div>
+            <a-avatar v-if="!contact.parent.isUser"
+                      :size="32"
+                      class="text-white bg-indigo-dark">
+              <a-iconfont :type="contact.avatar"/>
+            </a-avatar>
+            <a-avatar v-if="contact.parent.isUser"
+                      :size="32"
+                      :class="{[`bg-${contact.avatar}`]: true}"
+            >{{contact.name.substr(-2, 2)}}
+            </a-avatar>
+          </div>
 
-          <div class="flex flex-col ml-2 justify-center">
-            <span class="text-sm leading-none">{{contact.title}}</span>
+          <div class="flex flex-col truncate ml-2 justify-center">
+            <span class="text-sm leading-none truncate">{{contact.title}}</span>
             <span class="text-xs opacity-75 leading-none mt-1">{{contact.ip}}</span>
           </div>
         </div>
@@ -38,6 +55,24 @@
 </template>
 
 <script>
+const getParentKey = (key, tree) => {
+  let parentKey;
+
+  for (let i = 0; i < tree.length; i++) {
+    const node = tree[i];
+
+    if (node.children) {
+      if (node.children.some((item) => item.key === key)) {
+        parentKey = node.key;
+      }
+      else if (getParentKey(key, node.children)) {
+        parentKey = getParentKey(key, node.children);
+      }
+    }
+  }
+  
+  return parentKey;
+};
 
 export default {
   name  : 'ContactTree',
@@ -51,10 +86,12 @@ export default {
   },
   data() {
     return {
+      searchText       : '',
       expandedKeys     : [],
       autoExpandParent : true,
       selectedKeys     : [],
       checkedKeys      : [],
+      dataList         : [],
     };
   },
   computed : {
@@ -76,6 +113,10 @@ export default {
         treeNode.dataRef.addChildNodes();
       }
     },
+    onExpand(expandedKeys) {
+      this.expandedKeys = expandedKeys;
+      this.autoExpandParent = false;
+    },
     onCheck(checkedKeys, info) {
       const checkedContact = [];
 
@@ -88,12 +129,50 @@ export default {
       });
       this.$emit('onCheck', checkedContact);
     },
+
+    onChange(e) {
+      // if (this.dataList.length <= 0) {
+      //   const generateList = (data) => {
+      //     for (let i = 0; i < data.length; i++) {
+      //       const node = data[i];
+      //       const key = node.key;
+      //
+      //       this.dataList.push({ key, title: key });
+      //       if (node.children) {
+      //         generateList(node.children, node.key);
+      //       }
+      //     }
+      //   };
+      //
+      //   generateList(this.treeData);
+      // }
+      //
+      // const value = e.target.value;
+      // const expandedKeys = this.dataList.map((item) => {
+      //   if (item.key.indexOf(value) > -1) {
+      //     return getParentKey(item.key, this.treeData);
+      //   }
+      //
+      //   return null;
+      // }).filter((item, i, self) => item && self.indexOf(item) === i);
+      //
+      // Object.assign(this, {
+      //   expandedKeys,
+      //   searchValue      : value,
+      //   autoExpandParent : true,
+      // });
+    },
   },
 };
 </script>
 
 <style lang="less">
-  .contact-tree {
+  #contact-tree {
+    .ant-input-affix-wrapper {
+      input {
+        padding-right: 60px;
+      }
+    }
     .ant-tree-treenode-switcher{
       &-open, &-close {
         > .ant-tree-checkbox {
@@ -115,6 +194,7 @@ export default {
       }
       .ant-tree-node-content-wrapper {
         &-normal {
+          width: 80%;
           height: 56px !important;
           padding: 0 8px;
           .ant-tree-title {

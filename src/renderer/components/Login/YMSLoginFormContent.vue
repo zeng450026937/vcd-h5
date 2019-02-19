@@ -6,10 +6,10 @@
       <span class="text-4xl font-semibold text-white">Yealink</span>
     </div>
     <div class="flex flex-col pt-10 px-24">
-      <a-form class="login-form" @submit="handleLogin" :autoFormCreate="(form)=>{this.form = form}">
-        <a-form-item
-            fieldDecoratorId="account">
+      <a-form class="login-form" @submit="handleLogin" :form="form">
+        <a-form-item>
           <a-auto-complete
+              v-decorator="['account']"
               class="certain-category-search w-full"
               :dropdownMatchSelectWidth="false"
               optionLabelProp="value"
@@ -34,9 +34,9 @@
             </a-input>
           </a-auto-complete>
         </a-form-item>
-        <a-form-item
-            fieldDecoratorId="pin">
-            <a-input @keypress="passwordInputted" type='password' placeholder='密码'>
+        <a-form-item>
+            <a-input v-decorator="['pin']"
+                     @keypress="passwordInputted" type='password' placeholder='密码'>
               <a-tooltip
                   slot="prefix"
                   :visible="isCapsLockOn"
@@ -50,9 +50,9 @@
             </a-input>
         </a-form-item>
         <a-form-item
-            fieldDecoratorId="server"
             class="mb-2">
-          <a-input placeholder='服务器地址'>
+          <a-input v-decorator="['server']"
+                   placeholder='服务器地址'>
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
         </a-form-item>
@@ -110,6 +110,7 @@ export default {
   name : 'YMSLoginFormContent',
   data() {
     return {
+      form         : this.$form.createForm(this),
       searchResult : [],
       isCapsLockOn : false,
     };

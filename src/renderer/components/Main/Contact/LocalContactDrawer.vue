@@ -40,10 +40,7 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入手机号'
-                     v-decorator="[
-                          'phone',
-                          {rules: [{ required: true, message: '请输入手机号!' }]}
-                         ]"/>
+                     v-decorator="['phone']"/>
           </a-form-item>
           <a-form-item
               label='邮箱'
@@ -51,10 +48,7 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入邮箱'
-                     v-decorator="[
-                          'email',
-                          {rules: [{ required: true, message: '请输入邮箱!' }]}
-                         ]"/>
+                     v-decorator="['email']"/>
           </a-form-item>
         </a-form>
       </div>

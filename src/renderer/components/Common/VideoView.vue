@@ -9,9 +9,10 @@
         autoplay loop
         :style="{'object-fit': objectFit}"
     ></video>
-    <div v-if="!videoStream" class="loading-notice absolute">
+    <div v-if="!videoStream"
+         class="loading-notice absolute flex flex-col w-full justify-center items-center">
       <a-spin size="large"/>
-      <span class="ml-6 text-indigo text-xl">正在加载视频...</span>
+      <div class="mt-2 text-indigo text-xl">视频加载中...</div>
     </div>
   </a-layout>
 </template>

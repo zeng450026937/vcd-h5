@@ -22,8 +22,7 @@ export default {
           pin    : conference.pin,
         };
         storage.insert('MEETING_INFO_RECORD', this.meetingRecord);
-      }).catch(() => {});
+      });
     },
-
   },
 };

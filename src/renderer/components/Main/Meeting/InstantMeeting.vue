@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="instant-meeting" class="h-full">
+  <a-layout id="instant-meeting" class="h-full w-full">
     <div class="flex flex-col h-full">
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
@@ -11,7 +11,7 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <div class="flex h-full m-4">
+      <div class="flex h-full m-4 mx-16">
 
         <div class="w-1/2 bg-white overflow-hidden">
           <contact-tree ref="contactTree"
@@ -26,17 +26,23 @@
             <div class="border-b">
               <div class="flex flex-col">
                 <div class="flex h-10 items-center px-3">
-                  <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
-                  <span class="flex text-indigo text-xs cursor-pointer"
+                  <span class="flex flex-grow text-sm leading-normal">{{selectedContact.length || 0}}/100</span>
+                  <span class="flex text-indigo text-xs cursor-pointer leading-tight"
                         :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
                         @click="clearAll">全部清空</span>
                 </div>
               </div>
             </div>
-            <contact-list :contactList="selectedContact"
+            <template v-if="!selectedContact.length">
+              <common-empty class="mt-10 text-grey"
+                            text="当前只有本人加入会议"/>
+            </template>
+            <contact-list v-else
+                          :contactList="selectedContact"
                           :video-icon="false"
                           :audio-icon="false"
                           delete-icon highlightSelected
+                          self-un-deleted
                           @deleteContact="deleteContact"
             ></contact-list>
           </div>
@@ -46,7 +52,6 @@
       <a-divider class="my-0"/>
       <div class="flex justify-center items-center py-2 bg-white">
         <a-button large type="primary"
-                  :disabled="selectedContact.length <= 0"
                   class="w-24 text-sm"
                   @click="enterMeeting"
         >开始会议</a-button>
@@ -59,6 +64,7 @@
 /* eslint-disable no-loop-func */
 
 import AppHeader from '../MainHeader.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactTree from '../Contact/ContactTree.vue';
 import ContactList from '../Contact/ContactList.vue';
 
@@ -68,12 +74,13 @@ export default {
     AppHeader,
     ContactTree,
     ContactList,
+    CommonEmpty,
   },
   data() {
     return {
       enterPopup      : '',
       checkedKeys     : [],
-      selectedContact : [ ],
+      selectedContact : [],
     };
   },
   methods : {
@@ -92,11 +99,14 @@ export default {
       }
     },
     enterMeeting() {
-      this.$message.info('入会成功');
-      // this.enterPopup = this.$popup.prepared('loadingModal').display();
-      // this.enterPopup.vm.$on('cancel', () => {
-      //   this.$popup.destroy(this.enterPopup);
-      // });
+      const list = [];
+
+      this.selectedContact.forEach((item) => {
+        list.push({
+          requestUri : item.ip,
+        });
+      });
+      this.$rtc.conference.meetnow(list);
     },
     cancelEnter() {
       console.warn('Enter Canceled');

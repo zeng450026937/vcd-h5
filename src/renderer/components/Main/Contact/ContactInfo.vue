@@ -14,8 +14,9 @@
         <div class="ml-3">
           <a-avatar v-if="!user.parent.isUser"
                     :size="72"
-                    :icon="user.avatar"
-                    class="bg-indigo-dark text-white"/>
+                    class="bg-indigo-dark text-white">
+            <a-iconfont :type="user.avatar" class="text-3xl mt-5"/>
+          </a-avatar>
           <a-avatar v-else :size="72" :class="{[`bg-${user.avatar || 'indigo-dark'}`]: true}">
             <span class="text-lg">{{user.name.substr(-2, 2)}}</span>
           </a-avatar>

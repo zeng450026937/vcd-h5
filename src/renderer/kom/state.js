@@ -57,7 +57,7 @@ export default {
       else {
         if (val === 'registered') {
           // 登录成功状态
-          await wait(1000); // 添加延时 增加体验
+          await wait(2000); // 添加延时 增加体验
           router.push(MAIN.DIAL_PLATE);
         }
         else {
