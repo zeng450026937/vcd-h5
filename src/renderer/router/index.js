@@ -153,12 +153,6 @@ const router = new Router({
               component : () => import(/* webpackChunkName: "VideoSetting" */ '@/renderer/components/Main/Setting/VideoSetting.vue'),
             },
             {
-              name      : 'recordSetting',
-              path      : 'recordSetting',
-              meta      : { owner: MODULE_NAME.SETTING },
-              component : () => import(/* webpackChunkName: "recordSetting" */ '@/renderer/components/Main/Setting/RecordSetting.vue'),
-            },
-            {
               name      : 'aboutUs',
               path      : 'aboutUs',
               meta      : { owner: MODULE_NAME.SETTING },

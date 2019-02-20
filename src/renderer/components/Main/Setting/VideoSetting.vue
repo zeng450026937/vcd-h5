@@ -14,11 +14,14 @@
       <div class="flex flex-col">
         <div class="flex flex-col">
           <span class="leading-normal">摄像头</span>
-          <div class="flex items-center">
-            <a-select defaultValue="请选择摄像头" class="mt-2 w-80">
-              <a-select-option v-for="(camera, index) in cameraList" :key="index"
-                               :value="camera.value"
-              >{{camera.label}}
+          <div class="flex items-center mt-2">
+            <a-select defaultValue="请选择摄像头"
+                      v-model="videoInput"
+                      style="width: 320px;">
+              <a-select-option v-for="videoInput in videoInputList"
+                               :key="videoInput.id"
+                               :value="videoInput.id"
+              >{{videoInput.label}}
               </a-select-option>
             </a-select>
             <div class="flex items-end ml-2">
@@ -42,40 +45,28 @@
             </div>
           </div>
         </div>
-        <div class="flex">
-          <div style="height: 180px" class="flex mt-3">
-            <!--<video-view class="w-full h-full bg-white" object-fit="cover"/>-->
-            <video class="h-full bg-grey" autoplay
-                   src="https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4"
-            ></video>
-          </div>
-          <!--<video class="w-60 bg-grey h-32" autoplay-->
-                 <!--style="object-fit: contain"-->
-          <!--&gt;</video>-->
-
+        <div class="mt-3 relative" style="height: 180px;width: 320px;">
+          <video-view class="w-full h-full bg-white"
+                      position="absolute"
+                      object-fit="cover"/>
         </div>
-
       </div>
-      <div class="flex flex-col mt-5">
+      <div class="flex flex-col mt-3">
         <div class="leading-normal">
-          <a-switch size="small"/>
+          <a-switch size="small" v-model="enableHDVideo"/>
           <span class="ml-5">启用高清视频</span>
         </div>
         <div class="mt-3 leading-normal">
-          <a-switch size="small"/>
+          <a-switch size="small" v-model="enableHWSpeed"/>
           <span class="ml-5">启用硬件加速</span>
         </div>
         <div class="mt-3 leading-normal">
-          <a-switch size="small"/>
+          <a-switch size="small" v-model="enableMirroring"/>
           <span class="ml-5">启用视频镜像效果</span>
         </div>
         <div class="mt-3 leading-normal">
-          <a-switch size="small"/>
+          <a-switch size="small" v-model="disableVideo"/>
           <span class="ml-5">加入会议时不开启摄像头</span>
-        </div>
-        <div class="mt-3 leading-normal">
-          <a-switch size="small"/>
-          <span class="ml-5">屏幕共享时启用GPU加速</span>
         </div>
       </div>
     </div>
@@ -94,12 +85,38 @@ export default {
   },
   data() {
     return {
-      cameraList : [
-        { label: '摄像头一号', value: 'camera1' },
-        { label: '摄像头二号', value: 'camera2' },
-        { label: '摄像头三号', value: 'camera3' },
-      ],
     };
+  },
+  computed : {
+    videoInput : {
+      get() { return this.$model.setting.device.videoInput; },
+      set(val) { this.$model.setting.device.videoInput = val; },
+    },
+    videoInputList() { // 摄像头
+      return this.$model.setting.device.videoInputList;
+    },
+    enableHDVideo : {
+      get() { return this.$model.setting.video.enableHDVideo; },
+      set(val) { this.$model.setting.video.enableHDVideo = val; },
+    },
+    enableHWSpeed : {
+      get() { return this.$model.setting.video.enableHWSpeed; },
+      set(val) { this.$model.setting.video.enableHWSpeed = val; },
+    },
+    disableVideo : {
+      get() { return this.$model.setting.video.disableVideo; },
+      set(val) { this.$model.setting.video.disableVideo = val; },
+    },
+    enableMirroring : {
+      get() { return this.$model.setting.video.enableMirroring; },
+      set(val) { this.$model.setting.video.enableMirroring = val; },
+    },
+  },
+  deactivated() {
+    this.$model.setting.video.save(); // 页面不显示的时候保存设置
+  },
+  destroyed() {
+    this.$model.setting.video.save(); // 页面不显示的时候保存设置
   },
 };
 </script>

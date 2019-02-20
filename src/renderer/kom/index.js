@@ -12,9 +12,9 @@ import sys from './sys';
 import storage from './storage';
 //
 import setting from './setting';
-import settingCall from './setting/call';
+import settingConference from './setting/conference';
+import video from './setting/video';
 import normal from './setting/normal';
-import internet from './setting/internet';
 import device from './setting/device';
 import state from './state';
 //
@@ -66,10 +66,10 @@ const data = {
   call,
   setting : {
     $selfValue : setting,
-    call       : settingCall,
+    conference : settingConference,
+    video,
     normal,
     device,
-    internet,
   },
 };
 

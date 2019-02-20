@@ -11,28 +11,38 @@
     </div>
     <a-divider class="my-0"/>
     <div class="flex flex-col h-full m-4 bg-white p-5">
-      <div class="flex flex-col">
-        <span class="leading-normal">音频输入</span>
-        <a-select defaultValue="请选择麦克风" class="w-80 mt-2">
-          <a-select-option v-for="(mic, index) in micList"
-                           :key="index"
-                           :value="mic.value"
-          >{{mic.label}}</a-select-option>
-        </a-select>
-        <a-slider :defaultValue="30" class="my-0 mt-1 w-80 mx-0 dragable"/>
-        <span class="text-xs text-black-lightest">麦克风测试</span>
-      </div>
-      <div class="flex flex-col mt-6">
-        <span class="leading-normal">音频输出</span>
-        <a-select defaultValue="请选择扬声器" class="w-80 mt-2">
-          <a-select-option v-for="(mic, index) in micList"
-                           :key="index"
-                           :value="mic.value"
-          >{{mic.label}}</a-select-option>
-        </a-select>
-        <div class="text-indigo mt-2 flex items-center">
-          <a-iconfont type="icon-bofang" />
-          <span class="ml-1 text-xs">播放测试音频</span>
+      <div class="" style="width: 320px;">
+        <div class="flex flex-col">
+          <span class="leading-normal">音频输入</span>
+          <a-select defaultValue="请选择麦克风"
+                    v-model="audioInput" class="mt-2">
+            <a-select-option v-for="audioInput in audioInputList"
+                             :key="audioInput.id"
+                             :value="audioInput.id"
+            >{{audioInput.label}}
+            </a-select-option>
+          </a-select>
+          <a-progress class="leading-none" :percent="volume" :showInfo="false" :strokeWidth=2 />
+          <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
+        </div>
+
+        <div class="flex flex-col mt-5">
+          <span class="leading-normal">音频输出</span>
+
+          <a-select defaultValue="请选择扬声器"
+                    v-model="audioOutput" class="mt-2">
+            <a-select-option v-for="audioOutput in audioOutputList"
+                             :key="audioOutput.id"
+                             :value="audioOutput.id"
+            >{{audioOutput.label}}
+            </a-select-option>
+          </a-select>
+          <div class="mt-2 flex items-center text-indigo">
+            <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
+                        class="test-audio-text text-base cursor-pointer"
+                        @click="playTestMusic"/>
+            <span class="test-audio-text ml-1 text-xs leading-tight">播放测试音频</span>
+          </div>
         </div>
       </div>
     </div>
@@ -49,17 +59,40 @@ export default {
   },
   data() {
     return {
-      micList : [
-        { label: '麦克风一号', value: 'mic1' },
-        { label: '麦克风二号', value: 'mic2' },
-        { label: '麦克风三号', value: 'mic3' },
-      ],
-      speakList : [
-        { label: '扬声器一号', value: 'speak1' },
-        { label: '扬声器二号', value: 'speak2' },
-        { label: '扬声器三号', value: 'speak3' },
-      ],
+      isPlaying : false,
     };
+  },
+  computed : {
+    volume() {
+      return this.$rtc.media.localMedia.volume;
+    },
+    audioInput : {
+      get() {
+        return this.$model.setting.device.audioInput;
+      },
+      set(val) {
+        this.$model.setting.device.audioInput = val;
+      },
+    },
+    audioOutput : {
+      get() {
+        return this.$model.setting.device.audioOutput;
+      },
+      set(val) {
+        this.$model.setting.device.audioOutput = val;
+      },
+    },
+    audioInputList() { // 麦克风
+      return this.$model.setting.device.audioInputList;
+    },
+    audioOutputList() { // 扬声器
+      return this.$model.setting.device.audioOutputList;
+    },
+  },
+  methods : {
+    playTestMusic() {
+      this.isPlaying = !this.isPlaying;
+    },
   },
 };
 </script>
