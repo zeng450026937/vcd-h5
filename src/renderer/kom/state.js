@@ -21,6 +21,7 @@ export default {
       sidebarStatus      : {}, // 记录入会前的 sidebar 的状态信息
       isInConferenceView : false,
       isInCallView       : false,
+      isOnLine           : true,
     };
   },
   computed : {
@@ -65,6 +66,7 @@ export default {
           const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE);
 
           router.push(serverType === 'cloud' ? LOGIN.CLOUD_LOGIN : LOGIN.YMS_LOGIN);
+          this.isOnLine = navigator.onLine;
         }
         if (this.loginPopup) popup.destroy(this.loginPopup);
       }

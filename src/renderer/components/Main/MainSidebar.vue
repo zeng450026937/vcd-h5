@@ -61,11 +61,9 @@
       </div>
       <div class="flex flex-col items-center text-white text-3xl mt-1 h-full">
         <template v-for="(sidebar, index) in sidebarItems">
-          <div v-if="sidebar.spacer" :key="index" class="flex flex-grow"></div>
-          <div v-else :key="index"
+          <div :key="index"
                class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
-               :class="{'mb-2':sidebar.isBottom,
-                        'mt-2':sidebar.isTop,
+               :class="{'mt-2':sidebar.isTop,
                        'bg-indigo':currentSidebar === index,
                        'hover:text-indigo': currentSidebar !== index}"
                @click="clickMenu(sidebar, index)">
@@ -73,6 +71,13 @@
             <span class="text-3xs font-thin mt-2">{{sidebar.text}}</span>
           </div>
         </template>
+        <div class="flex flex-grow"/>
+        <div class="no-dragable cursor-pointer
+              w-full flex flex-col items-center
+              justify-center hover:text-indigo h-12 mb-2">
+          <a-iconfont type="icon-fankui" class="text-base"/>
+          <span class="text-3xs font-thin mt-2">反馈</span>
+        </div>
       </div>
     </div>
   </a-layout-sider>
@@ -106,8 +111,8 @@ export default {
         { icon: 'icon-richeng', text: '日程', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
         { icon: 'icon-lianxiren', text: '联系人', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
         { icon: 'icon-shezhi', text: '设置', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
-        { spacer: true },
-        { icon: 'icon-fankui', text: '反馈', isBottom: true, route: MAIN.FEEDBACK },
+        // { spacer: true },
+        // { icon: 'icon-fankui', text: '反馈', isBottom: true, route: MAIN.FEEDBACK },
       ],
       headMenuVisible : false,
     };
