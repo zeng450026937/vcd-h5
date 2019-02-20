@@ -1,18 +1,18 @@
 [submodule "docs"]
 	path = docs
-	url = http://gitlab.leucs.com/server-app/apollo-vc-docs.git
+url=http://gitcode.yealink.com/server/client/web_app/vcd-h5-docs.git
 [submodule "lib/vuem"]
 	path = lib/vuem
-	url = http://gitlab.leucs.com/server-app/vuem.git
+url=http://gitcode.yealink.com/server/client/web_app/third_party/vuem.git
 [submodule "lib/apollo-sip"]
 	path = lib/apollo-sip
-	url = http://gitlab.leucs.com/server-app/ApolloSIP.git
+url=http://gitcode.yealink.com/server/client/web_app/third_party/apollo-sip.git
 [submodule "lib/apollo-rtc"]
 	path = lib/apollo-rtc
-	url = http://gitlab.leucs.com/server-app/ApolloRTC.git
+url=http://gitcode.yealink.com/server/client/web_app/third_party/apollo-rtc.git
 [submodule "plugins/vue-cli-plugin-vuem"]
 	path = plugins/vue-cli-plugin-vuem
-	url = http://gitlab.leucs.com/server-app/vue-cli-plugin-vuem.git
+url=http://gitcode.yealink.com/server/client/web_app/third_party/vue-cli-plugin-vuem.git
 [submodule "plugins/vue-cli-plugin-electron"]
 	path = plugins/vue-cli-plugin-electron
-	url = http://gitlab.leucs.com/server-app/vue-cli-plugin-electron.git
+url=http://gitcode.yealink.com/server/client/web_app/third_party/vue-cli-plugin-electron.git
