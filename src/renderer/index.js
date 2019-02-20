@@ -10,21 +10,13 @@ import kom from './kom';
 import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
-import updater from './updater';
-import { sendReady } from './mainProcessProxy';
+import { AppWindowProxy } from './proxy/app-window-proxy';
 
 Vue.config.productionTip = false;
-updater.checkForUpdates();
-
-const startTime = performance.now();
 
 new Vue({
   mixins : [
-    {
-      mounted() {
-        sendReady(performance.now() - startTime);
-      },
-    },
+    AppWindowProxy,
   ],
   router,
   kom,

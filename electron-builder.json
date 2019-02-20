@@ -1,6 +1,6 @@
 {
-  "appId": "com.ylyun.meeting.apollovc",
-  "copyright": "Copyright ©2018 Yealink",
+  "appId": "com.ylyun.meeting.vcd",
+  "copyright": "Copyright ©2019 Yealink",
   "generateUpdatesFilesForAllChannels": true,
   "publish": {
     "provider": "generic",
@@ -18,7 +18,7 @@
     "menuCategory": true,
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "artifactName" : "${productName} ${version}.${ext}"
+    "artifactName" : "${productName}-${version}.${ext}"
   },
   "mac": {
     "target": [

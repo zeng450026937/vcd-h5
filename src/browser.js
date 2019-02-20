@@ -1,4 +1,5 @@
 import './logger/main/install';
+import './main/app-updater';
 
 import { app, Menu, ipcMain, BrowserWindow, shell, Tray } from 'electron';
 import { AppWindow } from './main/app-window';
