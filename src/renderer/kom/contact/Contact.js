@@ -85,6 +85,7 @@ class Contact extends ContactBase {
     this.ip = data.number || '';
     if (data.number === rtc.account.username) {
       this.isSelf = true;
+      rtc.account.currentContact = this;
     }
     this.phone = data.extension || '';
     this.email = data.email || '';

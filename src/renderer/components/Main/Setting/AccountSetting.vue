@@ -10,17 +10,17 @@
     </div>
   </div>
   <a-divider class="my-0"/>
-  <div class="flex flex-col items-center bg-white h-full m-3">
-    <div class="w-2/3 mt-5">
+  <div class="flex flex-col items-center bg-white h-full m-4">
+    <div class="mt-5" style="width: 440px;">
       <div class="flex mt-2 mb-4 items-center w-full">
         <div class="flex flex-col truncate">
           <div class="font-semibold leading-normal text-base items-center truncate">
-            匿名
+            {{userInfo.name}}
           </div>
           <div class="flex mt-2">
             <div style="max-width: 300px;">
               <span
-                  class="text-xs leading-tight text-black-lighter whitespace-normal"
+                  class="text-xs leading-tight text-black9 whitespace-normal"
               >这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字</span>
             </div>
             <a-iconfont type="icon-bianji" class="ml-2 text-indigo cursor-pointer text-base"/>
@@ -29,34 +29,36 @@
         <div class="flex flex-grow"></div>
         <div class="ml-4">
           <a-avatar :size="72" class="bg-indigo-dark">
-            <span class="text-lg">匿名</span>
+            <span class="text-lg">{{userInfo.name.substr(-2, 2)}}</span>
           </a-avatar>
         </div>
       </div>
       <a-divider class="my-0"/>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">账号</span>
-        <span class="ml-3">666777444555222</span>
+        <span class="ml-3">{{userInfo.ip || userInfo.account}}</span>
       </div>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">手机</span>
-        <span class="ml-3">18805926666</span>
+        <span class="ml-3">{{userInfo.phone}}</span>
       </div>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">邮箱</span>
-        <span class="ml-3">689234421@gmail.com</span>
+        <span class="ml-3">{{userInfo.email || '暂无邮箱'}}</span>
       </div>
-      <div class="mt-5 leading-normal">
-        <span class="opacity-75">部门</span>
-        <span class="ml-3">解决方案部</span>
-      </div>
-      <div class="mt-5 leading-normal">
-        <span class="opacity-75">企业</span>
-        <span class="ml-3">厦门亿联网络技术股份有限公司</span>
-        <a-iconfont class="ml-3 text-indigo cursor-pointer" type="icon-qiehuan" />
-      </div>
+      <template v-if="userInfo.parent.fullPath">
+        <div class="mt-5 leading-normal">
+          <span class="opacity-75">部门</span>
+          <span class="ml-3">{{userInfo.parent.fullPath | fullName}}</span>
+        </div>
+        <div class="mt-5 leading-normal">
+          <span class="opacity-75">企业</span>
+          <span class="ml-3">{{userInfo.parent.fullPath[0].text}}</span>
+        </div>
+      </template>
       <div class="mt-20">
-        <a-button type="primary">编辑</a-button>
+        <a-button type="primary">切换企业</a-button>
+        <a-button class="ml-4">编辑</a-button>
         <a-button class="ml-4">注销</a-button>
       </div>
     </div>
@@ -106,12 +108,38 @@ export default {
       updatePasswordVisible : false,
     };
   },
+  created() {
+    if (!this.userInfo.parent.fullPath) {
+      let parent = this.userInfo.parent;
+      let fullPath = [];
+
+      while (parent.id) {
+        fullPath = [ {
+          id   : parent.id,
+          text : parent.name,
+        } ].concat(fullPath);
+
+        parent = parent.parent;
+      }
+      this.userInfo.parent.fullPath = fullPath;
+    }
+  },
+  computed : {
+    userInfo() {
+      return this.$rtc.account.currentContact;
+    },
+  },
   methods : {
     editAvatar() {
     },
     handleOk() {
     },
     clickOk() {
+    },
+  },
+  filters : {
+    fullName(fullPath) {
+      return fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
     },
   },
 };

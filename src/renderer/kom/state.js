@@ -58,7 +58,7 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(2000); // 添加延时 增加体验
-          router.push(MAIN.CALENDAR_VIEW);
+          router.push(MAIN.SETTING_ACCOUNT);
         }
         else {
         // 未登录状态

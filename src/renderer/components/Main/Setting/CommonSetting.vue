@@ -13,16 +13,16 @@
     <div class="flex flex-col h-full m-4 bg-white p-5">
       <div>
         <div>
-          <a-switch size="small" defaultChecked/>
+          <a-switch size="small" v-model="autoStart"/>
           <span class="ml-5">开机自动启动</span>
         </div>
         <div class="mt-4">
-          <a-switch size="small"/>
+          <a-switch size="small" v-model="forceMinimize"/>
           <span class="ml-5">关闭时最小化</span>
         </div>
         <div class="mt-6">
           <span>切换语言</span>
-          <a-select defaultValue="简体中文" class="w-48 ml-4">
+          <a-select v-model="language" class="w-48 ml-4">
             <a-select-option v-for="(lang, index) in langList" :key="index"
                              :value="lang.lang"
             >{{lang.label}}</a-select-option>
@@ -47,10 +47,42 @@ export default {
   data() {
     return {
       langList : [
-        { label: '简体中文', lang: 'zn-CH' },
+        { label: '简体中文', lang: 'zh-CN' },
         { label: 'English', lang: 'en-US' },
       ],
     };
+  },
+  deactivated() {
+    this.$model.setting.normal.save(); // 页面不显示的时候保存设置
+  },
+  destroyed() {
+    this.$model.setting.normal.save(); // 页面不显示的时候保存设置
+  },
+  computed : {
+    autoStart : {
+      get() {
+        return this.$model.setting.normal.autoStart;
+      },
+      set(val) {
+        this.$model.setting.normal.autoStart = val;
+      },
+    },
+    forceMinimize : {
+      get() {
+        return this.$model.setting.normal.forceMinimize;
+      },
+      set(val) {
+        this.$model.setting.normal.forceMinimize = val;
+      },
+    },
+    language : {
+      get() {
+        return this.$model.setting.normal.language;
+      },
+      set(val) {
+        this.$model.setting.normal.language = val;
+      },
+    },
   },
 };
 </script>

@@ -5,6 +5,7 @@ export default {
         username : '8502',
         password : '123456',
       },
+      currentContact : {},
     };
   },
   methods : {},

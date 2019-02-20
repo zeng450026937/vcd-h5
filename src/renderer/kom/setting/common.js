@@ -2,7 +2,7 @@ import rtc from '../../rtc';
 import storage from '../../storage';
 
 // const version = 'V1';
-
+// normal 通用模块
 export const moduleList = [ 'normal', 'call', 'device', 'net' ];
 
 const keyMap = {
@@ -13,7 +13,7 @@ const keyMap = {
 };
 
 const itemMap = { // 对应不同模块需要导出的设置项
-  normal : [ 'labelList', 'serverAddress', 'serverPort', 'sipServerPort' ],
+  normal : [ 'autoStart', 'forceMinimize', 'language' ],
   call   : [ 'autoAnswer', 'enableDND' ],
   device : [
     'videoInput',
