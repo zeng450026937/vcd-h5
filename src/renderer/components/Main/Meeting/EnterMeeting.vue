@@ -1,46 +1,55 @@
 <template>
-  <a-layout id="enter-meeting" class="h-full bg-indigo-darker">
-    <div class="h-9">
-      <div class="flex bg-indigo-darker dragable h-full">
+  <a-layout id="enter-meeting" class="h-full">
+    <div class="h-14 border-b">
+      <div class="flex bg-white dragable h-full">
+        <div class="flex items-center h-full px-4 text-base">
+          <span>加入会议</span>
+        </div>
         <div class="flex flex-grow"></div>
-        <app-header bg-color="indigo-darker"/>
+        <app-header/>
       </div>
     </div>
-    <div class="flex justify-center items-center h-full">
-      <div style="width: 480px;height: 506px;" class="flex flex-col" v-if="!showSetting">
-        <div style="height: 270px" class="relative flex">
-          <video-view class="w-full h-full bg-white" object-fit="cover"/>
+    <div class="flex justify-center items-center h-full shadow">
+      <div style="width: 480px;height: 518px;"
+           class="flex flex-col bg-white" v-if="!showSetting">
+        <div style="height: 270px;background-color: #1F2437;"
+             class="relative flex">
+          <video-view v-if="!muteVideo" class="w-full h-full"
+                      style="background-color: #1F2437;"
+                      object-fit="cover"/>
+          <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
+            <a-iconfont type="icon-huiyishi" class="display-icon"/>
+          </div>
           <div class="flex self-end w-full justify-center">
             <div class="flex mb-4">
-              <a-button type="primary" shape="circle"
-                        size="large"
-                        class="w-12 h-12 text-xl bg-grey-darkest text-white"
+              <a-button shape="circle"
+                        class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
+                        @click="triggerVideo"
               >
-                <a-iconfont type="icon-shexiangtou"/>
+                <a-iconfont :type="videoIcon" class="text-base text-white"/>
               </a-button>
-              <a-button type="primary" shape="circle"
-                        size="large"
-                        class="w-12 h-12 text-xl bg-grey-darkest text-white mx-4"
+              <a-button shape="circle"
+                        class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
+                        @click="triggerAudio"
               >
-                <a-iconfont type="icon-maikefeng"/>
+                <a-iconfont :type="audioIcon" class="text-base text-white"/>
               </a-button>
-              <a-button type="primary" shape="circle"
-                        size="large"
-                        class="w-12 h-12 text-xl bg-grey-darkest text-white"
+              <a-button shape="circle"
+                        class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
                         @click="showSetting = true"
               >
-                <a-iconfont type="icon-kongzhi"/>
+                <a-iconfont type="icon-kongzhi" class="text-base text-white"/>
               </a-button>
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-center px-24" style="background-color: #ffffff0a">
+        <div class="flex flex-col items-center px-24 bg-white">
           <div class="mt-5 w-full">
             <a-input
                 v-model="meetingInfo.number"
                 placeholder='Meeting ID'
             >
-              <a-iconfont slot="prefix" type='icon-ID' class="text-grey-dark"/>
+              <a-iconfont slot="prefix" type='icon-ID' class="text-base text-black9"/>
             </a-input>
           </div>
 
@@ -50,7 +59,7 @@
                 placeholder='Password(Optional)'
                 type="password"
             >
-              <a-iconfont slot="prefix" type='icon-mima' class="text-grey-dark"/>
+              <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
             </a-input>
           </div>
           <div class="mt-5 w-full">
@@ -58,22 +67,21 @@
                 v-model="meetingInfo.server"
                 placeholder='Server address'
             >
-              <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-grey-dark"/>
+              <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
             </a-input>
           </div>
-          <a-button type="primary" class="mt-6 mb-5" block @click="enterMeeting">立即加入</a-button>
+          <a-button type="primary" class="mt-10" block @click="enterMeeting">立即加入</a-button>
         </div>
       </div>
-      <div style="width: 480px;height: 506px;background-color: #ffffff0a"
-           class="flex flex-col mb-9 justify-center" v-else>
-        <div class="mt-4 px-20">
-          <media-content/>
-        </div>
-        <div class="flex self-end w-full justify-center">
-          <div class="flex mt-4">
-            <a-button type="primary">确定</a-button>
-            <a-button class="ml-4" @click="showSetting = false">取消</a-button>
+      <div style="width: 480px;height: 518px;"
+           class="flex flex-col shadow bg-white" v-else>
+        <div class="mt-5 px-20 relative">
+          <!--返回按钮区域-->
+          <div class="absolute" style="left: 20px; top: 3px">
+            <a-iconfont type="icon-left" class="cursor-pointer text-black9"
+                        @click="showSetting = false"/>
           </div>
+          <media-content class="text-black3"/>
         </div>
       </div>
     </div>
@@ -82,7 +90,7 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
-import MediaContent from '../../Common/MediaContent.vue';
+import MediaContent from '../../Conference/TabSettingMedia.vue';
 import VideoView from '../../Common/VideoView.vue';
 
 export default {
@@ -93,6 +101,28 @@ export default {
     VideoView,
   },
   computed : {
+    muteAudio : {
+      get() {
+        return this.$rtc.media.localMedia.muteAudio;
+      },
+      set(val) {
+        this.$rtc.media.localMedia.muteAudio = val;
+      },
+    },
+    muteVideo : {
+      get() {
+        return this.$rtc.media.localMedia.muteVideo;
+      },
+      set(val) {
+        this.$rtc.media.localMedia.muteVideo = val;
+      },
+    },
+    videoIcon() {
+      return this.muteVideo ? 'icon-shexiangtoujinyong' : 'icon-shexiangtou';
+    },
+    audioIcon() {
+      return this.muteAudio ? 'icon-maikefengjinyong' : 'icon-maikefeng';
+    },
   },
   data() {
     return {
@@ -108,9 +138,45 @@ export default {
     cancelEnter() {
       this.$rtc.conference.leave();
     },
+    triggerAudio() {
+      this.muteAudio = !this.muteAudio;
+    },
+    triggerVideo() {
+      this.muteVideo = !this.muteVideo;
+    },
+
   },
 };
 </script>
 
-<style scoped>
+<style lang="less">
+  #enter-meeting {
+    .ant-input {
+      padding-left: 36px;
+    }
+    .controls-btn {
+      background: rgba(0,0,0,0.65);
+    }
+    .local-video-bg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      .display-icon {
+        opacity: 0.4;
+        color: white;
+        font-size: 84px;
+      }
+    }
+    #tab-setting-media {
+      .ant-progress {
+        .ant-progress-inner {
+          background-color: rgba(153, 153, 153, 0.5);
+          .ant-progress-bg {
+            background-color: #4A5FC4;
+          }
+        }
+      }
+    }
+  }
 </style>

@@ -29,7 +29,7 @@ class FavoriteContactGroup extends FavoriteBase {
     this.isUser = true;
     this.isRoot = !data.parent;
     this.fullPath = [];
-    this.avatar = 'cluster';
+    this.avatar = 'icon-zuzhi';
 
     if (!this.isRoot) {
       this.fullPath.push(...this.parent.fullPath);

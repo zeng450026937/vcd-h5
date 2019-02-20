@@ -21,13 +21,13 @@
                   <span class="text-sm leading-none truncate">{{item | nameTrim}}</span>
                   <span v-if="!item.isGroup"
                         class="text-xs opacity-75 leading-none"
-                        style="margin-top: 6px">{{item.ip}}</span>
+                        style="margin-top: 6px">{{item.ip || item.account}}</span>
                 </div>
               </div>
 
               <a-popover
                   placement="rightTop"
-                  trigger="click"
+                  trigger="hover"
                   slot="avatar"
                   overlayClassName="avatar-popover">
                 <template v-if="!item.isGroup" slot="content">
@@ -43,10 +43,11 @@
                       </div>
                       <div class="flex justify-center ml-3">
                         <a-avatar v-if="item.isGroup || !item.parent.isUser"
-                                  :icon="item.avatar"
                                   :size="48"
                                   :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
-                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}"/>
+                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
+                          <a-iconfont :type="item.avatar"/>
+                        </a-avatar>
                         <a-avatar v-else :size="48"
                                   class="bg-indigo-dark"
                                   :class="{[`bg-${item.avatar }`]: item.avatar}">
@@ -88,10 +89,11 @@
                   </div>
                 </template>
                 <a-avatar v-if="item.isGroup || !item.parent.isUser"
-                          :icon="item.avatar"
                           class="text-sm mx-2"
                           :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
-                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}"/>
+                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
+                  <a-iconfont :type="item.avatar"/>
+                </a-avatar>
                 <a-avatar v-else
                           class="bg-indigo-dark mx-2 text-sm"
                           :class="{[`bg-${item.avatar}`]: item.avatar}">
@@ -114,7 +116,7 @@
                       class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="moreOption(item)"/>
               <slot name="more" :item="item"></slot>
-              <a-iconfont v-if="deleteIcon"
+              <a-iconfont v-if="selfUnDeleted && deleteIcon && !item.isSelf"
                       type="icon-guanbi"
                       class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="deleteContact(item)"/>
@@ -150,6 +152,10 @@ export default {
       default : false,
     },
     deleteIcon : {
+      type    : Boolean,
+      default : false,
+    },
+    selfUnDeleted : {
       type    : Boolean,
       default : false,
     },
@@ -192,10 +198,14 @@ export default {
       this.$emit('deleteContact', item);
     },
     doVideo(item) {
-      this.$emit('doVideo', item);
+      this.$rtc.conference.meetnow([ {
+        requestUri : item.ip || item.account,
+      } ]);
+      // this.$emit('doVideo', item);
     },
     doAudio(item) {
-      this.$emit('doAudio', item);
+      this.$dispatch('call.doAudioCall', item.ip || item.account);
+      // this.$emit('doAudio', item);
     },
     moreOption(item) {
       this.$emit('moreOption', item);

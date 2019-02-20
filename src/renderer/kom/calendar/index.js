@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       formatCalendar    : null,
-      currentDateEvents : {},
+      currentDateEvents : [],
       currentEvent      : {},
     };
   },

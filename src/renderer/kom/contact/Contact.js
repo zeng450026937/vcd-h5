@@ -42,7 +42,7 @@ function unique(arr) {
 class ContactBase {
   constructor(data = {}) {
     this.id = data.id;
-    this.parent = data.parent;
+    this.parent = data.parent || { isUser: true };
     this.parentId = data.parentId || (data.parent && data.parent.id);
     this.selected = data.selected || false;
     this.isGroup = false;
@@ -83,6 +83,9 @@ class Contact extends ContactBase {
     super(data);
     this.name = data.name || '';
     this.ip = data.number || '';
+    if (data.number === rtc.account.username) {
+      this.isSelf = true;
+    }
     this.phone = data.extension || '';
     this.email = data.email || '';
     this.avatar = this.parent.isUser ? avatarColor() : this.parent.avatar;
@@ -118,11 +121,11 @@ class ContactGroup extends ContactBase {
     this.items = [];
     this.isGroup = true;
     this.amount = data.amount || 0;
-    this.avatar = this.isUser ? 'cluster'
-      : this.isDevice ? 'hdd'
-        : this.isExternal ? 'deployment-unit'
-          : this.isService ? 'printer'
-            : this.isVMR ? 'desktop' : 'cluster';
+    this.avatar = this.isUser ? 'icon-zuzhi'
+      : this.isDevice ? 'icon-huiyishishebei'
+        : this.isExternal ? 'icon-zuzhi'
+          : this.isService ? 'icon-wangluo'
+            : this.isVMR ? 'icon-xunihuiyishi' : 'icon-zuzhi';
     this.title = this.name; // for select
   }
 

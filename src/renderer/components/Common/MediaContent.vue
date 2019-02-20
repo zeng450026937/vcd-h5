@@ -1,60 +1,8 @@
 <template>
   <a-layout class="bg-transparent" id="media-content">
-    <!--<div class="flex flex-col select-none">-->
-
-      <!--<div class="flex justify-center items-center">-->
-        <!--<a-icon type="video-camera" class="text-white self-start mt-2"/>-->
-        <!--<div class="ml-3">-->
-          <!--<a-select defaultValue="请选择摄像头"-->
-                    <!--v-model="videoInput">-->
-            <!--<a-select-option v-for="videoInput in videoInputList"-->
-                             <!--:key="videoInput.id"-->
-                             <!--:value="videoInput.id"-->
-            <!--&gt;{{videoInput.label}}</a-select-option>-->
-          <!--</a-select>-->
-          <!--<div class="mt-3 h-32 relative">-->
-            <!--<video-view class="w-full h-full bg-white" object-fit="cover"/>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-
-      <!--<div class="flex mt-5 items-center justify-center items-center">-->
-        <!--<a-icon type="phone" class="text-white self-start mt-2"/>-->
-        <!--<div class="w-1/2 ml-3">-->
-          <!--<a-select defaultValue="请选择麦克风"-->
-                    <!--v-model="audioInput"-->
-                    <!--class="w-full">-->
-            <!--<a-select-option v-for="audioInput in audioInputList"-->
-                             <!--:key="audioInput.id"-->
-                             <!--:value="audioInput.id"-->
-            <!--&gt;{{audioInput.label}}-->
-            <!--</a-select-option>-->
-          <!--</a-select>-->
-          <!--<a-slider :defaultValue="30" class="my-0 mt-1 mx-0 dragable"/>-->
-          <!--<span class="text-xs mt-2 text-white">麦克风测试</span>-->
-        <!--</div>-->
-      <!--</div>-->
-
-      <!--<div class="flex w-full mt-5 items-center justify-center items-center">-->
-        <!--<a-icon type="sound" class="text-white self-start mt-2"/>-->
-        <!--<div class="ml-3">-->
-          <!--<a-select defaultValue="请选择扬声器"-->
-                    <!--v-model="audioOutput">-->
-            <!--<a-select-option v-for="audioOutput in audioOutputList"-->
-                             <!--:key="audioOutput.id"-->
-                             <!--:value="audioOutput.id"-->
-            <!--&gt;{{audioOutput.label}}</a-select-option>-->
-          <!--</a-select>-->
-          <!--<div class="text-white mt-2 flex items-center">-->
-            <!--<a-icon type="play-circle" />-->
-            <!--<span class="ml-1 text-xs">播放测试音频</span>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <div class="flex flex-col select-none px-4">
       <div class="flex flex-col">
-        <span class="text-white">摄像头</span>
+        <span>摄像头</span>
         <a-select defaultValue="请选择摄像头"
                   v-model="videoInput" class="mt-2">
           <a-select-option v-for="videoInput in videoInputList"
@@ -69,7 +17,7 @@
       </div>
 
       <div class="flex flex-col mt-5">
-        <span class="text-white">麦克风</span>
+        <span>麦克风</span>
         <a-select defaultValue="请选择麦克风"
                   v-model="audioInput" class="mt-2">
           <a-select-option v-for="audioInput in audioInputList"
@@ -79,11 +27,11 @@
           </a-select-option>
         </a-select>
         <a-slider :defaultValue="30" class="my-0 mt-1 mx-0 dragable"/>
-        <span class="test-mic-text text-xs text-white">麦克风测试</span>
+        <span class="test-mic-text text-xs">麦克风测试</span>
       </div>
 
       <div class="flex flex-col mt-5">
-        <span class="text-white">扬声器</span>
+        <span>扬声器</span>
 
         <a-select defaultValue="请选择扬声器"
                   v-model="audioOutput" class="mt-2">
@@ -94,8 +42,8 @@
           </a-select-option>
         </a-select>
         <div class="mt-2 flex items-center">
-          <a-icon type="play-circle" class="test-audio-text text-white"/>
-          <span class="test-audio-text ml-1 text-xs text-white">播放测试音频</span>
+          <a-icon type="play-circle" class="test-audio-text"/>
+          <span class="test-audio-text ml-1 text-xs">播放测试音频</span>
         </div>
       </div>
     </div>

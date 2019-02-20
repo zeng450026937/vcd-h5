@@ -91,7 +91,7 @@
                                     :class="{'bg-orange': item.role === 'organizer'}">
                             <a-iconfont type="icon-ren"/>
                           </a-avatar>
-                          <span class="ml-1 leading-tight">参会成员</span>
+                          <span class="ml-1 leading-tight">{{item['display-text']}}</span>
                           <span class="ml-1 leading-tight">({{item['display-text']}})</span>
                         </div>
                       </template>

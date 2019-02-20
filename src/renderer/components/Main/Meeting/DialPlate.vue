@@ -11,10 +11,12 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <div class="h-full m-4 bg-white flex items-center">
-        <div class="w-2/5 h-full flex flex-col p-10">
+      <div class="h-full m-4 bg-white flex">
+        <div class="flex flex-col p-10 mt-6"
+             style="width: 328px;">
           <div class="flex items-center">
-            <a-input id="number-input"
+            <a-input ref="numberInput"
+                     id="number-input"
                      defaultValue="号码"
                      :value="callNumber"
                      @input="inputNumber">
@@ -23,64 +25,54 @@
                           class="text-sm text-grey cursor-pointer hover:text-red"
                           @click="clearNumber"/>
             </a-input>
-            <a-iconfont type="icon-huishan" class="text-2xl ml-3 cursor-pointer" @click="removeTailNumber"/>
+            <a-iconfont type="icon-huishan"
+                        class="text-2xl ml-3 cursor-pointer" @click="removeTailNumber"/>
           </div>
-          <span class="text-indigo cursor-pointer text-center text-xs mt-3"
-                @click="$refs.contactDrawer.visible = true">添加为本地联系人</span>
+          <span class="text-indigo cursor-pointer text-center text-xs mt-3 leading-tight"
+                @click="showAddLocalContact">添加为本地联系人</span>
           <div class="flex flex-wrap mt-3">
-            <div class="my-2 w-1/3 text-center"
-                 v-for="n in dialPanel"
-                 :key="n.num">
+            <div v-for="n in dialPanel"
+                 :key="n.num"
+                 class="mb-3 text-center"
+                 :class="{'mx-10': n.isCenter}">
               <div class="flex justify-center">
-                <div class="rounded w-14 h-14 border cursor-pointer hover:text-blue hover:border-indigo"
-                     @click="clickNumber(n.num)">
-                  <div class="flex flex-col justify-center items-center h-full">
-                    <span class="text-xl">{{n.num}}</span>
-                    <span class="text-xs text-grey-darker">{{n.alpha}}</span>
-                  </div>
+                <div class="w-14 h-14">
+                  <a-button class="w-full h-full"
+                            @click="clickNumber(n.num)">
+                    <div class="flex flex-col justify-center items-center h-full">
+                      <span class="text-xl">{{n.num}}</span>
+                      <span class="text-xs text-grey-darker">{{n.alpha}}</span>
+                    </div>
+                  </a-button>
                 </div>
               </div>
             </div>
           </div>
           <div class="flex mt-8 w-full">
-            <a-button type="primary" class="w-1/2">
-              <a-iconfont type="icon-shipin"/>
+            <a-button type="primary" class="w-1/2" :disabled="!callNumber"
+                      @click="videoCall">
+              <a-iconfont type="icon-shipin" class="text-base"/>
             </a-button>
             <a-button type="primary" class="ml-4 w-1/2"
-                      @click="audioCall">
-              <a-iconfont type="icon-yuyin"/>
+                      @click="audioCall" :disabled="!callNumber">
+              <a-iconfont type="icon-yuyin" class="text-base"/>
             </a-button>
           </div>
         </div>
         <a-divider type="vertical" class="h-full mx-0"/>
-        <div class="w-3/5 h-full">
-          <div class="h-full flex flex-col">
-            <div class="mx-2 my-3">拨号搜素结果（6）</div>
+        <div class="flex flex-grow h-full">
+          <div class="h-full flex flex-col w-full">
+            <div class="mx-2 my-3">拨号搜素结果（{{searchResult.length}}）</div>
             <a-divider class="my-0"/>
-            <div class="flex flex-col h-full overflow-y-auto px-2">
-              <div v-for="i in 20" :key="i" class="group cursor-pointer hover:bg-grey-lighter">
-                <div class="flex px-3 items-center h-14">
-                  <div>
-                    <a-avatar :size="32" class="bg-indigo-dark"><span class="m-1">测试</span></a-avatar>
-                  </div>
-                  <div slot="title" class="truncate ml-3">
-                    <div class="flex flex-col justify-center">
-                      <span class="text-sm leading-none truncate">张三</span>
-                      <span class="text-xs opacity-75 leading-none mt-1">[视频通话] 4587349579</span>
-                    </div>
-                  </div>
-                  <div class="flex flex-grow"></div>
-                  <div class="flex">
-                    <a-iconfont class="opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
-                            type="icon-shipin"></a-iconfont>
-                    <a-iconfont class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"
-                            type="icon-yuyin"></a-iconfont>
-                    <a-iconfont type="ellipsis"
-                            class="ml-3 opacity-0 group-hover:opacity-100 text-indigo cursor-pointer"/>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <template v-if="!searchResult.length">
+              <common-empty class="mt-10 text-grey"
+                            text="暂无搜索结果"/>
+            </template>
+            <contact-list v-else
+                          :contactList="searchResult"
+                          highlightSelected
+            ></contact-list>
+
           </div>
         </div>
       </div>
@@ -92,45 +84,58 @@
 </template>
 
 <script>
+import { debounce } from 'lodash';
 import AppHeader from '../MainHeader.vue';
 import LocalContactDrawer from '../Contact/LocalContactDrawer.vue';
+import ContactList from '../Contact/ContactList.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 
 export default {
   name       : 'DialPlate',
   components : {
     AppHeader,
     LocalContactDrawer,
+    CommonEmpty,
+    ContactList,
   },
   data() {
     return {
       dialPanel : [
         { num: '1', alpha: '' },
-        { num: '2', alpha: 'ABC' },
+        { num: '2', alpha: 'ABC', isCenter: true },
         { num: '3', alpha: 'DEF' },
         { num: '4', alpha: 'GHI' },
-        { num: '5', alpha: 'JKL' },
+        { num: '5', alpha: 'JKL', isCenter: true },
         { num: '6', alpha: 'MNO' },
         { num: '7', alpha: 'PQRS' },
-        { num: '8', alpha: 'TUV' },
+        { num: '8', alpha: 'TUV', isCenter: true },
         { num: '9', alpha: 'WXYZ' },
-        { num: '*', alpha: '.@' },
-        { num: '0', alpha: '+' },
+        { num: '*', alpha: '. @' },
+        { num: '0', alpha: '+', isCenter: true },
         { num: '#', alpha: '' },
       ],
-      callNumber : '0001',
+      callNumber   : '',
+      searchResult : [],
     };
+  },
+  mounted() {
+    this.debounceSearch = debounce((val = '') => {
+      this.$model.contact.findContacts(val).then((r) => {
+        this.searchResult = r;
+      });
+    }, 500);
   },
   methods : {
     clickNumber(num) {
       this.callNumber = this.callNumber === null ? num : this.callNumber += num;
-      document.getElementById('number-input').focus();
+      this.$refs.numberInput.focus();
     },
     inputNumber(e) {
       this.callNumber = e.target.value;
     },
     clearNumber() {
       this.callNumber = '';
-      document.getElementById('number-input').focus();
+      this.$refs.numberInput.focus();
     },
     removeTailNumber(context) {
       context.target.onmousedown = function(e) {
@@ -139,6 +144,7 @@ export default {
       };
 
       const obj = document.getElementById('number-input');
+
       const start = obj.selectionStart;
       const end = obj.selectionEnd;
 
@@ -157,6 +163,25 @@ export default {
     audioCall() {
       if (!this.callNumber) return;
       this.$dispatch('call.doAudioCall', this.callNumber);
+    },
+    videoCall() {
+      if (!this.callNumber) return;
+      this.$rtc.conference.meetnow([ {
+        requestUri : this.callNumber,
+      } ]);
+    },
+    showAddLocalContact() {
+      this.$refs.contactDrawer.visible = true;
+      this.$refs.contactDrawer.$nextTick(() => {
+        this.$refs.contactDrawer.form.setFieldsValue({
+          account : this.callNumber,
+        });
+      });
+    },
+  },
+  watch : {
+    callNumber(val) {
+      this.debounceSearch(val.trim());
     },
   },
 };

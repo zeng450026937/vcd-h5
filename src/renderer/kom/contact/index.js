@@ -70,16 +70,14 @@ export default {
 
       return group;
     },
-    async findContacts(_val, val = String(_val).length === 1 ? `0${_val}` : String(_val)) {
-      const result = await rtc.contact.phonebook.search({ key: val });
-
-      return result.map((c) => {
+    async findContacts(val) {
+      return rtc.contact.phonebook.search({ key: val }).then((result) => result.data.map((c) => {
         const { id } = c.node;
         const index = this.selectedPhoneBook.findIndex((s) => s.id === id);
 
         if (index < 0) return this.phoneBookFormat(Object.assign({}, c.attributes, c.node));
         else return this.selectedPhoneBook[index];
-      });
+      }));
     },
     phoneBookFormat(val) {
       return formatPhoneBook(val, this.loadMode);
