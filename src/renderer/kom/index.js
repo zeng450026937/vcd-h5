@@ -16,6 +16,7 @@ import settingConference from './setting/conference';
 import video from './setting/video';
 import normal from './setting/normal';
 import device from './setting/device';
+import about from './setting/about';
 import state from './state';
 //
 import middles from './middle';
@@ -70,6 +71,7 @@ const data = {
     video,
     normal,
     device,
+    about,
   },
 };
 

@@ -21,14 +21,14 @@
       <div class="mt-6 text-base">
         Yealink VC Desktop
       </div>
-      <div class="mt-2 text-grey-dark text-xs">
+      <div class="mt-2 text-black6 text-xs">
         版本号： 1.0.9-alpha
       </div>
       <div class="mt-12">
         <a-button class="w-60 h-9" type="primary">检查更新</a-button>
       </div>
       <div class="mt-5 leading-normal">
-        <a-switch size="small"/>
+        <a-switch size="small" v-model="autoUpdate"/>
         <span class="ml-2">自动更新</span>
       </div>
       <div class="text-indigo text-xs text-center mt-10">
@@ -36,7 +36,7 @@
         <span class="cursor-pointer ml-8">隐私政策</span>
       </div>
       <div class="flex mt-8 justify-center">
-        <p class="text-xs text-black-lightest leading-tight">Copyright © 2018 Yealink Inc. All rights reserved.</p>
+        <p class="text-xs text-black9 leading-tight">Copyright © 2018 Yealink Inc. All rights reserved.</p>
       </div>
     </div>
   </a-layout>
@@ -52,6 +52,22 @@ export default {
   },
   data() {
     return {};
+  },
+  computed : {
+    autoUpdate : {
+      get() {
+        return this.$model.setting.about.autoUpdate;
+      },
+      set(val) {
+        this.$model.setting.about.autoUpdate = val;
+      },
+    },
+  },
+  deactivated() {
+    this.$model.setting.about.save(); // 页面不显示的时候保存设置
+  },
+  destroyed() {
+    this.$model.setting.about.save(); // 页面不显示的时候保存设置
   },
   methods : {},
 };

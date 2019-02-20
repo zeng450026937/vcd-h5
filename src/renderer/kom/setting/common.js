@@ -4,12 +4,14 @@ import storage from '../../storage';
 // const version = 'V1';
 // normal 通用模块
 // conference 会议模块
-export const moduleList = [ 'normal', 'conference', 'video', 'device' ];
+export const moduleList = [ 'normal', 'conference', 'video', 'device', 'about' ];
 
 const keyMap = {
   normal     : 'SETTING_NORMAL',
   conference : 'SETTING_CONFERENCE',
+  video      : 'SETTING_VIDEO',
   device     : 'SETTING_DEVICE',
+  about      : 'SETTING_ABOUT',
 };
 
 const itemMap = { // 对应不同模块需要导出的设置项
@@ -23,6 +25,7 @@ const itemMap = { // 对应不同模块需要导出的设置项
     'enableHWSpeed',
     'disableVideo',
     'enableMirroring' ],
+  about  : [ 'autoUpdate' ],
   device : [
     'videoInput',
     'forceLocalStream',
