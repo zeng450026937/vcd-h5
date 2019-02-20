@@ -63,6 +63,8 @@ export default {
       },
     },
   },
+  mounted() {
+  },
   deactivated() {
     this.$model.setting.about.save(); // 页面不显示的时候保存设置
   },
