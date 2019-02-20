@@ -46,6 +46,10 @@ export default {
   },
   data() {
     return {
+      langList : [
+        { label: '简体中文', lang: 'zh-CN' },
+        { label: 'English', lang: 'en-US' },
+      ],
     };
   },
   deactivated() {

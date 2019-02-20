@@ -162,7 +162,7 @@
           <div class="flex flex-col h-full">
             <div>
               <div class="h-10 border-b flex items-center px-2">
-                <span class="flex flex-grow">12/100</span>
+                <span class="flex flex-grow">{{selectedContact.length || 0}}/100</span>
                 <a-popover placement="bottomRight" trigger="click"
                            overlayClassName="reserve-meeting-popover">
                   <template slot="content">
@@ -182,7 +182,7 @@
                       </div>
                     </div>
                   </template>
-                  <a-iconfont type="icon-tishi" class="text-indigo-dark cursor-pointer"/>
+                  <a-iconfont type="icon-tishi" class="text-indigo-dark text-base cursor-pointer"/>
                 </a-popover>
               </div>
             </div>
@@ -219,7 +219,7 @@
       <a-drawer
           title="添加参会成员"
           placement="right"
-          :width="648"
+          :width="728"
           :closable="false"
           @close="showDrawer = false"
           :visible="showDrawer"
@@ -228,16 +228,16 @@
         <div class="flex flex-col h-full w-full">
           <div class="flex flex-col p-5 flex-grow">
             <div class="flex flex-grow">
-              <div class="w-1/2 shadow-md">
+              <div class="shadow-md" style="width: 320px;">
                 <contact-tree ref="contactTree"
                               :checked="checkedKeys"
                               @onCheck="onCheck"
                 ></contact-tree>
               </div>
-              <div class="flex w-1/2">
-                <div class="flex w-1/6 justify-center items-center">
-                  <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
-                </div>
+              <div class="flex w-12 justify-center items-center">
+                <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"/>
+              </div>
+              <div class="flex" style="width: 320px;">
                 <div class="w-5/6 shadow-md flex flex-col">
                   <div class="border-b">
                     <div class="flex flex-col">
@@ -263,8 +263,8 @@
           </div>
           <div>
             <div class="flex h-12 py-2 justify-center border-t">
-              <a-button type="primary" class="mx-2" @click="ensure">确定</a-button>
-              <a-button class="mx-2" @click="showDrawer = false">取消</a-button>
+              <a-button type="primary" class="mx-2" @click="addEnsure">确定</a-button>
+              <a-button class="mx-2" @click="addCancel">取消</a-button>
             </div>
           </div>
         </div>
@@ -353,10 +353,12 @@ export default {
       }, () => {
       });
     },
-    ensure() {
-      this.$model.calendar.datePicker = this.$refs.datePicker;
-      console.warn(this.$refs.datePicker);
-      console.warn(this.selectedContact);
+    addEnsure() {
+      // this.$model.calendar.datePicker = this.$refs.datePicker;
+      this.showDrawer = false;
+    },
+    addCancel() {
+      this.showDrawer = false;
     },
   },
 };

@@ -3,7 +3,7 @@
     <div v-if="hasEvent" class="h-full flex flex-col">
       <div class="h-full flex flex-grow">
         <div class="w-full">
-          <div class="flex flex-col px-5 h-full">
+          <div class="flex flex-col px-5 h-full overflow-y-auto">
             <div class="py-5 border-b">
               <div class="flex items-center">
                 <div class="w-1 text-base text-black flex flex-grow truncate">
@@ -13,15 +13,15 @@
                 <a-popover placement="bottomRight" trigger="click"
                            overlayClassName="calendar-info-popover">
                   <template slot="content">
-                    <div class="flex justify-between items-center p-5"
-                         style="width: 300px; height: 190px;">
-                      <div class="flex flex-col items-center justify-between h-full">
-                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest"></div>
-                        <span>分享会议</span>
+                    <div class="flex flex-col justify-between items-center p-3"
+                         style="width: 144px; height: 332px;">
+                      <div class="flex flex-col items-center h-full">
+                        <span class="text-xs leading-tight">分享会议</span>
+                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
                       </div>
-                      <div class="flex flex-col items-center justify-between h-full">
-                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest"></div>
-                        <span>观看直播</span>
+                      <div class="flex flex-col items-center h-full mt-3">
+                        <span class="text-xs leading-tight">观看直播</span>
+                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
                       </div>
                     </div>
                   </template>
@@ -61,8 +61,8 @@
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">直播链接</span>
-                  <span class="text-indigo flex flex-grow">当前会议不是直播会议</span>
-                  <span class="text-xs text-indigo cursor-pointer">复制</span>
+                  <span class="text-indigo flex">当前会议不是直播会议</span>
+                  <span class="text-xs text-indigo cursor-pointer ml-2">复制</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -75,7 +75,7 @@
             <div class="flex flex-col text-xs my-5">
               <div class="flex w-full leading-tight">
                 <span class="w-20 opacity-75">会议成员</span>
-                <div class="flex flex-col flex-grow overflow-y-auto">
+                <div class="flex flex-col flex-grow">
                   <div class="w-full" v-if="currentEvent.invitees">
                     <recycle-scroller
                         style="height: 100%"
