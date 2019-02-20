@@ -32,17 +32,17 @@ module.exports = {
 
   chainWebpack : (config) => {
     config.module
-      .noParse(/^(vue|vue-router|apollosip|apollortc|vuem)$/);
+      .noParse(/^(vue|vue-router|apollosip|apollortc|vuem|electron-updater)$/);
 
     config.module
       .rule('js')
       .exclude
-      .add(/(apollosip|apollortc|vuem)/);
+      .add(/(apollosip|apollortc|vuem|electron-updater)/);
 
     config.module
       .rule('eslint')
       .exclude
-      .add(/(apollosip|apollortc|vuem)/);
+      .add(/(apollosip|apollortc|vuem|electron-updater)/);
 
     config.resolve.alias
       .set('apollosip', path.resolve(__dirname, 'lib/apollo-sip'))

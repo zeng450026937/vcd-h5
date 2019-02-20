@@ -64,6 +64,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "babel-plugin-transform-imports": "^1.5.1",
+    "crocket": "^0.9.11",
     "electron": "^4.0.2",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
