@@ -1,8 +1,10 @@
 <template>
   <a-layout id="conference-content" class="bg-transparent h-full">
-    <div class="relative h-full w-full">
+    <div class="relative h-full w-full" @click="contentClicked">
       <div class="flex flex-col h-full">
-        <div v-if="isInConferenceMain" class="header flex flex-col h-12 dragable z-10">
+        <div v-if="isInConferenceMain"
+             class="header flex flex-col h-12 dragable z-10"
+             :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-5 no-dragable">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
                         class="cursor-pointer hover:text-indigo text-base"
@@ -34,6 +36,7 @@
         <conference-share-video/>
       </div>
       <conference-notice/>
+      <conference-inviting-modal ref="invitingModal"/>
     </div>
   </a-layout>
 </template>
@@ -45,10 +48,19 @@ import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
 import ConferenceControls from './ConferenceControls.vue';
+import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
-  name : 'ConferenceContent',
+  name       : 'ConferenceContent',
+  components : {
+    ConferenceRemoteVideo,
+    ConferenceLocalVideo,
+    ConferenceShareVideo,
+    ConferenceNotice,
+    ConferenceControls,
+    ConferenceInvitingModal,
+  },
   data() {
     const tabList = [
       { icon: 'icon-suoding', comp: 'TabLockConference' },
@@ -62,14 +74,8 @@ export default {
       isInConferenceMain : true,
       shareWindow        : null,
       isShareWindowOpen  : false,
+      hideControlsTimer  : null,
     };
-  },
-  components : {
-    ConferenceRemoteVideo,
-    ConferenceLocalVideo,
-    ConferenceShareVideo,
-    ConferenceNotice,
-    ConferenceControls,
   },
   computed : {
     localVideoClasses() {
@@ -90,8 +96,17 @@ export default {
       return this.$rtc.conference.shareChannel.remoteStream
         || this.$rtc.conference.shareChannel.localStream;
     },
+    hideControls : {
+      get() {
+        return this.$model.conference.hideControls;
+      },
+      set(val) {
+        this.$model.conference.hideControls = val;
+      },
+    },
   },
   mounted() {
+    this.contentClicked();
   },
   methods : {
     openShareWindow() {
@@ -107,7 +122,7 @@ export default {
       };
     },
     showInviteModal() {
-      // this.$refs.conferenceControls.$refs.invitingModal.visible = true;
+      this.$refs.invitingModal.visible = true;
     },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
@@ -115,6 +130,16 @@ export default {
     maxConferenceContent() {
       // FIXME DBLCLICK 双击是如果间隔时间过短，则不会响应事件
       screenfull.toggle(document.getElementById('layout-conference-content'));
+    },
+    contentClicked() {
+      if (!this.hideControls && this.hideControlsTimer) {
+        clearTimeout(this.hideControlsTimer);
+      }
+      this.hideControls = false;
+
+      this.hideControlsTimer = setTimeout(() => {
+        this.hideControls = true;
+      }, 6000);
     },
   },
   watch : {
@@ -132,6 +157,7 @@ export default {
 #conference-content {
   .header {
     background-image: linear-gradient(-180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.00) 98%);
+    transition: opacity ease-out .5s;
   }
   .button-content {
     button {

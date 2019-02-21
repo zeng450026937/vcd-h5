@@ -53,22 +53,18 @@
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
     </div>
-    <conference-inviting-modal ref="invitingModal"/>
     <conference-leaving-modal ref="leavingModal"/>
     <screen-share-modal ref="shareModal"/>
   </div>
 </template>
 
 <script>
-import { CONFERENCE } from '../../router/constants';
-import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
 
 export default {
   name       : 'ConferenceControls',
   components : {
-    ConferenceInvitingModal,
     ConferenceLeavingModal,
     ScreenShareModal,
   },

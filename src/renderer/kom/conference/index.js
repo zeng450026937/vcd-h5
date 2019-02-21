@@ -7,6 +7,7 @@ export default {
       noticeTextList     : [],
       isLocalUnmuteAudio : false,
       selectedMember     : '',
+      hideControls       : false, // 是否隐藏会议页面底部和头部的控制按钮
     };
   },
   computed : {

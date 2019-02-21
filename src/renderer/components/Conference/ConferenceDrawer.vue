@@ -69,8 +69,7 @@ export default {
   methods : {
     showInviteModal() {
       // FIXME ugly way
-      // this.$parent.$children[0].$refs.invitingModal.visible = true;
-      // console.warn(this.$refs);
+      console.warn(this.$parent.$children[0].showInviteModal());
     },
     closeDrawer() {
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
