@@ -13,7 +13,7 @@
         </template>
       </div>
       <div class="flex flex-col flex-grow w-1 ml-3">
-        <span class="item-name truncate">{{item.displayText + (item.isCurrentUser()?' ( 自己 )':'')}}</span>
+        <span class="item-name truncate">{{item.displayText + (item.isCurrentUser()?' ( 我 )':'')}}</span>
         <span class="item-phone">{{item.phone === 'unauth-web-client' ? 'WebRTC' : item.phone}}</span>
       </div>
       <div v-if="!isOnHold && !isAudioApplicant">
@@ -91,17 +91,17 @@
         </div>
         <div class="flex flex-col w-1/3 justify-between">
           <span>接收</span>
-          <span>312kb/s</span>
-          <span>1280x720</span>
-          <span>30fps</span>
-          <span>H.264</span>
+          <span>{{deviceInfo.recv.bitrate}}</span>
+          <span>{{deviceInfo.recv.ratio}}</span>
+          <span>{{deviceInfo.recv.frameRate}}</span>
+          <span>{{deviceInfo.recv.codec}}</span>
         </div>
         <div class="flex flex-col w-1/3 justify-between">
           <span>发送</span>
-          <span>312kb/s</span>
-          <span>1280x720</span>
-          <span>30fps</span>
-          <span>H.264</span>
+          <span>{{deviceInfo.send.bitrate}}</span>
+          <span>{{deviceInfo.send.ratio}}</span>
+          <span>{{deviceInfo.send.frameRate}}</span>
+          <span>{{deviceInfo.send.codec}}</span>
         </div>
       </div>
 
@@ -123,11 +123,25 @@ export default {
   data() {
     return {
       isShowDeviceInfo : false,
+      deviceInfo       : {
+        recv : {
+          bitrate   : '-',
+          ratio     : '-',
+          frameRate : '-',
+          codec     : '-',
+        },
+        send : {
+          bitrate   : '-',
+          ratio     : '-',
+          frameRate : '-',
+          codec     : '-',
+        },
+      },
     };
   },
   computed : {
     isSelected() {
-      return this.$model.conference.selectedMember === this.item.uid;
+      return this.$model.conference.selectedMember === this.item.entity;
     },
     currentIsPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
@@ -261,9 +275,24 @@ export default {
     },
     showDeviceInfo() { // 显示设备详情
       this.isShowDeviceInfo = true;
+      this.updateDeviceInfo();
+    },
+    updateDeviceInfo() {
+      this.item.getStatistics().then((result) => {
+        const videoInfo = result['main-video'];
+
+        this.deviceInfo.recv.bitrate = `${videoInfo.recv.bitrate} kbs`;
+        this.deviceInfo.send.bitrate = `${videoInfo.send.bitrate} kbs`;
+        this.deviceInfo.recv.ratio = `${videoInfo.recv.width} x ${videoInfo.recv.height}`;
+        this.deviceInfo.send.ratio = `${videoInfo.send.width} x ${videoInfo.send.height}`;
+        this.deviceInfo.recv.frameRate = `${videoInfo.recv.fr} fps`;
+        this.deviceInfo.send.frameRate = `${videoInfo.send.fr} fps`;
+        this.deviceInfo.recv.codec = videoInfo.recv.codec;
+        this.deviceInfo.send.codec = videoInfo.send.codec;
+      });
     },
     selectMember() {
-      this.$model.conference.selectedMember = this.item.uid;
+      this.$model.conference.selectedMember = this.item.entity;
     },
   },
 };

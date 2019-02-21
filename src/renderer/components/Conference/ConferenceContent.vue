@@ -21,7 +21,7 @@
         </div>
         <div class="flex flex-grow"></div>
         <!--TODO hard code modify after year-->
-        <conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>
+        <!--<conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>-->
       </div>
       <div class="remote-video-content absolute h-full w-full pin-t pin-r"
            @dblclick="maxConferenceContent">
@@ -107,7 +107,7 @@ export default {
       };
     },
     showInviteModal() {
-      this.$refs.conferenceControls.$refs.invitingModal.visible = true;
+      // this.$refs.conferenceControls.$refs.invitingModal.visible = true;
     },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });

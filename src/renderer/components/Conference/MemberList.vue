@@ -21,13 +21,13 @@
                          @selected="selectGroup">
       <template slot="items">
         <template v-for="item in waitingList">
-          <member-list-item :item="item" :key="item.uid"/>
+          <member-list-item :item="item" :key="item.entity"/>
         </template>
       </template>
       <template slot="operation">
-        <div class="text-white" v-if="selectedGroup === '2'">
-          <a-iconfont type="icon-tongguo" class="ml-4 text-base cursor-pointer" />
-          <a-iconfont type="icon-yichu" class="ml-4 text-base cursor-pointer" />
+        <div class="text-white" v-if="selectedGroup === '2' && isPresenter && waitingList.length > 0">
+          <a-iconfont type="icon-tongguo" class="ml-4 text-base cursor-pointer" @click.stop="allowAllAttend"/>
+          <a-iconfont type="icon-yichu" class="ml-4 text-base cursor-pointer" @click.stop="removeAllAttend"/>
         </div>
       </template>
     </member-list-wrapper>
@@ -37,13 +37,13 @@
                          @selected="selectGroup">
       <template slot="items">
         <template v-for="item in speakApplyList">
-          <member-list-item :item="item" :key="item.uid"/>
+          <member-list-item :item="item" :key="item.entity"/>
         </template>
       </template>
       <template slot="operation">
-        <div class="text-white" v-if="selectedGroup === '3'">
-          <a-iconfont type="icon-tongguo" class="ml-4 text-base cursor-pointer" />
-          <a-iconfont type="icon-yichu" class="ml-4 text-base cursor-pointer" />
+        <div class="text-white" v-if="selectedGroup === '3' && isPresenter && speakApplyList.length > 0">
+          <a-iconfont type="icon-tongguo" class="ml-4 text-base cursor-pointer" @click.stop="allowAllSpeak"/>
+          <a-iconfont type="icon-yichu" class="ml-4 text-base cursor-pointer" @click.stop="removeAllSpeak"/>
         </div>
       </template>
     </member-list-wrapper>
@@ -85,10 +85,34 @@ export default {
     speakApplyList() {
       return this.$model.conference.speakApplyList;
     },
+    isPresenter() { // current => the current login user
+      return this.$model.conference.isPresenter;
+    },
   },
   methods : {
     selectGroup(key) {
       this.selectedGroup = key;
+    },
+    allowAllAttend() { // 允许入会
+      console.warn(this.waitingList);
+      this.waitingList.forEach((user) => {
+        user.allow(true);
+      });
+    },
+    removeAllAttend() { // 拒绝入会
+      this.waitingList.forEach((user) => {
+        user.allow(false);
+      });
+    },
+    allowAllSpeak() { // 允许全部发言
+      this.speakApplyList.forEach((user) => {
+        this.$model.conference.updateAudioStatus(user, true);
+      });
+    },
+    removeAllSpeak() { // 拒绝全部发言
+      this.speakApplyList.forEach((user) => {
+        this.$model.conference.updateAudioStatus(user, false);
+      });
     },
   },
 };

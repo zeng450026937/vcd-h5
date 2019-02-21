@@ -41,6 +41,8 @@ export default {
 
 <style lang="less">
 #member-list-wrapper {
+  border-radius: unset;
+  border-bottom: 1px solid #E0E0E0;
   .ant-collapse-item {
     border-bottom: none;
     .ant-collapse-header {
