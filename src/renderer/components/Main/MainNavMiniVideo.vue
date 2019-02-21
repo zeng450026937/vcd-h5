@@ -28,15 +28,15 @@
                   <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
                   <span class="ml-3 text-xs">拨号盘</span>
                 </div>
-                <div class="h-8 w-full px-3 popover-content-item flex items-center">
-                  <a-iconfont type="icon-yangshengqi" class="text-base"/>
-                  <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
-                </div>
+                <!--<div class="h-8 w-full px-3 popover-content-item flex items-center">-->
+                  <!--<a-iconfont type="icon-yangshengqi" class="text-base"/>-->
+                  <!--<a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>-->
+                <!--</div>-->
               </div>
               <a-button shape="circle"
                         class="text-white mx-2"
                         @click="showMorePanel = !showMorePanel"
-              ><a-iconfont type="icon-gengduo"/></a-button>
+              ><a-iconfont type="icon-gengduo1"/></a-button>
             </a-popover>
             <a-button shape="circle"
                       class="text-white mx-2 bg-red-light"
@@ -126,7 +126,7 @@ export default {
     padding: 4px 0;
     .popover-content {
       width: 180px;
-      height: 96px;
+      height: 64px;
       .popover-content-item {
         cursor: pointer;
         &:hover {

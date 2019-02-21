@@ -11,7 +11,9 @@
           >{{videoInput.label}}
           </a-select-option>
         </a-select>
-        <div v-if="showVideo" class="mt-2 relative" style="height: 158px;">
+        <div v-if="showVideo"
+             class="video-content mt-2 relative"
+             style="height: 140px;">
           <video-view class="w-full h-full bg-white"
                       position="absolute"
                       object-fit="cover"/>
@@ -28,7 +30,7 @@
           >{{audioInput.label}}
           </a-select-option>
         </a-select>
-        <a-progress class="leading-none" :percent="volume" :showInfo="false" :strokeWidth=2 />
+        <volume-progress />
         <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
       </div>
 
@@ -57,11 +59,13 @@
 
 <script>
 import VideoView from '../Common/VideoView.vue';
+import VolumeProgress from '../Common/VolumeProgress.vue';
 
 export default {
   name       : 'TabSettingMedia',
   components : {
     VideoView,
+    VolumeProgress,
   },
   data() {
     return {

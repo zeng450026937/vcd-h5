@@ -151,7 +151,7 @@
                 <a-col :span="3" class="flex self-start">备注</a-col>
                 <a-col :span="21">
                   <a-textarea placeholder="Autosize height"
-                              :autosize="{ minRows: 6, maxRows: 8 }"
+                              :autosize="{ minRows: 4, maxRows: 4 }"
                   ></a-textarea>
                 </a-col>
               </a-row>

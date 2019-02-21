@@ -3,7 +3,8 @@
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
         <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
-        <a-iconfont :type="`icon-signal-${signal}`" class="text-white text-base mr-4"/>
+        <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
+                    class="text-white no-dragable text-base mr-4 cursor-pointer"/>
         <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         <span class="text-white text-xs leading-tight truncate">{{subject}}（ID：{{conferenceId}}）</span>
       </div>
@@ -59,7 +60,7 @@ export default {
     initSignal() {
       // 初始化信号
       this.$rtc.conference.getStats().then((val) => {
-        this.signal = 1; // TODO val.media.quality;
+        this.signal = val.media.quality;
       });
 
       // 设置会议进行时间

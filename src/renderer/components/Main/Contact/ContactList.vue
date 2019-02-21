@@ -46,7 +46,7 @@
                                   :size="48"
                                   :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
                                   [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
-                          <a-iconfont :type="item.avatar"/>
+                          <a-iconfont :type="item.avatar" class="text-base"/>
                         </a-avatar>
                         <a-avatar v-else :size="48"
                                   class="bg-indigo-dark"
@@ -89,13 +89,13 @@
                   </div>
                 </template>
                 <a-avatar v-if="item.isGroup || !item.parent.isUser"
-                          class="text-sm mx-2"
+                          class="text-sm"
                           :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
                                   [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
-                  <a-iconfont :type="item.avatar"/>
+                  <a-iconfont :type="item.avatar" class="text-base"/>
                 </a-avatar>
                 <a-avatar v-else
-                          class="bg-indigo-dark mx-2 text-sm"
+                          class="bg-indigo-dark text-sm"
                           :class="{[`bg-${item.avatar}`]: item.avatar}">
                   {{item.name|avatarTrim}}
                 </a-avatar>

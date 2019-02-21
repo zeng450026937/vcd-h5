@@ -38,6 +38,7 @@ export default {
     .video-content {
       height: auto;
       max-height: calc( 100% - 158px );
+      border: 1px solid #1D212F;
     }
   }
 }

@@ -12,8 +12,8 @@
           <div class="circle-outer"></div>
         </template>
       </div>
-      <div class="flex flex-col flex-grow ml-3">
-        <span class="item-name">{{item.displayText + (item.isCurrentUser()?' ( 自己 )':'')}}</span>
+      <div class="flex flex-col flex-grow w-1 ml-3">
+        <span class="item-name truncate">{{item.displayText + (item.isCurrentUser()?' ( 自己 )':'')}}</span>
         <span class="item-phone">{{item.phone === 'unauth-web-client' ? 'WebRTC' : item.phone}}</span>
       </div>
       <div v-if="!isOnHold && !isAudioApplicant">
@@ -31,7 +31,7 @@
                     overlayClassName="member-list-popover">
           <a class="ant-dropdown-link" href="#">
             <a-iconfont v-if="hasPermission"
-                        type="icon-gengduo"
+                        type="icon-gengduo1"
                         class="ml-4 text-indigo cursor-pointer text-base"/>
           </a>
           <a-menu slot="overlay">
@@ -77,7 +77,7 @@
           <div class="flex flex-grow w-1 truncate">
             <span class="truncate">Yealink VC Desktop</span>
           </div>
-          <a-iconfont type="icon-guanbi" class="text-base cursor-pointer text-black-lightest"
+          <a-iconfont type="icon-guanbi" class="text-base cursor-pointer text-black9"
                       @click="isShowDeviceInfo = false"></a-iconfont>
         </div>
       </div>

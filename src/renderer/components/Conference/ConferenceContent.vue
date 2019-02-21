@@ -7,8 +7,9 @@
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
-            <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
-            <a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>
+            <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                        @click="maxConferenceContent"/>
+            <!--<a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>-->
             <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo-light text-base"
                     @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
@@ -20,15 +21,16 @@
         </div>
         <div class="flex flex-grow"></div>
         <!--TODO hard code modify after year-->
-        <conference-controls ref="conferenceControls"/>
+        <conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>
       </div>
-      <div class="remote-video-content absolute h-full w-full pin-t pin-r">
+      <div class="remote-video-content absolute h-full w-full pin-t pin-r"
+           @dblclick="maxConferenceContent">
         <conference-remote-video/>
       </div>
-      <div class="local-video-content">
+      <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
-      <div v-if="hasScreenStream && !isshareWindowOpen" class="share-video-content">
+      <div v-if="hasScreenStream && !isShareWindowOpen" :class="shareVideoClasses">
         <conference-share-video/>
       </div>
       <conference-notice/>
@@ -37,6 +39,7 @@
 </template>
 
 <script>
+import screenfull from 'screenfull';
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
@@ -48,6 +51,7 @@ export default {
   name : 'ConferenceContent',
   data() {
     const tabList = [
+      { icon: 'icon-suoding', comp: 'TabLockConference' },
       { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView' },
       { icon: 'icon-liaotian', comp: 'TabChatting' },
       { icon: 'icon-kongzhi', comp: 'TabSetting' },
@@ -57,7 +61,7 @@ export default {
       tabList,
       isInConferenceMain : true,
       shareWindow        : null,
-      isshareWindowOpen  : false,
+      isShareWindowOpen  : false,
     };
   },
   components : {
@@ -68,6 +72,20 @@ export default {
     ConferenceControls,
   },
   computed : {
+    localVideoClasses() {
+      const position = this.isInConferenceMain ? 'right' : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
+
+      return {
+        [`local-video-content local-video-content-${position}`] : true,
+      };
+    },
+    shareVideoClasses() {
+      const position = this.isInConferenceMain ? 'left' : 'center';
+
+      return {
+        [`share-video-content share-video-content-${position}`] : true,
+      };
+    },
     hasScreenStream() {
       return this.$rtc.conference.shareChannel.remoteStream
         || this.$rtc.conference.shareChannel.localStream;
@@ -79,12 +97,12 @@ export default {
     openShareWindow() {
       const option = 'width=528,height=297,minWidth=528,minHeight=297,directories=no,resizable,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
 
-      this.shareWindow = window.open('/shareScreen.html', 'screen-share', option);
-      this.isshareWindowOpen = true;
+      this.shareWindow = window.open('shareScreen.html', 'screen-share', option);
+      this.isShareWindowOpen = true;
       this.shareWindow.onbeforeunload = () => {
         // FIXME TMP SOLUTION
         setTimeout(() => {
-          this.isshareWindowOpen = !this.shareWindow.closed;
+          this.isShareWindowOpen = !this.shareWindow.closed;
         }, 100);
       };
     },
@@ -93,6 +111,10 @@ export default {
     },
     openDrawer(tab) {
       this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
+    },
+    maxConferenceContent() {
+      // FIXME DBLCLICK 双击是如果间隔时间过短，则不会响应事件
+      screenfull.toggle(document.getElementById('layout-conference-content'));
     },
   },
   watch : {
@@ -118,15 +140,32 @@ export default {
   }
   .local-video-content {
     position: absolute;
-    left: 100%;
     top: 100%;
-    transform: translate(-100%, -100%);
+    &-right {
+      left: 100%;
+      transform: translate(-100%, -100%);
+    }
+    &-center-right {
+      left: 50%;
+      transform: translateY(-100%);
+    }
+    &-center {
+      left: 50%;
+      transform: translate(-50%, -100%);
+    }
   }
+
   .share-video-content {
     position: absolute;
-    left: 0;
     top: 100%;
-    transform: translateY(-100%);
+    &-left {
+      left: 0;
+      transform: translateY(-100%);
+    }
+    &-center {
+      left: 50%;
+      transform: translate(-100%, -100%);
+    }
   }
 }
   .more-panel-popover {
@@ -141,7 +180,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 96px;
+        height: 64px;
         .popover-content-item {
           cursor: pointer;
           &:hover {

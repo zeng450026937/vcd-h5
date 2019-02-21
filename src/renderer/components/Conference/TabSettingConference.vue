@@ -1,21 +1,18 @@
 <template>
   <a-layout id="tab-setting-conference" class="bg-white">
     <div class="flex flex-col px-4">
-      <div class="flex flex-col">
+      <div v-if="isDemonstrator && isPresenter" class="flex flex-col mb-5">
         <span class="text-sm leading-tight">画面布局</span>
         <div class="flex mt-3 justify-between px-1">
-          <div class="layout layout-one-more">
-            <a-iconfont type="icon-n"/>
-          </div>
-          <div class="layout layout-average">
-            <a-iconfont type="icon-dengfen" />
-          </div>
-          <div class="layout layout-one">
-            <a-iconfont type="icon-danfangquanping" />
+          <div v-for="layout in layoutList" :key="layout.value"
+               class="layout"
+               @click="selectLayout(layout.value)">
+            <a-iconfont :type="layout.icon"
+                        :class="{'text-indigo': layout.value === currentLayout}"/>
           </div>
         </div>
       </div>
-      <div class="flex mt-6">
+      <div class="flex items-center">
         <a-switch size="small" defaultChecked/>
         <span class="text-sm leading-tight ml-3">入会和离开的提示</span>
       </div>
@@ -26,6 +23,47 @@
 <script>
 export default {
   name : 'TabSettingConference',
+  data() {
+    return {
+      layoutList : [
+        {
+          value : 'SpeechExcitation',
+          icon  : 'icon-n',
+        },
+        {
+          value : 'Equality',
+          icon  : 'icon-dengfen',
+        },
+        {
+          value : 'Exclusive',
+          icon  : 'icon-danfangquanping',
+        },
+      ],
+      currentLayout : '',
+    };
+  },
+  computed : {
+    isDemonstrator() {
+      return this.$model.conference.profile === 'demonstrator';
+    },
+    isPresenter() { // current => the current login user
+      return this.$model.conference.isPresenter;
+    },
+  },
+  created() {
+    this.currentLayout = this.$rtc.conference.information.view.getLayout()['video-layout'] || 'SpeechExcitation';
+  },
+  methods : {
+    selectLayout(layout) {
+      this.currentLayout = layout;
+      this.$rtc.conference.information.view.setLayout({
+        'video-layout'                : layout,
+        'video-max-view'              : 5,
+        'video-speech-ex-sensitivity' : 2,
+        'video-round-interval'        : 2,
+      });
+    },
+  },
 };
 </script>
 

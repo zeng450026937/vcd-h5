@@ -2,7 +2,7 @@ export default function formatStatistics(data) {
   // if (!data) return null;
   if (!data) data = {};
   const DEFAULT_TEXT = '--';
-  
+
   const media = getReport(data.media);
   const share = data.share ? getReport(data.share) : null;
   let result;
@@ -269,7 +269,7 @@ function getReport(stats) {
     outbound : analyzeReport(stats, 'outbound'),
   };
 }
-  
+
 /**
    * 分析当前统计信息的报告
    * @param report
@@ -301,20 +301,19 @@ function analyzeReport(report = {}, direction = 'inbound') {
       },
     },
   };
-    
+
   const bound = report[direction] || {};
-    
+
   const { audio, video } = bound;
-    
+
   if (audio) {
     const { audio:statsAudio } = stats;
 
     statsAudio.packetsLost = safeValue(audio.packetsLost, statsAudio.packetsLost);
-    statsAudio.packetsLostRate =
-      safeValue(audio.packetsLostRate, statsAudio.packetsLostRate);
+    statsAudio.packetsLostRate = safeValue(audio.packetsLostRate, statsAudio.packetsLostRate);
     statsAudio.codec = safeValue(audio.codec, statsAudio.codec);
     statsAudio.track = safeValue(audio.track, statsAudio.track);
-  
+
     statsAudio.bitrate = direction === 'inbound'
       ? safeValue(audio.incomingBitrate, statsAudio.bitrate)
       : safeValue(audio.outgoingBitrate, statsAudio.bitrate);
@@ -323,8 +322,7 @@ function analyzeReport(report = {}, direction = 'inbound') {
     const { video:statsVideo } = stats;
 
     statsVideo.packetsLost = safeValue(video.packetsLost, statsVideo.packetsLost);
-    statsVideo.packetsLostRate =
-      safeValue(video.packetsLostRate, statsVideo.packetsLostRate);
+    statsVideo.packetsLostRate = safeValue(video.packetsLostRate, statsVideo.packetsLostRate);
     statsVideo.codec = safeValue(video.codec, statsVideo.codec);
     statsVideo.track = safeValue(video.track, statsVideo.track);
   

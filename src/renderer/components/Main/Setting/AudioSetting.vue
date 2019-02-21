@@ -22,7 +22,7 @@
             >{{audioInput.label}}
             </a-select-option>
           </a-select>
-          <a-progress class="leading-none" :percent="volume" :showInfo="false" :strokeWidth=2 />
+          <volume-progress />
           <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
         </div>
 
@@ -51,16 +51,23 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
-
+import VolumeProgress from '../../Common/VolumeProgress.vue'
 export default {
   name       : 'AudioSetting',
   components : {
     AppHeader,
+    VolumeProgress,
   },
   data() {
     return {
       isPlaying : false,
     };
+  },
+  mounted() {
+    this.$rtc.media.localMedia.acquireStream();
+  },
+  destroyed() {
+    this.$rtc.media.localMedia.releaseStream();
   },
   computed : {
     volume() {
@@ -99,19 +106,5 @@ export default {
 
 <style lang="less">
 #audio-setting {
-  .ant-slider {
-    .ant-slider-rail {
-      height: 2px;
-    }
-    .ant-slider-track {
-      height: 2px;
-    }
-    .ant-slider-step {
-      height: 2px;
-    }
-    .ant-slider-handle {
-      display: none;
-    }
-  }
 }
 </style>

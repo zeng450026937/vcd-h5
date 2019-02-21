@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="corporate-contacts" class="h-full">
+  <a-layout id="corporate-contacts" class="h-full w-full">
     <div class="flex flex-col h-full">
       <div>
         <div class="flex flex-col bg-white min-h-18 dragable">

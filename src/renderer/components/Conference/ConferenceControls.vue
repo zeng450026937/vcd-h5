@@ -1,5 +1,5 @@
 <template>
-  <div id="conference-controls" class="flex justify-center py-5 items-center" :class="{'mb-40': !isInConferenceMain}">
+  <div id="conference-controls" class="flex justify-center py-5 items-center">
     <div class="button-content flex h-12 items-center z-10">
       <!--视频控制-->
       <a-button :disabled="videoDisabled"
@@ -37,15 +37,15 @@
             <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
             <span class="ml-3 text-xs">拨号盘</span>
           </div>
-          <div class="h-8 w-full px-3 popover-content-item flex items-center">
-            <a-iconfont type="icon-yangshengqi" class="text-base"/>
-            <a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>
-          </div>
+          <!--<div class="h-8 w-full px-3 popover-content-item flex items-center">-->
+            <!--<a-iconfont type="icon-yangshengqi" class="text-base"/>-->
+            <!--<a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>-->
+          <!--</div>-->
         </div>
         <a-button shape="circle"
                   class="w-12 h-12 text-2xl text-white mx-2"
                   @click="showMorePanel = !showMorePanel"
-        ><a-iconfont type="icon-gengduo"/></a-button>
+        ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
@@ -74,8 +74,8 @@ export default {
   },
   data() {
     return {
-      isInConferenceMain : true,
-      showMorePanel      : false,
+      // isInConferenceMain : true,
+      showMorePanel : false,
     };
   },
   computed : {
@@ -141,14 +141,14 @@ export default {
       this.$model.conference.noticeTextList = [];
     },
   },
-  watch : {
-    $route : {
-      handler(val) {
-        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
-      },
-      immediate : true,
-    },
-  },
+  // watch : {
+  //   $route : {
+  //     handler(val) {
+  //       this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
+  //     },
+  //     immediate : true,
+  //   },
+  // },
 };
 </script>
 

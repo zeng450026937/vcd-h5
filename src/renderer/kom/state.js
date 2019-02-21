@@ -108,6 +108,7 @@ export default {
     },
     async handleCall(val, once) {
       if (val === 'ringing') { // 来电
+        this.sidebarStatus.preRoute = router.currentRoute;
         const width = 270;
         const height = 180;
         const offsetLeft = window.screen.width - width - 10;
@@ -115,7 +116,7 @@ export default {
 
         const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
 
-        window.open('/ringing.html', 'screenShare', option);
+        window.open('ringing.html', 'screenShare', option);
       }
       else if (val === 'connecting') {
         this.sidebarStatus.preRoute = router.currentRoute;

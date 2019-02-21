@@ -81,7 +81,7 @@
             <a-iconfont type="icon-left" class="cursor-pointer text-black9"
                         @click="showSetting = false"/>
           </div>
-          <media-content class="text-black3"/>
+          <media-content class="media-content text-black3"/>
         </div>
       </div>
     </div>
@@ -168,14 +168,9 @@ export default {
         font-size: 84px;
       }
     }
-    #tab-setting-media {
-      .ant-progress {
-        .ant-progress-inner {
-          background-color: rgba(153, 153, 153, 0.5);
-          .ant-progress-bg {
-            background-color: #4A5FC4;
-          }
-        }
+    .media-content{
+      .video-content {
+        height: 158px !important;
       }
     }
   }

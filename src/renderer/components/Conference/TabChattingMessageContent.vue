@@ -9,7 +9,7 @@
               <span style="margin: 0 6px">@</span>
               <span class="text-indigo">{{message.to}}</span>
               <div class="flex flex-grow"></div>
-              <span class="text-black-lightest">{{message.date}}</span>
+              <span class="text-black6">{{message.date}}</span>
             </div>
             <div style="margin-top: 6px;" class="rounded-sm bg-grey-light px-2 py-1">
               <div class="leading-normal">{{message.content}}</div>

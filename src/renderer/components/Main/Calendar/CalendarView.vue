@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="calendar-view" class="h-full">
+  <a-layout id="calendar-view" class="h-full w-full">
     <div class="flex flex-col h-full w-full">
       <div class="h-14">
         <div class="flex bg-white dragable h-full">

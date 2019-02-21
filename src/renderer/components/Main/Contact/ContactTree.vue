@@ -179,7 +179,7 @@ export default {
           margin: 12px 0 12px 0 !important;
         }
         > .ant-tree-switcher{
-          margin: 8px 6px 8px 0 !important;
+          margin: 6px 6px 8px 0 !important;
         }
         > .ant-tree-node-content-wrapper {
           margin: 8px 0 8px 0 !important;

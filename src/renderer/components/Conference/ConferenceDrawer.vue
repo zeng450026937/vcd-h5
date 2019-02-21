@@ -6,7 +6,7 @@
       <div class="h-10">
         <div class="header flex w-full h-full border-b px-4">
           <div class="flex flex-grow h-full items-center">
-            <a-iconfont type="icon-guanbi" class="cursor-pointer text-grey-darker hover:text-red text-base"
+            <a-iconfont type="icon-guanbi" class="cursor-pointer hover:text-red text-base"
                     @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="flex h-full">
-        <component :is="currentTab"></component>
+        <component :is="currentTab" @close="closeDrawer"></component>
       </div>
     </div>
   </div>
