@@ -7,6 +7,7 @@ import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
 import { showUncaughtException } from './main/show-uncaught-exception';
 import { log as writeLog } from './logger/winston';
+import { getSystemInfo } from './utils/systemInfo';
 
 let mainWindow = null;
 
@@ -127,6 +128,12 @@ if (!handlingSquirrelEvent) {
           writeLog(level, message);
         }
       );
+
+      ipcMain.on('request-system-info', async(event, arg) => {
+        const data = await getSystemInfo();
+
+        event.sender.send('system-info', data);
+      });
     });
     
     app.on('activate', () => {

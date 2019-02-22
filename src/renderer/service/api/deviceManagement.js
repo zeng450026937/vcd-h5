@@ -1,9 +1,13 @@
-import service from '../axios';
+import { service } from '../axios';
 
-const { post } = service;
+const { post, put } = service;
 
-export const clientChange = (data) => post('/softClient/change', data);
+export const clientUpdate = (clientId, data) => put(`softClients/${clientId}`, data);
+
+export const clientHeart = (clientId) => post(`/softClients/${clientId}/heart`);
+
 
 export default {
-  clientChange,
+  clientHeart,
+  clientUpdate,
 };

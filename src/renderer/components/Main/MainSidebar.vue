@@ -174,6 +174,7 @@ export default {
     clickLogout() {
       this.$rtc.account.signout();
       this.$router.push(LOGIN.LOGIN_CONTENT);
+      clearTimeout(window.clientHeart);
     },
   },
 };

@@ -1,18 +1,12 @@
-import Dexie from 'dexie';
+import Base from './base';
 
-const db = new Dexie('logger');
-
-db.version(1).stores({
-  log : '++id, timestamp',
-});
-
-class LoggerDB {
-  constructor() {
-    this.db = db;
+class LoggerDB extends Base {
+  constructor(dbName, storesOpt, version) {
+    super(dbName, storesOpt, version);
   }
 
-  add(data) {
-    this.db.log.add({
+  addLog(data) {
+    this.add('log', {
       timestamp : new Date().valueOf(),
       result    : data.result,
     });
@@ -34,4 +28,5 @@ class LoggerDB {
     });
   }
 }
-export default new LoggerDB();
+
+export default window.loggerDB = new LoggerDB('logger', { log: '++id, timestamp' }, 1);
