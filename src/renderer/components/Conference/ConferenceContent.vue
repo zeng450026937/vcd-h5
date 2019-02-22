@@ -1,6 +1,6 @@
 <template>
   <a-layout id="conference-content" class="bg-transparent h-full">
-    <div class="relative h-full w-full" @click="contentClicked">
+    <div class="relative h-full w-full" @mousemove="contentClicked">
       <div class="flex flex-col h-full">
         <div v-if="isInConferenceMain"
              class="header flex flex-col h-12 dragable z-10"

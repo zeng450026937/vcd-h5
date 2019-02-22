@@ -1,7 +1,7 @@
 <template>
   <div id="conference-remote-video" class="h-full w-full relative">
     <remote-video :class="{'remote-video-content-shrink': isVideoContentShrink}" source="remote">
-      <conference-controls slot="controls" class="controls" :class="controlsClasses"/>
+      <conference-controls ref="conferenceControls" slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
     controlsClasses() {
       return {
         [this.isVideoContentShrink ? 'controls-normal' : 'controls-bottom'] : true,
-        'opacity-0'                                                         : this.hideControls,
+        'hide-controls'                                                     : this.hideControls,
       };
     },
     hideControls() {
@@ -40,6 +40,11 @@ export default {
       },
       immediate : true,
     },
+    hideControls(val) {
+      if (val) {
+        this.$refs.conferenceControls.showMorePanel = false;
+      }
+    },
   },
 };
 </script>
@@ -50,7 +55,6 @@ export default {
     background-color: #1b1f2d;
   }
   .controls {
-    transition: opacity ease-out .5s;
     &-normal {
       transform: translateY(-100%);
     }
@@ -59,6 +63,12 @@ export default {
       top: 100%;
       left: 50%;
       transform: translate(-50%, -100%);
+    }
+  }
+  .hide-controls {
+    .button-content {
+      opacity: 0;
+      transition: opacity ease-out .5s;
     }
   }
   .remote-video-content-shrink {

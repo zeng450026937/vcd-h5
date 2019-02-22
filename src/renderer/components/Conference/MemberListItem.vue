@@ -55,7 +55,7 @@
                 <span class="text-xs">{{setMuteText}}</span>
               </div>
             </a-menu-item>
-            <a-menu-item v-if="currentIsPresenter" key="4" @click="showDeviceInfo">
+            <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="4" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设备详情</span>
               </div>

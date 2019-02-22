@@ -5,12 +5,21 @@ export default {
   data() {
     return {
       noticeTextList     : [],
+      messageTextList    : [],
       isLocalUnmuteAudio : false,
       selectedMember     : '',
       hideControls       : false, // 是否隐藏会议页面底部和头部的控制按钮
     };
   },
   computed : {
+
+    addedUser() {
+      return rtc.conference.addedUser;
+    },
+    deletedUser() {
+      return rtc.conference.deletedUser;
+    },
+
     currentUser() {
       return rtc.conference.information.users.currentUser;
     },
@@ -68,6 +77,11 @@ export default {
       
       return ingress ? ingress['@blockby'] : 'client';
     },
+    userList() {
+      const { userList } = rtc.conference.information.users;
+      
+      return userList;
+    },
     memberList() {
       const { userList } = rtc.conference.information.users;
       // 主持人
@@ -109,11 +123,6 @@ export default {
       
       return this.currentUser.setAudioFilter({ ingress }).catch((error) => {
         this.noticeTextList.push(error.reason['@text']);
-        // model.notice = {
-        //   visible : true,
-        //   text    : error.reason['@text'],
-        //   color   : 'error',
-        // };
         throw error;
       });
     },
@@ -123,11 +132,6 @@ export default {
       
       this.currentUser.setVideoFilter({ ingress }).catch((error) => {
         this.noticeTextList.push(error.reason['@text']);
-        // model.notice = {
-        //   visible : true,
-        //   text    : error.reason['@text'],
-        //   color   : 'error',
-        // };
       });
     },
     
@@ -139,38 +143,18 @@ export default {
         case 'hand':
           if (this.muteBlockBy !== 'client' && oldStatus !== 'unblocking') {
             this.noticeTextList.push('您被主持人禁言');
-            // model.notice = {
-            //   visible : true,
-            //   text    : '您被主持人禁言',
-            //   color   : 'info',
-            // };
           }
           else if (this.profile === 'demonstrator' && oldStatus === 'unblocking') {
             this.noticeTextList.push(this.isLocalUnmuteAudio ? '您取消了发言申请' : '您的发言申请被拒绝');
-            // model.notice = {
-            //   visible : true,
-            //   text    : this.isLocalUnmuteAudio ? '您取消了发言申请' : '您的发言申请被拒绝',
-            //   color   : 'info',
-            // };
           }
           break;
         case 'unblock':
           if (this.muteBlockBy !== 'client' && !this.isLocalUnmuteAudio) {
             this.noticeTextList.push(oldStatus === 'unblocking' ? '您的发言申请被允许' : '您被主持人解除禁言');
-            // model.notice = {
-            //   visible : true,
-            //   text    : oldStatus === 'unblocking' ? '您的发言申请被允许' : '您被主持人解除禁言',
-            //   color   : 'info',
-            // };
           }
           break;
         case 'unblocking':
           this.noticeTextList.push('您正在申请发言');
-          // model.notice = {
-          //   visible : true,
-          //   text    : '您正在申请发言',
-          //   color   : 'info',
-          // };
           break;
         default:
           break;
@@ -183,19 +167,9 @@ export default {
       
       if (permission === 'presenter') {
         this.noticeTextList.push('您被设置为主持人');
-        // model.notice = {
-        //   visible : true,
-        //   text    : '您被设置为主持人',
-        //   color   : 'info',
-        // };
       }
       else if (permission === 'attendee' || permission === 'castviewer') {
         this.noticeTextList.push('您被设置为访客');
-        // model.notice = {
-        //   visible : true,
-        //   text    : '您被设置为访客',
-        //   color   : 'info',
-        // };
       }
     },
     onDemostateChanged(role, oldRole) {
@@ -203,19 +177,9 @@ export default {
       // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
       if (role === 'demonstrator' && oldRole === 'audience') {
         this.noticeTextList.push('您被设置为演讲者');
-        // model.notice = {
-        //   visible : true,
-        //   text    : '您被设置为演讲者',
-        //   color   : 'info',
-        // };
       }
       else if (role === 'audience' && oldRole === 'demonstrator') {
         this.noticeTextList.push('您被取消演讲权限');
-        // model.notice = {
-        //   visible : true,
-        //   text    : '您被取消演讲权限',
-        //   color   : 'info',
-        // };
       }
     },
 
@@ -276,11 +240,19 @@ export default {
     setUserAsSpearker(user) {
     
     },
+
+
   },
   watch : {
     audioStatus : 'onAudioStatusChanged',
     permission  : 'onPermissionChanged',
     demostate   : 'onDemostateChanged',
+    addedUser(val) {
+      this.messageTextList.push(`${val.displayText} 加入会议`);
+    },
+    deletedUser(val) {
+      this.messageTextList.push(`${val.displayText} 离开会议`);
+    },
   },
   actions   : {},
   broadcast : {},

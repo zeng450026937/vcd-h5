@@ -48,7 +48,7 @@ export default {
     },
     // 最大或者最小
     switchMaxOrMin() {
-      this.videoCursor = this.videoCursor === 0 ? 3 : 0;
+      this.videoCursor = this.videoCursor === 0 ? 1 : 0;
     },
   },
   watch : {
