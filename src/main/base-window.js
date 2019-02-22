@@ -52,44 +52,6 @@ export class BaseWindow extends EventEmitter {
       });
     }
 
-    delegate(this, 'window')
-      .method('isMinimized')
-      .method('isVisible')
-      .method('restore')
-      .method('focus')
-      .method('show')
-      .method('destroy');
-  }
-
-  load(url) {
-    if (!url) return;
-
-    let startLoad = 0;
-
-    // We only listen for the first of the loading events to avoid a bug in
-    // Electron/Chromium where they can sometimes fire more than once. See
-    // See
-    // https://github.com/desktop/desktop/pull/513#issuecomment-253028277. This
-    // shouldn't really matter as in production builds loading _should_ only
-    // happen once.
-    this.window.webContents.once('did-start-loading', () => {
-      this.loadTime = null;
-      this.rendererReadyTime = null;
-
-      startLoad = now();
-    });
-
-    this.window.webContents.once('did-finish-load', () => {
-      if (process.env.NODE_ENV === 'development') {
-        this.window.webContents.openDevTools();
-      }
-
-      this.loadTime = now() - startLoad;
-      this.hasFinishedLoading = true;
-
-      this.maybeEmitDidLoad();
-    });
-
     this.window.webContents.on('did-finish-load', () => {
       this.window.webContents.setVisualZoomLevelLimits(1, 1);
     });
@@ -116,10 +78,45 @@ export class BaseWindow extends EventEmitter {
       }
     });
 
-    this.window.on('focus', () => this.window.webContents.send('focus'));
-    this.window.on('blur', () => this.window.webContents.send('blur'));
+    delegate(this, 'window')
+      .method('isMinimized')
+      .method('isVisible')
+      .method('restore')
+      .method('focus')
+      .method('show')
+      .method('destroy');
+  }
 
-    this.window.loadURL(url);
+  load(url) {
+    let startLoad = 0;
+
+    // We only listen for the first of the loading events to avoid a bug in
+    // Electron/Chromium where they can sometimes fire more than once. See
+    // See
+    // https://github.com/desktop/desktop/pull/513#issuecomment-253028277. This
+    // shouldn't really matter as in production builds loading _should_ only
+    // happen once.
+    this.window.webContents.once('did-start-loading', () => {
+      this.loadTime = null;
+      this.rendererReadyTime = null;
+
+      startLoad = now();
+    });
+
+    this.window.webContents.once('did-finish-load', () => {
+      if (process.env.NODE_ENV === 'development') {
+        this.window.webContents.openDevTools();
+      }
+
+      this.loadTime = now() - startLoad;
+      this.hasFinishedLoading = true;
+
+      this.maybeEmitDidLoad();
+    });
+
+    if (url) {
+      this.window.loadURL(url);
+    }
   }
   
   restoreWindow() {

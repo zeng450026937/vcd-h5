@@ -1,6 +1,6 @@
 import { BrowserWindow, ipcMain, Menu, app, powerSaveBlocker } from 'electron';
 import { BaseWindow } from './base-window';
-import { MediaWindow } from './media-window';
+import { PopupWindow } from './popup-window';
 import { AppTray } from './app-tray';
 import { formatPathAsUrl } from './utils';
 
@@ -87,6 +87,41 @@ export class AppWindow extends BaseWindow {
         }
       });
     }
+
+    this.window.on('focus', () => this.window.webContents.send('focus'));
+    this.window.on('blur', () => this.window.webContents.send('blur'));
+
+    this.window.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+      options.webPreferences.experimentalFeatures = false;
+      options.webPreferences.nativeWindowOpen = false;
+      options.webPreferences.nodeintegration = false;
+      options.webPreferences.nodeIntegrationInWorker = false;
+      // prevent popup window from showing before web is ready.
+      options.show = false;
+
+      switch (frameName) {
+        case 'screen-share':
+          options.minWidth = 528;
+          options.minHeight = 297;
+          break;
+        default:
+          options.minWidth = 0;
+          options.minHeight = 0;
+          break;
+      }
+
+      event.preventDefault();
+
+      const readyEvent = `${frameName}-ready`;
+      const popup = new PopupWindow(options);
+
+      popup.load(null, readyEvent);
+      popup.onDidLoad(() => {
+        popup.show();
+      });
+
+      event.newGuest = popup.window;
+    });
   }
 
   load(url) {
@@ -100,25 +135,7 @@ export class AppWindow extends BaseWindow {
         this.maybeEmitDidLoad();
       }
     );
-
-    /* eslint-disable no-shadow */
-    // window.open('', 'media')
-    this.window.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
-      if (frameName === 'screen-share') {
-        options.minWidth = 528;
-        options.minHeight = 297;
-      }
-      else {
-        options.minWidth = 0;
-        options.minHeight = 0;
-      }
-      options.webPreferences.experimentalFeatures = false;
-      options.webPreferences.nativeWindowOpen = false;
-      options.webPreferences.nodeintegration = false;
-      options.webPreferences.nodeIntegrationInWorker = false;
-    });
-    /* eslint-enable no-shadow */
-
+    
     if (process.env.NODE_ENV === 'development') {
       url = process.env.WEBPACK_DEV_SERVER_URL;
     }

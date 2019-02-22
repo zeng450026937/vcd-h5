@@ -1,12 +1,17 @@
 import {
+  ipcMain,
+} from 'electron';
+import {
   BaseWindow,
 } from './base-window';
-import { formatPathAsUrl } from './utils';
+import {
+  formatPathAsUrl,
+} from './utils';
 
-const minWidth = 600;
-const minHeight = 500;
+const minWidth = 100;
+const minHeight = 100;
 
-export class MediaWindow extends BaseWindow {
+export class PopupWindow extends BaseWindow {
   constructor(options) {
     const windowOptions = options || {
       width           : minWidth,
@@ -38,18 +43,17 @@ export class MediaWindow extends BaseWindow {
     super(windowOptions);
   }
 
-  load(url) {
-    this.rendererReadyTime = 0;
-    this.hasFinishedRendering = true;
+  load(url, readyEvent) {
+    // TODO: This should be scoped by the window.
+    ipcMain.once(
+      readyEvent,
+      (event, readyTime) => {
+        this.rendererReadyTime = readyTime;
+        this.hasFinishedRendering = true;
 
-    this.maybeEmitDidLoad();
-
-    if (process.env.NODE_ENV === 'development') {
-      url = `${process.env.WEBPACK_DEV_SERVER_URL}window.html`;
-    }
-    else {
-      url = formatPathAsUrl(__dirname, 'media.html');
-    }
+        this.maybeEmitDidLoad();
+      }
+    );
 
     super.load(url);
   }
