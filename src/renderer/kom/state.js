@@ -116,7 +116,7 @@ export default {
 
         const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
 
-        window.open('ringing.html', 'screenShare', option);
+        window.open('ringing.html', 'ringing', option);
       }
       else if (val === 'connecting') {
         this.sidebarStatus.preRoute = router.currentRoute;
