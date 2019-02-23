@@ -3,15 +3,17 @@
     <div class="flex flex-col-reverse overflow-y-auto pb-10">
       <template v-for="(message, index) in messageRecordList">
         <div :key="index">
-          <div class="flex flex-col p-3">
+          <div class="flex flex-col px-3 pt-3">
             <div class="flex items-center text-xs leading-tight select-none">
-              <span class="text-indigo">{{message.from}}</span>
+              <span :class="{'text-indigo': message.type === 'receive'}">{{message.from}}</span>
               <span style="margin: 0 6px">@</span>
-              <span class="text-indigo">{{message.to}}</span>
+              <span :class="{'text-indigo': !message.isPrivate || message.type === 'send'}">{{message.to}}</span>
               <div class="flex flex-grow"></div>
               <span class="text-black6">{{message.date}}</span>
             </div>
-            <div style="margin-top: 6px;" class="rounded-sm bg-grey-light px-2 py-1">
+            <div style="margin-top: 6px;"
+                 class="rounded-sm px-2 py-1 bg-grey-light"
+                 :class="{'bg-grey-lighter': message.type === 'receive'}">
               <div class="leading-normal">{{message.content}}</div>
             </div>
           </div>

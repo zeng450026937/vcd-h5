@@ -23,7 +23,7 @@ export default {
   name : 'ConferenceLeavingModal',
   data() {
     return {
-      visible     : false,
+      visible : false,
     };
   },
   computed : {
@@ -43,7 +43,12 @@ export default {
       this.visible = false;
     },
     endedConference() { // 结束会议 - 主持人
-      this.leaveConference();
+      this.$rtc.conference.conference.deleteConference().then((result) => {
+        // 成功
+      }).catch((e) => {
+        // 失败
+      });
+      this.visible = false;
     },
   },
 };
