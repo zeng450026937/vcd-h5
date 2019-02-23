@@ -37,6 +37,7 @@ export default {
 
         this.hideMessageTimer = setTimeout(() => {
           this.hideMessage = true;
+          this.$model.conference.messageTextList = [];
         }, 3000);
       },
       immediate : false,

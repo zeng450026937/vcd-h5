@@ -18,7 +18,8 @@
         <a-iconfont :type="audioIcon.icon" :class="{[`text-${audioIcon.color}`] : true}"/>
       </a-button>
       <!--分享辅流-->
-      <a-button shape="circle"
+      <a-button :disabled="!shareAvailable"
+                shape="circle"
                 class="w-12 h-12 text-2xl text-white mx-2"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
