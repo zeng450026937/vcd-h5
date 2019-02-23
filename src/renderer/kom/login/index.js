@@ -2,8 +2,6 @@ import SRV from '@/utils/srv';
 import rtc from '../../rtc';
 import storage from '../../storage';
 import { LOGIN_STORAGE } from '../../storage/constants';
-import { deviceManagement, ylDeviceManagement, enterprise } from '../../service';
-import { getSystemInfo } from '../../proxy/app-info-proxy';
 
 export default {
   data() {
@@ -67,55 +65,9 @@ export default {
           loginData.pin = pin;
         }
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
-
-        /*
-        *  update client info and do heart;
-        * */
-        this.updateClientInfo(loginData);
-        this.doHeart();
       });
     },
-    async updateClientInfo(loginData) {
-      const [ { data:{ data:enterpriseInfo } }, sysInfo ] = await Promise.all([
-        enterprise.getEnterpriseInfo(),
-        getSystemInfo(),
-      ]);
 
-      const params = Object.assign(
-        sysInfo,
-        {
-          account     : loginData.account,
-          serviceAddr : loginData.server,
-        },
-        {
-          enterpriseId : enterpriseInfo.enterpriseId,
-        }
-      );
-
-      deviceManagement.clientUpdate(sysInfo.clientId, params);
-      ylDeviceManagement.clientUpdate(sysInfo.clientId, params);
-    },
-    doHeart() {
-      const clientId = storage.query('SYSTEM_INFO').clientId;
-
-      deviceManagement.clientHeart(clientId);
-      ylDeviceManagement.clientHeart(clientId);
-
-      const heartTimer = (timeout) => {
-        window.clientHeart = setTimeout(async() => {
-          await deviceManagement.clientHeart(clientId);
-          ylDeviceManagement.clientHeart(clientId);
-          heartTimer(5 * 60 * 1000 - this.random(30 * 1000, 60 * 1000));
-        }, timeout);
-      };
-
-      heartTimer(5 * 60 * 1000 - this.random(30 * 1000, 60 * 1000));
-    },
-    random(a, b) {
-      const c = b - a + 1;
-
-      return Math.floor(Math.random() * c + a);
-    },
   },
   watch : {
     serverType       : (val) => storage.insert(LOGIN_STORAGE.SERVER_TYPE, val),

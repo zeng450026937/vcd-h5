@@ -8,8 +8,6 @@
 
 <script>
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
-import { getSystemInfo } from './proxy/app-info-proxy';
-import { deviceManagement, ylDeviceManagement } from './service';
 
 export default {
   name       : 'App',
@@ -32,13 +30,6 @@ export default {
         this.$message.error('网络不可用，请检查你的网络设置');
       }
     },
-  },
-  mounted() {
-    getSystemInfo().then((sysInfo) => {
-      this.$storage.insertOrUpdate('SYSTEM_INFO', sysInfo, 'clientId');
-      deviceManagement.clientUpdate(sysInfo.clientId, sysInfo);
-      ylDeviceManagement.clientUpdate(sysInfo.clientId, sysInfo);
-    });
   },
 };
 </script>
