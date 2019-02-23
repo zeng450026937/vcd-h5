@@ -30,24 +30,7 @@
           </div>
           <span class="text-indigo cursor-pointer text-center text-xs mt-3 leading-tight"
                 @click="showAddLocalContact">添加为本地联系人</span>
-          <div class="flex flex-wrap mt-3">
-            <div v-for="n in dialPanel"
-                 :key="n.num"
-                 class="mb-3 text-center"
-                 :class="{'mx-10': n.isCenter}">
-              <div class="flex justify-center">
-                <div class="w-14 h-14">
-                  <a-button class="w-full h-full"
-                            @click="clickNumber(n.num)">
-                    <div class="flex flex-col justify-center items-center h-full">
-                      <span class="text-xl">{{n.num}}</span>
-                      <span class="text-xs text-grey-darker">{{n.alpha}}</span>
-                    </div>
-                  </a-button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <plate-content @inputNumber="clickNumber"/>
           <div class="flex mt-8 w-full">
             <a-button type="primary" class="w-1/2" :disabled="!callNumber"
                       @click="videoCall">
@@ -89,6 +72,7 @@ import AppHeader from '../MainHeader.vue';
 import LocalContactDrawer from '../Contact/LocalContactDrawer.vue';
 import ContactList from '../Contact/ContactList.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
+import PlateContent from '../../Common/PlateContent.vue';
 
 export default {
   name       : 'DialPlate',
@@ -97,6 +81,7 @@ export default {
     LocalContactDrawer,
     CommonEmpty,
     ContactList,
+    PlateContent,
   },
   data() {
     return {
