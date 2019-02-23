@@ -1,11 +1,12 @@
 import Axios from 'axios';
 import { EventEmitter } from 'events';
+import Crypto from 'crypto';
 
-const YPushAction = {};
+const PushAction = {};
 
-YPushAction[YPushAction.CHECK = 0] = 'checksync';
-YPushAction[YPushAction.SYNC = 1] = 'sync';
-YPushAction[YPushAction.ACK = 2] = 'ack';
+PushAction[PushAction.CHECK = 0] = 'checksync';
+PushAction[PushAction.SYNC = 1] = 'sync';
+PushAction[PushAction.ACK = 2] = 'ack';
 
 const POLLING_PATH = '/api/v1/polling';
 const GATEWAY_PATH = '/api/v1/gateway';
@@ -28,15 +29,19 @@ async function waitFor(timeout) {
   });
 }
 
-export class YPush extends EventEmitter {
-  constructor() {
+export class PushService extends EventEmitter {
+  constructor(clientId) {
     super();
 
-    this.clientId = null;
-    this.baseURL = null;
-    this.tatentId = null;
+    this.clientId = clientId;
+    this.baseURL = 'http://push.yealink.com';
+    this.tatentId = 0;
     this.platform = process.platform;
     this.biz = 0; // default value
+    this.appid = 'ypush';
+
+    this.algorithm = 'sha256';
+    this.key = 'yealink'; // fake value
   }
 
   async poll(wait) {
@@ -44,7 +49,7 @@ export class YPush extends EventEmitter {
       await waitFor(wait);
     }
 
-    const res = await this.post(YPushAction.CHECK);
+    const res = await this.post(PushAction.CHECK);
 
     if (!res || res.code !== undefined) return this.poll(3000);
 
@@ -56,7 +61,7 @@ export class YPush extends EventEmitter {
   async sync(res) {
     const sids = this.genSyncSid(res);
 
-    res = await this.post(YPushAction.SYNC, sids);
+    res = await this.post(PushAction.SYNC, sids);
 
     // something error
     if (!res || res.code !== undefined) return 1000;
@@ -65,25 +70,21 @@ export class YPush extends EventEmitter {
 
     Object.keys(res).forEach((sid) => {
       const lastSeqId = res[sid];
-      let maxSeqId;
+      const maxSeqId = this.analyze(res[sid]);
       
-      try {
-        maxSeqId = this.analyze(res[sid]);
-      }
-      catch (error) {
-        // log error
-      }
-
       sids.push({ sid, seqId: maxSeqId || lastSeqId });
     });
 
-    await this.post(YPushAction.ACK, sids);
+    await this.post(PushAction.ACK, sids);
   }
 
   async post(action, sids) {
     let res;
-    const url = this.genUrl(action);
+    const path = this.genPath(action);
+    const url = this.baseURL + path;
     const body = this.genRequest(action, sids);
+    const auth = this.sign(path);
+    const sub = this.appid;
     
     try {
       res = await Axios({
@@ -93,14 +94,14 @@ export class YPush extends EventEmitter {
         headers : {
           Accept         : 'application/json',
           'Content-Type' : 'application/json',
-          Authorization  : 'appid="ypush",nonce="1536916245883:33333333",sign="gqZQcCDHS56Z/NTiSpmATLCcUc/cGHMlxKD46WnJgmk="',
-          subscribe      : 'ypush',
+          Authorization  : auth,
+          subscribe      : sub,
         },
-        timeout : 40000,
+        timeout : 30000,
       });
     }
     catch (error) {
-      return null;
+      return;
     }
 
     return res.data;
@@ -110,7 +111,9 @@ export class YPush extends EventEmitter {
     let maxSeqId = 0;
 
     value.forEach((data) => {
-      const { seqId, content } = data;
+      if (!data) return;
+
+      const { seqId = 0, content } = data;
 
       if (seqId > maxSeqId) maxSeqId = seqId;
 
@@ -121,21 +124,25 @@ export class YPush extends EventEmitter {
   }
 
   analyzeConent(content) {
+    if (!content) return;
+
     const { type, body } = content;
+
+    if (!type) return;
 
     this.emit(type, body);
     this.emit(MESSAGE_TYPE[type], body);
   }
 
-  genUrl(action) {
+  genPath(action) {
     let path;
 
     switch (action) {
-      case YPushAction.CHECK:
+      case PushAction.CHECK:
         path = POLLING_PATH;
         break;
-      case YPushAction.SYNC:
-      case YPushAction.ACK:
+      case PushAction.SYNC:
+      case PushAction.ACK:
         path = GATEWAY_PATH;
         break;
       default:
@@ -143,7 +150,7 @@ export class YPush extends EventEmitter {
         break;
     }
 
-    return this.baseURL + path;
+    return path;
   }
 
   genRequest(action, sids) {
@@ -161,7 +168,7 @@ export class YPush extends EventEmitter {
   genBasic(action) {
     return {
       biz      : this.biz,
-      action   : YPushAction[action],
+      action   : PushAction[action],
       tenantId : this.tatentId,
       platform : this.platform,
       clientId : this.clientId,
@@ -172,5 +179,22 @@ export class YPush extends EventEmitter {
   genSyncSid(data) {
     return Object.keys(data)
       .map((sid) => ({ sid, limit: 10 }));
+  }
+
+  sign(path) {
+    const appid = this.appid;
+    const method = 'POST';
+    const random = '12345678';
+    const nonce = `${new Date().valueOf()}:${random}`;
+
+    const hmac = Crypto.createHmac(this.algorithm, this.key);
+
+    const text = `${nonce}\n${appid}\n${method}\n${path}\n`;
+
+    hmac.update(text);
+
+    const signText = `appid="${appid}",nounce="${nonce}",sign="${hmac.digest('utf8')}"`;
+
+    return signText;
   }
 }
