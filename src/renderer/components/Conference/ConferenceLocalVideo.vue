@@ -1,6 +1,9 @@
 <template>
   <div id="conference-local-video" class="relative group"
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
+
+    <conference-message v-if="videoCursor !== 2" class="conference-message"/>
+
     <video-view source="local" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
       <div class="video-controls group-hover:opacity-100"
@@ -24,12 +27,14 @@
 
 <script>
 import VideoView from '../Common/VideoView.vue';
+import ConferenceMessage from './ConferenceMessage.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
   name       : 'ConferenceLocalVideo',
   components : {
     VideoView,
+    ConferenceMessage,
   },
   data() {
     // FIXME may hard code
@@ -48,7 +53,7 @@ export default {
     },
     // 最大或者最小
     switchMaxOrMin() {
-      this.videoCursor = this.videoCursor === 0 ? 3 : 0;
+      this.videoCursor = this.videoCursor === 0 ? 1 : 0;
     },
   },
   watch : {
@@ -80,6 +85,13 @@ export default {
       transform: translateX(-100%);
       background-image: linear-gradient(-180deg, #000000 3%, rgba(0,0,0,0.00) 98%);
       transition: opacity ease-in-out .5s;
+    }
+    .conference-message {
+      position: absolute;
+      width: 100%;
+      text-align: right;
+      color: white;
+      transform: translateY(-100%);
     }
   }
   .conference-local-video { // min shrink normal expand

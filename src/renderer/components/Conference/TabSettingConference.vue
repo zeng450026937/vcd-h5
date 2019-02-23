@@ -51,7 +51,7 @@ export default {
     },
   },
   created() {
-    this.currentLayout = this.$rtc.conference.information.view.getLayout()['video-layout'] || 'SpeechExcitation';
+    if (this.isDemonstrator) this.currentLayout = this.$rtc.conference.information.view.getLayout()['video-layout'] || 'SpeechExcitation';
   },
   methods : {
     selectLayout(layout) {

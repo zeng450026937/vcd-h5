@@ -1,31 +1,17 @@
 <template>
   <a-layout id="call-controls" class="mb-5 bg-transparent">
     <div class="button-content flex h-12 items-center justify-center z-10">
-      <!--视频-->
-      <!--<a-button v-if="callStatus === 'connected'"-->
-                <!--shape="circle"-->
-                <!--class="control-btn w-12 h-12 text-xl text-white mx-2"-->
-      <!--&gt;-->
-        <!--<a-iconfont type="icon-shexiangtou"/>-->
-      <!--</a-button>-->
       <!--音频-->
       <a-button shape="circle"
                 class="control-btn w-12 h-12 text-2xl text-white mx-2 border-transparent"
       >
         <a-iconfont type="icon-maikefeng"/>
       </a-button>
-      <!--辅流-->
-      <!--<a-button v-if="callStatus === 'connected'"-->
-                <!--shape="circle"-->
-                <!--class="control-btn w-12 h-12 text-xl text-white mx-2"-->
-      <!--&gt;-->
-        <!--<a-iconfont type="icon-fuliu"/>-->
-      <!--</a-button>-->
       <!--更多-->
       <a-button shape="circle"
                 class="control-btn w-12 h-12 text-2xl text-white mx-2 border-transparent"
       >
-        <a-iconfont type="icon-gengduo"/>
+        <a-iconfont type="icon-gengduo1"/>
       </a-button>
       <!--挂断-->
       <a-button shape="circle"

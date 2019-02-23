@@ -4,7 +4,7 @@
       <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
         <template v-if="callStatus === 'connected'">
           <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
-          <a-iconfont :type="`icon-signal-${signal}`" class="text-white text-base mr-4"/>
+          <a-iconfont :type="`icon-wangluozhuangtai_${signal}`" class="text-white text-base mr-4"/>
           <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         </template>
         <span class="text-white text-xs leading-tight truncate">{{title}}</span>
@@ -76,7 +76,7 @@ export default {
     initSignal() {
       // 初始化信号
       this.$rtc.call.getStats().then((val) => {
-        this.signal = 1; // TODO val.media.quality;
+        this.signal = val.media.quality;
       });
 
       // 设置通话进行时间

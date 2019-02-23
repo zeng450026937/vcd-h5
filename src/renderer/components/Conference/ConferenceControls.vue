@@ -37,10 +37,6 @@
             <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
             <span class="ml-3 text-xs">拨号盘</span>
           </div>
-          <!--<div class="h-8 w-full px-3 popover-content-item flex items-center">-->
-            <!--<a-iconfont type="icon-yangshengqi" class="text-base"/>-->
-            <!--<a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>-->
-          <!--</div>-->
         </div>
         <a-button shape="circle"
                   class="w-12 h-12 text-2xl text-white mx-2"
@@ -55,23 +51,28 @@
     </div>
     <conference-leaving-modal ref="leavingModal"/>
     <screen-share-modal ref="shareModal"/>
+    <conference-message v-if="!isInConferenceMain" class="conference-message"/>
   </div>
 </template>
 
 <script>
 import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
+import ConferenceMessage from './ConferenceMessage.vue';
+import { CONFERENCE } from '../../router/constants';
 
 export default {
   name       : 'ConferenceControls',
   components : {
     ConferenceLeavingModal,
     ScreenShareModal,
+    ConferenceMessage,
   },
   data() {
     return {
       // isInConferenceMain : true,
-      showMorePanel : false,
+      showMorePanel      : false,
+      isInConferenceMain : false,
     };
   },
   computed : {
@@ -137,17 +138,26 @@ export default {
       this.$model.conference.noticeTextList = [];
     },
   },
-  // watch : {
-  //   $route : {
-  //     handler(val) {
-  //       this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
-  //     },
-  //     immediate : true,
-  //   },
-  // },
+  watch : {
+    $route : {
+      handler(val) {
+        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
+      },
+      immediate : true,
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="less">
+  #conference-controls {
+    .conference-message {
+      position: absolute;
+      left: 100%;
+      bottom: 4px;
+      transform: translateX(-100%);
+      width: 100%;
+    }
+  }
 
 </style>

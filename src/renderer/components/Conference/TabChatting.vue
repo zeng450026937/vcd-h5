@@ -9,17 +9,16 @@
           <div>
             <div class="flex items-center">
               <span class="whitespace-no-wrap text-xs leading-tight">发给</span>
-              <a-select defaultValue="lucy" v-model="message.to" class="w-full ml-2">
-                <a-select-option value="Jack">Jack</a-select-option>
-                <a-select-option value="Lucy">Lucy</a-select-option>
-                <a-select-option value="张三">张三</a-select-option>
-                <a-select-option value="Yiminghe">yiminghe</a-select-option>
+              <a-select v-model="target" class="w-full ml-2">
+                <a-select-option v-for="(user, index) in targetList"
+                                 :value="user.entity"
+                                 :key="index">{{user.displayText}}</a-select-option>
               </a-select>
             </div>
           </div>
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
-              <a-textarea v-model="message.content" placeholder="请输入您将要发送的消息" class="h-full"/>
+              <a-textarea v-model="message" placeholder="请输入您将要发送的消息" class="h-full"/>
             </div>
             <div class="w-1/6 bg-grey-light">
               <a-button type="primary" class="w-full h-full p-0 text-xs" @click="sendMessage">
@@ -34,7 +33,8 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
 import TabChattingMessageContent from './TabChattingMessageContent.vue';
 
 export default {
@@ -44,17 +44,73 @@ export default {
   },
   data() {
     return {
-      message : {
-        from    : '我',
-        to      : 'Lucy',
-        content : '',
-        date    : '今天',
-      },
+      message : '',
+      target  : 'all',
     };
+  },
+  computed : {
+    userList() {
+      return this.$model.conference.userList.filter((user) => !user.isCurrentUser());
+    },
+    targetList() {
+      return [
+        {
+          entity      : 'all',
+          displayText : '全体',
+        },
+        ...this.userList,
+      ];
+    },
+    newMessage() {
+      return this.$rtc.conference.message;
+    },
+  },
+  async mounted() {
+    const { conference } = this.$rtc.conference;
+
+    if (!conference.isChatAvariable()) {
+      await conference.connectChat();
+    }
   },
   methods : {
     sendMessage() {
-      this.$model.chat.messageRecordList.push(cloneDeep(this.message));
+      const { conference } = this.$rtc.conference;
+      const startTime = moment(new Date(), 'YYYYMMDD').format('HH:mm');
+      const messageObject = {
+        from      : '我',
+        content   : this.message,
+        date      : startTime,
+        type      : 'send',
+        isPrivate : true,
+      };
+
+      if (this.target === 'all') {
+        conference.sendMessage(this.message);
+        messageObject.to = '所有人';
+      }
+      else {
+        const user = conference.users.getUser(this.target);
+
+        conference.sendMessage(this.message, [ user.entity ]);
+        messageObject.to = user.displayText;
+      }
+
+      this.$model.chat.messageRecordList.push(messageObject);
+      this.message = '';
+    },
+  },
+  watch : {
+    newMessage(val) {
+      const messageObject = {
+        from      : val.user['@display-text'],
+        content   : val.msg,
+        date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
+        to        : val['@is-private'] ? '我' : '所有人',
+        isPrivate : val['@is-private'],
+        type      : 'receive',
+      };
+
+      this.$model.chat.messageRecordList.push(messageObject);
     },
   },
 };
