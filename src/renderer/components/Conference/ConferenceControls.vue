@@ -33,7 +33,8 @@
             <a-iconfont type="icon-maikefeng" class="text-base"/>
             <span class="ml-3 text-xs">切换为音频通话</span>
           </div>
-          <div class="h-8 w-full px-3 popover-content-item flex items-center">
+          <div class="h-8 w-full px-3 popover-content-item flex items-center"
+               @click="openPlateModal">
             <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
             <span class="ml-3 text-xs">拨号盘</span>
           </div>
@@ -52,12 +53,14 @@
     <conference-leaving-modal ref="leavingModal"/>
     <screen-share-modal ref="shareModal"/>
     <conference-message v-if="!isInConferenceMain" class="conference-message"/>
+    <conference-plate-modal ref="plateModal"/>
   </div>
 </template>
 
 <script>
 import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
+import ConferencePlateModal from './ConferencePlateModal.vue';
 import ConferenceMessage from './ConferenceMessage.vue';
 import { CONFERENCE } from '../../router/constants';
 
@@ -66,6 +69,7 @@ export default {
   components : {
     ConferenceLeavingModal,
     ScreenShareModal,
+    ConferencePlateModal,
     ConferenceMessage,
   },
   data() {
@@ -136,6 +140,10 @@ export default {
     onExitClicked() {
       this.$rtc.conference.leave();
       this.$model.conference.noticeTextList = [];
+    },
+    openPlateModal() {
+      this.showMorePanel = false;
+      this.$refs.plateModal.visible = true;
     },
   },
   watch : {

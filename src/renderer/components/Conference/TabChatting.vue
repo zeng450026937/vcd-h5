@@ -21,8 +21,13 @@
               <a-textarea v-model="message" placeholder="请输入您将要发送的消息" class="h-full"/>
             </div>
             <div class="w-1/6 bg-grey-light">
-              <a-button type="primary" class="w-full h-full p-0 text-xs" @click="sendMessage">
-                <a-iconfont type="icon-fasong" class="text-base"/>
+              <a-button type="primary"
+                        class="w-full h-full p-0 text-xs"
+                        :class="{'bg-indigo-lighter': isSendingDisabled}"
+                        :disabled="isSendingDisabled"
+                        @click="sendMessage">
+                <span v-if="isSendingDisabled" class="text-base text-white">{{timeout}}</span>
+                <a-iconfont v-else type="icon-fasong" class="text-base"/>
               </a-button>
             </div>
           </div>
@@ -44,8 +49,11 @@ export default {
   },
   data() {
     return {
-      message : '',
-      target  : 'all',
+      message           : '',
+      target            : 'all',
+      isSendingDisabled : false,
+      timeout           : 3,
+      sendingTimer      : null,
     };
   },
   computed : {
@@ -97,6 +105,15 @@ export default {
 
       this.$model.chat.messageRecordList.push(messageObject);
       this.message = '';
+      this.isSendingDisabled = true;
+      this.sendingTimer = setInterval(() => {
+        this.timeout--;
+        if (this.timeout === 0) {
+          clearInterval(this.sendingTimer);
+          this.timeout = 3;
+          this.isSendingDisabled = false;
+        }
+      }, 1000);
     },
   },
   watch : {
