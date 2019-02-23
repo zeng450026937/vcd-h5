@@ -7,3 +7,5 @@ export * as feedBack from './api/feedBack';
 export * as clientCheck from './api/clientCheck';
 
 export * as fileUpload from './api/fileUpload';
+
+export * as ylDeviceManagement from './api/ylDeviceManagement';

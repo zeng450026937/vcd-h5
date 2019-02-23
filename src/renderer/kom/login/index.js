@@ -2,7 +2,7 @@ import SRV from '@/utils/srv';
 import rtc from '../../rtc';
 import storage from '../../storage';
 import { LOGIN_STORAGE } from '../../storage/constants';
-import { deviceManagement, enterprise } from '../../service';
+import { deviceManagement, ylDeviceManagement, enterprise } from '../../service';
 import { getSystemInfo } from '../../proxy/app-info-proxy';
 
 export default {
@@ -93,15 +93,18 @@ export default {
       );
 
       deviceManagement.clientUpdate(sysInfo.clientId, params);
+      ylDeviceManagement.clientUpdate(sysInfo.clientId, params);
     },
     doHeart() {
       const clientId = storage.query('SYSTEM_INFO').clientId;
 
       deviceManagement.clientHeart(clientId);
+      ylDeviceManagement.clientHeart(clientId);
 
       const heartTimer = (timeout) => {
         window.clientHeart = setTimeout(async() => {
           await deviceManagement.clientHeart(clientId);
+          ylDeviceManagement.clientHeart(clientId);
           heartTimer(5 * 60 * 1000 - this.random(30 * 1000, 60 * 1000));
         }, timeout);
       };
