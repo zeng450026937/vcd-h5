@@ -1,7 +1,7 @@
 <template>
   <a-layout id="window" class="h-full">
     <div class="flex flex-col justify-center items-center h-full">
-      <span class="dragable text-white text-base">C用户</span>
+      <span class="dragable text-white text-base">{{this.displayName || '未知用户'}}</span>
       <span class="text-white">正在呼你</span>
       <a-avatar :size="48" class="bg-indigo mt-2">C</a-avatar>
       <div class="flex justify-center mt-4">
@@ -38,15 +38,37 @@ export default {
     rtc() {
       return (window.opener && window.opener.rtc) || window.rtc;
     },
+    displayName() {
+      const { remoteIdentity } = this.rtc.call.incoming[0];
+
+      return remoteIdentity && (remoteIdentity.display_name
+        || remoteIdentity.uri.user);
+    },
+  },
+  mounted() {
+    setInterval(() => {
+      console.warn(this.checkStatus());
+    }, 2000);
   },
   methods : {
     hangUp() {
-      this.rtc.call.decline().catch(() => {});
-      window.close();
+      this.rtc.call.decline();// .catch(() => {});
     },
     answerCall() {
-      this.rtc.call.answer().catch(() => {});
-      window.close();
+      this.rtc.call.answer();// .catch(() => {});
+    },
+    getStatus() {
+      if (this.rtc.call.ringing) return 'ringing';
+      else if (this.rtc.call.connecting) return 'connecting';
+      else if (this.rtc.call.connected) return 'connected';
+      else return 'disconnected';
+    },
+    checkStatus() {
+      const status = this.getStatus();
+
+      if (status !== 'ringing') {
+        window.close();
+      }
     },
   },
 };

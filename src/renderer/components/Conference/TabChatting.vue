@@ -61,19 +61,27 @@ export default {
         ...this.userList,
       ];
     },
+    newMessage() {
+      return this.$rtc.conference.message;
+    },
+  },
+  async mounted() {
+    const { conference } = this.$rtc.conference;
+
+    if (!conference.isChatAvariable()) {
+      await conference.connectChat();
+    }
   },
   methods : {
-    async sendMessage() {
+    sendMessage() {
       const { conference } = this.$rtc.conference;
-
-      if (!conference.isChatAvariable()) {
-        await conference.connectChat();
-      }
       const startTime = moment(new Date(), 'YYYYMMDD').format('HH:mm');
       const messageObject = {
-        from    : this.$rtc.account.username,
-        content : this.message,
-        date    : startTime,
+        from      : '我',
+        content   : this.message,
+        date      : startTime,
+        type      : 'send',
+        isPrivate : true,
       };
 
       if (this.target === 'all') {
@@ -89,6 +97,20 @@ export default {
 
       this.$model.chat.messageRecordList.push(messageObject);
       this.message = '';
+    },
+  },
+  watch : {
+    newMessage(val) {
+      const messageObject = {
+        from      : val.user['@display-text'],
+        content   : val.msg,
+        date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
+        to        : val['@is-private'] ? '我' : '所有人',
+        isPrivate : val['@is-private'],
+        type      : 'receive',
+      };
+
+      this.$model.chat.messageRecordList.push(messageObject);
     },
   },
 };
