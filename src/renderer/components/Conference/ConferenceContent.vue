@@ -140,7 +140,7 @@ export default {
 
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = true;
-      }, 6000);
+      }, 60000000);
     },
   },
   watch : {
@@ -198,7 +198,16 @@ export default {
   .more-panel-popover {
     .ant-popover-arrow {
       z-index: -1;
-      background: rgba(0,0,0,0.65);
+      width: 0;
+      height: 0;
+      bottom: 2.5px !important;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: none;
+      border-top: 8px solid rgba(0, 0, 0, .65);
+      box-sizing: content-box;
+      background: transparent !important;;
+      transform: translateX(-50%) !important;;
     }
     .ant-popover-inner {
       background: rgba(0,0,0,0.65);

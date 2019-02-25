@@ -20,7 +20,6 @@
       <span class="ml-3 text-sm">{{nav.text}}</span>
     </div>
     <div class="flex flex-grow"></div>
-    <!--<main-nav-mini-video/>-->
   </a-layout>
 </template>
 
@@ -28,12 +27,10 @@
 
 // FIXME the currentNav should be set by route
 import { MAIN } from '../../router/constants';
-import MainNavMiniVideo from './MainNavMiniVideo.vue';
 
 export default {
   name       : 'MainNav',
   components : {
-    MainNavMiniVideo,
   },
   props : {
   },

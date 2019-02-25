@@ -1,6 +1,6 @@
 <template>
   <div id="main-nav-mini-video" class="bg-white">
-    <div v-if="showMiniVideo" class="relative" style="border: 1px solid #1D212F;">
+    <div class="relative" style="border: 1px solid #1D212F;">
       <div class="video-controls absolute w-full">
       <div class="h-full w-full flex flex-col">
 
@@ -81,9 +81,6 @@ export default {
     confStatus() {
       return this.$rtc.conference.status;
     },
-    showMiniVideo() {
-      return !this.isInConferenceView && this.confStatus === 'connected';
-    },
   },
   methods : {
     leaveConference() {
@@ -111,36 +108,6 @@ export default {
   }
   .nav-mini-video {
 
-  }
-}
-
-.more-panel-popover {
-  .ant-popover-arrow {
-    z-index: -1;
-    background: rgba(0,0,0,0.65);
-  }
-  .ant-popover-inner {
-    background: rgba(0,0,0,0.65);
-  }
-  .ant-popover-inner-content {
-    padding: 4px 0;
-    .popover-content {
-      width: 180px;
-      height: 64px;
-      .popover-content-item {
-        cursor: pointer;
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.2);
-        }
-        .ant-slider-rail, .ant-slider-track,.ant-slider-step {
-          height: 2px;
-        }
-        .ant-slider-handle {
-          width: 12px;
-          height: 12px;
-        }
-      }
-    }
   }
 }
 </style>

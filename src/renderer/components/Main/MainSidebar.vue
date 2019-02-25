@@ -166,8 +166,12 @@ export default {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {
         this.$router.push(sidebar.route);
         this.isInConferenceView = false;
+        this.isInCallView = false;
       }
       if (this.confStatus === 'connected') {
+        this.$model.state.sidebarStatus.preRoute = this.$router.currentRoute;
+      }
+      if (this.callStatus === 'connected' || this.callStatus === 'connecting') {
         this.$model.state.sidebarStatus.preRoute = this.$router.currentRoute;
       }
     },
