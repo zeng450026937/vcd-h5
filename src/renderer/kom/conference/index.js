@@ -4,6 +4,7 @@ import rtc from '../../rtc';
 export default {
   data() {
     return {
+      showMessage        : true,
       noticeTextList     : [],
       messageTextList    : [],
       isLocalUnmuteAudio : false,

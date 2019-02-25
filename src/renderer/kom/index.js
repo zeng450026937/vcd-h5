@@ -27,6 +27,7 @@ import conference from './conference';
 import share from './conference/share';
 // call
 import call from './call';
+import callChat from './call/chat';
 
 Vue.use(Vuem);
 
@@ -65,6 +66,7 @@ const data = {
   conference,
   share,
   call,
+  callChat,
   setting : {
     $selfValue : setting,
     conference : settingConference,

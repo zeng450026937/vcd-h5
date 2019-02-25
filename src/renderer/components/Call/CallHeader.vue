@@ -38,14 +38,14 @@ export default {
     return {
       targetUser : '',
       duration   : '00:00:00',
-      signal     : 1,
+      signal     : 4,
     };
   },
   computed : {
     title() {
       const titleMap = {
         connecting   : `正在呼叫 ${this.userName}`,
-        connected    : `正在与 ${this.userName} 进行通话`,
+        connected    : `与 ${this.userName} 通话中`,
         ringing      : `${this.userName} 正在来电`,
         disconnected : `与 ${this.userName} 的通话已结束`,
       };
@@ -74,17 +74,24 @@ export default {
   },
   methods : {
     initSignal() {
-      // 初始化信号
-      this.$rtc.call.getStats().then((val) => {
-        this.signal = val.media.quality;
-      });
-
+      let checkInterval = 1; // 1 2 4 8 循环时长
+      let checkTimes = 0;
       // 设置通话进行时间
-      const meetTime = new Date();
+      const callTime = new Date();
 
       this.durationTimer = setInterval(() => {
-        const time = (new Date().getTime() - meetTime.getTime()) / 1000;
+        const time = (new Date().getTime() - callTime.getTime()) / 1000;
 
+        while (checkTimes++ === checkInterval) {
+          this.$rtc.call.getStats().then((val) => {
+            if (this.signal === val.quality) {
+              checkInterval *= 2;
+              checkInterval = (checkInterval * 2) % 15;
+              checkTimes = 0;
+            }
+            this.signal = val.quality || '1';
+          });
+        }
         this.duration = secondsToHms(time);
       }, 1000);
     },
@@ -102,10 +109,13 @@ export default {
     displayName(cur, once) {
       this.targetUser = cur || once;
     },
-    callStatus(cur, once) {
-      if (cur === 'connected') {
-        this.initSignal();
-      }
+    callStatus : {
+      handler(val) {
+        if (val === 'connected') {
+          this.initSignal();
+        }
+      },
+      immediate : true,
     },
   },
 };

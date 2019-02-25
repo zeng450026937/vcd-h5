@@ -8,12 +8,9 @@
         <div class="h-full p-3 flex flex-col">
           <div>
             <div class="flex items-center">
-              <span class="whitespace-no-wrap text-xs leading-tight">发给</span>
-              <a-select v-model="target" class="w-full ml-2">
-                <a-select-option v-for="(user, index) in targetList"
-                                 :value="user.entity"
-                                 :key="index">{{user.displayText}}</a-select-option>
-              </a-select>
+              <span class="whitespace-no-wrap text-xs leading-tight">发给
+                <span class="text-indigo">{{displayName}}</span>
+              </span>
             </div>
           </div>
           <div class="flex mt-2 h-full">
@@ -50,60 +47,24 @@ export default {
   data() {
     return {
       message           : '',
-      target            : 'all',
       isSendingDisabled : false,
       timeout           : 3,
       sendingTimer      : null,
     };
   },
   computed : {
-    userList() {
-      return this.$model.conference.userList.filter((user) => !user.isCurrentUser());
-    },
-    targetList() {
-      return [
-        {
-          entity      : 'all',
-          displayText : '全体',
-        },
-        ...this.userList,
-      ];
-    },
-    newMessage() {
-      return this.$rtc.conference.message;
-    },
-  },
-  async mounted() {
-    const { conference } = this.$rtc.conference;
+    displayName() {
+      const remoteIdentity = this.$model.state.callStatus !== 'disconnected'
+        ? this.$rtc.call.remoteIdentity
+        || this.$rtc.call.incoming[0].remoteIdentity : null;
 
-    if (!conference.isChatAvariable()) {
-      await conference.connectChat();
-    }
+      return remoteIdentity && (remoteIdentity.display_name
+        || remoteIdentity.uri.user);
+    },
   },
   methods : {
     sendMessage() {
-      const { conference } = this.$rtc.conference;
-      const startTime = moment(new Date(), 'YYYYMMDD').format('HH:mm');
-      const messageObject = {
-        from      : '我',
-        content   : this.message,
-        date      : startTime,
-        type      : 'send',
-        isPrivate : true,
-      };
-
-      if (this.target === 'all') {
-        conference.sendMessage(this.message);
-        messageObject.to = '所有人';
-      }
-      else {
-        const user = conference.users.getUser(this.target);
-
-        conference.sendMessage(this.message, [ user.entity ]);
-        messageObject.to = user.displayText;
-      }
-
-      this.$model.chat.messageRecordList.push(messageObject);
+      this.$model.callChat.sendMessage('我', this.displayName, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {
@@ -114,20 +75,6 @@ export default {
           this.isSendingDisabled = false;
         }
       }, 1000);
-    },
-  },
-  watch : {
-    newMessage(val) {
-      const messageObject = {
-        from      : val.user['@display-text'],
-        content   : val.msg,
-        date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
-        to        : val['@is-private'] ? '我' : '所有人',
-        isPrivate : val['@is-private'],
-        type      : 'receive',
-      };
-
-      this.$model.chat.messageRecordList.push(messageObject);
     },
   },
 };

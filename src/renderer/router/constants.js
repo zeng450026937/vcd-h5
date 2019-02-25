@@ -47,7 +47,6 @@ export const CONFERENCE = {
 
 export const CALL = {
   // call
-  CALL_CONNECTING : '/call/content/connecting',
-  CALL_CONNECTED  : '/call/content/connected',
-  CALL_DRAWER     : '/call/content/tabs',
+  CALL_MAIN   : '/call/content',
+  CALL_DRAWER : '/call/content/tabs',
 };
