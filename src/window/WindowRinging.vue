@@ -1,9 +1,9 @@
 <template>
   <a-layout id="window" class="h-full">
     <div class="flex flex-col justify-center items-center h-full">
-      <span class="dragable text-white text-base">{{this.displayName || '未知用户'}}</span>
+      <span class="dragable text-white text-base">{{this.displayName}}</span>
       <span class="text-white">正在呼你</span>
-      <a-avatar :size="48" class="bg-indigo mt-2">C</a-avatar>
+      <a-avatar :size="48" class="bg-indigo mt-2">{{this.displayName.substr(-2,2)}}</a-avatar>
       <div class="flex justify-center mt-4">
         <!--视频（接听）-->
         <a-button shape="circle"
@@ -41,8 +41,8 @@ export default {
     displayName() {
       const { remoteIdentity } = this.rtc.call.incoming[0];
 
-      return remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user);
+      return (remoteIdentity && (remoteIdentity.display_name
+        || remoteIdentity.uri.user)) || '未知用户';
     },
   },
   mounted() {

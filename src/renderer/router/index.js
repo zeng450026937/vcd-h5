@@ -194,21 +194,15 @@ const router = new Router({
           name       : 'callContent',
           path       : 'content',
           components : {
-            header  : () => import(/* webpackChunkName: "conferenceHeader" */ '@/renderer/components/Call/CallHeader.vue'),
+            header  : () => import(/* webpackChunkName: "callHeader" */ '@/renderer/components/Call/CallHeader.vue'),
             sidebar : () => import(/* webpackChunkName: "mainSidebar" */ '@/renderer/components/Main/MainSidebar.vue'),
-            drawer  : () => import(/* webpackChunkName: "conferenceDrawer" */ '@/renderer/components/Call/CallDrawer.vue'),
-            default : () => import(/* webpackChunkName: "layoutConferenceContent" */ '@/renderer/views/LayoutCallContent.vue'),
+            default : () => import(/* webpackChunkName: "layoutCallContent" */ '@/renderer/views/LayoutCallContent.vue'),
           },
           children : [
             {
-              name      : 'callConnecting',
-              path      : 'connecting',
-              component : () => import(/* webpackChunkName: "callConnecting" */ '@/renderer/components/Call//CallConnectingContent.vue'),
-            },
-            {
-              name      : 'callConnected',
-              path      : 'connected',
-              component : () => import(/* webpackChunkName: "callConnected" */ '@/renderer/components/Call//CallConnectedContent.vue'),
+              name      : 'callDrawer',
+              path      : 'tabs',
+              component : () => import(/* webpackChunkName: "callDrawer" */ '@/renderer/components/Call/CallDrawer.vue'),
             },
           ],
         },
