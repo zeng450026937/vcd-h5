@@ -67,6 +67,7 @@
     "electron": "^4.0.2",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "source-map-support": "^0.5.10",
     "tailwindcss": "^0.7.3",
     "vue-template-compiler": "^2.5.21"
   },
