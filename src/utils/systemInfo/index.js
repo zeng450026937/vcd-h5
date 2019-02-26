@@ -4,8 +4,12 @@ const network = require('systeminformation/lib/network');
 const memory = require('systeminformation/lib/memory');
 const os = require('systeminformation/lib/osinfo');
 
+let systemInfo;
+
 export function getSystemInfo() {
   return new Promise(async(resolve, reject) => {
+    if (systemInfo) return resolve(systemInfo);
+
     try {
       const [ sysInfo, cpuInfo, networkInfo, memoryInfo, osInfo ] = await Promise.all([
         sys.system(),
@@ -15,7 +19,7 @@ export function getSystemInfo() {
         os.osInfo(),
       ]);
 
-      resolve({
+      resolve(systemInfo = {
         clientId       : sysInfo.uuid.replace(/-/g, '').toLowerCase(),
         clientModel    : osInfo.distro,
         clientName     : osInfo.hostname,

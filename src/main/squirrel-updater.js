@@ -5,11 +5,7 @@ import {
   ensureDir,
   writeFile,
 } from 'fs-extra';
-import {
-  spawn,
-  getPathSegments,
-  setPathSegments,
-} from '../../lib/process/win32';
+import { spawn, setPathSegments } from '../../lib/process/win32';
 
 const appFolder = Path.resolve(process.execPath, '..');
 const exeName = Path.basename(process.execPath);

@@ -9,6 +9,8 @@ import { showUncaughtException } from './main/show-uncaught-exception';
 import { log as writeLog } from './logger/winston';
 import { getSystemInfo } from './utils/systemInfo';
 
+import ClientManagement from './api-service/clientManagement';
+
 let mainWindow = null;
 
 const launchTime = now();
@@ -133,6 +135,21 @@ if (!handlingSquirrelEvent) {
         const data = await getSystemInfo();
 
         event.sender.send('system-info', data);
+      });
+
+      let clientManagement;
+
+      getSystemInfo().then((systemInfo) => {
+        clientManagement = new ClientManagement(systemInfo);
+        clientManagement.state = 0;
+      });
+
+      ipcMain.on('after-login', (event, arg) => {
+        clientManagement.accountInfo = arg;
+        clientManagement.state = 1;
+      });
+      ipcMain.on('after-user-logout', (event, arg) => {
+        clientManagement.state = 2;
       });
     });
     

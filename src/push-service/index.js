@@ -126,9 +126,9 @@ export class PushService extends EventEmitter {
   analyzeConent(content) {
     if (!content) return;
 
-    const { type, body } = content;
+    const { type, body } = this.parseJSON(content);
 
-    if (!type) return;
+    if (type == null) return;
 
     this.emit(type, body);
     this.emit(MESSAGE_TYPE[type], body);
@@ -193,8 +193,23 @@ export class PushService extends EventEmitter {
 
     hmac.update(text);
 
-    const signText = `appid="${appid}",nounce="${nonce}",sign="${hmac.digest('utf8')}"`;
+    // const signText = `appid="${appid}",nounce="${nonce}",sign="${hmac.digest('utf8')}"`;
+    const signText = 'appid="ypush",nonce="1536916245883:33333333",sign="gqZQcCDHS56Z/NTiSpmATLCcUc/cGHMlxKD46WnJgmk="';
 
     return signText;
+  }
+
+  parseJSON(json) {
+    let obj;
+
+    try {
+      obj = JSON.parse(json);
+    }
+    catch (e) {
+      console.log(e);
+      obj = {};
+    }
+    
+    return obj;
   }
 }

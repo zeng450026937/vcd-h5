@@ -11,6 +11,7 @@ import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
 import { AppWindowProxy } from './proxy/app-window-proxy';
+import alarmReporter from './alarm';
 
 Vue.config.productionTip = false;
 

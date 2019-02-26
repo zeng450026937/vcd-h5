@@ -71,6 +71,16 @@ export class AppWindow extends BaseWindow {
       }
     });
 
+    app.on('gpu-process-crashed', (event, killed) => {
+      console.log('gpu-process-crashed');
+      this.window.webContents.send('gpu-process-crashed', { event, killed });
+    });
+
+    this.window.webContents.on('crashed', (event, killed) => {
+      console.log('crash');
+      this.window.webContents.send('crashed', { event, killed });
+    });
+
     ipcMain.on('will-quit', (event) => {
       this.quitting = true;
       event.returnValue = true;
