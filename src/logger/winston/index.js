@@ -10,7 +10,7 @@ const MaxLogFiles = 14;
 
 function getLogFilePath(directory) {
   const channel = 'alpha';
-  const fileName = `vc-desktop.${channel}.log`;
+  const fileName = `vc-desktop-${channel}-%DATE%.log`;
 
   return Path.join(directory, fileName);
 }
