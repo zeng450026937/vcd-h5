@@ -2,11 +2,11 @@ import Axios from 'axios';
 import { EventEmitter } from 'events';
 import Crypto from 'crypto';
 
-const PushAction = {};
+const PUSH_ACTION = {};
 
-PushAction[PushAction.CHECK = 0] = 'checksync';
-PushAction[PushAction.SYNC = 1] = 'sync';
-PushAction[PushAction.ACK = 2] = 'ack';
+PUSH_ACTION[PUSH_ACTION.CHECK = 0] = 'checksync';
+PUSH_ACTION[PUSH_ACTION.SYNC = 1] = 'sync';
+PUSH_ACTION[PUSH_ACTION.ACK = 2] = 'ack';
 
 const POLLING_PATH = '/api/v1/polling';
 const GATEWAY_PATH = '/api/v1/gateway';
@@ -49,7 +49,7 @@ export class PushService extends EventEmitter {
       await waitFor(wait);
     }
 
-    const res = await this.post(PushAction.CHECK);
+    const res = await this.post(PUSH_ACTION.CHECK);
 
     if (!res || res.code !== undefined) return this.poll(3000);
 
@@ -61,7 +61,7 @@ export class PushService extends EventEmitter {
   async sync(res) {
     const sids = this.genSyncSid(res);
 
-    res = await this.post(PushAction.SYNC, sids);
+    res = await this.post(PUSH_ACTION.SYNC, sids);
 
     // something error
     if (!res || res.code !== undefined) return 1000;
@@ -75,7 +75,7 @@ export class PushService extends EventEmitter {
       sids.push({ sid, seqId: maxSeqId || lastSeqId });
     });
 
-    await this.post(PushAction.ACK, sids);
+    await this.post(PUSH_ACTION.ACK, sids);
   }
 
   async post(action, sids) {
@@ -138,11 +138,11 @@ export class PushService extends EventEmitter {
     let path;
 
     switch (action) {
-      case PushAction.CHECK:
+      case PUSH_ACTION.CHECK:
         path = POLLING_PATH;
         break;
-      case PushAction.SYNC:
-      case PushAction.ACK:
+      case PUSH_ACTION.SYNC:
+      case PUSH_ACTION.ACK:
         path = GATEWAY_PATH;
         break;
       default:
@@ -168,7 +168,7 @@ export class PushService extends EventEmitter {
   genBasic(action) {
     return {
       biz      : this.biz,
-      action   : PushAction[action],
+      action   : PUSH_ACTION[action],
       tenantId : this.tatentId,
       platform : this.platform,
       clientId : this.clientId,

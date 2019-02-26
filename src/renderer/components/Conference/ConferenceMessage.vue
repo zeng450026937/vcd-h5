@@ -21,9 +21,14 @@ export default {
   },
   computed : {
     messageTextList() {
+      if (!this.showMessage) return [];
+
       const { messageTextList } = this.$model.conference;
       
       return messageTextList.length > 3 ? messageTextList.slice(messageTextList.length - 3) : messageTextList;
+    },
+    showMessage() {
+      return this.$model.conference.showMessage;
     },
   },
   watch : {
@@ -37,6 +42,7 @@ export default {
 
         this.hideMessageTimer = setTimeout(() => {
           this.hideMessage = true;
+          this.$model.conference.messageTextList = [];
         }, 3000);
       },
       immediate : false,

@@ -120,10 +120,10 @@ export default {
       this.searchResult = this.accountList.filter((a) => a.account.indexOf(val) >= 0);
     }, 200);
     this.initAccountList();
-
     this.$nextTick(() => {
-      if (this.autoLogin) {
+      if (this.autoLogin && !this.autoLoginDisabled) {
         this.handleLogin();
+        this.autoLoginDisabled = true;
       }
     });
   },
@@ -146,6 +146,14 @@ export default {
       },
       set(val) {
         this.$model.login.autoLogin = val;
+      },
+    },
+    autoLoginDisabled : {
+      get() {
+        return this.$model.login.autoLoginDisabled;
+      },
+      set(val) {
+        this.$model.login.autoLoginDisabled = val;
       },
     },
   },

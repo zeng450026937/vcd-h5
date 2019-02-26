@@ -13,6 +13,7 @@ export default {
       serverType,
       rememberPassword,
       autoLogin,
+      autoLoginDisabled : false,
       loginType : 'login',
       proxy     : '10.200.112.165',
       proxyPort : 5061,

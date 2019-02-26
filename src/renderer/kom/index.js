@@ -27,6 +27,7 @@ import conference from './conference';
 import share from './conference/share';
 // call
 import call from './call';
+import callChat from './call/chat';
 
 import afterLogin from './middle/afterLogin';
 
@@ -67,6 +68,7 @@ const data = {
   conference,
   share,
   call,
+  callChat,
   setting : {
     $selfValue : setting,
     conference : settingConference,

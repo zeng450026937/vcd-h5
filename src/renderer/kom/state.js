@@ -59,7 +59,7 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(2000); // 添加延时 增加体验
-          router.push(MAIN.SETTING_ACCOUNT);
+          router.push(MAIN.DIAL_PLATE);
         }
         else {
         // 未登录状态
@@ -87,8 +87,11 @@ export default {
       else {
         if (this.enterPopup) popup.destroy(this.enterPopup);
         if (val === 'connected') {
-          // 记住入会前的路由状态
-          this.sidebarStatus.preRoute = router.currentRoute;
+          console.warn('会议已经连接');
+          // 记住入会前的路由状态 P2P通话的状态则不需要记录
+          if (router.currentRoute.path !== CALL.CALL_MAIN) {
+            this.sidebarStatus.preRoute = router.currentRoute;
+          }
           this.isInConferenceView = true;
           // 成功入会状态
           router.push(CONFERENCE.CONFERENCE_MAIN);
@@ -118,20 +121,25 @@ export default {
 
         window.open('ringing.html', 'ringing', option);
       }
-      else if (val === 'connecting') {
-        this.sidebarStatus.preRoute = router.currentRoute;
+      else if (val === 'connecting' || (once === 'ringing' && val === 'connected')) {
+        if (router.currentRoute.path !== CALL.CALL_MAIN) { // TODO MAY BE DU
+          this.sidebarStatus.preRoute = router.currentRoute;
+        }
         this.isInCallView = true;
 
-        router.push(CALL.CALL_CONNECTING);
+        router.push(CALL.CALL_MAIN);
       }
       else if (val === 'connected') {
-        this.isInCallView = true;
-
-        router.push(CALL.CALL_CONNECTED);
       }
       else if (once && val === 'disconnected') {
+        console.warn('通话已经结束');
         await wait(1000); // 添加延时 增加体验
-        if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
+
+        Promise.resolve().then(() => {
+          if (this.confStatus === 'disconnected') {
+            if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
+          }
+        });
       }
     },
   },

@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="flex items-center">
-        <a-switch size="small" defaultChecked/>
+        <a-switch size="small" v-model="showMessage"/>
         <span class="text-sm leading-tight ml-3">入会和离开的提示</span>
       </div>
     </div>
@@ -48,6 +48,14 @@ export default {
     },
     isPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
+    },
+    showMessage : {
+      get() {
+        return this.$model.conference.showMessage;
+      },
+      set(val) {
+        this.$model.conference.showMessage = val;
+      },
     },
   },
   created() {

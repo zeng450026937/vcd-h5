@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       duration : '00:00:00',
-      signal   : 1,
+      signal   : 4,
     };
   },
   computed : {
@@ -58,17 +58,24 @@ export default {
   },
   methods : {
     initSignal() {
-      // 初始化信号
-      this.$rtc.conference.getStats().then((val) => {
-        this.signal = val.media.quality;
-      });
-
+      let checkInterval = 1; // 1 2 4 8 循环时长
+      let checkTimes = 0;
       // 设置会议进行时间
       const meetTime = new Date();
 
       this.durationTimer = setInterval(() => {
         const time = (new Date().getTime() - meetTime.getTime()) / 1000;
 
+        while (checkTimes++ === checkInterval) {
+          this.$rtc.conference.getStats().then((val) => {
+            if (this.signal === val.media.quality) {
+              checkInterval *= 2;
+              checkInterval = (checkInterval * 2) % 15;
+              checkTimes = 0;
+            }
+            this.signal = val.media.quality || '1';
+          });
+        }
         this.duration = secondsToHms(time);
       }, 1000);
     },
