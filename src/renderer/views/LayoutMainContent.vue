@@ -38,16 +38,16 @@ export default {
   },
   computed : {
     confStatus() {
-      return this.$rtc.conference.status;
+      return this.$model.state.confStatus;
     },
     callStatus() {
       return this.$model.state.callStatus;
     },
     showMiniVideo() {
-      return !this.isInConferenceView && this.confStatus === 'connected';
+      return this.$model.state.isInMiniConference && this.confStatus === 'connected';
     },
     showMiniCall() {
-      return !this.isInCallView && (this.callStatus === 'connected' || this.callStatus === 'connecting');
+      return this.$model.state.isInMiniCall && (this.callStatus === 'connected' || this.callStatus === 'connecting');
     },
   },
   mounted() {

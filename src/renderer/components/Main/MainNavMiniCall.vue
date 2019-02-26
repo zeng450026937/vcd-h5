@@ -21,9 +21,6 @@
             <div class="button-content flex h-8 items-center z-10">
               <a-button shape="circle"
                         class="text-white mx-2 border-transparent"
-              ><a-iconfont type="icon-shexiangtou"/></a-button>
-              <a-button shape="circle"
-                        class="text-white mx-2 border-transparent"
               ><a-iconfont type="icon-maikefeng"/></a-button>
 
               <a-popover
@@ -121,6 +118,7 @@ export default {
       }
     },
     expandMiniContent() {
+      this.$model.state.isInMiniCall = false;
       this.isInCallView = true;
       this.$router.push(CALL.CALL_MAIN);
     },

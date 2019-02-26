@@ -21,6 +21,8 @@ export default {
       sidebarStatus      : {}, // 记录入会前的 sidebar 的状态信息
       isInConferenceView : false,
       isInCallView       : false,
+      isInMiniConference : false,
+      isInMiniCall       : false,
       isOnLine           : true,
     };
   },
@@ -87,21 +89,21 @@ export default {
       else {
         if (this.enterPopup) popup.destroy(this.enterPopup);
         if (val === 'connected') {
-          console.warn('会议已经连接');
+          this.isInConferenceView = true;
           // 记住入会前的路由状态 P2P通话的状态则不需要记录
           if (router.currentRoute.path !== CALL.CALL_MAIN) {
+            console.warn(router.currentRoute);
             this.sidebarStatus.preRoute = router.currentRoute;
           }
-          this.isInConferenceView = true;
           // 成功入会状态
           router.push(CONFERENCE.CONFERENCE_MAIN);
         }
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态
-          // TODO 点击左侧导航 然后返回会议页面 最后退出路由出错
           if (this.isInConferenceView) {
             if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
             this.isInConferenceView = false;
+            this.isInMiniConference = false;
           }
         }
         else {
@@ -130,16 +132,18 @@ export default {
         router.push(CALL.CALL_MAIN);
       }
       else if (val === 'connected') {
+        //
       }
       else if (once && val === 'disconnected') {
-        console.warn('通话已经结束');
-        await wait(1000); // 添加延时 增加体验
+        // await wait(1000); // 添加延时 增加体验
 
         Promise.resolve().then(() => {
           if (this.confStatus === 'disconnected') {
             if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
           }
         });
+        this.isInMiniCall = false;
+        this.isInCallView = false;
       }
     },
   },

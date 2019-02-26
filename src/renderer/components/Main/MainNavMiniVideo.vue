@@ -28,10 +28,6 @@
                   <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
                   <span class="ml-3 text-xs">拨号盘</span>
                 </div>
-                <!--<div class="h-8 w-full px-3 popover-content-item flex items-center">-->
-                  <!--<a-iconfont type="icon-yangshengqi" class="text-base"/>-->
-                  <!--<a-slider :min="1" :max="100" :defaultValue="30" class="ml-3 w-full m-auto"/>-->
-                <!--</div>-->
               </div>
               <a-button shape="circle"
                         class="text-white mx-2"
@@ -40,7 +36,7 @@
             </a-popover>
             <a-button shape="circle"
                       class="text-white mx-2 bg-red-light"
-                      @click="leaveConference"
+                      @click="showLeaveModal"
             ><a-iconfont type="icon-guaduan"/></a-button>
           </div>
         </div>
@@ -52,17 +48,20 @@
                   position="relative"
                   @dblclick.native="expandVideoContent"/>
     </div>
+    <conference-leaving-modal ref="leavingModal"/>
   </div>
 </template>
 
 <script>
 import VideoView from '../Common/VideoView.vue';
 import { CONFERENCE } from '../../router/constants';
+import ConferenceLeavingModal from '../Conference/ConferenceLeavingModal.vue';
 
 export default {
   name       : 'MainNavMiniVideo',
   components : {
     VideoView,
+    ConferenceLeavingModal,
   },
   data() {
     return {
@@ -83,10 +82,11 @@ export default {
     },
   },
   methods : {
-    leaveConference() {
-      this.$rtc.conference.leave();
+    showLeaveModal() {
+      this.$refs.leavingModal.visible = true;
     },
     expandVideoContent() {
+      this.$model.state.isInMiniConference = false;
       this.isInConferenceView = true;
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
     },

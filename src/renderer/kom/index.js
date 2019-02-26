@@ -25,6 +25,7 @@ import chat from './conference/chat';
 import stat from './conference/stat';
 import conference from './conference';
 import share from './conference/share';
+import confState from './conference/state';
 // call
 import call from './call';
 import callChat from './call/chat';
@@ -64,6 +65,7 @@ const data = {
   chat,
   stat,
   conference,
+  confState,
   share,
   call,
   callChat,

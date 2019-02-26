@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import screenfull from 'screenfull';
+
 export default {
   name  : 'MainHeader',
   props : {
@@ -29,7 +31,8 @@ export default {
       this.$dispatch('sys.minimize');
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
+      // this.$dispatch('sys.maximize');
+      screenfull.toggle(document.getElementById('app'));
     },
     clickClose() {
       this.$dispatch('sys.close');

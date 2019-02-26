@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import screenfull from 'screenfull';
 import LoginHeaderModal from './LoginHeaderModal.vue';
 import { LOGIN } from '../../router/constants';
 
@@ -76,7 +77,8 @@ export default {
       this.$dispatch('sys.minimize');
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
+      // this.$dispatch('sys.maximize');
+      screenfull.toggle(document.getElementById('app'));
     },
     clickClose() {
       this.$dispatch('sys.close');

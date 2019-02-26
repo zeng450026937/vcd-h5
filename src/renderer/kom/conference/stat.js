@@ -1,7 +1,5 @@
 import rtc from '../../rtc';
 import formatStatistics from './statistic';
-import MeetingInfo from '.';
-import share from './share';
 
 export default {
   data : {
@@ -18,9 +16,5 @@ export default {
   },
   actions   : {},
   broadcast : {},
-  models    : {
-    MeetingInfo,
-    share,
-  },
   
 };

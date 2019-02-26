@@ -1,7 +1,7 @@
 <template>
   <div id="conference-header" class="bg-indigo-darker h-9">
     <div class="px-4 flex h-full select-none">
-      <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
+      <div class="flex items-center flex-grow dragable w-1 my-1 mr-12" @dblclick="maxAppContent">
         <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
         <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
                     class="text-white no-dragable text-base mr-4 cursor-pointer"/>
@@ -22,23 +22,10 @@
 </template>
 
 <script>
-const secondsToHms = (d) => {
-  d = Number(d);
-  const h = Math.floor(d / 3600);
-  const m = Math.floor((d % 3600) / 60);
-  const s = Math.floor(d % 3600 % 60);
-
-  return `${(h < 10 ? '0' : '') + h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-};
+import screenfull from 'screenfull';
 
 export default {
-  name : 'ConferenceHeader',
-  data() {
-    return {
-      duration : '00:00:00',
-      signal   : 4,
-    };
-  },
+  name     : 'ConferenceHeader',
   computed : {
     description() {
       return this.$rtc.conference.information.description;
@@ -49,41 +36,28 @@ export default {
     subject() {
       return this.description.subject;
     },
+    duration() {
+      return this.$model.confState.duration;
+    },
+    signal() {
+      return this.$model.confState.signal;
+    },
   },
   mounted() {
-    this.initSignal();
   },
   destroyed() {
     if (this.durationTimer) clearInterval(this.durationTimer);
   },
   methods : {
-    initSignal() {
-      let checkInterval = 1; // 1 2 4 8 循环时长
-      let checkTimes = 0;
-      // 设置会议进行时间
-      const meetTime = new Date();
-
-      this.durationTimer = setInterval(() => {
-        const time = (new Date().getTime() - meetTime.getTime()) / 1000;
-
-        while (checkTimes++ === checkInterval) {
-          this.$rtc.conference.getStats().then((val) => {
-            if (this.signal === val.media.quality) {
-              checkInterval *= 2;
-              checkInterval = (checkInterval * 2) % 15;
-              checkTimes = 0;
-            }
-            this.signal = val.media.quality || '1';
-          });
-        }
-        this.duration = secondsToHms(time);
-      }, 1000);
+    maxAppContent() {
+      console.warn('MAX');
     },
     clickMinimize() {
       this.$dispatch('sys.minimize');
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
+      screenfull.toggle(document.getElementById('app'));
+      // this.$dispatch('sys.maximize');
     },
     clickClose() {
       this.$dispatch('sys.close');
