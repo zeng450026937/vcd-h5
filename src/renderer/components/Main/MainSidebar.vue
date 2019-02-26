@@ -188,7 +188,7 @@ export default {
       handler(val) {
         const { isInMiniConference, isInMiniCall, sidebarStatus } = this.$model.state;
 
-        if (isInMiniConference || isInMiniCall) {
+        if (this.$model.state.isNotInCallOrConference()) {
           sidebarStatus.preRoute = val;
         }
       },

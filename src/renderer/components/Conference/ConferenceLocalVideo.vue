@@ -4,7 +4,8 @@
 
     <conference-message v-if="videoCursor !== 2" class="conference-message"/>
 
-    <video-view source="local" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
+    <video-view source="local" object-fit="cover"
+                :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
       <div class="video-controls group-hover:opacity-100"
            :class="{'opacity-0 h-10': videoCursor !== 0}">

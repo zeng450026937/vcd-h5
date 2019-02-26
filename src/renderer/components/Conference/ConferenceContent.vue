@@ -26,14 +26,15 @@
         <!--TODO hard code modify after year-->
         <!--<conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>-->
       </div>
-      <div class="remote-video-content absolute h-full w-full pin-t pin-r"
+      <div :class="remoteVideoClass"
            @dblclick="maxConferenceContent">
         <conference-remote-video/>
       </div>
       <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
-      <div v-if="hasScreenStream && !isShareWindowOpen" :class="shareVideoClasses">
+      <div v-if="hasScreenStream && !isShareWindowOpen"
+           :class="shareVideoClasses">
         <conference-share-video/>
       </div>
       <conference-notice/>
@@ -92,6 +93,11 @@ export default {
       return {
         [`share-video-content share-video-content-${position}`] : true,
       };
+    },
+    remoteVideoClass() {
+      return {
+        'remote-video-content absolute h-full w-full pin-t pin-r' : true,
+      }
     },
     hasScreenStream() {
       return this.$rtc.conference.shareChannel.remoteStream
@@ -170,7 +176,7 @@ export default {
     top: 100%;
     &-right {
       left: 100%;
-      transform: translate(-100%, -100%);
+      transform: translate(calc( -100% - 4px ), calc( -100% - 4px ));
     }
     &-center-right {
       left: 50%;
@@ -187,7 +193,7 @@ export default {
     top: 100%;
     &-left {
       left: 0;
-      transform: translateY(-100%);
+      transform: translate(4px, calc( -100% - 4px ));
     }
     &-center {
       left: 50%;

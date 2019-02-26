@@ -1,13 +1,5 @@
 import rtc from '../../rtc';
-
-export const secondsToHms = (d) => {
-  d = Number(d);
-  const h = Math.floor(d / 3600);
-  const m = Math.floor((d % 3600) / 60);
-  const s = Math.floor(d % 3600 % 60);
-
-  return `${(h < 10 ? '0' : '') + h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-};
+import { secondsToHms } from '../conference/state';
 
 export default {
   data() {
@@ -18,7 +10,7 @@ export default {
     };
   },
   computed : {
-    isConnected : () => rtc.conference.connected,
+    isConnected : () => rtc.call.connected,
   },
   methods : {
     initSignal() {
@@ -31,13 +23,13 @@ export default {
         const time = (new Date().getTime() - meetTime.getTime()) / 1000;
 
         while (checkTimes++ === checkInterval) {
-          rtc.conference.getStats().then((val) => {
-            if (this.signal === val.media.quality) {
+          rtc.call.getStats().then((val) => {
+            if (this.signal === val.quality) {
               checkInterval *= 2;
               checkInterval = (checkInterval * 2) % 15;
               checkTimes = 0;
             }
-            this.signal = val.media.quality || '1';
+            this.signal = val.quality || '1';
           });
         }
         this.duration = secondsToHms(time);

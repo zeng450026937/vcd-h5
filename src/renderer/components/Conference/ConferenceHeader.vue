@@ -1,12 +1,14 @@
 <template>
   <div id="conference-header" class="bg-indigo-darker h-9">
     <div class="px-4 flex h-full select-none">
-      <div class="flex items-center flex-grow dragable w-1 my-1 mr-12" @dblclick="maxAppContent">
+      <div class="flex items-center flex-grow dragable my-1 mr-12" @dblclick="maxAppContent">
         <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
         <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
                     class="text-white no-dragable text-base mr-4 cursor-pointer"/>
         <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
-        <span class="text-white text-xs leading-tight truncate">{{subject}}（ID：{{conferenceId}}）</span>
+        <div class="w-1 flex flex-grow">
+          <span class="text-white text-xs leading-tight truncate">{{subject}}（ID：{{conferenceId}}）</span>
+        </div>
       </div>
       <div class="flex items-center">
         <a-iconfont type="icon-zuixiaohua"
@@ -42,11 +44,6 @@ export default {
     signal() {
       return this.$model.confState.signal;
     },
-  },
-  mounted() {
-  },
-  destroyed() {
-    if (this.durationTimer) clearInterval(this.durationTimer);
   },
   methods : {
     maxAppContent() {

@@ -95,7 +95,6 @@ export default {
           this.isInConferenceView = true;
           // 记住入会前的路由状态 P2P通话的状态则不需要记录
           if (router.currentRoute.path !== CALL.CALL_MAIN) {
-            console.warn(router.currentRoute);
             this.sidebarStatus.preRoute = router.currentRoute;
           }
           // 成功入会状态
@@ -103,7 +102,7 @@ export default {
         }
         else if (once === 'connected' && val === 'disconnected') {
           // 退出会议状态
-          if (this.isInConferenceView) {
+          if (this.isInConferenceView || this.isInMiniCall) {
             if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
             this.isInConferenceView = false;
           }
@@ -113,7 +112,9 @@ export default {
     },
     async handleCall(val, once) {
       if (val === 'ringing') { // 来电
-        this.sidebarStatus.preRoute = router.currentRoute;
+        if (this.isNotInCallOrConference()) { // 解决会议中来电时的preRoute错误
+          this.sidebarStatus.preRoute = router.currentRoute;
+        }
         const width = 270;
         const height = 180;
         const offsetLeft = window.screen.width - width - 10;
@@ -124,7 +125,7 @@ export default {
         window.open('ringing.html', 'ringing', option);
       }
       else if (val === 'connecting' || (once === 'ringing' && val === 'connected')) {
-        if (router.currentRoute.path !== CALL.CALL_MAIN) { // TODO MAY BE DU
+        if (this.isNotInCallOrConference()) {
           this.sidebarStatus.preRoute = router.currentRoute;
         }
         this.isInCallView = true;
@@ -135,16 +136,21 @@ export default {
         //
       }
       else if (once && val === 'disconnected') {
-        // await wait(1000); // 添加延时 增加体验
-
-        Promise.resolve().then(() => {
-          if (this.confStatus === 'disconnected') {
-            if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
-          }
-        });
+        if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
         this.isInMiniCall = false;
         this.isInCallView = false;
       }
+    },
+    isNotInCallOrConference() { // 判断当前路由不在Conference 或者 Call 的主页面
+      if (this.confStatus === 'connected' && !this.isInMiniConference) {
+        // 在会议主页面
+        return false;
+      }
+      else if ((this.callStatus === 'connected' || this.callStatus === 'connecting') && !this.isInMiniCall) {
+        return false;
+      }
+      
+      return true;
     },
   },
   watch : {
