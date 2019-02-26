@@ -1,57 +1,74 @@
+import { get } from 'lodash';
 import { deviceManagement, ylDeviceManagement } from './api/deviceManagements';
 import { getEnterpriseInfo } from './api/enterprise';
 
 
 const states = {
-  START_UP    : 0,
-  USER_LOGIN  : 1,
-  USER_LOGOUT : 2,
+  START_UP   : 0,
+  USER_LOGIN : 1,
 };
 
 export default class ClientManagement {
   constructor(systemInfo) {
+    this.count = 0;
     this.accountInfo = {};
     this.systemInfo = systemInfo;
-    getEnterpriseInfo().then((info) => {
-      const { data:{ data:enterpriseInfo } } = info;
+    this.getEnterpriseInfo();
+  }
 
-      this.enterpriseInfo = enterpriseInfo || {};
-    });
+  get state() {
+    return this.stateProxy;
   }
 
   set state(state) {
     switch (state) {
-      case states.START_UP:
-        this.updateClientInfo(this.systemInfo);
+      case states.START_UP: {
+        this.updateClientInfo(this.clentInfo);
+        this.startHeartBeat(this.clentInfo);
         break;
-
-      case states.USER_LOGIN:
-        this.genClentInfo().then((info) => {
-          this.updateClientInfo(info);
-          this.startHeartBeat(info);
-        });
+      }
+      case states.USER_LOGIN: {
+        this.updateClientInfo(this.clentInfo);
         break;
-
-      case states.USER_LOGOUT:
-        this.stopHeartBeat();
-        break;
-
+      }
       default:
         break;
     }
+    this.stateProxy = state;
   }
 
-  async genClentInfo() {
-    return Promise.resolve(Object.assign(
-      this.systemInfo,
-      {
-        account     : this.accountInfo.account,
-        serviceAddr : this.accountInfo.server,
-      },
-      {
-        enterpriseId : this.enterpriseInfo.enterpriseId,
-      },
-    ));
+  get clentInfo() {
+    return {
+      ...this.systemInfo,
+      account      : get(this, 'accountInfo.account', null),
+      serviceAddr  : get(this, 'accountInfo.server', null),
+      enterpriseId : get(this, 'enterpriseInfo.enterpriseId', null),
+    };
+  }
+
+  get enterpriseInfo() {
+    return this.enterpriseInfoProxy;
+  }
+
+  set enterpriseInfo(info) {
+    this.enterpriseInfoProxy = info;
+    this.stopHeartBeat();
+    this.updateClientInfo(this.clentInfo);
+    this.startHeartBeat(this.clentInfo);
+  }
+
+  async getEnterpriseInfo() {
+    try {
+      this.count++;
+      const res = await getEnterpriseInfo();
+
+      this.enterpriseInfo = res.data.data;
+    }
+    catch (e) {
+      if (this.count > 20) return;
+
+      return setTimeout(() => this.getEnterpriseInfo(), 10 * 1000);
+    }
   }
 
   async updateClientInfo(info) {

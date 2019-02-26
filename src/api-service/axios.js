@@ -27,25 +27,27 @@ export const ylService = axios.create({
 });
 
 const success = (response) => {
+  logger.info('[receive resoponse]');
   console.log('[receive resoponse]:', response.data);
 
   return response;
 };
 
 const fail = (error) => {
-  console.log(error);
+  logger.error('error', error);
 
   return Promise.reject(error);
 };
 
 const reqSuc = (config) => {
-  console.log('[send request]:', config.data);
+  logger.info(`[send request]  ${config.baseURL}${config.url}`);
+  console.log(`[send request]  ${config.baseURL}${config.url} --- send data :`, config.data);
 
   return config;
 };
 
 const reqErr = (error) => {
-  console.log(error);
+  logger.error('error', error);
 
   return Promise.reject(error);
 };

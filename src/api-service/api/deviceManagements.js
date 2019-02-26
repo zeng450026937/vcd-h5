@@ -3,7 +3,7 @@ import { service, ylService } from '../axios';
 function genService(server) {
   const { post, put } = server;
 
-  const clientUpdate = (clientId, data) => put(`softClients/${clientId}`, data);
+  const clientUpdate = (clientId, data) => put(`/softClients/${clientId}`, data);
 
   const fullAmountUpdate = (data) => post('/softClients', data);
 

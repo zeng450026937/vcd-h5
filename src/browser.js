@@ -148,9 +148,6 @@ if (!handlingSquirrelEvent) {
         clientManagement.accountInfo = arg;
         clientManagement.state = 1;
       });
-      ipcMain.on('after-user-logout', (event, arg) => {
-        clientManagement.state = 2;
-      });
     });
     
     app.on('activate', () => {

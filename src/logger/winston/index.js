@@ -4,7 +4,7 @@ import { ensureDir } from 'fs-extra';
 import { app } from 'electron';
 import { getLogDirectoryPath } from '../get-log-path';
 
-// require('winston-daily-rotate-file');
+require('winston-daily-rotate-file');
 
 const MaxLogFiles = 14;
 
@@ -17,22 +17,22 @@ function getLogFilePath(directory) {
 
 
 function initializeWinston(path) {
-  // const fileLogger = new winston.transports.DailyRotateFile({
-  //   filename         : path,
-  //   handleExceptions : false,
-  //   json             : false,
-  //   datePattern      : 'YYYY-MM-DD',
-  //   prepend          : true,
-  //   level            : 'debug',
-  //   maxFiles         : MaxLogFiles,
-  // });
+  const fileLogger = new winston.transports.DailyRotateFile({
+    filename         : path,
+    handleExceptions : false,
+    json             : false,
+    datePattern      : 'YYYY-MM-DD',
+    prepend          : true,
+    level            : 'info',
+    maxFiles         : MaxLogFiles,
+  });
 
   const consoleLogger = new winston.transports.Console({
     level : process.env.NODE_ENV === 'development' ? 'debug' : 'error',
   });
 
   winston.configure({
-    transports : [ consoleLogger ],
+    transports : [ consoleLogger, fileLogger ],
   });
 
   return winston.log;
@@ -50,6 +50,7 @@ function getLogger() {
     ensureDir(logDirectory)
       .then(() => {
         try {
+          console.log(getLogFilePath(logDirectory));
           const logger = initializeWinston(getLogFilePath(logDirectory));
 
           resolve(logger);

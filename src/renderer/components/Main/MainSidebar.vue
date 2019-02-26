@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
 import CommonAvatar from '../Shared/CommonAvatar.vue';
 import { LOGIN, MAIN, MODULE_NAME } from '../../router/constants';
 
@@ -175,8 +174,6 @@ export default {
     clickLogout() {
       this.$rtc.account.signout();
       this.$router.push(LOGIN.LOGIN_CONTENT);
-
-      ipcRenderer.send('after-user-logout');
     },
   },
 };

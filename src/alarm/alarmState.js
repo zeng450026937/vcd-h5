@@ -9,7 +9,7 @@ export default {
     code  : '002',
     level : 0,
     type  : 'PROCESS_ERROR',
-    name  : 'MAIN_PROCESS_CRASAH',
+    name  : 'RENDER_PROCESS_CRASAH',
   },
   FAILED_TO_JOIN_CONFERENCE : {
     code  : '003',
