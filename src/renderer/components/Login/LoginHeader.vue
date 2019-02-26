@@ -6,7 +6,7 @@
           <span class="text-xl text-white font-bold ml-2">Yealink</span>
         </div>
         <div class="flex-grow dragable"></div>
-        <div class="flex items-center mr-4 text-white text-xs">
+        <div v-if="loginType === 'login'" class="flex items-center mr-4 text-white text-xs">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
               <a-menu-item key="cloud" class="py-2 text-xs">云服务版</a-menu-item>

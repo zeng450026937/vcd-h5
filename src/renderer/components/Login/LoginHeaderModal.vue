@@ -27,7 +27,7 @@
               @change="handleChange"
           >
             <div v-if="fileList.length < 3">
-              <a-iconfont type="plus" class="text-2xl" />
+              <a-icon type="plus" class="text-2xl" />
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>

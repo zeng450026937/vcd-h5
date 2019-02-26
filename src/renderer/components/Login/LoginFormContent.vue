@@ -1,5 +1,5 @@
 <template>
-  <div id="yms-login-form-content"
+  <div id="login-form-content"
        class="flex flex-col bg-white shadow"
        style="width: 480px;height: 538px;">
     <div class="flex items-center justify-center w-full bg-indigo" style="height: 160px;">
@@ -16,18 +16,24 @@
               @select="onAccountSelect"
               @search="handleSearch"
           >
-            <template slot="dataSource">
-              <a-select-option v-for="item in searchResult" :key="item.account" :value="item.account" class="group">
-                <div class="flex items-center px-2 py-2">
-                  <span class="certain-search-item-count">{{item.account}}</span>
-                  <div class="flex flex-grow"></div>
-                  <a-iconfont
-                      type="icon-guanbi"
-                      class="flex text-red opacity-0 group-hover:opacity-100"
-                      @click.stop="deleteAccount(item)"
-                  ></a-iconfont>
+            <template v-if="searchResult.length > 0" slot="dataSource">
+              <a-select-opt-group>
+                <div class="flex justify-between px-3 border-b" slot="label">
+                  <span>历史记录</span>
+                  <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
                 </div>
-              </a-select-option>
+                <a-select-option v-for="item in searchResult" :key="item.account" :value="item.account" class="group">
+                  <div class="flex items-center px-2 py-2">
+                    <span class="certain-search-item-count">{{item.account}}</span>
+                    <div class="flex flex-grow"></div>
+                    <a-iconfont
+                        type="icon-guanbi"
+                        class="flex text-red opacity-0 group-hover:opacity-100"
+                        @click.stop="deleteAccount(item)"
+                    ></a-iconfont>
+                  </div>
+                </a-select-option>
+              </a-select-opt-group>
             </template>
             <a-input placeholder='电话或电子邮件'>
               <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
@@ -35,19 +41,19 @@
           </a-auto-complete>
         </a-form-item>
         <a-form-item>
-            <a-input v-decorator="['pin']"
-                     @keypress="passwordInputted" type='password' placeholder='密码'>
-              <a-tooltip
-                  slot="prefix"
-                  :visible="isCapsLockOn"
-                  trigger="focus"
-                  placement="bottomLeft">
-                <template slot="title">
-                  <span>大写锁定已打开</span>
-                </template>
-                <a-iconfont type='icon-mima' class="text-base text-black9"/>
-              </a-tooltip>
-            </a-input>
+          <a-input v-decorator="['pin']"
+                   @keypress="passwordInputted" type='password' placeholder='密码'>
+            <a-tooltip
+                slot="prefix"
+                :visible="isCapsLockOn"
+                trigger="focus"
+                placement="bottomLeft">
+              <template slot="title">
+                <span>大写锁定已打开</span>
+              </template>
+              <a-iconfont type='icon-mima' class="text-base text-black9"/>
+            </a-tooltip>
+          </a-input>
         </a-form-item>
         <a-form-item
             class="mb-2">
@@ -74,10 +80,12 @@
         </a-form-item>
       </a-form>
       <div class="mt-5 text-xs text-center text-black6">
-        <span class="cursor-pointer leading-tight">忘记密码</span>
-        <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
-        <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
-        <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+        <template v-if="type === 'yms'">
+          <span class="cursor-pointer leading-tight">忘记密码</span>
+          <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+          <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
+          <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+        </template>
         <a-badge v-if="hasNewVersion">
               <span slot="count"
                     class="text-white bg-indigo rounded-lg h-4 leading-none"
@@ -112,6 +120,7 @@ export default {
     return {
       form         : this.$form.createForm(this),
       searchResult : [],
+      accountList  : [],
       isCapsLockOn : false,
     };
   },
@@ -128,6 +137,9 @@ export default {
     });
   },
   computed : {
+    type() {
+      return this.$model.login.serverType;
+    },
     hasNewVersion() {
       // TODO check the status of update
       return false;
@@ -158,7 +170,6 @@ export default {
     },
   },
   methods : {
-
     handleLogin(e) {
       if (e) e.preventDefault();
       this.form.validateFields([ 'account', 'pin', 'server' ],
@@ -172,17 +183,23 @@ export default {
     registerAccount() {
     },
     joinMeeting() {
-      this.$router.push(LOGIN.YMS_MEETING);
+      this.$model.login.loginType = 'meeting';
+      this.$router.push(LOGIN.MEETING_CONTENT);
     },
     deleteAccount(val) {
       this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, val.account, 'account');
+      this.initAccountList();
+    },
+    clearAccount() {
+      this.$storage.clear(LOGIN_STORAGE.ACCOUNT_LIST);
       this.initAccountList();
     },
     openSetting() {
       this.$emit('openSetting');
     },
     initAccountList() {
-      this.accountList = this.$storage.query(LOGIN_STORAGE.ACCOUNT_LIST) || [];
+      this.accountList = (this.$storage.query(LOGIN_STORAGE.ACCOUNT_LIST) || [])
+        .filter((account) => account.type === this.type);
       this.accountList.sort((a1, a2) => a2.lastLoginDate - a1.lastLoginDate);
 
       this.searchResult = cloneDeep(this.accountList.slice(0, 10));
@@ -206,6 +223,13 @@ export default {
     },
     passwordInputted(event) {
       this.isCapsLockOn = isCapsLockOn(event);
+    },
+  },
+  watch : {
+    type(val) {
+      if (this.accountList.length <= 0) {
+        this.initAccountList();
+      }
     },
   },
 };

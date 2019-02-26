@@ -32,14 +32,9 @@ const router = new Router({
               component : () => import(/* webpackChunkName: "ymsLoginContent" */ '@/renderer/components/Login/YMSLoginContent.vue'),
             },
             {
-              name      : 'cloudMeetingContent',
-              path      : 'cloudMeeting',
-              component : () => import(/* webpackChunkName: "cloudMeetingContent" */ '@/renderer/components/Login/CloudMeetingContent.vue'),
-            },
-            {
-              name      : 'ymsMeetingContent',
-              path      : 'ymsMeeting',
-              component : () => import(/* webpackChunkName: "ymsMeetingContent" */ '@/renderer/components/Login/YMSMeetingContent.vue'),
+              name      : 'meetingContent',
+              path      : 'meetingContent',
+              component : () => import(/* webpackChunkName: "meetingContent" */ '@/renderer/components/Login/MeetingContent.vue'),
             },
           ],
         },
