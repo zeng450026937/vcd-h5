@@ -28,6 +28,10 @@
             >{{lang.label}}</a-select-option>
           </a-select>
         </div>
+        <div class="mt-6">
+          <span>软终端管理平台地址</span>
+          <a-input v-model="address" class="w-48 ml-4"/>
+        </div>
         <div class="mt-10">
           <a-button type="primary" class="w-32">查看新手引导</a-button>
         </div>
@@ -81,6 +85,14 @@ export default {
       },
       set(val) {
         this.$model.setting.normal.language = val;
+      },
+    },
+    address : {
+      get() {
+        return this.$model.setting.normal.address;
+      },
+      set(val) {
+        this.$model.setting.normal.address = val;
       },
     },
   },

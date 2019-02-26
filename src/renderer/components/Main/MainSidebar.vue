@@ -173,7 +173,12 @@ export default {
         this.$model.state.isInMiniCall = true;
       }
     },
-    clickLogout() {
+    async clickLogout() {
+      if (this.confStatus === 'connected') {
+        // 如果当前在会议中，则先退出会议
+        await this.$rtc.conference.leave();
+      }
+      this.$model.state.sidebarStatus.mainRoute = this.$router.currentRoute.path;
       this.$rtc.account.signout();
       this.$router.push(LOGIN.LOGIN_CONTENT);
     },

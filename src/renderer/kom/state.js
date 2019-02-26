@@ -16,9 +16,12 @@ const wait = async(timeout = 0) => new Promise((resolve) => {
 export default {
   data() {
     return {
-      loginPopup         : null, // 登录中的 popup 提示
-      enterPopup         : null, // 正在进入会议的 popup 提示
-      sidebarStatus      : {}, // 记录入会前的 sidebar 的状态信息
+      loginPopup    : null, // 登录中的 popup 提示
+      enterPopup    : null, // 正在进入会议的 popup 提示
+      sidebarStatus : {
+        mainRoute : '',
+        preRoute  : {},
+      }, // 记录入会前的 sidebar 的状态信息
       isInConferenceView : false,
       isInCallView       : false,
       isInMiniConference : false,
@@ -61,10 +64,10 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(2000); // 添加延时 增加体验
-          router.push(MAIN.DIAL_PLATE);
+          router.push(this.sidebarStatus.mainRoute || MAIN.DIAL_PLATE);
         }
         else {
-        // 未登录状态
+          // 未登录状态 登陆状态
           const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE);
 
           router.push(serverType === 'cloud' ? LOGIN.CLOUD_LOGIN : LOGIN.YMS_LOGIN);
@@ -103,11 +106,8 @@ export default {
           if (this.isInConferenceView) {
             if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
             this.isInConferenceView = false;
-            this.isInMiniConference = false;
           }
-        }
-        else {
-          // 未入会状态
+          this.isInMiniConference = false;
         }
       }
     },

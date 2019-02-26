@@ -19,7 +19,8 @@
       </template>
       <template slot="operation">
         <div class="text-white" v-if="selectedGroup === '1'">
-          <a-iconfont type="icon-sousuo" class="ml-4 text-base" @click.stop="openSearch"/>
+          <a-iconfont :title="isOpenSearch ? '关闭搜索框': '打开搜索框'"
+                      type="icon-sousuo" class="ml-4 text-base" @click.stop="openSearch"/>
           <a-iconfont title="解除全员禁言" type="icon-maikefeng" class="ml-4 text-base" @click.stop="unMuteAll"/>
           <a-iconfont title="全员禁言" type="icon-maikefengjinyong" class="ml-4 text-base" @click.stop="muteAll"/>
         </div>
