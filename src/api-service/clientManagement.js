@@ -23,12 +23,12 @@ export default class ClientManagement {
   set state(state) {
     switch (state) {
       case states.START_UP: {
-        this.updateClientInfo(this.clentInfo);
-        this.startHeartBeat(this.clentInfo);
+        this.updateClientInfo(this.clientInfo);
+        this.startHeartBeat(this.clientInfo);
         break;
       }
       case states.USER_LOGIN: {
-        this.updateClientInfo(this.clentInfo);
+        this.updateClientInfo(this.clientInfo);
         break;
       }
       default:
@@ -37,7 +37,7 @@ export default class ClientManagement {
     this.stateProxy = state;
   }
 
-  get clentInfo() {
+  get clientInfo() {
     return {
       ...this.systemInfo,
       account      : get(this, 'accountInfo.account', null),
@@ -53,8 +53,8 @@ export default class ClientManagement {
   set enterpriseInfo(info) {
     this.enterpriseInfoProxy = info;
     this.stopHeartBeat();
-    this.updateClientInfo(this.clentInfo);
-    this.startHeartBeat(this.clentInfo);
+    this.updateClientInfo(this.clientInfo);
+    this.startHeartBeat(this.clientInfo);
   }
 
   async getEnterpriseInfo() {
