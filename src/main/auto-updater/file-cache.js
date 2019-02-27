@@ -1,6 +1,5 @@
 import {
   resolve,
-  basename,
 } from 'path';
 import {
   homedir,
@@ -41,7 +40,7 @@ export function getAppCacheDir(name = app.getName()) {
 export class FileCache {
   constructor(cacheDir) {
     this.cacheDir = cacheDir || resolve(getAppCacheDir(), 'FileCache');
-    this.cacheFile = resolve(cacheDir, 'cache-file.json');
+    this.cacheFile = resolve(this.cacheDir, 'cache-file.json');
     this.fileMap = {}; // url, path
     this.loaded = false;
 
