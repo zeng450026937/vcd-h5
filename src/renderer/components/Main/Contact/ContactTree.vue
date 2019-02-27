@@ -112,6 +112,8 @@ export default {
       if (treeNode.dataRef.isGroup) {
         treeNode.dataRef.addChildNodes();
       }
+      
+      return Promise.resolve();
     },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys;

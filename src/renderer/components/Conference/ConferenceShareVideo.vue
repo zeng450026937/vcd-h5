@@ -1,7 +1,11 @@
 <template>
   <div id="conference-share-video" class="relative group"
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
-    <video-view source="screen" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
+    <video-view :source="source"
+                object-fit="cover"
+                class="cursor-pointer"
+                :class="{'opacity-0':videoCursor === 0}"
+                @video-clicked="videoClicked"/>
     <template v-if="videoCursor !== 2">
       <div class="video-controls group-hover:opacity-100"
            :class="{'opacity-0 h-10': videoCursor !== 0}">
@@ -31,6 +35,12 @@ export default {
   components : {
     VideoView,
   },
+  props : {
+    source : {
+      type    : String,
+      default : 'screen',
+    },
+  },
   data() {
     // FIXME may hard code
     const videoLayouts = [ 'min', 'shrink', 'normal', 'expand' ]; // normal occurred when drawer showed
@@ -49,6 +59,9 @@ export default {
     // 最大或者最小
     switchMaxOrMin() {
       this.videoCursor = this.videoCursor === 0 ? 1 : 0;
+    },
+    videoClicked() {
+      this.$emit('video-clicked');
     },
   },
   watch : {

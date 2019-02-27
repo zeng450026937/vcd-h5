@@ -8,6 +8,7 @@
         class="video-content"
         autoplay loop
         :style="{'object-fit': objectFit}"
+        @click="videoClicked"
     ></video>
     <div v-if="!videoStream"
          class="loading-notice absolute flex flex-col w-full justify-center items-center">
@@ -72,6 +73,9 @@ export default {
     },
   },
   methods : {
+    videoClicked() {
+      this.$emit('video-clicked');
+    },
     onVideoStreamChanged(stream) {
       if (!stream) return;
       if (!this.videoElement) { // TODO update DOM to refs

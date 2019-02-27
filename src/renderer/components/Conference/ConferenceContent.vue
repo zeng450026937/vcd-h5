@@ -28,14 +28,16 @@
       </div>
       <div :class="remoteVideoClass"
            @dblclick="maxConferenceContent">
-        <conference-remote-video/>
+        <conference-remote-video :source="centerSource"/>
       </div>
       <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
       <div v-if="hasScreenStream && !isShareWindowOpen"
            :class="shareVideoClasses">
-        <conference-share-video/>
+        <conference-share-video
+            :source="leftSource"
+            @video-clicked="shareScreenClicked"/>
       </div>
       <conference-notice/>
       <conference-inviting-modal ref="invitingModal"/>
@@ -49,7 +51,6 @@ import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
-import ConferenceControls from './ConferenceControls.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
@@ -60,7 +61,6 @@ export default {
     ConferenceLocalVideo,
     ConferenceShareVideo,
     ConferenceNotice,
-    ConferenceControls,
     ConferenceInvitingModal,
   },
   data() {
@@ -77,11 +77,19 @@ export default {
       shareWindow        : null,
       isShareWindowOpen  : false,
       hideControlsTimer  : null,
+      isShareInCenter    : false, // 辅流页面是否显示在主页面
     };
   },
   computed : {
+    centerSource() {
+      return this.isShareInCenter ? 'screen' : 'remote';
+    },
+    leftSource() {
+      return this.isShareInCenter ? 'remote' : 'screen';
+    },
     localVideoClasses() {
-      const position = this.isInConferenceMain ? 'right' : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
+      const position = this.isInConferenceMain ? 'right'
+        : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
 
       return {
         [`local-video-content local-video-content-${position}`] : true,
@@ -97,7 +105,7 @@ export default {
     remoteVideoClass() {
       return {
         'remote-video-content absolute h-full w-full pin-t pin-r' : true,
-      }
+      };
     },
     hasScreenStream() {
       return this.$rtc.conference.shareChannel.remoteStream
@@ -148,6 +156,9 @@ export default {
         this.hideControls = true;
       }, 60000000);
     },
+    shareScreenClicked() {
+      this.isShareInCenter = !this.isShareInCenter;
+    },
   },
   watch : {
     $route : {
@@ -155,6 +166,13 @@ export default {
         this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
       },
       immediate : true,
+    },
+    hasScreenStream(val) {
+      // 第一次打开辅流将其显示在主页面
+      this.isShareInCenter = !!val;
+    },
+    isShareWindowOpen(val) {
+      if (val) this.isShareInCenter = false;
     },
   },
 };
