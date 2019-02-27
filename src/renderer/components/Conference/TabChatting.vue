@@ -69,41 +69,10 @@ export default {
         ...this.userList,
       ];
     },
-    newMessage() {
-      return this.$rtc.conference.message;
-    },
-  },
-  async mounted() {
-    const { conference } = this.$rtc.conference;
-
-    if (!conference.isChatAvariable()) {
-      await conference.connectChat();
-    }
   },
   methods : {
     sendMessage() {
-      const { conference } = this.$rtc.conference;
-      const startTime = moment(new Date(), 'YYYYMMDD').format('HH:mm');
-      const messageObject = {
-        from      : '我',
-        content   : this.message,
-        date      : startTime,
-        type      : 'send',
-        isPrivate : true,
-      };
-
-      if (this.target === 'all') {
-        conference.sendMessage(this.message);
-        messageObject.to = '所有人';
-      }
-      else {
-        const user = conference.users.getUser(this.target);
-
-        conference.sendMessage(this.message, [ user.entity ]);
-        messageObject.to = user.displayText;
-      }
-
-      this.$model.chat.messageRecordList.push(messageObject);
+      this.$model.chat.sendMessage('我', this.target, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {
@@ -114,20 +83,6 @@ export default {
           this.isSendingDisabled = false;
         }
       }, 1000);
-    },
-  },
-  watch : {
-    newMessage(val) {
-      const messageObject = {
-        from      : val.user['@display-text'],
-        content   : val.msg,
-        date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
-        to        : val['@is-private'] ? '我' : '所有人',
-        isPrivate : val['@is-private'],
-        type      : 'receive',
-      };
-
-      this.$model.chat.messageRecordList.push(messageObject);
     },
   },
 };

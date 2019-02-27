@@ -25,8 +25,10 @@ import chat from './conference/chat';
 import stat from './conference/stat';
 import conference from './conference';
 import share from './conference/share';
+import confState from './conference/state';
 // call
 import call from './call';
+import callState from './call/state';
 import callChat from './call/chat';
 
 Vue.use(Vuem);
@@ -64,9 +66,11 @@ const data = {
   chat,
   stat,
   conference,
+  confState,
   share,
   call,
   callChat,
+  callState,
   setting : {
     $selfValue : setting,
     conference : settingConference,

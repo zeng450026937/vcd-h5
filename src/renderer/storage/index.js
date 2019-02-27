@@ -8,7 +8,7 @@ const storage = new VueStorage({
   dbName  : 'vcd_h5',
   version : 'V1', // 可能会保存多版本的数据信息
   storage : [
-    { // 登录的用户
+    { // 登录的用户 YMS
       store   : LOGIN_STORAGE.ACCOUNT_LIST,
       type    : Array,
       key     : 'id',

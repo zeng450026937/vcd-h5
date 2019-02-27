@@ -13,8 +13,18 @@
         </template>
       </div>
       <div class="flex flex-col flex-grow w-1 ml-3">
-        <span class="item-name truncate">{{item.displayText + (item.isCurrentUser()?' ( 我 )':'')}}</span>
-        <span class="item-phone">{{item.phone === 'unauth-web-client' ? 'WebRTC' : item.phone}}</span>
+        <span class="item-name truncate">
+          <span v-if="displayName.indexOf(filterText) > -1">
+          {{displayName.substr(0, displayName.indexOf(filterText))}}<span class="text-indigo">{{filterText}}</span>{{displayName.substr(displayName.indexOf(filterText) + filterText.length)}}
+          </span>
+          <span v-else>{{displayName}}</span>
+        </span>
+        <span class="item-phone">
+          <span v-if="displayPhone.indexOf(filterText) > -1">
+          {{displayPhone.substr(0, displayPhone.indexOf(filterText))}}<span class="text-indigo">{{filterText}}</span>{{displayPhone.substr(displayPhone.indexOf(filterText) + filterText.length)}}
+          </span>
+          <span v-else>{{displayPhone}}</span>
+        </span>
       </div>
       <div v-if="!isOnHold && !isAudioApplicant">
         <a-iconfont :type="videoIcon.icon"
@@ -140,6 +150,15 @@ export default {
     };
   },
   computed : {
+    filterText() {
+      return this.$model.conference.filterText;
+    },
+    displayName() {
+      return this.item.displayText + (this.item.isCurrentUser() ? ' ( 我 )' : '');
+    },
+    displayPhone() {
+      return this.item.phone === 'unauth-web-client' ? 'WebRTC' : this.item.phone;
+    },
     isSelected() {
       return this.$model.conference.selectedMember === this.item.entity;
     },

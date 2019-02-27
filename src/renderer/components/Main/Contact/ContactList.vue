@@ -91,11 +91,12 @@
                 <a-avatar v-if="item.isGroup || !item.parent.isUser"
                           class="text-sm"
                           :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
-                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
+                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true,
+                                  'mx-2': !item.isGroup}">
                   <a-iconfont :type="item.avatar" class="text-base"/>
                 </a-avatar>
                 <a-avatar v-else
-                          class="bg-indigo-dark text-sm"
+                          class="bg-indigo-dark text-sm mx-2"
                           :class="{[`bg-${item.avatar}`]: item.avatar}">
                   {{item.name|avatarTrim}}
                 </a-avatar>
@@ -112,7 +113,7 @@
                       class="mr-3 text-indigo cursor-pointer text-base"
                       @click.stop="doAudio(item)"/>
               <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
-                      type="icon-gengduo"
+                      type="icon-gengduo1"
                       class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="moreOption(item)"/>
               <slot name="more" :item="item"></slot>

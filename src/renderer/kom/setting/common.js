@@ -15,7 +15,7 @@ const keyMap = {
 };
 
 const itemMap = { // 对应不同模块需要导出的设置项
-  normal     : [ 'autoStart', 'forceMinimize', 'language' ],
+  normal     : [ 'autoStart', 'forceMinimize', 'language', 'address' ],
   conference : [ 'maxWindowWhenSharing', 'maxWindowWhenWatchingSharing',
     'enableGpu', 'autoSilence',
     'noticeWhenLeaving', 'advanceEntryTime',

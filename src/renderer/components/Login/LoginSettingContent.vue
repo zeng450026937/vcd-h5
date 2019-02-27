@@ -1,5 +1,5 @@
 <template>
-  <div id="yms-login-setting-content" class="flex flex-col bg-white shadow" style="width: 480px;height: 538px;">
+  <div id="login-setting-content" class="flex flex-col bg-white shadow" style="width: 480px;height: 538px;">
     <div class="flex flex-grow">
       <a-tabs defaultActiveKey="1" class="w-full">
         <a-tab-pane tab="基本设置" key="1">
@@ -59,7 +59,7 @@
 
 <script>
 export default {
-  name : 'YMSLoginSettingContent',
+  name : 'LoginSettingContent',
   data() {
     return {
     };
@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style lang="less">
-  #yms-login-setting-content {
+  #login-setting-content {
     .ant-tabs-bar {
       text-align: center;
       margin: 0;

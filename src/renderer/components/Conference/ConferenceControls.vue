@@ -4,7 +4,7 @@
       <!--视频控制-->
       <a-button :disabled="videoDisabled"
                 shape="circle"
-                class="w-12 h-12 text-2xl text-white mx-2"
+                class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
                 @click="onVideoBtnClick"
       >
         <a-iconfont :type="videoIcon.icon" :class="{[`text-${videoIcon.color}`] : true}"/>
@@ -12,7 +12,7 @@
       <!--音频-->
       <a-button :disabled="audioDisabled"
                 shape="circle"
-                class="w-12 h-12 text-2xl text-white mx-2"
+                class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
                 @click="onAudioBtnClick"
       >
         <a-iconfont :type="audioIcon.icon" :class="{[`text-${audioIcon.color}`] : true}"/>
@@ -20,7 +20,7 @@
       <!--分享辅流-->
       <a-button :disabled="!shareAvailable"
                 shape="circle"
-                class="w-12 h-12 text-2xl text-white mx-2"
+                class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -41,7 +41,7 @@
           </div>
         </div>
         <a-button shape="circle"
-                  class="w-12 h-12 text-2xl text-white mx-2"
+                  class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
@@ -168,5 +168,4 @@ export default {
       width: 100%;
     }
   }
-
 </style>

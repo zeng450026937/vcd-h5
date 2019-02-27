@@ -2,9 +2,9 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full" @mousemove="contentClicked">
       <div class="flex flex-col h-full">
-        <div class="header flex flex-col h-12 dragable z-10"
+        <div class="header flex flex-col h-12 z-10"
              :class="{'opacity-0': hideControls}">
-          <div class="flex items-center h-full text-white self-end px-5 no-dragable">
+          <div class="flex items-center h-full text-white self-end px-5">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
@@ -26,14 +26,15 @@
         <!--TODO hard code modify after year-->
         <!--<conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>-->
       </div>
-      <div class="remote-video-content absolute h-full w-full pin-t pin-r"
+      <div :class="remoteVideoClass"
            @dblclick="maxConferenceContent">
         <conference-remote-video/>
       </div>
       <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
-      <div v-if="hasScreenStream && !isShareWindowOpen" :class="shareVideoClasses">
+      <div v-if="hasScreenStream && !isShareWindowOpen"
+           :class="shareVideoClasses">
         <conference-share-video/>
       </div>
       <conference-notice/>
@@ -93,6 +94,11 @@ export default {
         [`share-video-content share-video-content-${position}`] : true,
       };
     },
+    remoteVideoClass() {
+      return {
+        'remote-video-content absolute h-full w-full pin-t pin-r' : true,
+      }
+    },
     hasScreenStream() {
       return this.$rtc.conference.shareChannel.remoteStream
         || this.$rtc.conference.shareChannel.localStream;
@@ -140,7 +146,7 @@ export default {
 
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = true;
-      }, 6000);
+      }, 60000000);
     },
   },
   watch : {
@@ -170,7 +176,7 @@ export default {
     top: 100%;
     &-right {
       left: 100%;
-      transform: translate(-100%, -100%);
+      transform: translate(calc( -100% - 4px ), calc( -100% - 4px ));
     }
     &-center-right {
       left: 50%;
@@ -187,7 +193,7 @@ export default {
     top: 100%;
     &-left {
       left: 0;
-      transform: translateY(-100%);
+      transform: translate(4px, calc( -100% - 4px ));
     }
     &-center {
       left: 50%;
@@ -198,7 +204,16 @@ export default {
   .more-panel-popover {
     .ant-popover-arrow {
       z-index: -1;
-      background: rgba(0,0,0,0.65);
+      width: 0;
+      height: 0;
+      bottom: 2.5px !important;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: none;
+      border-top: 8px solid rgba(0, 0, 0, .65);
+      box-sizing: content-box;
+      background: transparent !important;;
+      transform: translateX(-50%) !important;;
     }
     .ant-popover-inner {
       background: rgba(0,0,0,0.65);
