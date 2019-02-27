@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { Transform } from 'stream';
+import { randomBytes } from 'crypto';
 import { createWriteStream } from 'fs-extra';
 import axios from 'axios';
 import { resolve as resolvePath } from 'path';
@@ -164,7 +165,12 @@ export class Downloader extends EventEmitter {
 export class Provider extends Downloader {
   constructor(appUpdater) {
     super();
+
     this.appUpdater = appUpdater;
+
+    this.feedURL = null;
+    this.channel = 'stable'; // insiders, fast, stable
+    this.clientId = randomBytes(32).toString(); // used for Staged Rollouts
     this.latestVersion = null;
   }
 
@@ -190,7 +196,9 @@ export class Provider extends Downloader {
 
     const path = resolvePath(getAppCacheDir(), packageName);
 
-    return super.download(downloadUrl, path);
+    await super.download(downloadUrl, path);
+
+    return path;
   }
   
   onProgress(info) {

@@ -8,9 +8,6 @@ export class AppUpdater extends EventEmitter {
   constructor() {
     super();
 
-    this.brand = 'yealink';
-    this.channel = 'stable'; // insiders, fast, stable
-    this.feedURL = null;
     this.provider = this.genProvider();
 
     this.autoDownload = true;
@@ -23,6 +20,9 @@ export class AppUpdater extends EventEmitter {
 
     this.installing = false;
     this.installError = null;
+
+    // AppUpdater is designed to be only one instance.
+    app.once('quit', this.handlerQuit.bind(this));
   }
 
   get appSuffix() {
@@ -37,12 +37,20 @@ export class AppUpdater extends EventEmitter {
     return this.provider && this.provider.isDownloading;
   }
 
+  get channel() {
+    return this.provider.channel;
+  }
+
+  set channel(channel) {
+    this.provider.channel = channel;
+  }
+
   setFeedURL(url) {
-    this.feedURL = url;
+    this.provider.feedURL = url;
   }
 
   getFeedURL() {
-    return this.feedURL;
+    return this.provider.feedURL;
   }
 
   async checkForUpdates() {
@@ -105,5 +113,12 @@ export class AppUpdater extends EventEmitter {
 
   async install() {
     return null;
+  }
+
+  handlerQuit(exitCode) {
+    if (!this.autoInstallOnAppQuit) return;
+    if (exitCode !== 0) return;
+
+    this.install();
   }
 }

@@ -1,16 +1,13 @@
 import axios from 'axios';
-import { randomBytes } from 'crypto';
 import { Provider } from './provider';
 
 export class YealinkProvider extends Provider {
   constructor(appUpdater) {
     super(appUpdater);
-    this.clientId = randomBytes(32).toString();
-    this.clientType = 'VCD';
-  }
-
-  setClientId(id) {
-    this.clientId = id;
+    
+    this.customId = 'default';
+    this.clientModel = 'VCD-H5';
+    this.clientType = 'software';
   }
 
   async getLatestVersion() {
