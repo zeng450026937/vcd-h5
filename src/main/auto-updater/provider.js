@@ -1,10 +1,44 @@
 import { EventEmitter } from 'events';
 import { Transform } from 'stream';
-import { randomBytes } from 'crypto';
+import { randomBytes, createHash } from 'crypto';
 import { createWriteStream } from 'fs-extra';
 import axios from 'axios';
-import { resolve as resolvePath } from 'path';
-import { getAppCacheDir } from './file-cache';
+import semver from 'semver';
+import { FileCache } from './file-cache';
+
+export class DigestTransform extends Transform {
+  constructor(expected, algorithm = 'md5', encoding = 'base64') {
+    super();
+
+    this.expected = expected;
+    this.algorithm = algorithm;
+    this.encoding = encoding;
+    this.actual = null;
+    this.digester = createHash(algorithm);
+  }
+
+  _transform(chunk, encoding, callback) {
+    this.digester.update(chunk);
+    callback(null, chunk);
+  }
+
+  _flush(callback) {
+    this.actual = this.digester.digest(this.encoding);
+
+    const valid = this.validate();
+
+    if (!valid) return callback(new Error(`${this.algorithm} checksum mismatch`));
+
+    callback(null);
+  }
+
+  validate() {
+    if (!this.expected) return true;
+    if (this.actual && this.actual === this.expected) return true;
+
+    return false;
+  }
+}
 
 export class ProgressTransform extends Transform {
   constructor(total, downloader) {
@@ -98,11 +132,11 @@ export class Downloader extends EventEmitter {
     this.cancelToken = null;
   }
 
-  async download(url, dist) {
+  async download(file, dist) {
     this.cancelToken = axios.CancelToken.source();
     
     const res = await axios({
-      url,
+      url          : file.url,
       responseType : 'stream',
       headers      : {
         'User-Agent' : 'VCD-H5',
@@ -116,12 +150,17 @@ export class Downloader extends EventEmitter {
     if (!contentLength || contentLength <= 0) throw new Error('Wrong Length');
 
     const streams = [];
-    const progressStream = new ProgressTransform(
+
+    streams.push(new ProgressTransform(
       Number.parseInt(contentLength, 10), this
-    );
+    ));
+
+    if (file.md5) {
+      streams.push(new DigestTransform(file.md5));
+    }
+
     const fileStream = createWriteStream(dist);
 
-    streams.push(progressStream);
     streams.push(fileStream);
 
     let finalStream = data;
@@ -130,7 +169,9 @@ export class Downloader extends EventEmitter {
       streams.forEach((stream) => {
         finalStream = finalStream.pipe(stream);
         stream.once('error', (e) => {
-          this.onDownloadError(e);
+          if (!this.cancelToken.token.reason) {
+            this.onDownloadError(e);
+          }
           reject();
         });
       });
@@ -167,15 +208,21 @@ export class Provider extends Downloader {
     super();
 
     this.appUpdater = appUpdater;
+    this.fileCache = new FileCache();
 
     this.feedURL = null;
     this.channel = 'stable'; // insiders, fast, stable
     this.clientId = randomBytes(32).toString(); // used for Staged Rollouts
     this.latestVersion = null;
+    this.latestFile = null;
   }
 
   get isDownloading() {
     return this.state === DOWNLOAD_STATE.PROGRESS;
+  }
+
+  get latestVersionDownloaded() {
+    return this.latestFile && this.latestFile.path;
   }
 
   async getLatestVersion() {
@@ -189,16 +236,37 @@ export class Provider extends Downloader {
 
     if (!info) throw new Error('Missing download info');
 
-    // TODO: should add a default packageName, eg. 'vcd.exe'
-    const { downloadUrl, packageName } = info;
+    // TODO: sanityCheck here
 
-    if (!downloadUrl) return;
+    const { file } = info;
 
-    const path = resolvePath(getAppCacheDir(), packageName);
+    if (!file.url) return;
 
-    await super.download(downloadUrl, path);
+    // find file in cache
+    const cachedFile = await this.fileCache.find(file.url);
 
-    return path;
+    if (cachedFile && cachedFile.md5 === file.md5) {
+      this.onDownloaded(cachedFile.path);
+
+      return cachedFile;
+    }
+
+    const { appName, appVersion, appSuffix } = this.appUpdater;
+
+    const filename = file.name 
+      || `${appName}-${appVersion}${appSuffix}`;
+  
+    const path = this.fileCache.resolvePath(filename);
+  
+    await super.download(file, path);
+  
+    file.path = path;
+
+    await this.fileCache.add(file.url, file);
+
+    this.latestFile = file;
+
+    return file;
   }
   
   onProgress(info) {

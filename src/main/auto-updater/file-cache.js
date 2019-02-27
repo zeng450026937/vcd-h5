@@ -42,10 +42,14 @@ export class FileCache {
   constructor(cacheDir) {
     this.cacheDir = cacheDir || resolve(getAppCacheDir(), 'FileCache');
     this.cacheFile = resolve(cacheDir, 'cache-file.json');
-    this.fileMap = {}; // name, path
+    this.fileMap = {}; // url, path
     this.loaded = false;
 
     this.load();
+  }
+
+  resolvePath(...args) {
+    return resolve(this.cacheDir, ...args);
   }
 
   async gen(name) {
@@ -56,45 +60,56 @@ export class FileCache {
     return path;
   }
 
-  async add(name) {
+  async add(url, info) {
     await this.load();
     
-    const path = resolve(this.cacheDir, name);
+    const path = resolve(this.cacheDir, info.path);
 
     await pathExists(path);
 
-    name = basename(path);
+    this.fileMap[url] = info;
 
-    this.fileMap[name] = path;
-
-    await outputJson(this.cacheFile);
+    await outputJson(this.cacheFile, this.fileMap);
   }
 
-  async remove(name) {
-    const path = resolve(this.cacheDir, name);
+  async remove(url) {
+    await this.load();
+
+    if (!this.fileMap[url]) return;
+
+    const path = resolve(this.cacheDir, this.fileMap[url].path);
 
     await unlink(path).catch(() => {}); // ignore error
 
-    delete this.fileMap[name];
+    delete this.fileMap[url];
 
-    await outputJson(this.cacheFile);
+    await outputJson(this.cacheFile, this.fileMap);
   }
 
-  async find(name) {
-    const path = resolve(this.cacheDir, name);
+  async find(url) {
+    await this.load();
+
+    const info = this.fileMap[url];
+
+    if (!info) return;
+
+    const path = resolve(this.cacheDir, info.path);
     const exist = await pathExists(path);
 
-    if (exist && this.fileMap.name && this.fileMap.name === path) {
-      return path;
+    if (!exist) {
+      await this.remove(url);
+
+      return;
     }
 
-    await this.remove(name);
-
-    return null;
+    return info;
   }
 
   async clear() {
+    await this.load();
     await emptyDir(this.cacheDir);
+    
+    this.fileMap = {};
   }
 
   async load() {
