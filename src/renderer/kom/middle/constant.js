@@ -9,7 +9,7 @@ const errorMap = {
   NoMpsAvailable         : '会议人数已达上限，请稍后再试！',
   'User Count Exceed'    : '会议人数已达上限，请稍后再试！',
   // login
-  'Password Error'       : '登陆密码错误',
+  'Password Error'       : '登录密码错误',
   // call
   'Not Found'            : '未找到当前号码',
   Canceled               : '当前通话已取消',

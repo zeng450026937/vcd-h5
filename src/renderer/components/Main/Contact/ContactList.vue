@@ -21,10 +21,19 @@
                   <span class="text-sm leading-none truncate">{{item | nameTrim}}</span>
                   <span v-if="!item.isGroup"
                         class="text-xs opacity-75 leading-none"
-                        style="margin-top: 6px">{{item.ip || item.account}}</span>
+                        style="margin-top: 6px">
+                    <span v-if="highlightContent && (item.ip || item.account).indexOf(highlightContent) > -1"
+                          class="flex">
+                    {{(item.ip || item.account).substr(0, (item.ip || item.account).indexOf(highlightContent))}}
+                      <span class="text-indigo">{{highlightContent}}</span>
+                      {{(item.ip || item.account)
+                        .substr((item.ip || item.account)
+                        .indexOf(highlightContent) + highlightContent.length)}}
+                    </span>
+                    <span v-else>{{(item.ip || item.account)}}</span>
+                  </span>
                 </div>
               </div>
-
               <a-popover
                   placement="rightTop"
                   trigger="hover"
@@ -102,8 +111,7 @@
                 </a-avatar>
               </a-popover>
             </a-list-item-meta>
-            <div class="opacity-0 group-hover:opacity-100 flex justify-around"
-                 :class="{'opacity-100': selectedContact.id === item.id}">
+            <div class="opacity-0 group-hover:opacity-100 flex justify-around">
               <a-iconfont v-if="videoIcon"
                       type="icon-shipin"
                       class="mr-3 text-indigo cursor-pointer text-base"
@@ -119,7 +127,7 @@
               <slot name="more" :item="item"></slot>
               <a-iconfont v-if="selfUnDeleted && deleteIcon && !item.isSelf"
                       type="icon-guanbi"
-                      class="mr-2 text-indigo cursor-pointer text-base"
+                      class="mr-2 text-black9 cursor-pointer text-base"
                       @click.stop="deleteContact(item)"/>
             </div>
           </a-list-item>
@@ -169,6 +177,10 @@ export default {
       default() {
         return [];
       },
+    },
+    highlightContent : { // 用于搜索 高亮搜索内容
+      type    : String,
+      default : '',
     },
   },
   components : {

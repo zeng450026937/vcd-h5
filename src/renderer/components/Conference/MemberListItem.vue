@@ -14,14 +14,18 @@
       </div>
       <div class="flex flex-col flex-grow w-1 ml-3">
         <span class="item-name truncate">
-          <span v-if="displayName.indexOf(filterText) > -1">
-          {{displayName.substr(0, displayName.indexOf(filterText))}}<span class="text-indigo">{{filterText}}</span>{{displayName.substr(displayName.indexOf(filterText) + filterText.length)}}
+          <span v-if="filterText && displayName.indexOf(filterText) > -1" class="flex">
+          {{displayName.substr(0, displayName.indexOf(filterText))}}
+            <span class="text-indigo">{{filterText}}</span>
+            {{displayName.substr(displayName.indexOf(filterText) + filterText.length)}}
           </span>
           <span v-else>{{displayName}}</span>
         </span>
-        <span class="item-phone">
-          <span v-if="displayPhone.indexOf(filterText) > -1">
-          {{displayPhone.substr(0, displayPhone.indexOf(filterText))}}<span class="text-indigo">{{filterText}}</span>{{displayPhone.substr(displayPhone.indexOf(filterText) + filterText.length)}}
+        <span class="item-phone flex">
+          <span v-if="displayPhone.indexOf(filterText) > -1" class="flex">
+          {{displayPhone.substr(0, displayPhone.indexOf(filterText))}}
+            <span class="text-indigo">{{filterText}}</span>
+            {{displayPhone.substr(displayPhone.indexOf(filterText) + filterText.length)}}
           </span>
           <span v-else>{{displayPhone}}</span>
         </span>

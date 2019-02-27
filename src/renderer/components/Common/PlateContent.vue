@@ -1,5 +1,5 @@
 <template>
-  <div id="plate-content" class="flex flex-wrap mt-3 justify-between">
+  <div id="plate-content" class="flex flex-wrap justify-between">
     <div v-for="n in dialPanel"
          :key="n.num"
          class="mb-3 text-center"
@@ -7,7 +7,8 @@
       <div class="flex justify-center">
         <div class="w-14 h-14">
           <a-button class="w-full h-full"
-                    @click="clickNumber(n.num)">
+                    @click="clickNumber(n.num)"
+                    @long-press="longPressNumber(n.alpha)">
             <div class="flex flex-col justify-center items-center h-full">
               <span class="text-xl">{{n.num}}</span>
               <span class="text-xs text-grey-darker">{{n.alpha}}</span>
@@ -43,6 +44,9 @@ export default {
   methods : {
     clickNumber(num) {
       this.$emit('inputNumber', num);
+    },
+    longPressNumber(alpha) {
+      console.warn(alpha);
     },
   },
 };

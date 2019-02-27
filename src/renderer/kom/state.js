@@ -67,7 +67,7 @@ export default {
           router.push(this.sidebarStatus.mainRoute || MAIN.DIAL_PLATE);
         }
         else {
-          // 未登录状态 登陆状态
+          // 未登录状态 登录状态
           const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE);
 
           router.push(serverType === 'cloud' ? LOGIN.CLOUD_LOGIN : LOGIN.YMS_LOGIN);

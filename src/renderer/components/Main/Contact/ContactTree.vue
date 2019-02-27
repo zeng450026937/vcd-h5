@@ -1,9 +1,9 @@
 <template>
-  <a-layout id="contact-tree" class="h-full bg-white">
+  <a-layout id="contact-tree" class="h-full bg-white border">
 
     <a-input v-model="searchText"
              placeholder="搜索"
-             class="h-10 mb-2"
+             class="h-10 rounded-none border-none"
              @change="onChange">
       <div slot="suffix">
         <a-iconfont
@@ -16,7 +16,7 @@
       </div>
 
     </a-input>
-    <div class="overflow-y-auto h-full px-2">
+    <div class="overflow-y-auto h-full px-2 border-t">
       <a-tree
           checkable
           class="contact-tree"

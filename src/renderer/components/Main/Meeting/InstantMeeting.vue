@@ -18,10 +18,10 @@
                         :checked="checkedKeys"
                         @onCheck="onCheck"></contact-tree>
         </div>
-        <div class="flex mx-3 justify-center items-center">
-          <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
+        <div class="flex mx-2 justify-center items-center">
+          <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"/>
         </div>
-        <div class="flex w-1/2 bg-white overflow-hidden">
+        <div class="flex w-1/2 bg-white overflow-hidden border">
           <div class="w-full flex flex-col">
             <div class="border-b">
               <div class="flex flex-col">
@@ -122,6 +122,6 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 
 </style>

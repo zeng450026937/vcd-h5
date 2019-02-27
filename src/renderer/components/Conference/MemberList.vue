@@ -8,8 +8,9 @@
         <a-input v-show="isOpenSearch"
                  ref="memberSearchInput"
                  class="border-none"
+                 placeholder="搜索"
                  v-model="filterText">
-          <a-iconfont v-if="filterText"
+          <a-iconfont v-show="filterText"
                       slot="suffix"
                       type="icon-guanbi"
                       class="text-sm text-grey cursor-pointer hover:text-red"
@@ -96,11 +97,7 @@ export default {
       return this.$model.conference.memberList;
     },
     memberNum() {
-      let count = 0;
-
-      this.memberList.forEach((m) => count += m.list.length);
-      
-      return count;
+      return this.memberList.reduce((sum, val) => val.list.length + sum, 0);
     },
     waitingList() {
       return this.$model.conference.waitingList;

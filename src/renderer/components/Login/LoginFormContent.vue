@@ -80,7 +80,7 @@
         </a-form-item>
       </a-form>
       <div class="mt-5 text-xs text-center text-black6">
-        <template v-if="type === 'yms'">
+        <template v-if="type === 'cloud'">
           <span class="cursor-pointer leading-tight">忘记密码</span>
           <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
           <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
@@ -97,7 +97,7 @@
         <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
       </div>
       <div>
-        <p class="text-xs text-center leading-tight mt-5 text-black9">
+        <p class="text-xs flex text-center leading-tight mt-5 text-black9">
           点击登录则代表您同意
           <span class="text-indigo-light cursor-pointer">《用户协议》</span>
           和

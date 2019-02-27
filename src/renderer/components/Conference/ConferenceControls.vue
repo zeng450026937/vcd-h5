@@ -4,23 +4,25 @@
       <!--视频控制-->
       <a-button :disabled="videoDisabled"
                 shape="circle"
-                class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
+                class="w-10 h-10 text-lg text-white border-transparent"
+                :class="{[`bg-${videoIcon.color}`] : true}"
                 @click="onVideoBtnClick"
       >
-        <a-iconfont :type="videoIcon.icon" :class="{[`text-${videoIcon.color}`] : true}"/>
+        <a-iconfont :type="videoIcon.icon"/>
       </a-button>
       <!--音频-->
       <a-button :disabled="audioDisabled"
                 shape="circle"
-                class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
+                class="w-10 h-10 text-lg text-white mx-3 border-transparent"
+                :class="{[`bg-${audioIcon.color}`] : true}"
                 @click="onAudioBtnClick"
       >
-        <a-iconfont :type="audioIcon.icon" :class="{[`text-${audioIcon.color}`] : true}"/>
+        <a-iconfont :type="audioIcon.icon"/>
       </a-button>
       <!--分享辅流-->
       <a-button :disabled="!shareAvailable"
                 shape="circle"
-                class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
+                class="w-10 h-10 text-lg text-white border-transparent"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -31,23 +33,23 @@
       >
         <div slot="content" class="popover-content text-white">
           <div class="h-8 w-full px-3 popover-content-item flex items-center">
-            <a-iconfont type="icon-maikefeng" class="text-base"/>
+            <a-iconfont type="icon-maikefeng" class="text-lg"/>
             <span class="ml-3 text-xs">切换为音频通话</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center"
                @click="openPlateModal">
-            <a-iconfont type="icon-bohao" theme="filled" class="text-base"/>
+            <a-iconfont type="icon-bohao" theme="filled" class="text-lg"/>
             <span class="ml-3 text-xs">拨号盘</span>
           </div>
         </div>
         <a-button shape="circle"
-                  class="w-12 h-12 text-2xl text-white mx-2 border-transparent"
+                  class="w-10 h-10 text-lg text-white mx-3 border-transparent"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
-                class="w-12 h-12 text-2xl border-transparent text-white mx-2 bg-red-light"
+                class="w-10 h-10 text-lg border-transparent text-white bg-red-light"
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
     </div>
@@ -93,18 +95,18 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red' },
-        unblock    : { icon: 'icon-maikefeng', color: 'white' },
-        unblocking : { icon: 'icon-maikefeng', color: 'blue' },
-        hand       : { icon: 'icon-maikefeng', color: 'white' },
+        block      : { icon: 'icon-maikefengjinyong', color: 'red-light' },
+        unblock    : { icon: 'icon-maikefeng', color: '' },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light' },
+        hand       : { icon: 'icon-jushou', color: '' },
       };
 
       return iconMap[this.$model.conference.audioStatus || 'unblock'];
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shexiangtou', color: 'white' },
-        block   : { icon: 'icon-shexiangtoujinyong', color: 'red' },
+        unblock : { icon: 'icon-shipin', color: '' },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light' },
       };
 
       return iconMap[this.$model.conference.videoStatus];
@@ -166,6 +168,9 @@ export default {
       bottom: 4px;
       transform: translateX(-100%);
       width: 100%;
+    }
+    button {
+      box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
     }
   }
 </style>

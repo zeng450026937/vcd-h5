@@ -7,9 +7,9 @@
     <video-view source="local" object-fit="cover"
                 :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
-      <div class="video-controls group-hover:opacity-100"
-           :class="{'opacity-0 h-10': videoCursor !== 0}">
-        <div class="flex px-4 justify-end" :class="{[`pt-${videoCursor === 0 ? 2 : 3}`]: true}">
+      <div class="video-controls group-hover:opacity-100 h-8"
+           :class="{'opacity-0': videoCursor !== 0}">
+        <div class="flex px-4 justify-end pt-2">
           <a-iconfont v-if="videoCursor !== 0"
                       :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'" class="text-base text-white"
                   @click="switchShrinkOrExpand"/>
@@ -84,7 +84,8 @@ export default {
       cursor: pointer;
       width: 100%;
       transform: translateX(-100%);
-      background-image: linear-gradient(-180deg, #000000 3%, rgba(0,0,0,0.00) 98%);
+      background: rgba(0,0,0,0.65);
+      /*box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);*/
       transition: opacity ease-in-out .5s;
     }
     .conference-message {

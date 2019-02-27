@@ -4,7 +4,7 @@
       <div class="flex flex-col h-full">
         <div class="header flex flex-col h-12 z-10"
              :class="{'opacity-0': hideControls}">
-          <div class="flex items-center h-full text-white self-end px-5">
+          <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
