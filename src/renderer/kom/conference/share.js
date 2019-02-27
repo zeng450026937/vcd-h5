@@ -11,19 +11,8 @@ export default {
   },
   computed : {
     windowList() {
-      return [...this.screenList, ...this.applicationList];
-    }
-    // windowList() {
-    //   return [ {
-    //     title : '屏幕分享',
-    //     list  : [ ...this.screenList ],
-    //   },
-    //   {
-    //     title : '应用分享',
-    //     list  : [ ...this.applicationList ],
-    //
-    //   } ];
-    // },
+      return [ ...this.screenList, ...this.applicationList ];
+    },
   },
   methods : {
     async getSources() {

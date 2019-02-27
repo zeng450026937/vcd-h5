@@ -1,11 +1,9 @@
 {
   "appId": "com.ylyun.meeting.vcd",
+  "productName": "VC Desktop",
   "copyright": "Copyright ©2019 Yealink",
   "generateUpdatesFilesForAllChannels": true,
-  "publish": {
-    "provider": "generic",
-    "url": "http://download.yealinkvc.com/apollovc/"
-  },
+  "afterAllArtifactBuild": "./script/package-info.js",
   "win": {
     "target": [
       "nsis"
@@ -15,10 +13,12 @@
   "nsis": {
     "createDesktopShortcut": "always",
     "displayLanguageSelector": true,
-    "menuCategory": true,
+    "menuCategory": "VC Desktop",
+    "shortcutName": "VC Desktop",
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "artifactName" : "${productName}-${version}.${ext}"
+    "artifactName": "${productName}-${version}.${ext}",
+    "differentialPackage": false
   },
   "mac": {
     "target": [

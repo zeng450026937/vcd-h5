@@ -1,11 +1,11 @@
 <template>
-  <a-layout id="yms-login" class="h-full bg-transparent">
+  <a-layout id="yms-login" class="h-full bg-transparent mt-8">
     <div class="flex flex-col items-center justify-center h-full">
       <div v-show="!isInSettingContent">
-        <yms-login-form-content @openSetting="isInSettingContent = true"/>
+        <login-form-content @openSetting="isInSettingContent = true"/>
       </div>
 
-      <yms-login-setting-content v-if="isInSettingContent"
+      <login-setting-content v-if="isInSettingContent"
                                  @closeSetting="isInSettingContent = false"/>
 
       <div class="flex mt-4 items-center">
@@ -18,15 +18,15 @@
 <script>
 
 
-import YmsLoginFormContent from './YMSLoginFormContent.vue';
-import YmsLoginSettingContent from './YMSLoginSettingContent.vue';
+import LoginFormContent from './LoginFormContent.vue';
+import LoginSettingContent from './LoginSettingContent.vue';
 
 
 export default {
   name       : 'YMSLoginContent',
   components : {
-    YmsLoginFormContent,
-    YmsLoginSettingContent,
+    LoginFormContent,
+    LoginSettingContent,
   },
   data() {
     return {

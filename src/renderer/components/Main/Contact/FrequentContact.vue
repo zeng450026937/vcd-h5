@@ -36,7 +36,7 @@
             <a-dropdown slot-scope="{item}"
                         slot="more"
                         :trigger="['click']">
-              <a-iconfont type="icon-gengduo"
+              <a-iconfont type="icon-gengduo1"
                       class="mr-2 text-indigo cursor-pointer text-sm"
                       @click.stop="moreOption(item)"/>
               <a-menu slot="overlay" v-if="item.isGroup">

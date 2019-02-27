@@ -1,6 +1,6 @@
 <template>
-  <a-collapse id="member-list-inner" :bordered="false" >
-    <a-collapse-panel v-for="(l, i) in list" :key="i" :showArrow="false" >
+  <a-collapse id="member-list-inner" :bordered="false" v-model="activeKey">
+    <a-collapse-panel v-for="(l, i) in list" :key="String(i)" :showArrow="false" >
 
       <div class="flex items-center" slot="header">
         <span class="flex flex-grow">{{l.title}}</span>
@@ -28,6 +28,29 @@ export default {
       default() {
         return [];
       },
+    },
+  },
+  data() {
+    return {
+      activeKey : [],
+    };
+  },
+  computed : {
+    isCollapseOpen() {
+      return !!this.$model.conference.filterText;
+    },
+  },
+  watch : {
+    isCollapseOpen : {
+      handler(val) {
+        if (val && this.activeKey.length < this.list.length) {
+          this.activeKey.length = 0;
+          for (let i = 0; i < this.list.length; i++) {
+            this.activeKey.push(String(i));
+          }
+        }
+      },
+      immediate : true,
     },
   },
 };

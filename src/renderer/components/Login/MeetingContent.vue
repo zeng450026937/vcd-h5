@@ -113,7 +113,7 @@ export default {
       return this.$rtc.media.localMedia.stream;
     },
     videoIcon() {
-      return this.muteVideo ? 'icon-shexiangtoujinyong' : 'icon-shexiangtou' ;
+      return this.muteVideo ? 'icon-shexiangtoujinyong' : 'icon-shexiangtou';
     },
     audioIcon() {
       return this.muteAudio ? 'icon-maikefengjinyong' : 'icon-maikefeng';
@@ -133,6 +133,7 @@ export default {
       this.$dispatch('meeting.joinMeeting', this.meetingData);
     },
     returnLogin() {
+      this.$model.login.loginType = 'login';
       this.$router.push(LOGIN.YMS_LOGIN);
     },
     handleMeeting() {

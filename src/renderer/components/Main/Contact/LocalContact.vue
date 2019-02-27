@@ -25,7 +25,7 @@
                         slot="more"
                         @click.stop=""
                         :trigger="['click']">
-              <a-iconfont type="icon-gengduo"
+              <a-iconfont type="icon-gengduo1"
                       class="mr-2 text-indigo cursor-pointer text-base"/>
               <a-menu slot="overlay">
                 <a-menu-item @click="editContact(item)">

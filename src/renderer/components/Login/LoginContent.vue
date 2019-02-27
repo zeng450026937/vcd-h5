@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="login-content" class="bg-transparent h-full">
+  <a-layout id="login-content" class="bg-transparent h-full w-full absolute">
     <router-view/>
   </a-layout>
 </template>

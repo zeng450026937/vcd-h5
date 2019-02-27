@@ -111,8 +111,6 @@ export default {
         { icon: 'icon-richeng', text: '日程', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
         { icon: 'icon-lianxiren', text: '联系人', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
         { icon: 'icon-shezhi', text: '设置', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
-        // { spacer: true },
-        // { icon: 'icon-fankui', text: '反馈', isBottom: true, route: MAIN.FEEDBACK },
       ],
       headMenuVisible : false,
     };
@@ -166,14 +164,35 @@ export default {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {
         this.$router.push(sidebar.route);
         this.isInConferenceView = false;
+        this.isInCallView = false;
       }
       if (this.confStatus === 'connected') {
-        this.$model.state.sidebarStatus.preRoute = this.$router.currentRoute;
+        this.$model.state.isInMiniConference = true;
+      }
+      if (this.callStatus === 'connected' || this.callStatus === 'connecting') {
+        this.$model.state.isInMiniCall = true;
       }
     },
-    clickLogout() {
+    async clickLogout() {
+      if (this.confStatus === 'connected') {
+        // 如果当前在会议中，则先退出会议
+        await this.$rtc.conference.leave();
+      }
+      this.$model.state.sidebarStatus.mainRoute = this.$router.currentRoute.path;
       this.$rtc.account.signout();
       this.$router.push(LOGIN.LOGIN_CONTENT);
+    },
+  },
+  watch : {
+    $route : {
+      handler(val) {
+        const { isInMiniConference, isInMiniCall, sidebarStatus } = this.$model.state;
+
+        if (this.$model.state.isNotInCallOrConference()) {
+          sidebarStatus.preRoute = val;
+        }
+      },
+      immediate : true,
     },
   },
 };

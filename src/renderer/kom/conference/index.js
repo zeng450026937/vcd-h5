@@ -10,6 +10,7 @@ export default {
       isLocalUnmuteAudio : false,
       selectedMember     : '',
       hideControls       : false, // 是否隐藏会议页面底部和头部的控制按钮
+      filterText         : '',
     };
   },
   computed : {
@@ -86,9 +87,14 @@ export default {
     memberList() {
       const { userList } = rtc.conference.information.users;
       // 主持人
-      const presenterList = userList.filter((user) => user.isPresenter());
+      const presenterList = userList.filter((user) => user.isPresenter()
+        && (user.displayText.indexOf(this.filterText) > -1
+          || user.displayText.indexOf(this.phone) > -1));
       // 访客
-      const visitorList = userList.filter((user) => !user.isPresenter() && !user.isOnHold());
+      const visitorList = userList.filter((user) => !user.isPresenter()
+        && !user.isOnHold()
+        && (user.displayText.indexOf(this.filterText) > -1
+        || user.displayText.indexOf(this.phone) > -1));
 
       return [
         {

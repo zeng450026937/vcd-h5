@@ -24,7 +24,9 @@
         </div>
       </div>
       <div class="flex h-full">
-        <component :is="currentTab" @close="closeDrawer"></component>
+        <keep-alive>
+          <component :is="currentTab" @close="closeDrawer"></component>
+        </keep-alive>
       </div>
     </div>
   </div>

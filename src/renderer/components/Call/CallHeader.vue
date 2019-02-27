@@ -23,22 +23,13 @@
 </template>
 
 <script>
-const secondsToHms = (d) => {
-  d = Number(d);
-  const h = Math.floor(d / 3600);
-  const m = Math.floor((d % 3600) / 60);
-  const s = Math.floor(d % 3600 % 60);
-
-  return `${(h < 10 ? '0' : '') + h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-};
+import screenfull from 'screenfull';
 
 export default {
   name : 'CallHeader',
   data() {
     return {
       targetUser : '',
-      duration   : '00:00:00',
-      signal     : 4,
     };
   },
   computed : {
@@ -66,40 +57,19 @@ export default {
     userName() {
       return this.displayName || this.targetUser || '未知用户';
     },
-  },
-  mounted() {
-  },
-  destroyed() {
-    if (this.durationTimer) clearInterval(this.durationTimer);
+    duration() {
+      return this.$model.callState.duration;
+    },
+    signal() {
+      return this.$model.callState.signal;
+    },
   },
   methods : {
-    initSignal() {
-      let checkInterval = 1; // 1 2 4 8 循环时长
-      let checkTimes = 0;
-      // 设置通话进行时间
-      const callTime = new Date();
-
-      this.durationTimer = setInterval(() => {
-        const time = (new Date().getTime() - callTime.getTime()) / 1000;
-
-        while (checkTimes++ === checkInterval) {
-          this.$rtc.call.getStats().then((val) => {
-            if (this.signal === val.quality) {
-              checkInterval *= 2;
-              checkInterval = (checkInterval * 2) % 15;
-              checkTimes = 0;
-            }
-            this.signal = val.quality || '1';
-          });
-        }
-        this.duration = secondsToHms(time);
-      }, 1000);
-    },
     clickMinimize() {
       this.$dispatch('sys.minimize');
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
+      screenfull.toggle(document.getElementById('app'));
     },
     clickClose() {
       this.$dispatch('sys.close');
@@ -108,14 +78,6 @@ export default {
   watch : {
     displayName(cur, once) {
       this.targetUser = cur || once;
-    },
-    callStatus : {
-      handler(val) {
-        if (val === 'connected') {
-          this.initSignal();
-        }
-      },
-      immediate : true,
     },
   },
 };

@@ -14,9 +14,9 @@ export default {
       rememberPassword,
       autoLogin,
       autoLoginDisabled : false,
-      loginType : 'login',
-      proxy     : '10.200.112.165',
-      proxyPort : 5061,
+      loginType         : 'login',
+      proxy             : '10.200.112.165',
+      proxyPort         : 5061,
     };
   },
   mounted() {
@@ -60,19 +60,20 @@ export default {
           proxy         : this.proxy,
           proxyPort     : defaultPort,
           lastLoginDate : Date.now(),
+          type          : this.serverType,
         });
 
         if (this.rememberPassword) {
           loginData.pin = pin;
         }
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
+        this.storeConfig(); // 登陆成功之后保存登陆前的状态
       });
     },
-
-  },
-  watch : {
-    serverType       : (val) => storage.insert(LOGIN_STORAGE.SERVER_TYPE, val),
-    rememberPassword : (val) => storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, val),
-    autoLogin        : (val) => storage.insert(LOGIN_STORAGE.AUTO_LOGIN, val),
+    storeConfig() {
+      storage.insert(LOGIN_STORAGE.SERVER_TYPE, this.serverType);
+      storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, this.rememberPassword);
+      storage.insert(LOGIN_STORAGE.AUTO_LOGIN, this.autoLogin);
+    },
   },
 };

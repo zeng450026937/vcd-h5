@@ -70,7 +70,9 @@
               <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
             </a-input>
           </div>
-          <a-button type="primary" class="mt-10" block @click="enterMeeting">立即加入</a-button>
+          <a-button type="primary" class="mt-10" block
+                    :disabled="isConnected"
+                    @click="enterMeeting">立即加入</a-button>
         </div>
       </div>
       <div style="width: 480px;height: 518px;"
@@ -101,6 +103,9 @@ export default {
     VideoView,
   },
   computed : {
+    isConnected() {
+      return this.$rtc.conference.connected;
+    },
     muteAudio : {
       get() {
         return this.$rtc.media.localMedia.muteAudio;
