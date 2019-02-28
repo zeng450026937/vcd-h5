@@ -19,14 +19,14 @@ export default {
       loginPopup    : null, // 登录中的 popup 提示
       enterPopup    : null, // 正在进入会议的 popup 提示
       sidebarStatus : {
-        mainRoute : '',
-        preRoute  : {},
+        mainRoute : '', // 退出登陆前记录 main 页面的路由
+        preRoute  : {}, // 记录加入会议或者p2p通话前的状态
       }, // 记录入会前的 sidebar 的状态信息
-      isInConferenceView : false,
-      isInCallView       : false,
-      isInMiniConference : false,
-      isInMiniCall       : false,
-      isOnLine           : true,
+      isInConferenceView : false, // 记录当前页面是否在会议主页面
+      isInCallView       : false, // 记录当前页面是否在P2P通话主页面
+      isInMiniConference : false, // 记录当前页面是否在会议的小窗口
+      isInMiniCall       : false, // 记录当前页面是否在P2P通话的小窗口
+      isOnLine           : true, // 退出登陆之后标识当前的网络状态是否还在连接
     };
   },
   computed : {
@@ -136,7 +136,7 @@ export default {
         //
       }
       else if (once && val === 'disconnected') {
-        if (this.sidebarStatus.preRoute) router.push(this.sidebarStatus.preRoute.path);
+        if (this.sidebarStatus.preRoute && !this.isInConferenceView) router.push(this.sidebarStatus.preRoute.path);
         this.isInMiniCall = false;
         this.isInCallView = false;
       }

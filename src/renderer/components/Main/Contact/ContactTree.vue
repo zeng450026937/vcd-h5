@@ -7,12 +7,13 @@
              @change="onChange">
       <div slot="suffix">
         <a-iconfont
+            v-show="searchText"
             type="icon-guanbi"
-            class="text-sm text-black9 text-base cursor-pointer mr-2"
+            class="text-sm text-black9 text-base cursor-pointer mr-2 hover:text-red"
             @click="searchText = ''"/>
         <a-iconfont
             type="icon-sousuo"
-            class="text-sm text-black9 text-base hover:text-red"/>
+            class="text-sm text-black9 text-base"/>
       </div>
 
     </a-input>
@@ -181,13 +182,20 @@ export default {
           margin: 12px 0 12px 0 !important;
         }
         > .ant-tree-switcher{
-          margin: 6px 6px 8px 0 !important;
+          margin: 8px 6px 8px 0 !important;
+          .ant-tree-switcher-icon{
+            font-size: 16px;
+            color: #999;
+          }
         }
         > .ant-tree-node-content-wrapper {
           margin: 8px 0 8px 0 !important;
           padding: 0 8px;
         }
       }
+    }
+    .ant-tree-switcher-noop {
+      width: 30px;
     }
     li{
       padding: 0;

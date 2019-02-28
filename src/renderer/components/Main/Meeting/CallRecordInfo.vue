@@ -3,9 +3,9 @@
     <div class="flex flex-col h-full">
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
-          <div class="flex items-center h-full px-4 text-base">
-            <a-iconfont  type="left"
-                     class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
+          <div class="flex items-center h-full px-4 text-base no-dragable cursor-pointer">
+            <a-iconfont  type="icon-left"
+                     class="text-grey-dark text-base mr-2 hover:text-purple-dark"
                      @click="goBack"/>
             <span>通话详情</span>
           </div>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <a-divider class="my-0 "/>
-      <div class="h-full m-4 bg-white flex items-center flex-col">
+      <div class="h-full m-4 bg-white flex items-center flex-col border">
         <div class="flex flex-col h-full" style="width: 440px;">
           <div>
             <div class="flex py-5 items-center w-full border-b" style="width: 440px">

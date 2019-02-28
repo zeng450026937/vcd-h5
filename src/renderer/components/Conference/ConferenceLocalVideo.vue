@@ -1,10 +1,13 @@
 <template>
   <div id="conference-local-video" class="relative group"
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
-
-    <conference-message v-if="videoCursor !== 2" class="conference-message"/>
-
-    <video-view source="local" object-fit="cover"
+    <!--//TODO 如果添加该段消息提示代码，则会导致本地视频-->
+    <div>
+      <conference-message v-if="videoCursor !== 2" class="conference-message"/>
+    </div>
+    <video-view source="local"
+                object-fit="cover"
+                class="cursor-pointer"
                 :class="{'opacity-0':videoCursor === 0}"/>
     <template v-if="videoCursor !== 2">
       <div class="video-controls group-hover:opacity-100 h-8"
@@ -12,7 +15,7 @@
         <div class="flex px-4 justify-end pt-2">
           <a-iconfont v-if="videoCursor !== 0"
                       :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'" class="text-base text-white"
-                  @click="switchShrinkOrExpand"/>
+                      @click="switchShrinkOrExpand"/>
           <a-iconfont :type="videoCursor === 0 ? 'icon-zhankai' : 'icon-yincang'"
                       class="text-base text-white ml-4"
                       @click="switchMaxOrMin"/>
@@ -56,6 +59,9 @@ export default {
     switchMaxOrMin() {
       this.videoCursor = this.videoCursor === 0 ? 1 : 0;
     },
+    // videoClicked() {
+    //   this.$emit('video-clicked');
+    // },
   },
   watch : {
     $route : {
@@ -85,7 +91,6 @@ export default {
       width: 100%;
       transform: translateX(-100%);
       background: rgba(0,0,0,0.65);
-      /*box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);*/
       transition: opacity ease-in-out .5s;
     }
     .conference-message {
@@ -103,7 +108,7 @@ export default {
     }
     &-shrink {
       width: 176px;
-      height: 99px;
+      height: 98px;
     }
     &-normal {
       width: 280px;

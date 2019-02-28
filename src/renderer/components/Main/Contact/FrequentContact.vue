@@ -59,7 +59,7 @@
       <a-drawer
           :title="modalTitle"
           placement="right"
-          :width="648"
+          :width="728"
           :closable="false"
           @close="showDrawer = false"
           :visible="showDrawer"
@@ -71,33 +71,37 @@
               <a-input placeholder="请输入分组名称" v-model="groupName"/>
             </div>
             <div class="flex flex-grow mt-5">
-              <div class="w-1/2 shadow-md">
+              <div class="w-1/2">
                 <contact-tree ref="contactTree"
                               :checked="checkedKeys"
                               @onCheck="onCheck"></contact-tree>
               </div>
-              <div class="flex w-1/2">
-                <div class="flex w-1/6 justify-center items-center">
-                  <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
-                </div>
-                <div class="w-5/6 shadow-md flex flex-col">
-                  <div class="border-b">
-                    <div class="flex flex-col">
-                      <div class="flex h-10 items-center px-3">
-                        <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
-                        <span class="flex text-indigo text-xs cursor-pointer"
-                              :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
-                              @click="clearAll">全部清空</span>
-                      </div>
+              <div class="flex justify-center items-center"
+                   style="width: 48px;">
+                <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
+              </div>
+              <div class="flex flex-col border w-1/2">
+                <div class="border-b">
+                  <div class="flex flex-col">
+                    <div class="flex h-10 items-center px-3">
+                      <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
+                      <span class="flex text-indigo text-xs cursor-pointer"
+                            :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
+                            @click="clearAll">全部清空</span>
                     </div>
                   </div>
-                  <contact-list :contactList="selectedContact"
-                                :video-icon="false"
-                                :audio-icon="false"
-                                delete-icon highlightSelected
-                                @deleteContact="deleteContact"
-                  ></contact-list>
                 </div>
+                <template v-if="!selectedContact.length">
+                  <common-empty class="mt-10 text-grey"
+                                text="暂未选择联系人"/>
+                </template>
+                <contact-list v-else
+                              :contactList="selectedContact"
+                              :video-icon="false"
+                              :audio-icon="false"
+                              delete-icon highlightSelected
+                              @deleteContact="deleteContact"
+                ></contact-list>
               </div>
             </div>
 
@@ -117,6 +121,7 @@
 <script>
 /* eslint-disable no-loop-func */
 import AppHeader from '../MainHeader.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactInfo from './ContactInfo.vue';
 import ContactList from './ContactList.vue';
 import ContactTree from './ContactTree.vue';
@@ -128,6 +133,7 @@ export default {
     ContactInfo,
     ContactList,
     ContactTree,
+    CommonEmpty,
   },
   data() {
     return {

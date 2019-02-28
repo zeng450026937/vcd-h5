@@ -125,7 +125,7 @@
                       class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="moreOption(item)"/>
               <slot name="more" :item="item"></slot>
-              <a-iconfont v-if="selfUnDeleted && deleteIcon && !item.isSelf"
+              <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
                       type="icon-guanbi"
                       class="mr-2 text-black9 cursor-pointer text-base"
                       @click.stop="deleteContact(item)"/>

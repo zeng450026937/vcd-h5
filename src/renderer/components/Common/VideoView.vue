@@ -7,6 +7,7 @@
         :id="videoId"
         class="video-content"
         autoplay loop
+        v-once
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
     ></video>

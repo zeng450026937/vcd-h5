@@ -13,6 +13,7 @@ const storage = new VueStorage({
       type    : Array,
       key     : 'id',
       default : [],
+      autoKey : true,
     },
     { // 服务器类型
       store   : LOGIN_STORAGE.SERVER_TYPE,

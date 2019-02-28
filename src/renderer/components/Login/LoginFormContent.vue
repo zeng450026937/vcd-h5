@@ -58,7 +58,8 @@
         <a-form-item
             class="mb-2">
           <a-input v-decorator="['server']"
-                   placeholder='服务器地址'>
+                   placeholder='服务器地址'
+                   :read-only="type === 'cloud'">
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
         </a-form-item>
@@ -191,7 +192,7 @@ export default {
       this.initAccountList();
     },
     clearAccount() {
-      this.$storage.clear(LOGIN_STORAGE.ACCOUNT_LIST);
+      this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, this.accountList.map((account) => account.id));
       this.initAccountList();
     },
     openSetting() {
@@ -206,11 +207,11 @@ export default {
       this.updateForm(cloneDeep(this.accountList[0]));
     },
     updateForm(data) {
-      if (!data) return;
+      if (!data) data = {};
       this.form.setFieldsValue({
         account : data.account,
         pin     : data.pin,
-        server  : data.server,
+        server  : this.type === 'cloud' ? 'yealinkvc.com' : data.server,
       });
       this.$model.login.proxy = data.proxy;
       this.$model.login.proxyPort = data.proxyPort;

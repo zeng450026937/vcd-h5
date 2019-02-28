@@ -102,7 +102,7 @@ export default {
     }
     &-shrink {
       width: 176px;
-      height: 99px;
+      height: 98px;
     }
     &-normal {
       width: 280px;

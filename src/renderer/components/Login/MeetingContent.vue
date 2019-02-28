@@ -85,16 +85,18 @@
         </div>
       </div>
       <div class="flex flex-grow"></div>
-      <div class="flex justify-center pb-5">
+      <div class="controls-content flex justify-center pb-5">
         <a-button shape="circle"
-                  class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
+                  class="controls-btn text-lg w-10 h-10 border-transparent"
+                  :class="{[`bg-${videoIcon.color}`] : true}"
                   @click="triggerVideo">
-          <a-iconfont :type="videoIcon" class="text-white"/>
+          <a-iconfont :type="videoIcon.icon" class="text-white"/>
         </a-button>
-        <a-button class="controls-btn w-12 h-12 text-xl mx-4 border-transparent"
+        <a-button class="controls-btn text-lg w-10 h-10 ml-3 border-transparent"
+                  :class="{[`bg-${audioIcon.color}`] : true}"
                   shape="circle"
                   @click="triggerAudio">
-          <a-iconfont :type="audioIcon" class="text-white"/>
+          <a-iconfont :type="audioIcon.icon" class="text-white"/>
         </a-button>
       </div>
     </div>
@@ -151,10 +153,16 @@ export default {
       return this.$rtc.media.localMedia.stream;
     },
     videoIcon() {
-      return this.muteVideo ? 'icon-shipinjinyong' : 'icon-shipin';
+      return this.muteVideo ? {
+        icon  : 'icon-shipinjinyong',
+        color : 'red-light',
+      } : { icon: 'icon-shipin', color: '' };
     },
     audioIcon() {
-      return this.muteAudio ? 'icon-maikefengjinyong' : 'icon-maikefeng';
+      return this.muteAudio ? {
+        icon  : 'icon-maikefengjinyong',
+        color : 'red-light',
+      } : { icon: 'icon-maikefeng', color: '' };
     },
     meetingBtnClasses() {
       return {};
@@ -192,6 +200,11 @@ export default {
 
 <style lang="less">
   #yms-meeting {
+    .controls-content {
+      button{
+        box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
+      }
+    }
     .enter-meeting-content, .setting-content {
       background-color: rgba(0, 0, 0, 0.65);
       width: 360px;

@@ -6,6 +6,7 @@
       </a-tab-pane>
       <a-tab-pane tab="音视频" key="2">
         <tab-setting-media/>
+        <!--<video class="w-full" src="https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4" autoplay loop/>-->
       </a-tab-pane>
     </a-tabs>
   </a-layout>

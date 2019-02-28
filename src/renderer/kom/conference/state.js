@@ -37,7 +37,9 @@ export default {
               checkInterval = (checkInterval * 2) % 15;
               checkTimes = 0;
             }
-            this.signal = val.media.quality || '1';
+            const { quality } = val.media;
+
+            this.signal = quality >= 1 ? quality : '1';
           });
         }
         this.duration = secondsToHms(time);

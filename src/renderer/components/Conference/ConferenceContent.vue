@@ -154,7 +154,7 @@ export default {
 
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = true;
-      }, 60000000);
+      }, 6000);
     },
     shareScreenClicked() {
       this.isShareInCenter = !this.isShareInCenter;
@@ -220,22 +220,6 @@ export default {
   }
 }
   .more-panel-popover {
-    .ant-popover-arrow {
-      z-index: -1;
-      width: 0;
-      height: 0;
-      bottom: 2.5px !important;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-bottom: none;
-      border-top: 8px solid rgba(0, 0, 0, .65);
-      box-sizing: content-box;
-      background: transparent !important;;
-      transform: translateX(-50%) !important;;
-    }
-    .ant-popover-inner {
-      background: rgba(0,0,0,0.65);
-    }
     .ant-popover-inner-content {
       padding: 4px 0;
       .popover-content {
@@ -243,9 +227,6 @@ export default {
         height: 64px;
         .popover-content-item {
           cursor: pointer;
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-          }
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {
             height: 2px;
           }

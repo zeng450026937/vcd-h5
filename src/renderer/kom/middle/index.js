@@ -6,6 +6,7 @@ const errorNotice = async(ctx, next) => {
     await next();
   }
   catch (e) {
+    console.warn(e);
     const errorKey = e.cause || (e.data && e.data.cause);
 
     ctx.vm.$message.error(ERROR_MAP[errorKey] || e.message);
