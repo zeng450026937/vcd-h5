@@ -10,6 +10,8 @@ import { log as writeLog } from './logger/winston';
 import { getSystemInfo } from './utils/systemInfo';
 
 import ClientManagement from './api-service/clientManagement';
+import LogReporter from './log-reporter';
+
 
 let mainWindow = null;
 
@@ -93,6 +95,8 @@ function createWindow() {
     });
 
     onDidLoadFns = null;
+
+    const logReporter = new LogReporter();
   });
 
   window.load();

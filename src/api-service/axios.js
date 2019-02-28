@@ -12,7 +12,7 @@ export const service = axios.create({
 });
 
 export const fileService = axios.create({
-  baseURL : ENTERPRISE_URL,
+  baseURL : YEALINK_URL,
   headers : {
     'Content-Type' : 'multipart/form-data',
   },
