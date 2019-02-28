@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 import { app } from 'electron';
-import semver from 'semver';
 // import { Provider } from './provider';
 import { YealinkProvider } from './yealink-provider';
 
@@ -8,9 +7,6 @@ export class AppUpdater extends EventEmitter {
   constructor() {
     super();
 
-    this.brand = 'yealink';
-    this.channel = 'stable'; // insiders, fast, stable
-    this.feedURL = null;
     this.provider = this.genProvider();
 
     this.autoDownload = true;
@@ -23,6 +19,9 @@ export class AppUpdater extends EventEmitter {
 
     this.installing = false;
     this.installError = null;
+
+    // AppUpdater is designed to be only one instance.
+    app.once('quit', this.handlerQuit.bind(this));
   }
 
   get appSuffix() {
@@ -37,12 +36,20 @@ export class AppUpdater extends EventEmitter {
     return this.provider && this.provider.isDownloading;
   }
 
+  get channel() {
+    return this.provider.channel;
+  }
+
+  set channel(channel) {
+    this.provider.channel = channel;
+  }
+
   setFeedURL(url) {
-    this.feedURL = url;
+    this.provider.feedURL = url;
   }
 
   getFeedURL() {
-    return this.feedURL;
+    return this.provider.feedURL;
   }
 
   async checkForUpdates() {
@@ -55,32 +62,26 @@ export class AppUpdater extends EventEmitter {
     this.emit('update-avariable', info);
 
     if (this.autoDownload) {
-      await this.downloadUpdate();
-      // TODO: cache file
+      await this.provider.download(info);
     }
 
     return info;
   }
 
-  async downloadUpdate() {
-    const path = await this.provider.download();
-
-    return path;
-  }
-
   quitAndInstall(silent = false, runAfter = false) {
     if (this.installing) return;
+    if (!this.provider.latestVersionDownloaded) return;
+
+    const { latestFile } = this.provider;
 
     this.installing = true;
-    // TODO: finde file from cache
-    let path;
 
     try {
       this.install({
-        installer     : path,
+        installer     : latestFile.path,
         silent,
         runAfter,
-        adminRequired : false,
+        adminRequired : !!latestFile.adminRequired,
       });
     }
     catch (error) {
@@ -105,5 +106,20 @@ export class AppUpdater extends EventEmitter {
 
   async install() {
     return null;
+  }
+
+  handlerQuit(exitCode) {
+    if (exitCode !== 0) return;
+    if (!this.autoInstallOnAppQuit) return;
+    if (!this.provider.latestVersionDownloaded) return;
+
+    const { latestFile } = this.provider;
+
+    this.install({
+      installer     : latestFile.path,
+      silent        : true,
+      runAfter      : false,
+      adminRequired : !!latestFile.adminRequired,
+    }).catch(() => {}); // ignore anyway
   }
 }

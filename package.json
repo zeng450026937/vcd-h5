@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha",
   "title": "VC Desktop",
   "model": "VCD-H5",
-  "customId": "",
+  "customId": "default",
   "description": "VC Desktop Developed by H5",
   "author": {
     "name": "Yealink",
