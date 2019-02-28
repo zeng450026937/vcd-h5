@@ -20,25 +20,30 @@ export default class logReporter {
 
   report() {
     const reportList = this.record.reportRecord.filter((file) => !file.isReported && !isToday(file.logDate));
+    const reportFile = this.reportFile.bind(this);
 
-    reportList.forEach(async(file) => {
-      try {
-        await this.zipFile(file.fileName);
-        await this.startReport(file.fileName);
-        this.record.reportRecord.forEach((item) => {
-          if (file.fileName === item.fileName) {
-            item.isReported = true;
-            item.reportDate = new Date().valueOf();
-          }
-        });
-
-        await this.writeRecordFile(this.record);
-      }
-      catch (e) {
-        console.log(e);
-      }
-    });
+    reportList.forEach(reportFile);
   }
+
+  async reportFile(file) {
+    try {
+      await this.zipFile(file.fileName);
+      await this.startReport(file.fileName);
+      this.record.reportRecord.forEach((item) => {
+        if (file.fileName === item.fileName) {
+          item.isReported = true;
+          item.reportDate = new Date().valueOf();
+        }
+      });
+
+      await this.writeRecordFile(this.record);
+      this.removeZipFile(`${file.fileName}.zip`);
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
 
   setClientId() {
     getSystemInfo().then((systemInfo) => {
@@ -56,6 +61,7 @@ export default class logReporter {
 
   removeZipFile(file) {
     fs.remove(path.join(this.logDirectory, `/${file}`));
+    console.log('remove *.zip file:', path.join(this.logDirectory, `/${file}`));
   }
 
   zipFile(file) {
@@ -104,7 +110,7 @@ export default class logReporter {
       fileName,
       isReported : false,
       reportDate : null,
-      logDate    : new Date(`${fileName.split('.')[2]} 00:00`).valueOf(),
+      logDate    : new Date(`${fileName.split('.')[1]} 00:00`).valueOf(),
     }));
 
     this.record = {
@@ -126,7 +132,7 @@ export default class logReporter {
           fileName   : file,
           isReported : false,
           reportDate : null,
-          logDate    : new Date(`${file.split('.')[2]} 00:00`).valueOf(),
+          logDate    : new Date(`${file.split('.')[1]} 00:00`).valueOf(),
         });
       }
     });

@@ -42,7 +42,7 @@ export default class ClientManagement {
       ...this.systemInfo,
       account      : get(this, 'accountInfo.account', null),
       serviceAddr  : get(this, 'accountInfo.server', null),
-      enterpriseId : get(this, 'enterpriseInfo.enterpriseId', null),
+      enterpriseId : get(this, 'enterpriseInfo.id', null),
     };
   }
 
@@ -62,7 +62,7 @@ export default class ClientManagement {
       this.count++;
       const res = await getEnterpriseInfo();
 
-      this.enterpriseInfo = res.data.data;
+      this.enterpriseInfo = res.data.data.enterprise;
     }
     catch (e) {
       if (this.count > 20) return;

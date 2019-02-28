@@ -27,38 +27,40 @@ export const ylService = axios.create({
 });
 
 const success = (response) => {
-  logger.info('[receive resoponse]');
+  // logger.info('[receive resoponse]');
   console.log('[receive resoponse]:', response.data);
 
   return response;
 };
 
 const fail = (error) => {
-  logger.error('error', error);
+  // logger.error('error', error);
 
   return Promise.reject(error);
 };
 
 const reqSuc = (config) => {
-  logger.info(`[send request]  ${config.baseURL}${config.url}`);
+  // logger.info(`[send request]  ${config.baseURL}${config.url}`);
   console.log(`[send request]  ${config.baseURL}${config.url} --- send data :`, config.data);
 
   return config;
 };
 
 const reqErr = (error) => {
-  logger.error('error', error);
+  // logger.error('error', error);
+
+  console.log('error', error);
 
   return Promise.reject(error);
 };
 
-// service.interceptors.response.use(success, fail);
-// fileService.interceptors.response.use(success, fail);
-// ylService.interceptors.response.use(success, fail);
-//
-// service.interceptors.request.use(reqSuc, reqErr);
-// fileService.interceptors.request.use(reqSuc, reqErr);
-// ylService.interceptors.request.use(reqSuc, reqErr);
+service.interceptors.response.use(success, fail);
+fileService.interceptors.response.use(success, fail);
+ylService.interceptors.response.use(success, fail);
+
+service.interceptors.request.use(reqSuc, reqErr);
+fileService.interceptors.request.use(reqSuc, reqErr);
+ylService.interceptors.request.use(reqSuc, reqErr);
 
 
 export default {

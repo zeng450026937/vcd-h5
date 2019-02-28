@@ -9,8 +9,8 @@ require('winston-daily-rotate-file');
 const MaxLogFiles = 14;
 
 function getLogFilePath(directory) {
-  const channel = 'alpha';
-  const fileName = `vc-desktop.${channel}.%DATE%.log`;
+  // const channel = 'alpha';
+  const fileName = 'vc-desktop.%DATE%.log';
 
   return Path.join(directory, fileName);
 }
@@ -50,7 +50,6 @@ function getLogger() {
     ensureDir(logDirectory)
       .then(() => {
         try {
-          console.log(getLogFilePath(logDirectory));
           const logger = initializeWinston(getLogFilePath(logDirectory));
 
           resolve(logger);
