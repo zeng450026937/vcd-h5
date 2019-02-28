@@ -52,13 +52,13 @@ const reqErr = (error) => {
   return Promise.reject(error);
 };
 
-service.interceptors.response.use(success, fail);
-fileService.interceptors.response.use(success, fail);
-ylService.interceptors.response.use(success, fail);
-
-service.interceptors.request.use(reqSuc, reqErr);
-fileService.interceptors.request.use(reqSuc, reqErr);
-ylService.interceptors.request.use(reqSuc, reqErr);
+// service.interceptors.response.use(success, fail);
+// fileService.interceptors.response.use(success, fail);
+// ylService.interceptors.response.use(success, fail);
+//
+// service.interceptors.request.use(reqSuc, reqErr);
+// fileService.interceptors.request.use(reqSuc, reqErr);
+// ylService.interceptors.request.use(reqSuc, reqErr);
 
 
 export default {
