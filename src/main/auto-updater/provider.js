@@ -246,6 +246,7 @@ export class Provider extends Downloader {
     const cachedFile = await this.fileCache.find(file.url);
 
     if (cachedFile && cachedFile.md5 === file.md5) {
+      this.latestFile = cachedFile;
       this.onDownloaded(cachedFile.path);
 
       return cachedFile;

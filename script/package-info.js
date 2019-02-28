@@ -12,11 +12,11 @@ module.exports = async function(context) {
   delete version.options;
   delete version.loose;
 
-  packageInfo.name = path.basename(artifact);
-  packageInfo.version = pkg.version;
-  packageInfo.model = pkg.model;
-  packageInfo.arch = process.arch;
-  packageInfo.platform = process.platform;
+  packageInfo.packageName = path.basename(artifact);
+  packageInfo.packageVersion = pkg.version;
+  packageInfo.clientModel = pkg.model;
+  packageInfo.clientArch = process.arch;
+  packageInfo.clientPlatform = process.platform;
   packageInfo.customId = pkg.customId;
   packageInfo.releaseDate = new Date().toISOString();
   packageInfo.semver = version;
