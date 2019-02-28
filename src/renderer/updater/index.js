@@ -6,6 +6,8 @@ import { sendWillQuitSync } from '../proxy/main-process-proxy';
 const USE_SQUIRREL = process.env.VUE_APP_USE_SQUIRREL && process.env.VUE_APP_USE_SQUIRREL === 'true';
 const autoUpdater = remote.getGlobal('autoUpdater');
 
+window.autoUpdater = autoUpdater;
+
 export const UpdateStatus = {
   CheckingForUpdates : 0, // 开始检查更新
   UpdateAvailable    : 1, // 发现一个可用更新

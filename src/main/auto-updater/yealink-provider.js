@@ -11,21 +11,27 @@ export class YealinkProvider extends Provider {
   }
 
   async getLatestVersion() {
-    const { platform, arch } = process;
-    const { brand, channel, feedURL } = this.appUpdater || {};
+    // const { platform, arch } = process;
+    // const { brand, channel, feedURL } = this.appUpdater || {};
 
-    const res = await axios({
-      url  : feedURL,
-      data : {
-        clientId : this.clientId,
-        type     : this.clientType,
-        platform,
-        arch,
-        brand,
-        channel,
+    // const res = await axios({
+    //   url  : feedURL,
+    //   data : {
+    //     clientId : this.clientId,
+    //     type     : this.clientType,
+    //     platform,
+    //     arch,
+    //     brand,
+    //     channel,
+    //   },
+    // });
+
+    this.latestVersion = {
+      file : {
+        url : 'http://file.yealinkops.com/publish/enterprise/download/RTVC/vc-desktop-1.0.0-alpha.exe',
       },
-    });
+    };
 
-    return this.latestVersion = res.data;
+    return this.latestVersion;
   }
 }

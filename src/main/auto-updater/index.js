@@ -14,6 +14,8 @@ export function loadPlatformUpdater() {
     default:
       break;
   }
+
+  return updater;
 }
 
 export const autoUpdater = loadPlatformUpdater();

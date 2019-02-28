@@ -108,7 +108,8 @@ export class AppUpdater extends EventEmitter {
     return null;
   }
 
-  handlerQuit(exitCode) {
+  handlerQuit(event, exitCode) {
+    console.log(exitCode, this.autoInstallOnAppQuit, this.provider.latestVersionDownloaded);
     if (exitCode !== 0) return;
     if (!this.autoInstallOnAppQuit) return;
     if (!this.provider.latestVersionDownloaded) return;
