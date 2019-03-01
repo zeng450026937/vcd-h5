@@ -58,11 +58,12 @@ export async function updateClientInfo(baseURL, clientId, data) {
   return res.data;
 }
 
-export async function getClientStatus(baseURL, clientId) {
+export async function getClientStatus(baseURL, clientId, data) {
   const res = await axios({
     method : 'post',
     baseURL,
     url    : `/clients/${clientId}/status`,
+    data,
   });
 
   return res.data;
@@ -135,3 +136,5 @@ export async function reportNetLogs(baseURL, clientId, sessionId, data, expire =
 
   return res.data;
 }
+
+// 新增API必须保证前两个参数必须是 baseURL, clientId 不管有用没用

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { EventEmitter } from 'events';
 import { createHmac } from 'crypto';
+import { waitFor, calcWaitingTime } from './wait-for';
 
 const PUSH_ACTION = {};
 
@@ -21,28 +22,6 @@ MESSAGE_TYPE[MESSAGE_TYPE.GET_CONFIG = 4] = 'GET_CONFIG';
 MESSAGE_TYPE[MESSAGE_TYPE.GET_NETSTAT = 5] = 'GET_NETSTAT';
 
 export { MESSAGE_TYPE };
-
-function calcWaitingTime(times, max = 60, min = 3) {
-  /* eslint-disable no-restricted-properties */
-  let k = Math.floor((Math.random() * Math.pow(2, times)) + 1);
-  /* eslint-enable no-restricted-properties */
-
-  if (k < min) {
-    k = min;
-  }
-  else if (k > max) {
-    k = max;
-  }
-
-  return k * 1000;
-}
-
-async function waitFor(timeout) {
-  return new Promise((resolve) => {
-    if (!timeout) return resolve();
-    setTimeout(resolve, timeout);
-  });
-}
 
 export class PushService extends EventEmitter {
   constructor(baseURL, clientId, tenantId) {
@@ -66,7 +45,8 @@ export class PushService extends EventEmitter {
       await waitFor(wait);
     }
 
-    const res = await this.post(PUSH_ACTION.CHECK);
+    // ignore anyway, we will check the respones
+    const res = await this.post(PUSH_ACTION.CHECK).catch(() => {});
 
     if (!res || res.code !== undefined) {
       this.reconnect_attempts += 1;
