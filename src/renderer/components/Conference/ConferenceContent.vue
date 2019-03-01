@@ -2,29 +2,27 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full" @mousemove="contentClicked">
       <div class="flex flex-col h-full">
-        <div class="header flex flex-col h-12 z-10"
+        <div class="header no-dragable flex flex-col h-12 z-10"
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
-            <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"
+            <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
                         @click="maxConferenceContent"/>
-            <!--<a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>-->
+            <!--<a-iconfont type="icon-suoding" class="ml-4 cursor-pointer hover:text-indigo text-base"/>-->
             <template v-if="isInConferenceMain">
-              <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo-light text-base"
+              <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
                           @click="showInviteModal"/>
               <template v-for="(tab, index) in tabList">
                 <a-iconfont :key="index" :type="tab.icon"
-                            class="ml-5 cursor-pointer hover:text-indigo-light text-base"
+                            class="ml-4 cursor-pointer hover:text-indigo-light text-base"
                             @click="openDrawer(tab)"/>
               </template>
             </template>
           </div>
         </div>
         <div class="flex flex-grow"></div>
-        <!--TODO hard code modify after year-->
-        <!--<conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>-->
       </div>
       <div :class="remoteVideoClass"
            @dblclick="maxConferenceContent">

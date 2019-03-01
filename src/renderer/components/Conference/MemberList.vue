@@ -136,12 +136,11 @@ export default {
     },
     openSearch() {
       this.isOpenSearch = !this.isOpenSearch;
-      // TODO FOCUS AFTER DISPLAY
-      // if (this.isOpenSearch) {
-      //   Promise.resolve().then(() => {
-      //     this.$refs.memberSearchInput.$el.focus();
-      //   })
-      // }
+      if (this.isOpenSearch) { // 搜索框展示之后立即focus
+        this.$refs.memberSearchInput.$nextTick().then(() => {
+          this.$refs.memberSearchInput.focus();
+        });
+      }
     },
     muteAll() {
       this.$rtc.conference.conference.view.setDefaultFilter({

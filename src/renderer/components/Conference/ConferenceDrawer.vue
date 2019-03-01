@@ -4,21 +4,21 @@
             style="width: 280px">
     <div class="flex flex-col h-full">
       <div class="h-10">
-        <div class="header flex w-full h-full border-b px-4">
+        <div class="header no-dragable flex w-full h-full border-b px-4">
           <div class="flex flex-grow h-full items-center">
             <a-iconfont type="icon-guanbi" class="cursor-pointer hover:text-red text-base"
                     @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
             <a-iconfont type="icon-tianjialianxiren"
-                    class="ml-4 cursor-pointer text-grey-darker hover:text-indigo-light text-base"
+                    class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                     @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
               <a-iconfont :key="index" :type="tab.icon"
-                      class="ml-4 cursor-pointer text-grey-darker text-base"
+                      class="ml-4 cursor-pointer text-black9 text-base"
                       :class="{'text-indigo': currentTab === tab.is,
-                    'hover:text-indigo-light': currentTab !== tab.is}"
-                      @click="currentTab = tab.is"/>
+                          'hover:text-indigo-light': currentTab !== tab.is}"
+                      @click="switchTab(tab.is)"/>
             </template>
           </div>
         </div>
@@ -71,10 +71,18 @@ export default {
   methods : {
     showInviteModal() {
       // FIXME ugly way
-      console.warn(this.$parent.$children[0].showInviteModal());
+      this.$parent.$children[0].showInviteModal();
     },
     closeDrawer() {
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
+    },
+    switchTab(tab) {
+      if (this.currentTab === tab) {
+        this.closeDrawer();
+        
+        return;
+      }
+      this.currentTab = tab;
     },
   },
 };

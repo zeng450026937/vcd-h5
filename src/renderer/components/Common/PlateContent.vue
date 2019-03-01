@@ -11,7 +11,7 @@
                     @long-press="longPressNumber(n.alpha)">
             <div class="flex flex-col justify-center items-center h-full">
               <span class="text-xl">{{n.num}}</span>
-              <span class="text-xs text-grey-darker">{{n.alpha}}</span>
+              <span class="text-xs text-black6">{{n.alpha}}</span>
             </div>
           </a-button>
         </div>

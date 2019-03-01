@@ -64,7 +64,9 @@ export default {
         if (val === 'registered') {
           // 登录成功状态
           await wait(2000); // 添加延时 增加体验
-          router.push(this.sidebarStatus.mainRoute || MAIN.DIAL_PLATE);
+          if (this.loginStatus === 'registered') { // 防止中途退出
+            router.push(this.sidebarStatus.mainRoute || MAIN.DIAL_PLATE);
+          }
         }
         else {
           // 未登录状态 登录状态

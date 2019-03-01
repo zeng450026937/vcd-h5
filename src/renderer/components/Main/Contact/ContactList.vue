@@ -4,11 +4,12 @@
       <recycle-scroller
           :items="contactListWithHeight"
           :buffer="20"
+          :min-item-size="48"
           :page-mode="false"
           key-field="id"
           class="h-full"
       >
-        <template slot-scope="{item}">
+        <template v-slot="{item}">
           <a-list-item class="px-1 cursor-pointer group"
                        :class="{'bg-grey-light':selectedContact.id === item.id,
                              'hover:bg-grey-lighter': selectedContact.id !== item.id,
@@ -194,7 +195,7 @@ export default {
   computed : {
     contactListWithHeight() {
       return this.contactList.map((item) => {
-        item.height = item.isGroup ? 48 : 56;
+        item.size = item.isGroup ? 48 : 56;
 
         return item;
       });
@@ -238,6 +239,7 @@ export default {
     fullName(item) {
       if (!item.parent.fullPath) {
         const fullPath = [];
+
         let tmpParent = item.parent;
 
         while (tmpParent) {
