@@ -4,7 +4,7 @@
       <a-tab-pane tab="会议" key="1">
         <tab-setting-conference/>
       </a-tab-pane>
-      <a-tab-pane tab="音视频" key="2">
+      <a-tab-pane tab="音视频" key="2" forceRender>
         <tab-setting-media/>
       </a-tab-pane>
     </a-tabs>

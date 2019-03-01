@@ -7,7 +7,9 @@
         :id="videoId"
         class="video-content"
         autoplay loop
+        v-once
         :style="{'object-fit': objectFit}"
+        @click="videoClicked"
     ></video>
     <div v-if="!videoStream"
          class="loading-notice absolute flex flex-col w-full justify-center items-center">
@@ -72,6 +74,9 @@ export default {
     },
   },
   methods : {
+    videoClicked() {
+      this.$emit('video-clicked');
+    },
     onVideoStreamChanged(stream) {
       if (!stream) return;
       if (!this.videoElement) { // TODO update DOM to refs
@@ -79,6 +84,7 @@ export default {
       }
       if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.srcObject = stream;
+        // this.videoElement.src = 'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4';
       }
     },
     initStream() {

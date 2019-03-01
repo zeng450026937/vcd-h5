@@ -1,11 +1,15 @@
 <template>
   <div id="conference-share-video" class="relative group"
        :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
-    <video-view source="screen" object-fit="cover" :class="{'opacity-0':videoCursor === 0}"/>
+    <video-view :source="source"
+                object-fit="cover"
+                class="cursor-pointer"
+                :class="{'opacity-0':videoCursor === 0}"
+                @video-clicked="videoClicked"/>
     <template v-if="videoCursor !== 2">
-      <div class="video-controls group-hover:opacity-100"
-           :class="{'opacity-0 h-10': videoCursor !== 0}">
-        <div class="flex px-4 justify-end" :class="{[`pt-${videoCursor === 0 ? 2 : 3}`]: true}">
+      <div class="video-controls group-hover:opacity-100 h-8"
+           :class="{'opacity-0': videoCursor !== 0}">
+        <div class="flex px-4 justify-end pt-2">
           <a-iconfont v-if="videoCursor !== 0"
                       :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'" class="text-base text-white"
                       @click="switchShrinkOrExpand"/>
@@ -31,6 +35,12 @@ export default {
   components : {
     VideoView,
   },
+  props : {
+    source : {
+      type    : String,
+      default : 'screen',
+    },
+  },
   data() {
     // FIXME may hard code
     const videoLayouts = [ 'min', 'shrink', 'normal', 'expand' ]; // normal occurred when drawer showed
@@ -49,6 +59,9 @@ export default {
     // 最大或者最小
     switchMaxOrMin() {
       this.videoCursor = this.videoCursor === 0 ? 1 : 0;
+    },
+    videoClicked() {
+      this.$emit('video-clicked');
     },
   },
   watch : {
@@ -78,7 +91,7 @@ export default {
       cursor: pointer;
       width: 100%;
       transform: translateX(-100%);
-      background-image: linear-gradient(-180deg, #000000 3%, rgba(0,0,0,0.00) 98%);
+      background: rgba(0,0,0,0.65);
       transition: opacity ease-in-out .5s;
     }
   }
@@ -89,7 +102,7 @@ export default {
     }
     &-shrink {
       width: 176px;
-      height: 99px;
+      height: 98px;
     }
     &-normal {
       width: 280px;

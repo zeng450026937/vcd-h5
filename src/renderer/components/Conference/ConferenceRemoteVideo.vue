@@ -1,6 +1,8 @@
 <template>
   <div id="conference-remote-video" class="h-full w-full relative">
-    <remote-video :class="{'remote-video-content-shrink': isVideoContentShrink}" source="remote">
+    <remote-video
+        :class="{[`remote-video-content-${isVideoContentShrink ? 'shrink' : 'normal'}`]: true}"
+        :source="source">
       <conference-controls ref="conferenceControls" slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
   </div>
@@ -16,6 +18,12 @@ export default {
   components : {
     RemoteVideo,
     ConferenceControls,
+  },
+  props : {
+    source : {
+      type    : String,
+      default : 'remote',
+    },
   },
   data() {
     return {
@@ -72,11 +80,32 @@ export default {
     }
   }
   .remote-video-content-shrink {
+
     .video-content {
       height: auto;
       max-height: calc( 100% - 158px );
       border: 1px solid #1D212F;
     }
   }
+
+  .remote-video-content-normal {
+    position: absolute;
+    height: auto !important;
+
+    #video-view {
+      height: auto !important;
+
+      .video-content {
+        height: auto;
+      }
+
+      #conference-controls {
+        width: 100%;
+        position: absolute;
+        top: 100%;
+      }
+    }
+  }
+
 }
 </style>

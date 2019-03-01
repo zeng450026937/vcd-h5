@@ -11,11 +11,11 @@
           </div>
           <div class="flex h-full items-center">
             <a-iconfont type="icon-tianjialianxiren"
-                        class="ml-4 cursor-pointer text-grey-darker hover:text-indigo-light text-base"
+                        class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                         @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
               <a-iconfont :key="index" :type="tab.icon"
-                          class="ml-4 cursor-pointer text-grey-darker text-base"
+                          class="ml-4 cursor-pointer text-black9 text-base"
                           :class="{'text-indigo': currentTab === tab.is,
                     'hover:text-indigo-light': currentTab !== tab.is}"
                           @click="currentTab = tab.is"/>

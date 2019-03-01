@@ -11,7 +11,7 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <div class="h-full m-4 bg-white flex">
+      <div class="h-full m-4 bg-white flex border">
         <div class="flex flex-col p-10 mt-6"
              style="width: 328px;">
           <div class="flex items-center">
@@ -19,8 +19,10 @@
                      id="number-input"
                      defaultValue="号码"
                      :value="callNumber"
-                     @input="inputNumber">
-              <a-iconfont slot="suffix"
+                     @input="inputNumber"
+                     @keyup.enter="audioCall">
+              <a-iconfont v-show="!!callNumber"
+                          slot="suffix"
                           type="icon-guanbi"
                           class="text-sm text-grey cursor-pointer hover:text-red"
                           @click="clearNumber"/>
@@ -28,9 +30,12 @@
             <a-iconfont type="icon-huishan"
                         class="text-2xl ml-3 cursor-pointer" @click="removeTailNumber"/>
           </div>
-          <span class="text-indigo cursor-pointer text-center text-xs mt-3 leading-tight"
+          <span v-show="!localContactExist"
+                class="text-indigo cursor-pointer text-center text-xs leading-tight"
+                style="margin: 10px 0;"
                 @click="showAddLocalContact">添加为本地联系人</span>
-          <plate-content @inputNumber="clickNumber"/>
+
+          <plate-content :class="{'mt-10': localContactExist}" @inputNumber="clickNumber"/>
           <div class="flex mt-8 w-full">
             <a-button type="primary" class="w-1/2" :disabled="!callNumber"
                       @click="videoCall">
@@ -53,6 +58,7 @@
             </template>
             <contact-list v-else
                           :contactList="searchResult"
+                          :highlightContent="callNumber"
                           highlightSelected
             ></contact-list>
 
@@ -99,24 +105,46 @@ export default {
         { num: '0', alpha: '+', isCenter: true },
         { num: '#', alpha: '' },
       ],
-      callNumber   : '',
-      searchResult : [],
+      callNumber        : '',
+      searchResult      : [],
+      localContactExist : false,
     };
+  },
+  created() {
+    // 初始化本地联系人
+    this.$dispatch('storage.initData');
   },
   mounted() {
     this.debounceSearch = debounce((val = '') => {
+      if (!val) {
+        this.searchResult = [];
+        this.localContactExist = false;
+        
+        return;
+      }
       this.$model.contact.findContacts(val).then((r) => {
         this.searchResult = r;
+        this.localContactExist = this.localContacts.filter((local) => local.account === val).length > 0;
+        this.searchResult.push(...this.localContacts.filter((local) => local.account.indexOf(val) > -1));
       });
     }, 500);
   },
+  computed : {
+    localContacts() {
+      return this.$model.storage.localContacts;
+    },
+  },
   methods : {
     clickNumber(num) {
-      this.callNumber = this.callNumber === null ? num : this.callNumber += num;
+      if (this.callNumber.length < 64) {
+        this.callNumber = this.callNumber === null ? num : this.callNumber += num;
+      }
       this.$refs.numberInput.focus();
     },
     inputNumber(e) {
-      this.callNumber = e.target.value;
+      if (this.callNumber.length < 64) {
+        this.callNumber = e.target.value;
+      }
     },
     clearNumber() {
       this.callNumber = '';
@@ -156,6 +184,7 @@ export default {
       } ]);
     },
     showAddLocalContact() {
+      if (this.localContactExist) return;
       this.$refs.contactDrawer.visible = true;
       this.$refs.contactDrawer.$nextTick(() => {
         this.$refs.contactDrawer.form.setFieldsValue({

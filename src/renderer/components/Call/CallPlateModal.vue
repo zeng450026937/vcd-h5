@@ -11,7 +11,7 @@
   >
     <div class="flex flex-col">
       <a-input v-model="callNumber"/>
-      <plate-content @inputNumber="clickNumber"/>
+      <plate-content @inputNumber="clickNumber" style="margin-top: 10px"/>
     </div>
   </a-modal>
 </template>

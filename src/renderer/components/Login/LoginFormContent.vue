@@ -58,7 +58,8 @@
         <a-form-item
             class="mb-2">
           <a-input v-decorator="['server']"
-                   placeholder='服务器地址'>
+                   placeholder='服务器地址'
+                   :read-only="type === 'cloud'">
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
         </a-form-item>
@@ -80,7 +81,7 @@
         </a-form-item>
       </a-form>
       <div class="mt-5 text-xs text-center text-black6">
-        <template v-if="type === 'yms'">
+        <template v-if="type === 'cloud'">
           <span class="cursor-pointer leading-tight">忘记密码</span>
           <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
           <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
@@ -97,7 +98,7 @@
         <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
       </div>
       <div>
-        <p class="text-xs text-center leading-tight mt-5 text-black9">
+        <p class="text-xs flex text-center leading-tight mt-5 text-black9">
           点击登录则代表您同意
           <span class="text-indigo-light cursor-pointer">《用户协议》</span>
           和
@@ -191,7 +192,7 @@ export default {
       this.initAccountList();
     },
     clearAccount() {
-      this.$storage.clear(LOGIN_STORAGE.ACCOUNT_LIST);
+      this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, this.accountList.map((account) => account.id));
       this.initAccountList();
     },
     openSetting() {
@@ -206,11 +207,11 @@ export default {
       this.updateForm(cloneDeep(this.accountList[0]));
     },
     updateForm(data) {
-      if (!data) return;
+      if (!data) data = {};
       this.form.setFieldsValue({
         account : data.account,
         pin     : data.pin,
-        server  : data.server,
+        server  : this.type === 'cloud' ? 'yealinkvc.com' : data.server,
       });
       this.$model.login.proxy = data.proxy;
       this.$model.login.proxyPort = data.proxyPort;

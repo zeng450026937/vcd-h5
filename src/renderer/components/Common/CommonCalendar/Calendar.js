@@ -6,7 +6,7 @@ import createChainedFunction from 'ant-design-vue/es/_util/createChainedFunction
 import moment from 'moment';
 import { setTimeout } from 'timers';
 
-function isMoment(value) {
+function isMoment(value) { // 是否是 Moment 类型
   if (Array.isArray(value)) {
     return value.length === 0 || value.findIndex((val) => val === undefined || moment.isMoment(val)) !== -1;
   }
@@ -90,9 +90,15 @@ const Picker = {
     },
     focusCalendar : function focusCalendar() {
       if (this.calendarInstance && this.calendarInstance.componentInstance) {
-        console.warn(this.calendarInstance);
         this.calendarInstance.componentInstance.focus();
       }
+    },
+    onToday() {
+      this.$children[0].onToday();
+    },
+    setDate(date) {
+      if(!date) return;
+      this.$children[0].onSelect(isMoment(date) ? date : moment(date));
     },
   },
 

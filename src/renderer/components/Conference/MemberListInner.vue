@@ -40,16 +40,22 @@ export default {
       return !!this.$model.conference.filterText;
     },
   },
+  mounted() {
+    this.openAllCollapse(); // 默认打开全部的 collapse
+  },
+  methods : {
+    openAllCollapse(val = true) {
+      if (val && this.activeKey.length < this.list.length) {
+        this.activeKey.length = 0;
+        for (let i = 0; i < this.list.length; i++) {
+          this.activeKey.push(String(i));
+        }
+      }
+    },
+  },
   watch : {
     isCollapseOpen : {
-      handler(val) {
-        if (val && this.activeKey.length < this.list.length) {
-          this.activeKey.length = 0;
-          for (let i = 0; i < this.list.length; i++) {
-            this.activeKey.push(String(i));
-          }
-        }
-      },
+      handler   : 'openAllCollapse',
       immediate : true,
     },
   },

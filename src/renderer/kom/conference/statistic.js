@@ -1,3 +1,5 @@
+import prettyBytes from 'pretty-bytes';
+
 export default function formatStatistics(data) {
   // if (!data) return null;
   if (!data) data = {};
@@ -5,6 +7,7 @@ export default function formatStatistics(data) {
 
   const media = getReport(data.media);
   const share = data.share ? getReport(data.share) : null;
+
   let result;
   
   const staticInfo = [
@@ -145,9 +148,9 @@ export default function formatStatistics(data) {
   staticInfo[1].section[1].recv = result;
   
   // 视频 -- 带宽
-  result = moVideo.bitrate ? `${Math.round(moVideo.bitrate)} kbs` : DEFAULT_TEXT;
+  result = moVideo.bitrate ? prettyBytes(Math.round(moVideo.bitrate)) : DEFAULT_TEXT;
   staticInfo[1].section[2].send = result;
-  result = miVideo.bitrate ? `${Math.round(miVideo.bitrate)} kbs` : DEFAULT_TEXT;
+  result = miVideo.bitrate ? prettyBytes(Math.round(miVideo.bitrate)) : DEFAULT_TEXT;
   staticInfo[1].section[2].recv = result;
   
   // 视频 -- 帧率
@@ -175,9 +178,9 @@ export default function formatStatistics(data) {
   staticInfo[2].section[0].recv = result;
   
   // 音频 -- 带宽
-  result = moAudio.bitrate ? `${Math.round(moAudio.bitrate)} kbs` : DEFAULT_TEXT;
+  result = moAudio.bitrate ? prettyBytes(Math.round(moAudio.bitrate)) : DEFAULT_TEXT;
   staticInfo[2].section[1].send = result;
-  result = miAudio.bitrate ? `${Math.round(miAudio.bitrate)} kbs` : DEFAULT_TEXT;
+  result = miAudio.bitrate ? prettyBytes(Math.round(miAudio.bitrate)) : DEFAULT_TEXT;
   staticInfo[2].section[1].recv = result;
   
   // 音频 -- 丢包数
@@ -211,9 +214,9 @@ export default function formatStatistics(data) {
     staticInfo[3].section[1].recv = result;
   
     // 视频 -- 带宽
-    result = soVideo.bitrate ? `${Math.round(soVideo.bitrate)} kbs` : DEFAULT_TEXT;
+    result = soVideo.bitrate ? prettyBytes(Math.round(soVideo.bitrate)) : DEFAULT_TEXT;
     staticInfo[3].section[2].send = result;
-    result = siVideo.bitrate ? `${Math.round(siVideo.bitrate)} kbs` : DEFAULT_TEXT;
+    result = siVideo.bitrate ? prettyBytes(Math.round(siVideo.bitrate)) : DEFAULT_TEXT;
     staticInfo[3].section[2].recv = result;
   
     // 视频 -- 帧率

@@ -2,40 +2,40 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full" @mousemove="contentClicked">
       <div class="flex flex-col h-full">
-        <div class="header flex flex-col h-12 z-10"
+        <div class="header no-dragable flex flex-col h-12 z-10"
              :class="{'opacity-0': hideControls}">
-          <div class="flex items-center h-full text-white self-end px-5">
+          <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
-            <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"
+            <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
                         @click="maxConferenceContent"/>
-            <!--<a-iconfont type="icon-suoding" class="ml-5 cursor-pointer hover:text-indigo text-base"/>-->
+            <!--<a-iconfont type="icon-suoding" class="ml-4 cursor-pointer hover:text-indigo text-base"/>-->
             <template v-if="isInConferenceMain">
-              <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo-light text-base"
+              <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
                           @click="showInviteModal"/>
               <template v-for="(tab, index) in tabList">
                 <a-iconfont :key="index" :type="tab.icon"
-                            class="ml-5 cursor-pointer hover:text-indigo-light text-base"
+                            class="ml-4 cursor-pointer hover:text-indigo-light text-base"
                             @click="openDrawer(tab)"/>
               </template>
             </template>
           </div>
         </div>
         <div class="flex flex-grow"></div>
-        <!--TODO hard code modify after year-->
-        <!--<conference-controls ref="conferenceControls"  :class="{'mb-40': !isInConferenceMain}"/>-->
       </div>
       <div :class="remoteVideoClass"
            @dblclick="maxConferenceContent">
-        <conference-remote-video/>
+        <conference-remote-video :source="centerSource"/>
       </div>
       <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
       <div v-if="hasScreenStream && !isShareWindowOpen"
            :class="shareVideoClasses">
-        <conference-share-video/>
+        <conference-share-video
+            :source="leftSource"
+            @video-clicked="shareScreenClicked"/>
       </div>
       <conference-notice/>
       <conference-inviting-modal ref="invitingModal"/>
@@ -49,7 +49,6 @@ import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceNotice from './ConferenceNotice.vue';
-import ConferenceControls from './ConferenceControls.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
@@ -60,7 +59,6 @@ export default {
     ConferenceLocalVideo,
     ConferenceShareVideo,
     ConferenceNotice,
-    ConferenceControls,
     ConferenceInvitingModal,
   },
   data() {
@@ -77,11 +75,19 @@ export default {
       shareWindow        : null,
       isShareWindowOpen  : false,
       hideControlsTimer  : null,
+      isShareInCenter    : false, // 辅流页面是否显示在主页面
     };
   },
   computed : {
+    centerSource() {
+      return this.isShareInCenter ? 'screen' : 'remote';
+    },
+    leftSource() {
+      return this.isShareInCenter ? 'remote' : 'screen';
+    },
     localVideoClasses() {
-      const position = this.isInConferenceMain ? 'right' : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
+      const position = this.isInConferenceMain ? 'right'
+        : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
 
       return {
         [`local-video-content local-video-content-${position}`] : true,
@@ -97,7 +103,7 @@ export default {
     remoteVideoClass() {
       return {
         'remote-video-content absolute h-full w-full pin-t pin-r' : true,
-      }
+      };
     },
     hasScreenStream() {
       return this.$rtc.conference.shareChannel.remoteStream
@@ -146,7 +152,10 @@ export default {
 
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = true;
-      }, 60000000);
+      }, 6000);
+    },
+    shareScreenClicked() {
+      this.isShareInCenter = !this.isShareInCenter;
     },
   },
   watch : {
@@ -155,6 +164,13 @@ export default {
         this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
       },
       immediate : true,
+    },
+    hasScreenStream(val) {
+      // 第一次打开辅流将其显示在主页面
+      this.isShareInCenter = !!val;
+    },
+    isShareWindowOpen(val) {
+      if (val) this.isShareInCenter = false;
     },
   },
 };
@@ -202,22 +218,6 @@ export default {
   }
 }
   .more-panel-popover {
-    .ant-popover-arrow {
-      z-index: -1;
-      width: 0;
-      height: 0;
-      bottom: 2.5px !important;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-bottom: none;
-      border-top: 8px solid rgba(0, 0, 0, .65);
-      box-sizing: content-box;
-      background: transparent !important;;
-      transform: translateX(-50%) !important;;
-    }
-    .ant-popover-inner {
-      background: rgba(0,0,0,0.65);
-    }
     .ant-popover-inner-content {
       padding: 4px 0;
       .popover-content {
@@ -225,9 +225,6 @@ export default {
         height: 64px;
         .popover-content-item {
           cursor: pointer;
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-          }
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {
             height: 2px;
           }

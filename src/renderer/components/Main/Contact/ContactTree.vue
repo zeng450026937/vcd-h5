@@ -1,22 +1,23 @@
 <template>
-  <a-layout id="contact-tree" class="h-full bg-white">
+  <a-layout id="contact-tree" class="h-full bg-white border">
 
     <a-input v-model="searchText"
              placeholder="搜索"
-             class="h-10 mb-2"
+             class="h-10 rounded-none border-none"
              @change="onChange">
       <div slot="suffix">
         <a-iconfont
+            v-show="searchText"
             type="icon-guanbi"
-            class="text-sm text-black9 text-base cursor-pointer mr-2"
+            class="text-sm text-black9 text-base cursor-pointer mr-2 hover:text-red"
             @click="searchText = ''"/>
         <a-iconfont
             type="icon-sousuo"
-            class="text-sm text-black9 text-base hover:text-red"/>
+            class="text-sm text-black9 text-base"/>
       </div>
 
     </a-input>
-    <div class="overflow-y-auto h-full px-2">
+    <div class="overflow-y-auto h-full px-2 border-t">
       <a-tree
           checkable
           class="contact-tree"
@@ -55,24 +56,24 @@
 </template>
 
 <script>
-const getParentKey = (key, tree) => {
-  let parentKey;
-
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-
-    if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
-        parentKey = node.key;
-      }
-      else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  
-  return parentKey;
-};
+// const getParentKey = (key, tree) => {
+//   let parentKey;
+//
+//   for (let i = 0; i < tree.length; i++) {
+//     const node = tree[i];
+//
+//     if (node.children) {
+//       if (node.children.some((item) => item.key === key)) {
+//         parentKey = node.key;
+//       }
+//       else if (getParentKey(key, node.children)) {
+//         parentKey = getParentKey(key, node.children);
+//       }
+//     }
+//   }
+//
+//   return parentKey;
+// };
 
 export default {
   name  : 'ContactTree',
@@ -112,6 +113,8 @@ export default {
       if (treeNode.dataRef.isGroup) {
         treeNode.dataRef.addChildNodes();
       }
+      
+      return Promise.resolve();
     },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys;
@@ -179,13 +182,20 @@ export default {
           margin: 12px 0 12px 0 !important;
         }
         > .ant-tree-switcher{
-          margin: 6px 6px 8px 0 !important;
+          margin: 8px 6px 8px 0 !important;
+          .ant-tree-switcher-icon{
+            font-size: 16px;
+            color: #999;
+          }
         }
         > .ant-tree-node-content-wrapper {
           margin: 8px 0 8px 0 !important;
           padding: 0 8px;
         }
       }
+    }
+    .ant-tree-switcher-noop {
+      width: 30px;
     }
     li{
       padding: 0;

@@ -26,8 +26,8 @@ export default {
       await next();
       const { account, pin, server } = ctx.payload;
 
-      const protocol = ctx.payload.protocol || 'tls';
-      const defaultPort = protocol === 'wss' ? 443 : this.proxyPort || 5061;
+      const protocol = ctx.payload.protocol || 'wss';
+      const defaultPort = this.proxyPort || 5061;
 
       let servers;
 
@@ -50,7 +50,7 @@ export default {
       rtc.account.uri = `${account}@${server}`;
       rtc.account.password = pin;
       rtc.account.servers = servers.map((s) => ({
-        url    : `${protocol}://${s.address}:${s.port || defaultPort}${protocol === 'wss' ? '/meeting/join' : ''}`,
+        url    : `${protocol}://${s.address}:${s.port || defaultPort}`,
         weight : s.weight || s.priority,
       }));
       rtc.account.protocol = protocol;
@@ -67,7 +67,7 @@ export default {
           loginData.pin = pin;
         }
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
-        this.storeConfig(); // 登陆成功之后保存登陆前的状态
+        this.storeConfig(); // 登录成功之后保存登录前的状态
       });
     },
     storeConfig() {

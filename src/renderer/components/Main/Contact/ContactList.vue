@@ -4,11 +4,12 @@
       <recycle-scroller
           :items="contactListWithHeight"
           :buffer="20"
+          :min-item-size="48"
           :page-mode="false"
           key-field="id"
           class="h-full"
       >
-        <template slot-scope="{item}">
+        <template v-slot="{item}">
           <a-list-item class="px-1 cursor-pointer group"
                        :class="{'bg-grey-light':selectedContact.id === item.id,
                              'hover:bg-grey-lighter': selectedContact.id !== item.id,
@@ -21,10 +22,19 @@
                   <span class="text-sm leading-none truncate">{{item | nameTrim}}</span>
                   <span v-if="!item.isGroup"
                         class="text-xs opacity-75 leading-none"
-                        style="margin-top: 6px">{{item.ip || item.account}}</span>
+                        style="margin-top: 6px">
+                    <span v-if="highlightContent && (item.ip || item.account).indexOf(highlightContent) > -1"
+                          class="flex">
+                    {{(item.ip || item.account).substr(0, (item.ip || item.account).indexOf(highlightContent))}}
+                      <span class="text-indigo">{{highlightContent}}</span>
+                      {{(item.ip || item.account)
+                        .substr((item.ip || item.account)
+                        .indexOf(highlightContent) + highlightContent.length)}}
+                    </span>
+                    <span v-else>{{(item.ip || item.account)}}</span>
+                  </span>
                 </div>
               </div>
-
               <a-popover
                   placement="rightTop"
                   trigger="hover"
@@ -35,7 +45,11 @@
                     <!--头部-->
                     <div class="flex items-center w-full px-5 py-4 bg-card-title rounded-t text-white">
                       <div class="flex flex-col max-w-4/5 flex-grow">
-                        <div class="text-base leading-loose">{{item.name}}</div>
+                        <div class="text-base flex leading-loose">
+                          <span class="w-1 flex flex-grow truncate">
+                            <span class="truncate">{{item.name}}</span>
+                          </span>
+                        </div>
                         <div v-if="item.parent.isUser"
                              class="truncate text-xs font-thin leading-tight opacity-75 mt-1">
                           <span>个性签名，只显示一行，如果超出一行则超出的部分省略不显示</span>
@@ -102,8 +116,7 @@
                 </a-avatar>
               </a-popover>
             </a-list-item-meta>
-            <div class="opacity-0 group-hover:opacity-100 flex justify-around"
-                 :class="{'opacity-100': selectedContact.id === item.id}">
+            <div class="opacity-0 group-hover:opacity-100 flex justify-around">
               <a-iconfont v-if="videoIcon"
                       type="icon-shipin"
                       class="mr-3 text-indigo cursor-pointer text-base"
@@ -117,9 +130,9 @@
                       class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="moreOption(item)"/>
               <slot name="more" :item="item"></slot>
-              <a-iconfont v-if="selfUnDeleted && deleteIcon && !item.isSelf"
+              <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
                       type="icon-guanbi"
-                      class="mr-2 text-indigo cursor-pointer text-base"
+                      class="mr-2 text-black9 cursor-pointer text-base"
                       @click.stop="deleteContact(item)"/>
             </div>
           </a-list-item>
@@ -170,6 +183,10 @@ export default {
         return [];
       },
     },
+    highlightContent : { // 用于搜索 高亮搜索内容
+      type    : String,
+      default : '',
+    },
   },
   components : {
     RecycleScroller,
@@ -182,7 +199,7 @@ export default {
   computed : {
     contactListWithHeight() {
       return this.contactList.map((item) => {
-        item.height = item.isGroup ? 48 : 56;
+        item.size = item.isGroup ? 48 : 56;
 
         return item;
       });
@@ -226,6 +243,7 @@ export default {
     fullName(item) {
       if (!item.parent.fullPath) {
         const fullPath = [];
+
         let tmpParent = item.parent;
 
         while (tmpParent) {

@@ -27,7 +27,7 @@
             <div class="mt-1 text-black6 text-xs leading-tight">
               版本号： 1.0.9-alpha
             </div>
-            <div class="mt-5 w-3/5">
+            <div class="mt-5 w-1/2">
               <a-button class="w-full h-9" type="primary">检查更新</a-button>
             </div>
             <div class="mt-5">

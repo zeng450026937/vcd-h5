@@ -42,12 +42,20 @@ export default function wrapPicker(Picker, props, defaultFormat) {
       handleSelect(value) {
         this.$emit('select', value);
       },
+      onToday() {
+        // this.$refs.picker.$refs.calendarInstance.onToday();
+        this.$refs.picker.onToday();
+      },
+      setDate(date) {
+        this.$refs.picker.$refs.calendar.setDate(date);
+      },
       renderPicker(locale, localeCode) {
         const h = this.$createElement;
 
         return h(
           Picker,
           {
+            ref   : 'picker',
             props : {
               ...getOptionProps(this),
               locale,

@@ -67,6 +67,9 @@ export default function createPicker(TheCalendar, props) {
           format : (value && value.format(this.format)) || '',
         });
       },
+      onToday() {
+        this.$refs.calendar.onToday();
+      },
     },
 
     render(h) {
@@ -130,6 +133,7 @@ export default function createPicker(TheCalendar, props) {
       const calendar = h(TheCalendar, theCalendarProps);
 
       const vcDatePickerProps = {
+        ref   : 'calendar',
         props : {
           ...props,
           ...pickerProps.props,

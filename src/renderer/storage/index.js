@@ -13,6 +13,7 @@ const storage = new VueStorage({
       type    : Array,
       key     : 'id',
       default : [],
+      autoKey : true,
     },
     { // 服务器类型
       store   : LOGIN_STORAGE.SERVER_TYPE,
@@ -24,7 +25,7 @@ const storage = new VueStorage({
       type    : Boolean,
       default : true, // cloud yms
     },
-    { // 是否自动登陆
+    { // 是否自动登录
       store   : LOGIN_STORAGE.AUTO_LOGIN,
       type    : Boolean,
       default : false, // cloud yms

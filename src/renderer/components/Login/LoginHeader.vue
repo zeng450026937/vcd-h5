@@ -5,7 +5,7 @@
         <div class="flex items-center">
           <span class="text-xl text-white font-bold ml-2">Yealink</span>
         </div>
-        <div class="flex-grow dragable"></div>
+        <div class="flex-grow dragable my-1"></div>
         <div v-if="loginType === 'login'" class="flex items-center mr-4 text-white text-xs">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
@@ -13,9 +13,9 @@
 
               <a-menu-item key="yms" class="py-2 text-xs">企业版</a-menu-item>
             </a-menu>
-            <span class="ant-dropdown-link cursor-pointer text-xs leading-tight">
+            <span class="ant-dropdown-link cursor-pointer text-xs leading-tight flex items-center">
               {{ serverText }}
-              <a-iconfont :type="menuStatus ? 'icon-up': 'icon-down'" class="text-base ml-1" />
+              <a-iconfont :type="menuStatus ? 'icon-up': 'icon-down'" class="text-base ml-2" />
             </span>
           </a-dropdown>
         </div>
@@ -89,8 +89,8 @@ export default {
         cloud : LOGIN.CLOUD_LOGIN,
         yms   : LOGIN.YMS_LOGIN,
       } : {
-        cloud : LOGIN.CLOUD_MEETING,
-        yms   : LOGIN.YMS_MEETING,
+        cloud : LOGIN.MEETING_CONTENT,
+        yms   : LOGIN.MEETING_CONTENT,
       };
 
       this.$router.push(ROUTE_MAP[key]);
@@ -109,6 +109,6 @@ export default {
 
 <style scoped lang="less">
   #login-header {
-    background-image: linear-gradient(-180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.00) 98%);
+    background-image: linear-gradient(-180deg, rgba(0,0,0,0.45) 4%, rgba(0,0,0,0.00) 98%);
   }
 </style>

@@ -25,7 +25,8 @@
     </div>
     <div class="flex flex-col items-center mt-4 px-3">
       <a-button type="primary" block
-                class="cursor-pointer h-9"
+                disabled
+                class="h-9"
                 @click="reserveMeeting">
         <a-iconfont type="icon-yuyuehuiyi" class="text-base"/>
         预约会议
@@ -53,11 +54,20 @@ export default {
     eventList() {
       return this.$model.calendar.formatCalendar || [];
     },
+    selectedDate : {
+      get() {
+        return this.$model.calendar.selectedDate;
+      },
+      set(val) {
+        this.$model.calendar.selectedDate = val;
+      },
+    },
   },
   mounted() {
     this.$nextTick(() => {
-      // TODO TMP
-      // this.$refs.calendar.$children[0].$children[0].$children[0].$children[0].onToday();
+      // 初始化时候点击 today
+      // this.$refs.calendar.onToday();
+      this.$refs.calendar.setDate(this.selectedDate);
     });
   },
   methods : {
@@ -79,6 +89,7 @@ export default {
         && date1.year() === date2.year();
     },
     selectDate(date) {
+      this.selectedDate = date.raw;
       this.$model.calendar.currentDateEvents = [];
       this.eventList.forEach((e) => {
         if (e.startTime.toDate() >= date.raw.toDate() || this.isDateMatched(e.startTime, date.raw)) {

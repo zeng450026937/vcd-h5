@@ -673,6 +673,7 @@ module.exports = {
     5  : '1.25rem', // 20px
     6  : '1.5rem',
     8  : '2rem',
+    9  : '2.25rem', // 36
     10 : '2.5rem', // 40px
     12 : '3rem', // 48px
     16 : '4rem',

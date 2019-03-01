@@ -52,7 +52,10 @@
           <span class="test-audio-text ml-1 text-xs leading-tight">播放测试音频</span>
         </div>
       </div>
-      <!--<a-button type="primary" block class="mt-5">保存</a-button>-->
+      <audio ref="testAudio" @ended="isPlaying = false" @playing="isPlaying = true">
+        <source src="../../assets/sounds/testspeaker.ogg"
+                type="audio/ogg;codec='vorbis'">
+      </audio>
     </div>
   </a-layout>
 </template>
@@ -77,6 +80,9 @@ export default {
       type    : Boolean,
       default : true,
     },
+  },
+  deactivated() {
+
   },
   computed : {
     volume() {
@@ -118,7 +124,7 @@ export default {
   },
   methods : {
     playTestMusic() {
-      this.isPlaying = !this.isPlaying;
+      this.$refs.testAudio.play().then(() => {});
     },
   },
 };

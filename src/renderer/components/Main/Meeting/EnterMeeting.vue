@@ -9,9 +9,11 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex justify-center items-center h-full shadow">
-      <div style="width: 480px;height: 518px;"
-           class="flex flex-col bg-white" v-if="!showSetting">
+    <div class="flex justify-center items-center h-full">
+      <div  v-if="!showSetting"
+            style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
+           class="flex flex-col bg-white"
+           @keyup.enter="enterMeeting">
         <div style="height: 270px;background-color: #1F2437;"
              class="relative flex">
           <video-view v-if="!muteVideo" class="w-full h-full"
@@ -20,25 +22,27 @@
           <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
             <a-iconfont type="icon-huiyishi" class="display-icon"/>
           </div>
-          <div class="flex self-end w-full justify-center">
+          <div class="controls-content flex self-end w-full justify-center">
             <div class="flex mb-4">
               <a-button shape="circle"
-                        class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
+                        class="controls-btn text-lg w-10 h-10 border-transparent"
+                        :class="{[`bg-${videoIcon.color}`] : true}"
                         @click="triggerVideo"
               >
-                <a-iconfont :type="videoIcon" class="text-base text-white"/>
+                <a-iconfont :type="videoIcon.icon" class="text-white"/>
               </a-button>
               <a-button shape="circle"
-                        class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
+                        class="controls-btn text-lg w-10 h-10 mx-4 border-transparent"
+                        :class="{[`bg-${audioIcon.color}`] : true}"
                         @click="triggerAudio"
               >
-                <a-iconfont :type="audioIcon" class="text-base text-white"/>
+                <a-iconfont :type="audioIcon.icon" class="text-white"/>
               </a-button>
               <a-button shape="circle"
-                        class="controls-btn text-xl w-12 h-12 mx-4 border-transparent"
+                        class="controls-btn text-lg w-10 h-10 border-transparent"
                         @click="showSetting = true"
               >
-                <a-iconfont type="icon-kongzhi" class="text-base text-white"/>
+                <a-iconfont type="icon-kongzhi" class="text-white"/>
               </a-button>
             </div>
           </div>
@@ -71,12 +75,12 @@
             </a-input>
           </div>
           <a-button type="primary" class="mt-10" block
-                    :disabled="isConnected"
+                    :disabled="isConnected || !meetingInfo.number"
                     @click="enterMeeting">立即加入</a-button>
         </div>
       </div>
-      <div style="width: 480px;height: 518px;"
-           class="flex flex-col shadow bg-white" v-else>
+      <div v-else style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
+           class="flex flex-col bg-white">
         <div class="mt-5 px-20 relative">
           <!--返回按钮区域-->
           <div class="absolute" style="left: 20px; top: 3px">
@@ -123,10 +127,16 @@ export default {
       },
     },
     videoIcon() {
-      return this.muteVideo ? 'icon-shexiangtoujinyong' : 'icon-shexiangtou';
+      return this.muteVideo ? {
+        icon  : 'icon-shipinjinyong',
+        color : 'red-light',
+      } : { icon: 'icon-shipin', color: '' };
     },
     audioIcon() {
-      return this.muteAudio ? 'icon-maikefengjinyong' : 'icon-maikefeng';
+      return this.muteAudio ? {
+        icon  : 'icon-maikefengjinyong',
+        color : 'red-light',
+      } : { icon: 'icon-maikefeng', color: '' };
     },
   },
   data() {
@@ -156,6 +166,12 @@ export default {
 
 <style lang="less">
   #enter-meeting {
+    background-color: rgb(247, 258, 252);
+    .controls-content {
+      button{
+        box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
+      }
+    }
     .ant-input {
       padding-left: 36px;
     }

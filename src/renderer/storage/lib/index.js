@@ -1,3 +1,4 @@
+import uuid from 'uuid/v1';
 import install from './install';
 import { toJSON, toString } from './utils';
 
@@ -66,7 +67,15 @@ export default class VueStorage {
    * @param value
    * @param key
    */
-  insertItem(store, value, key = this.primaryKey(store)) {
+  insertItem(store, value, key) {
+    const storage = this.getStorage(store) || {};
+    const pk = storage.key || 'id';
+
+    if (storage && storage.autoKey) { // 自动赋值
+      value[pk] = value[pk] || uuid();
+    }
+    key = key || pk;
+
     if (!value[key]) throw new Error(`the attr of ${key} is required`);
     const item = this.query(store);
 
@@ -111,26 +120,23 @@ export default class VueStorage {
   /**
    * 删除数组中的一个ITEM (根据主键) only Array
    * @param store
-   * @param value
+   * @param value Key Or KeyList
    * @param key
    */
   deleteItem(store, value, key = this.primaryKey(store)) {
     const item = this.query(store);
 
     if (!Array.isArray(item)) {
-      throw new Error('pleause use func of delete to delete none Array value');
+      throw new Error('please use func of delete to delete none Array value');
     }
 
-    const index = item.findIndex((i) => i[key] === value);
-
-    if (index > -1) {
-      item.splice(index, 1);
-    }
-    else {
-      throw new Error('the value does not exist');
+    if (!Array.isArray(value)) {
+      value = [ value ];
     }
 
-    return this.insert(store, item);
+    const result = item.filter((i) => value.some((v) => v !== i[key])) || [];
+
+    return this.insert(store, result);
   }
 
 
@@ -148,8 +154,18 @@ export default class VueStorage {
    * @param value
    * @param key
    */
-  insertOrUpdate(store, value, key = this.primaryKey(store)) {
-    if (!value[key]) throw new Error(`the attr of ${key} is required`);
+  insertOrUpdate(store, value, key) {
+    const storage = this.getStorage(store) || {};
+    const pk = storage.key || 'id';
+
+    if (storage && storage.autoKey) { // 自动赋值
+      value[pk] = value[pk] || uuid();
+    }
+    key = key || pk;
+
+    if (!value[key]) {
+      throw new Error(`the attr of ${key} is required`);
+    }
     const item = this.query(store);
 
     if (!Array.isArray(item)) { // none Array
@@ -176,7 +192,7 @@ export default class VueStorage {
   /**
    * 查询 store 中的 ITEM only Array
    * @param store
-   * @param value
+   * @param value key Or KeyList
    * @param key
    */
   queryItem(store, value, key = this.primaryKey(store)) {
@@ -186,10 +202,14 @@ export default class VueStorage {
       throw new Error('please use func of delete to delete none Array value');
     }
 
+    if (!Array.isArray(value)) {
+      value = [ value ];
+    }
+
     const result = [];
 
     item.forEach((val) => {
-      if (val[key] === value) {
+      if (value.some((v) => v === val[key])) {
         result.push(val);
       }
     });
