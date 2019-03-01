@@ -11,7 +11,7 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <a-row class="flex h-full m-4 shadow">
+      <a-row class="flex h-full m-4 border">
         <a-col :span="9" class="h-full overflow-y-auto border-r">
           <calendar-list/>
         </a-col>

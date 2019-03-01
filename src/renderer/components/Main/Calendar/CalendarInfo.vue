@@ -34,16 +34,16 @@
                   <span>{{currentEvent.startTime}} - {{currentEvent.expiryTime}}</span>
                 </div>
               </div>
-              <div class="flex flex-col text-xs mt-4">
+              <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">周期</span>
                   <span>当前会议不是周期性会议</span>
                 </div>
               </div>
-              <div class="flex flex-col text-xs mt-4">
+              <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">会议室</span>
-                  <span>{{currentEvent.locations || '当前会议尚未设置会议室'}}</span>
+                  <span>{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -58,11 +58,14 @@
                   <span>{{currentEvent.attendeePin}}</span>
                 </div>
               </div>
-              <div class="flex flex-col text-xs mt-4">
+              <div v-if="currentEvent.isLive" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">直播链接</span>
-                  <span class="text-indigo flex">当前会议不是直播会议</span>
-                  <span class="text-xs text-indigo cursor-pointer ml-2">复制</span>
+                  <span class="text-indigo w-1 flex flex-grow truncate">
+                    <span class="truncate">{{currentEvent.liveShareUrl}}</span>
+                  </span>
+                  <span class="text-xs text-indigo cursor-pointer ml-2"
+                        @click="copyShareUrl(currentEvent.liveShareUrl)">复制</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -81,7 +84,7 @@
                         style="height: 100%"
                         :items="currentEvent.invitees.invitee"
                         :buffer="5"
-                        :item-height="32"
+                        :item-size="32"
                         :page-mode="false"
                         key-field="display-text"
                     >
@@ -107,7 +110,8 @@
       <div class="my-2 flex justify-center items-center">
         <a-button class="w-1/3 mx-2" type="primary"
                   @click="enterMeeting"><a-iconfont type="icon-shipin"/>视频加入</a-button>
-        <a-button class="w-1/3 mx-2" type="primary"><a-iconfont type="icon-yuyin"/>音频加入</a-button>
+        <a-button class="w-1/3 mx-2" type="primary"
+                  @click="audioEnter"><a-iconfont type="icon-yuyin"/>音频加入</a-button>
       </div>
       <div>
       <plain-modal ref="deleteModal"
@@ -124,6 +128,7 @@
 </template>
 
 <script>
+import copy from 'clipboard-copy';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import NoFound from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
@@ -151,6 +156,12 @@ export default {
         number : this.currentEvent.conferenceNumber,
         pin    : this.currentEvent.attendeePin,
       });
+    },
+    audioEnter() {
+      console.warn(this.currentEvent);
+    },
+    copyShareUrl(url) {
+      copy(url);
     },
   },
 };

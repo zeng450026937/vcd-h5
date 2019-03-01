@@ -79,13 +79,23 @@ export default {
   data() {
     return {
       enterPopup      : '',
-      checkedKeys     : [],
-      selectedContact : [],
+      checkedKeys     : [ ],
+      selectedContact : [ ],
     };
+  },
+  computed : {
+    currentContact() {
+      return this.$rtc.account.currentContact;
+    },
+  },
+  mounted() {
+    this.checkedKeys.push(this.currentContact.id);
+    this.selectedContact.push(this.currentContact);
   },
   methods : {
     deleteContact(contact) {
       const { checkedKeys } = this.$refs.contactTree;
+
       let parent = contact;
       const i = this.selectedContact.findIndex((c) => c.id === contact.id);
 
@@ -113,10 +123,19 @@ export default {
     },
     onCheck(selectedContact) {
       this.selectedContact = selectedContact;
+      const hasSelf = this.selectedContact.findIndex((c) => c.id === this.currentContact.id) < 0;
+
+      this.selectedContact.splice(hasSelf ? 99 : 100);
+      if (hasSelf) {
+        this.selectedContact.push(this.currentContact.id);
+      }
+      if (this.selectedContact.length >= 100) {
+        this.checkedKeys = this.selectedContact.map((c) => c.id);
+      }
     },
     clearAll() {
-      this.selectedContact = [];
-      this.$refs.contactTree.checkedKeys = [];
+      this.selectedContact = [ this.currentContact ];
+      this.$refs.contactTree.checkedKeys = [ this.currentContact.id ];
     },
   },
 };

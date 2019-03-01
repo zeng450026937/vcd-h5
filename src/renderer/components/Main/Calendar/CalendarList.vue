@@ -11,7 +11,15 @@
                'border-l-4': meetingStatus(event.startTime, event.expiryTime).isRunning,
              }"
              @click="clickCalendar(event)">
-          <div class="text-sm truncate">{{event.subject}}</div>
+          <div class="text-sm flex w-full">
+            <div class="flex flex-grow w-1">
+              <span class="truncate">{{event.subject}}</span>
+            </div>
+            <div class="ml-1 text-base text-indigo">
+              <a-iconfont v-if="event.isRecurrence" title="周期会议" type="icon-xunhuanhuiyi"/>
+              <a-iconfont v-if="event.isLive" title="直播" type="icon-zhibo" class="ml-3"/>
+            </div>
+          </div>
           <div class="mt-3 text-xs truncate">ID: {{event.conferenceNumber}}</div>
           <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.expiryTime}}</div>
         </div>

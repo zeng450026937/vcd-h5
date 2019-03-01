@@ -86,12 +86,15 @@
          class="flex flex-col w-full bg-grey-lightest"
          style="height: 180px;">
       <div>
-        <div class="flex h-7 items-center border-b px-4 text-xs leading-tight">
+        <div class="flex h-8 items-center border-b px-4 text-xs leading-tight">
           <span>终端类型：</span>
           <div class="flex flex-grow w-1 truncate">
             <span class="truncate">Yealink VC Desktop</span>
           </div>
-          <a-iconfont type="icon-guanbi" class="text-base cursor-pointer text-black9"
+          <a-iconfont type="icon-shuaxin" class="text-base cursor-pointer text-black9"
+                      :spin="isUpdating"
+                      @click="updateDeviceInfo"></a-iconfont>
+          <a-iconfont type="icon-guanbi" class="text-base cursor-pointer text-black9 ml-4"
                       @click="isShowDeviceInfo = false"></a-iconfont>
         </div>
       </div>
@@ -124,6 +127,8 @@
 </template>
 
 <script>
+import prettyBytes from 'pretty-bytes';
+
 export default {
   name  : 'MemberListItem',
   props : {
@@ -137,6 +142,7 @@ export default {
   data() {
     return {
       isShowDeviceInfo : false,
+      isUpdating       : false,
       deviceInfo       : {
         recv : {
           bitrate   : '-',
@@ -301,17 +307,19 @@ export default {
       this.updateDeviceInfo();
     },
     updateDeviceInfo() {
+      this.isUpdating = true;
       this.item.getStatistics().then((result) => {
         const videoInfo = result['main-video'];
 
-        this.deviceInfo.recv.bitrate = `${videoInfo.recv.bitrate} kbs`;
-        this.deviceInfo.send.bitrate = `${videoInfo.send.bitrate} kbs`;
+        this.deviceInfo.recv.bitrate = prettyBytes(videoInfo.recv.bitrate);
+        this.deviceInfo.send.bitrate = prettyBytes(videoInfo.send.bitrate);
         this.deviceInfo.recv.ratio = `${videoInfo.recv.width} x ${videoInfo.recv.height}`;
         this.deviceInfo.send.ratio = `${videoInfo.send.width} x ${videoInfo.send.height}`;
         this.deviceInfo.recv.frameRate = `${videoInfo.recv.fr} fps`;
         this.deviceInfo.send.frameRate = `${videoInfo.send.fr} fps`;
         this.deviceInfo.recv.codec = videoInfo.recv.codec;
         this.deviceInfo.send.codec = videoInfo.send.codec;
+        this.isUpdating = false;
       });
     },
     selectMember() {

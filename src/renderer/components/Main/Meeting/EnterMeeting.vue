@@ -10,8 +10,10 @@
       </div>
     </div>
     <div class="flex justify-center items-center h-full">
-      <div style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
-           class="flex flex-col bg-white" v-if="!showSetting">
+      <div  v-if="!showSetting"
+            style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
+           class="flex flex-col bg-white"
+           @keyup.enter="enterMeeting">
         <div style="height: 270px;background-color: #1F2437;"
              class="relative flex">
           <video-view v-if="!muteVideo" class="w-full h-full"

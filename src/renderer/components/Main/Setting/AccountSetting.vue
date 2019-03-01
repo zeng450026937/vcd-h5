@@ -111,6 +111,7 @@ export default {
   created() {
     if (!this.userInfo.parent.fullPath) {
       let parent = this.userInfo.parent;
+
       let fullPath = [];
 
       while (parent.id) {

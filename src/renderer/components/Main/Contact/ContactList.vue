@@ -45,7 +45,11 @@
                     <!--头部-->
                     <div class="flex items-center w-full px-5 py-4 bg-card-title rounded-t text-white">
                       <div class="flex flex-col max-w-4/5 flex-grow">
-                        <div class="text-base leading-loose">{{item.name}}</div>
+                        <div class="text-base flex leading-loose">
+                          <span class="w-1 flex flex-grow truncate">
+                            <span class="truncate">{{item.name}}</span>
+                          </span>
+                        </div>
                         <div v-if="item.parent.isUser"
                              class="truncate text-xs font-thin leading-tight opacity-75 mt-1">
                           <span>个性签名，只显示一行，如果超出一行则超出的部分省略不显示</span>
