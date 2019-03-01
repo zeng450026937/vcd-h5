@@ -10,6 +10,7 @@ const states = {
 
 export default class ClientManagement {
   constructor(systemInfo) {
+    this.stateProxy = 0;
     this.count = 0;
     this.accountInfo = {};
     this.systemInfo = systemInfo;
@@ -40,9 +41,17 @@ export default class ClientManagement {
   get clientInfo() {
     return {
       ...this.systemInfo,
-      account      : get(this, 'accountInfo.account', null),
-      serviceAddr  : get(this, 'accountInfo.server', null),
-      enterpriseId : get(this, 'enterpriseInfo.id', null),
+      enterprise : {
+        id     : get(this, 'enterpriseInfo.enterprise.id', null),
+        name   : get(this, 'enterpriseInfo.enterprise.name', null),
+        domain : get(this, 'enterpriseInfo.pushService.url', null),
+      },
+      user : {
+        account  : get(this, 'accountInfo.account', null),
+        domain   : get(this, 'accountInfo.server', null),
+        outbound : '',
+        status   : '',
+      },
     };
   }
 
@@ -53,6 +62,7 @@ export default class ClientManagement {
   set enterpriseInfo(info) {
     this.enterpriseInfoProxy = info;
     this.stopHeartBeat();
+    this.resetClient(this.clientInfo);
     this.updateClientInfo(this.clientInfo);
     this.startHeartBeat(this.clientInfo);
   }
@@ -62,23 +72,41 @@ export default class ClientManagement {
       this.count++;
       const res = await getEnterpriseInfo();
 
-      this.enterpriseInfo = res.data.data.enterprise;
+      this.enterpriseInfo = res.data.data;
     }
-    catch (e) {
-      if (this.count > 20) return;
+    catch (e) { // 如果获取不到企业用户 则 只上报到 yealink 管理平台
+      if (this.count > 20) {
+        this.stopHeartBeat();
+        this.resetClient(this.clientInfo);
+        this.updateClientInfo(this.clientInfo);
+        this.startHeartBeat(this.clientInfo);
 
-      return setTimeout(() => this.getEnterpriseInfo(), 10 * 1000);
+        return;
+      }
+
+      return setTimeout(() => this.getEnterpriseInfo(), 1000);
     }
   }
 
-  async updateClientInfo(info) {
-    const { enterpriseId, clientId } = info;
+  async updateClientInfo(clientInfo) {
+    const enterpriseId = get(clientInfo, 'enterprise.id', null);
+    const clientId = clientInfo.clientId;
 
-    if (enterpriseId) deviceManagement.clientUpdate(clientId, info);
-    ylDeviceManagement.clientUpdate(clientId, info);
+    if (enterpriseId) deviceManagement.clientUpdate(clientId, clientInfo);
+    ylDeviceManagement.clientUpdate(clientId, clientInfo);
   }
 
-  clientHeart({ enterpriseId, clientId }) {
+  resetClient(clientInfo) {
+    const enterpriseId = get(clientInfo, 'enterprise.id', null);
+
+    if (enterpriseId) deviceManagement.resetClient(clientInfo);
+    ylDeviceManagement.resetClient(clientInfo);
+  }
+
+  clientHeart(clientInfo) {
+    const enterpriseId = get(clientInfo, 'enterprise.id', null);
+    const clientId = clientInfo.clientId;
+
     if (enterpriseId) deviceManagement.clientHeart(clientId);
     ylDeviceManagement.clientHeart(clientId);
   }

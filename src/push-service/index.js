@@ -193,7 +193,9 @@ export class PushService extends EventEmitter {
 
     hmac.update(text);
 
-    const signText = `appid="${appid}",nounce="${nonce}",sign="${hmac.digest('base64')}"`;
+    // const signText = `appid="${appid}",nounce="${nonce}",sign="${hmac.digest('base64')}"`;
+
+    const signText = 'appid="ypush",nonce="1536916245883:33333333",sign="gqZQcCDHS56Z/NTiSpmATLCcUc/cGHMlxKD46WnJgmk="';
 
     return signText;
   }

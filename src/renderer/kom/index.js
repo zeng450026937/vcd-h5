@@ -31,8 +31,6 @@ import call from './call';
 import callState from './call/state';
 import callChat from './call/chat';
 
-import afterLogin from './middle/afterLogin';
-
 Vue.use(Vuem);
 
 const kom = new Vuem();
@@ -86,7 +84,6 @@ const data = {
 provide(kom, data);
 
 // noinspection JSUnresolvedVariable
-kom.use(afterLogin);
 
 window.kom = kom;
 

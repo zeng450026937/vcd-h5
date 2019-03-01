@@ -43,6 +43,8 @@ const reqSuc = (config) => {
   // logger.info(`[send request]  ${config.baseURL}${config.url}`);
   console.log(`[send request]  ${config.baseURL}${config.url} --- send data :`, config.data);
 
+  console.log(JSON.stringify(config.data))
+
   return config;
 };
 

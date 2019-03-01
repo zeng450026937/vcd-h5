@@ -5,7 +5,7 @@ function genService(server) {
 
   const clientUpdate = (clientId, data) => put(`/clients/${clientId}`, data);
 
-  const fullAmountUpdate = (data) => post('/clients', data);
+  const resetClient = (data) => post('/clients', data);
 
   const clientHeart = (clientId) => post(`/clients/${clientId}/heart`);
 
@@ -13,12 +13,12 @@ function genService(server) {
 
   const pullLatestPackage = (clientId, data) => post(`/clients/${clientId}/poll`, data);
 
-  const reportAlarm = (clientId, data) => post(`/clients/${clientId}/report`, data);
+  const reportAlarm = (clientId, data, config = {}) => post(`/clients/${clientId}/alarms`, data, config);
 
   return {
     clientHeart,
     clientUpdate,
-    fullAmountUpdate,
+    resetClient,
     checkRegister,
     pullLatestPackage,
     reportAlarm,

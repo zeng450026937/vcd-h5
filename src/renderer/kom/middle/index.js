@@ -1,5 +1,7 @@
 import log4electron from '../../../logger';
 import ERROR_MAP from './constant';
+import afterLogin from './afterLogin';
+import crashReport from './crashReport'
 
 const logger = log4electron.getLogger('BROWSER');
 
@@ -16,4 +18,4 @@ const errorNotice = async(ctx, next) => {
   }
 };
 
-export default [ errorNotice ];
+export default [ errorNotice, afterLogin, crashReport ];

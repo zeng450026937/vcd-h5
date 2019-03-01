@@ -1,7 +1,7 @@
 import './logger/main/install';
 import './main/app-updater';
 
-import { app, Menu, ipcMain, BrowserWindow, shell, Tray } from 'electron';
+import { app, Menu, ipcMain, BrowserWindow, shell, Tray, Notification } from 'electron';
 import { AppWindow } from './main/app-window';
 import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
@@ -11,6 +11,7 @@ import { getSystemInfo } from './utils/systemInfo';
 
 import ClientManagement from './api-service/clientManagement';
 import LogReporter from './log-reporter';
+import alarmReport from './alarm-reporter';
 
 
 let mainWindow = null;
@@ -135,6 +136,24 @@ if (!handlingSquirrelEvent) {
         }
       );
 
+      ipcMain.on('YTMS-notification', (event, arg) => {
+        const isSupported = Notification.isSupported();
+
+        if (!isSupported) return;
+
+        const notification = new Notification({
+          title    : 'YPUSH MESSAGE TEST',
+          subtitle : arg.title,
+          body     : arg.message,
+        });
+
+        notification.show();
+      });
+
+      ipcMain.on('render-crash', (event, arg) => {
+        alarmReport.report(arg);
+      });
+
       ipcMain.on('request-system-info', async(event, arg) => {
         const data = await getSystemInfo();
 
@@ -145,7 +164,6 @@ if (!handlingSquirrelEvent) {
 
       getSystemInfo().then((systemInfo) => {
         clientManagement = new ClientManagement(systemInfo);
-        clientManagement.state = 0;
       });
 
       ipcMain.on('after-login', (event, arg) => {

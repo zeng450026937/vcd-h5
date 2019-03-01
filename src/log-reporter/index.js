@@ -1,25 +1,19 @@
 import fs from 'fs-extra';
 import path from 'path';
-import archiver from 'archiver';
-import FormData from 'form-data';
-import { getSystemInfo } from '../utils/systemInfo';
 import { uploadLog } from '../api-service/api/fileUpload';
-import { getLogDirectoryPath } from '../logger/get-log-path';
-
+import LogProvider from '../log-provider/provider';
 
 const RECORD_FILE_NAME = 'report-record.json';
 
-const isToday = (date) => new Date() - new Date(date).valueOf() < 86400000;
-
-export default class logReporter {
+export default class logReporter extends LogProvider {
   constructor() {
-    this.setClientId();
-    this.logDirectory = getLogDirectoryPath();
+    super();
+
     this.checkRecordFile();
   }
 
   report() {
-    const reportList = this.record.reportRecord.filter((file) => !file.isReported && !isToday(file.logDate));
+    const reportList = this.record.reportRecord.filter((file) => !file.isReported && !this.isToday(file.logDate));
     const reportFile = this.reportFile.bind(this);
 
     reportList.forEach(reportFile);
@@ -27,8 +21,12 @@ export default class logReporter {
 
   async reportFile(file) {
     try {
-      await this.zipFile(file.fileName);
-      await this.startReport(file.fileName);
+      const form = await this.provideLogFile(file.fileName);
+
+      const res = await this.startReport(form);
+
+      if (res.data.ret === -1) throw res.data;
+
       this.record.reportRecord.forEach((item) => {
         if (file.fileName === item.fileName) {
           item.isReported = true;
@@ -37,55 +35,16 @@ export default class logReporter {
       });
 
       await this.writeRecordFile(this.record);
-      this.removeZipFile(`${file.fileName}.zip`);
     }
     catch (e) {
       console.log(e);
     }
+
+    this.removeZipFile(`${file.fileName}.zip`);
   }
 
-
-  setClientId() {
-    getSystemInfo().then((systemInfo) => {
-      this.clientId = systemInfo.clientId;
-    });
-  }
-
-  startReport(fileName) {
-    const form = new FormData();
-
-    form.append('file', fs.createReadStream(path.join(this.logDirectory, `/${fileName}.zip`)));
-
+  startReport(form) {
     return uploadLog(this.clientId, form, { headers: form.getHeaders() });
-  }
-
-  removeZipFile(file) {
-    fs.remove(path.join(this.logDirectory, `/${file}`));
-    console.log('remove *.zip file:', path.join(this.logDirectory, `/${file}`));
-  }
-
-  zipFile(file) {
-    return new Promise((resolve, reject) => {
-      const archive = archiver('zip', {
-        zlib : { level: 9 },
-      });
-
-      const output = fs.createWriteStream(path.join(this.logDirectory, `/${file}.zip`));
-
-      output.on('close', () => {
-        console.log(`${archive.pointer()} total bytes`);
-        resolve();
-      });
-
-      archive.pipe(output);
-
-      archive.append(
-        fs.createReadStream(path.join(this.logDirectory, `/${file}`)),
-        { name: file },
-      );
-
-      archive.finalize();
-    });
   }
 
   async checkRecordFile() {
@@ -102,26 +61,17 @@ export default class logReporter {
   }
 
   async createRecordFile() {
-    let logFiles = await this.readLogfileList().catch((e) => console.log('Failed to read record file list'));
-
-    if (!Array.isArray(logFiles)) logFiles = [];
-
-    const record = logFiles.map((fileName) => ({
-      fileName,
-      isReported : false,
-      reportDate : null,
-      logDate    : new Date(`${fileName.split('.')[1]} 00:00`).valueOf(),
-    }));
+    const logFiles = await this.readLogfileList();
 
     this.record = {
-      reportRecord : record,
+      reportRecord : logFiles,
     };
 
     return this.writeRecordFile(this.record).catch((e) => { console.log(e); });
   }
 
   async updateRecordFile(recordData) {
-    const logFiles = await this.readLogfileList().catch((e) => console.log('Failed to read record file list'));
+    const logFiles = await this.readLogfileList();
     const recordFiles = recordData.reportRecord.map((record) => record.fileName);
 
     recordData.reportRecord = recordData.reportRecord.filter((file) => logFiles.indexOf(file.fileName) > -1);
@@ -129,10 +79,10 @@ export default class logReporter {
     logFiles.forEach((file) => {
       if (recordFiles.indexOf(file) === -1) {
         recordData.reportRecord.push({
-          fileName   : file,
+          fileName   : file.fileName,
           isReported : false,
           reportDate : null,
-          logDate    : new Date(`${file.split('.')[1]} 00:00`).valueOf(),
+          logDate    : new Date(`${file.fileName.split('.')[1]} 00:00`).valueOf(),
         });
       }
     });
@@ -163,16 +113,5 @@ export default class logReporter {
     });
   }
 
-  readLogfileList() {
-    return new Promise((resolve, reject) => {
-      fs.readdir(this.logDirectory, (err, files) => {
-        if (err) return reject(err);
 
-        const logFiles = files.filter((file) => path.extname(file) === '.log');
-
-        console.log('log file list is:', logFiles);
-        resolve(logFiles);
-      });
-    });
-  }
 }

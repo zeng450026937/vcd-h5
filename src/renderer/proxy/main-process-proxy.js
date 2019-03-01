@@ -17,3 +17,11 @@ export function getSystemInfo() {
     });
   });
 }
+
+export function sendNotification(data) {
+  ipcRenderer.send('YTMS-notification', data);
+}
+
+export function sendCrashReport(data) {
+  ipcRenderer.send('render-crash', data);
+}

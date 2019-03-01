@@ -18,26 +18,34 @@ export function getSystemInfo() {
         memory.mem(),
         os.osInfo(),
       ]);
+      // console.log({ sysInfo, cpuInfo, networkInfo, memoryInfo, osInfo });
 
       resolve(systemInfo = {
         clientId       : sysInfo.uuid.replace(/-/g, '').toLowerCase(),
-        clientModel    : osInfo.distro,
         clientName     : osInfo.hostname,
-        clientOs       : osInfo.platform,
-        clientType     : 0,
-        cpuCore        : cpuInfo.cores,
-        cpuModel       : cpuInfo.brand,
-        ip             : networkInfo[0].ip4,
-        mac            : networkInfo[0].mac,
-        memory         : memoryInfo.total,
-        packageVersion : process.env.VUE_APP_VERSION,
+        clientModel    : 'VCD-H5',
+        clientType     : 'software',
+        clientVersion  : process.env.VUE_APP_VERSION,
+        clientArch     : osInfo.arch,
+        clientPlatform : osInfo.platform,
+        device         : {
+          ip       : networkInfo[0].ip4,
+          mac      : networkInfo[0].mac,
+          hostname : osInfo.hostname,
+          cpu      : cpuInfo.brand,
+          memory   : memoryInfo.total,
+          os       : osInfo.distro,
+        },
       });
+
+      // console.log(systemInfo);
     }
     catch (e) {
       reject(e);
     }
   });
 }
+
 
 export default {
   getSystemInfo,
