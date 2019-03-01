@@ -33,7 +33,7 @@ export class YTMSClient extends EventEmitter {
     if (this.isReady) return;
 
     return new Promise((resolve) => {
-      this.once('ready', resolve);
+      this.once('ready', () => resolve());
     });
   }
 
@@ -45,9 +45,9 @@ export class YTMSClient extends EventEmitter {
 
     await this.getEnterpriseInfo();
 
-    const status = await this.api.getClientStatus();
+    const status = await this.api.getClientStatus().catch(() => {});
 
-    if (!status.exist) {
+    if (!status || !status.exist) {
       // reset with full info
       await this.api.resetClientInfo({ clientId: this.clientId });
     }
@@ -90,7 +90,7 @@ export class YTMSClient extends EventEmitter {
 
     await this.api.heartBeat();
 
-    return this.heartBeat(250);
+    return this.heartBeat(250 * 1000);
   }
 
   async getEnterpriseInfo() {

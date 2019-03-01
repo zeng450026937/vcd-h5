@@ -15,12 +15,15 @@ import {
 import {
   PushService,
 } from './push-service';
+import { 
+  newUUID,
+} from './uuid';
 
 let yealinkClient = null;
 let yealinkPush = null;
 let enterpriseClient = null;
 let enterprisePush = null;
-let clientId = 'fallback clientId';
+let clientId = newUUID();
 const clientInfo = {
   clientName     : '',
   clientModel    : process.env.VUE_APP_MODEL,
@@ -59,14 +62,14 @@ let clientInfoPromise = Promise.resolve();
 
 const systemInfoPromise = getSystemInfo()
   .catch(() => ({}))
-  .then(() => {
+  .then((info) => {
     clientInfoPromise = Promise.all([
       getCpuInfo().catch(() => ({})),
       getNetInfo().catch(() => ({})),
       getMemInfo().catch(() => ({})),
       getOsInfo().catch(() => ({})),
     ])
-      .then(async([ cpuInfo, netInfo, memInfo, osInfo ]) => {
+      .then(([ cpuInfo, netInfo, memInfo, osInfo ]) => {
         // update client info
         clientInfo.clientName = osInfo.hostname;
         clientInfo.device.ip = netInfo[0] && netInfo[0].ip4;
@@ -76,6 +79,8 @@ const systemInfoPromise = getSystemInfo()
         clientInfo.device.memory = memInfo.total;
         clientInfo.device.os = osInfo.platform;
       });
+
+    return info;
   })
   .then((info) => {
     const { uuid } = info;
@@ -85,11 +90,12 @@ const systemInfoPromise = getSystemInfo()
     }
 
     // start yealink client
-    const url = process.env.VUE_APP_YTMS_URL;
+    let url = process.env.VUE_APP_YTMS_URL;
 
     yealinkClient = new YTMSClient(url, clientId);
     yealinkClient.start();
 
+    url = process.env.VUE_APP_YPUSH_URL;
     const tenantId = process.env.VUE_APP_YPUSH_TENANTID;
 
     yealinkPush = new PushService(url, clientId, Number.parseInt(tenantId, 10));
@@ -97,50 +103,53 @@ const systemInfoPromise = getSystemInfo()
 
     clientInfoPromise
       .then(() => yealinkClient.whenReady())
-      .then(() => yealinkClient.updateInfo(clientInfo));
+      .then(() => yealinkClient.updateInfo(clientInfo))
+      .then(() => yealinkClient.api.getUpdatePackage(clientInfo));
   });
 
-// 此部分代码只需在主进程运行
-app.on('ready', () => {
-  ipcMain.on('connect to enterprise ytms', async(event, url) => {
-    if (!clientId) {
-      await systemInfoPromise;
-    }
+if (process.type === 'browser') {
+  // 此部分代码只需在主进程运行
+  app.on('ready', () => {
+    ipcMain.on('connect to enterprise ytms', async(event, url) => {
+      if (!clientId) {
+        await systemInfoPromise;
+      }
 
-    if (!enterpriseClient) {
-      enterpriseClient.stop();
-      enterpriseClient = null;
-    }
+      if (!enterpriseClient) {
+        enterpriseClient.stop();
+        enterpriseClient = null;
+      }
 
-    enterpriseClient = new YTMSClient(url, clientId);
-    enterpriseClient.start();
+      enterpriseClient = new YTMSClient(url, clientId);
+      enterpriseClient.start();
 
-    event.sender.send('hello clientId', clientId);
+      event.sender.send('hello clientId', clientId);
 
-    await enterpriseClient.whenReady();
+      await enterpriseClient.whenReady();
 
-    /*
-    const { enterprise, pushService } = enterpriseClient.enterpriseInfo;
+      /*
+      const { enterprise, pushService } = enterpriseClient.enterpriseInfo;
 
-    clientInfo.enterprise.id = enterprise.id;
-    clientInfo.enterprise.name = enterprise.name;
+      clientInfo.enterprise.id = enterprise.id;
+      clientInfo.enterprise.name = enterprise.name;
 
-    const { url: pushURL, tenantId } = pushService;
-    */
-    const tenantId = process.env.VUE_APP_YPUSH_TENANTID;
+      const { url: pushURL, tenantId } = pushService;
+      */
+      const tenantId = process.env.VUE_APP_YPUSH_TENANTID;
 
-    enterprisePush = new PushService(url, clientId, Number.parseInt(tenantId, 10));
-    enterprisePush.poll();
+      enterprisePush = new PushService(url, clientId, Number.parseInt(tenantId, 10));
+      // enterprisePush.poll();
 
-    await clientInfoPromise;
-    enterpriseClient.updateInfo(clientInfo);
+      await clientInfoPromise;
+      enterpriseClient.updateInfo(clientInfo);
 
-    // update enterprise info to yealink
-    await yealinkClient.whenReady();
-    yealinkClient.updateInfo(clientInfo);
+      // update enterprise info to yealink
+      await yealinkClient.whenReady();
+      yealinkClient.updateInfo(clientInfo);
+    });
+
+    ipcMain.on('get clientId', (event) => {
+      event.sender.send('get clientId replay', clientId);
+    });
   });
-
-  ipcMain.on('get clientId', (event) => {
-    event.sender.send('get clientId replay', clientId);
-  });
-});
+}

@@ -11,7 +11,7 @@ export async function doFeedback(baseURL, clientId, formdata) {
     data    : formdata,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function getEnterpriseInfo(baseURL, clientId, data) {
@@ -22,7 +22,7 @@ export async function getEnterpriseInfo(baseURL, clientId, data) {
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function getUpdatePackage(baseURL, clientId, data) {
@@ -33,7 +33,7 @@ export async function getUpdatePackage(baseURL, clientId, data) {
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function resetClientInfo(baseURL, clientId, data) {
@@ -44,7 +44,7 @@ export async function resetClientInfo(baseURL, clientId, data) {
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function updateClientInfo(baseURL, clientId, data) {
@@ -55,18 +55,18 @@ export async function updateClientInfo(baseURL, clientId, data) {
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function getClientStatus(baseURL, clientId, data) {
   const res = await axios({
-    method : 'post',
+    method : 'get',
     baseURL,
     url    : `/clients/${clientId}/status`,
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function heartBeat(baseURL, clientId, expire = 300) {
@@ -76,7 +76,7 @@ export async function heartBeat(baseURL, clientId, expire = 300) {
     url    : `/clients/${clientId}/heart?expire=${expire}`,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function doAlarm(baseURL, clientId, formdata) {
@@ -88,7 +88,7 @@ export async function doAlarm(baseURL, clientId, formdata) {
     data    : formdata,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function uploadConfig(baseURL, clientId, data) {
@@ -99,7 +99,7 @@ export async function uploadConfig(baseURL, clientId, data) {
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function uploadLogs(baseURL, clientId, formdata) {
@@ -111,7 +111,7 @@ export async function uploadLogs(baseURL, clientId, formdata) {
     data    : formdata,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function uploadNetLogs(baseURL, clientId, formdata) {
@@ -123,7 +123,7 @@ export async function uploadNetLogs(baseURL, clientId, formdata) {
     data    : formdata,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 export async function reportNetLogs(baseURL, clientId, sessionId, data, expire = 300) {
@@ -134,7 +134,7 @@ export async function reportNetLogs(baseURL, clientId, sessionId, data, expire =
     data,
   });
 
-  return res.data;
+  return res.data.data;
 }
 
 // 新增API必须保证前两个参数必须是 baseURL, clientId 不管有用没用

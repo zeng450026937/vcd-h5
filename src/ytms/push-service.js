@@ -2,6 +2,7 @@ import axios from 'axios';
 import { EventEmitter } from 'events';
 import { createHmac } from 'crypto';
 import { waitFor, calcWaitingTime } from './wait-for';
+import { hexToBytes, encode64 } from './uuid';
 
 const PUSH_ACTION = {};
 
@@ -35,7 +36,7 @@ export class PushService extends EventEmitter {
     this.appid = 'ypush';
 
     this.algorithm = 'sha256';
-    this.key = 'yealink'; // fake value
+    this.secretKey = 'yealink'; // fake value
 
     this.reconnect_attempts = 0;
   }
@@ -48,7 +49,11 @@ export class PushService extends EventEmitter {
     // ignore anyway, we will check the respones
     const res = await this.post(PUSH_ACTION.CHECK).catch(() => {});
 
-    if (!res || res.code !== undefined) {
+    if (!res) {
+      return this.poll(1000);
+    }
+
+    if (res.code !== undefined) {
       this.reconnect_attempts += 1;
 
       return this.poll(calcWaitingTime(this.reconnect_attempts));
@@ -172,7 +177,7 @@ export class PushService extends EventEmitter {
     return {
       biz      : this.biz,
       action   : PUSH_ACTION[action],
-      tenantId : this.tatentId,
+      tenantId : this.tenantId,
       platform : this.platform,
       clientId : this.clientId,
     };
@@ -188,15 +193,17 @@ export class PushService extends EventEmitter {
     const appid = this.appid;
     const method = 'POST';
     const random = '12345678';
-    const nonce = `${new Date().valueOf()}:${random}`;
+    const nonce = `${Date.now()}:${random}`;
 
-    const hmac = createHmac(this.algorithm, this.key);
+    const hmac = createHmac(this.algorithm, this.secretKey);
 
-    const text = `${nonce}\n${appid}\n${method}\n${path}\n`;
+    const text = `${[ nonce, appid, method, path ].join('\n')}\n`;
 
     hmac.update(text);
 
-    const signText = `appid="${appid}",nounce="${nonce}",sign="${hmac.digest('base64')}"`;
+    const digest = hmac.digest('base64');
+
+    const signText = `appid="${appid}",nonce="${nonce}",sign="${digest}"`;
 
     return signText;
   }
@@ -208,7 +215,6 @@ export class PushService extends EventEmitter {
       obj = JSON.parse(json);
     }
     catch (e) {
-      console.log(e);
       obj = {};
     }
     
