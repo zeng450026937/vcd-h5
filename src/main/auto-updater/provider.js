@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import { Transform } from 'stream';
 import { randomBytes, createHash } from 'crypto';
 import { createWriteStream } from 'fs-extra';
+import { basename } from 'path';
 import axios from 'axios';
 import semver from 'semver';
 import { FileCache } from './file-cache';
@@ -238,7 +239,7 @@ export class Provider extends Downloader {
 
     // TODO: sanityCheck here
 
-    const { file } = info;
+    const { file, version } = info;
 
     if (!file.url) return;
 
@@ -254,8 +255,8 @@ export class Provider extends Downloader {
 
     const { appName, appVersion, appSuffix } = this.appUpdater;
 
-    const filename = file.name 
-      || `${appName}-${appVersion}${appSuffix}`;
+    const filename = file.name || basename(file.url)
+      || `${appName}-${version || appVersion}${appSuffix}`;
   
     const path = this.fileCache.resolvePath(filename);
   
