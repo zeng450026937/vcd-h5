@@ -48,7 +48,7 @@ export default class logReporter extends LogProvider {
   }
 
   async checkRecordFile() {
-    const recordData = await this.readRecordFile().catch((e) => console.log('Failed to read record file or record file does not exist'));
+    const recordData = await this.readRecordFile().catch((e) => console.log('Failed to read record file or record file does not exist')); // 读取日志记录文件
 
     if (!recordData) {
       await this.createRecordFile();
@@ -70,14 +70,22 @@ export default class logReporter extends LogProvider {
     return this.writeRecordFile(this.record).catch((e) => { console.log(e); });
   }
 
-  async updateRecordFile(recordData) {
-    const logFiles = await this.readLogfileList();
-    const recordFiles = recordData.reportRecord.map((record) => record.fileName);
 
-    recordData.reportRecord = recordData.reportRecord.filter((file) => logFiles.indexOf(file.fileName) > -1);
+  /*
+  * recordData : 日志记录文件 {fileName, isReported, reportDate, logDate}
+  *
+  * */
+  async updateRecordFile(recordData) { // 更新日志记录文件
+    const logFiles = await this.readLogfileList();
+    const logFilesName = logFiles.map((file) => file.fileName); // 当前日志目录下所有日志文件名
+
+    const recordFilesName = recordData.reportRecord.map((record) => record.fileName); // 日志记录文件下记录的所有文件名
+
+    recordData.reportRecord = recordData.reportRecord // 去除日志记录中 已经不存在目录中的文件
+      .filter((file) => logFilesName.indexOf(file.fileName) > -1);
 
     logFiles.forEach((file) => {
-      if (recordFiles.indexOf(file) === -1) {
+      if (recordFilesName.indexOf(file.fileName) === -1) { // 添加新增的 日志文件 到记录中
         recordData.reportRecord.push({
           fileName   : file.fileName,
           isReported : false,
@@ -112,6 +120,4 @@ export default class logReporter extends LogProvider {
       });
     });
   }
-
-
 }
