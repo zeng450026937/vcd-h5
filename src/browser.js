@@ -1,18 +1,15 @@
 import './logger/main/install';
 import './main/app-updater';
+import './ytms/install';
 
-import { app, Menu, ipcMain, BrowserWindow, shell, Tray, Notification } from 'electron';
+import { app, ipcMain } from 'electron';
 import { AppWindow } from './main/app-window';
 import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
 import { showUncaughtException } from './main/show-uncaught-exception';
 import { log as writeLog } from './logger/winston';
-import { getSystemInfo } from './utils/systemInfo';
-
-import ClientManagement from './api-service/clientManagement';
-import LogReporter from './log-reporter';
-import alarmReport from './alarm-reporter';
-
+import { getClientId } from './ytms/client-info';
+import { Alarm } from './ytms/uploader';
 
 let mainWindow = null;
 
@@ -96,8 +93,24 @@ function createWindow() {
     });
 
     onDidLoadFns = null;
+  });
 
-    const logReporter = new LogReporter();
+  window.onCrashed((killed) => {
+    const ytmsService = global.ytmsService;
+
+    if (!ytmsService) return;
+
+    const service = ytmsService.get();
+
+    if (!service) return;
+
+    // TODO: handle killed
+    const alarm = Alarm.Create(service.api);
+
+    // TODO: setup alarm
+    alarm.type = 'gpu-process-crashed';
+
+    alarm.upload();
   });
 
   window.load();
@@ -136,40 +149,29 @@ if (!handlingSquirrelEvent) {
         }
       );
 
-      ipcMain.on('YTMS-notification', (event, arg) => {
-        const isSupported = Notification.isSupported();
-
-        if (!isSupported) return;
-
-        const notification = new Notification({
-          title    : 'YPUSH MESSAGE TEST',
-          subtitle : arg.title,
-          body     : arg.message,
-        });
-
-        notification.show();
+      ipcMain.on('get-clientid', async(event) => {
+        const id = await getClientId();
+        
+        event.sender.send('get-clientid-reply', id);
       });
-
-      ipcMain.on('render-crash', (event, arg) => {
-        alarmReport.report(arg);
-      });
-
-      ipcMain.on('request-system-info', async(event, arg) => {
-        const data = await getSystemInfo();
-
-        event.sender.send('system-info', data);
-      });
-
-      let clientManagement;
-
-      getSystemInfo().then((systemInfo) => {
-        clientManagement = new ClientManagement(systemInfo);
-      });
-
-      ipcMain.on('after-login', (event, arg) => {
-        clientManagement.accountInfo = arg;
-        clientManagement.state = 1;
-      });
+    });
+    
+    app.on('gpu-process-crashed', (event, killed) => {
+      const ytmsService = global.ytmsService;
+  
+      if (!ytmsService) return;
+  
+      const service = ytmsService.get();
+  
+      if (!service) return;
+  
+      // TODO: handle killed
+      const alarm = Alarm.Create(service.api);
+  
+      // TODO: setup alarm
+      alarm.type = 'gpu-process-crashed';
+  
+      alarm.upload();
     });
     
     app.on('activate', () => {

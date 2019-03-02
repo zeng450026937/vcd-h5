@@ -56,6 +56,10 @@ export class BaseWindow extends EventEmitter {
       this.window.webContents.setVisualZoomLevelLimits(1, 1);
     });
 
+    this.window.webContents.on('crashed', (event, killed) => {
+      this.emit('crashed', killed);
+    });
+
     this.window.webContents.on('did-fail-load', () => {
       if (process.env.NODE_ENV === 'development') {
         this.window.webContents.openDevTools();
@@ -153,6 +157,11 @@ export class BaseWindow extends EventEmitter {
   onFailedToLoad(fn) {
     if (!fn) return;
     this.on('did-fail-load', fn);
+  }
+
+  onCrashed(fn) {
+    if (!fn) return;
+    this.on('crashed', fn);
   }
 
   /**

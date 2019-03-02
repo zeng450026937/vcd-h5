@@ -3,14 +3,15 @@ import { YTMSClient } from './ytms-client';
 import { PushService } from './push-service';
 import { handlePushMessage } from './handle-push-message';
 
+const default_url = process.env.VUE_APP_YTMS_URL;
+
+// TODO: rename to YTMSServiceManager
 export class YTMSService {
   constructor() {
     this.services = {};
   }
 
-  async connect(url) {
-    if (!url) throw new Error('Missing url');
-    
+  async connect(url = default_url) {    
     // disconnect first
     this.disconnect(url);
 
@@ -26,6 +27,8 @@ export class YTMSService {
     await client.whenReady();
 
     service.client = client;
+    service.api = client.api;
+    service.clientId = client.clientId;
 
     // prepare push service
     const {
@@ -40,6 +43,8 @@ export class YTMSService {
     handlePushMessage(push);
 
     service.push = push;
+    service.pushURL = pushURL;
+    service.tenantId = tenantId;
 
     this.services[url] = service;
 
@@ -72,7 +77,7 @@ export class YTMSService {
     delete this.services[url];
   }
 
-  get(url) {
+  get(url = default_url) {
     return this.services[url];
   }
 

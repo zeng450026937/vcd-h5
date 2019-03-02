@@ -53,7 +53,7 @@ export class Payload {
 }
 
 export class Alarm extends Payload {
-  static Create(data, api) {
+  static Create(api, data) {
     const uploader = new Uploader(api);
     const alarm = new Alarm(data, uploader);
 
@@ -98,7 +98,7 @@ export class Alarm extends Payload {
 }
 
 export class Log extends Payload {
-  static Create(data, api) {
+  static Create(api, data) {
     const uploader = new Uploader(api);
     const alarm = new Log(data, uploader);
 
@@ -127,7 +127,7 @@ export class Log extends Payload {
 }
 
 export class NetLog extends Payload {
-  static Create(data, api) {
+  static Create(api, data) {
     const uploader = new Uploader(api);
     const alarm = new NetLog(data, uploader);
 
@@ -163,7 +163,7 @@ export class NetLog extends Payload {
 }
 
 export class Config extends Payload {
-  static Create(data, api) {
+  static Create(api, data) {
     const uploader = new Uploader(api);
     const alarm = new Config(data, uploader);
 
@@ -180,7 +180,7 @@ export class Config extends Payload {
 }
 
 export class Feedback extends Payload {
-  static Create(data, api) {
+  static Create(api, data) {
     const uploader = new Uploader(api);
     const alarm = new Feedback(data, uploader);
 

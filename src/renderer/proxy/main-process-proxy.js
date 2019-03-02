@@ -8,20 +8,22 @@ export function sendCrashQuitSync() {
   ipcRenderer.sendSync('crash-quit');
 }
 
-export function getSystemInfo() {
-  ipcRenderer.send('request-system-info');
+export function startYTMSService() {
+  ipcRenderer.send('start-ytms-service');
 
   return new Promise((resolve) => {
-    ipcRenderer.once('system-info', (event, arg) => {
-      resolve(arg);
+    ipcRenderer.once('start-ytms-service-reply', (event, ...args) => {
+      resolve(...args);
     });
   });
 }
 
-export function sendNotification(data) {
-  ipcRenderer.send('YTMS-notification', data);
-}
+export function getClientId() {
+  ipcRenderer.send('get-clientid');
 
-export function sendCrashReport(data) {
-  ipcRenderer.send('render-crash', data);
+  return new Promise((resolve) => {
+    ipcRenderer.once('get-clientid-reply', (event, ...args) => {
+      resolve(...args);
+    });
+  });
 }

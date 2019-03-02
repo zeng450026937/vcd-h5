@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
-import { getSystemInfo } from './main-process-proxy';
+import { startYTMSService, getClientId } from './main-process-proxy';
+import { createApi } from '../../ytms/create-api';
 
 let startTime = 0;
 
@@ -10,11 +11,24 @@ export const AppWindowProxy = {
   async mounted() {
     ipcRenderer.send('renderer-ready', performance.now() - startTime);
 
-    let systemInfo = this.$storage.query('SYSTEM_INFO');
+    const clientId = await getClientId();
 
-    if (!systemInfo) {
-      systemInfo = await getSystemInfo();
-      this.$storage.insertOrUpdate('SYSTEM_INFO', systemInfo, 'clientId');
+    const apis = {};
+
+    window.apis = apis;
+    this.$apis = apis;
+
+    let url = process.env.VUE_APP_YTMS_URL;
+
+    apis.yealink = createApi(url, clientId);
+    
+    // TODO: get ytms url setted by user
+    url = this.$storage.query('YTMS_URL');
+
+    if (url) {
+      await startYTMSService(url);
+
+      apis.enterprise = createApi(url, clientId);
     }
   },
 };

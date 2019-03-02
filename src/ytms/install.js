@@ -1,18 +1,26 @@
 import { app, ipcMain } from 'electron';
 import { getClientId } from './client-info';
 import { YTMSService } from './ytms-service';
+import { Alarm } from './uploader';
 
 const g_ytms_service = new YTMSService();
-const yealink_ytms = process.env.VUE_APP_YTMS_URL;
 
-g_ytms_service.connect(yealink_ytms);
+global.ytmsService = g_ytms_service;
+// connect default
+g_ytms_service.connect()
+  .then(() => {
+    // TODO: do something else. eg. log report
+  });
 
 if (process.type === 'browser') {
   app.on('ready', () => {
     ipcMain.on('start-ytms-service', async(event, url) => {
+      // TODO: handle connect fail, send message to renderer process.
       const service = await g_ytms_service.connect(url);
 
       event.sender.send('start-ytms-service-reply', service.client.clientId);
+
+      // TODO: update enterprise info to yealink
     });
 
     ipcMain.on('get-clientid', async(event) => {

@@ -1,4 +1,5 @@
 import '../logger/renderer/install';
+// import '../ytms/install';
 
 import Vue from 'vue';
 import App from './App.vue';
@@ -11,18 +12,6 @@ import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
 import { AppWindowProxy } from './proxy/app-window-proxy';
-
-/*
-*  在渲染进程 测试 YTMS 接口时序
-* */
-// import ClientManagement from '../api-service/clientManagement';
-// import { getSystemInfo } from './proxy/main-process-proxy';
-//
-// let clientManagement;
-//
-// getSystemInfo().then((systemInfo) => {
-//   clientManagement = new ClientManagement(systemInfo);
-// });
 
 Vue.config.productionTip = false;
 

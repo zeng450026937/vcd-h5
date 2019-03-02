@@ -3,7 +3,6 @@ import { BaseWindow } from './base-window';
 import { PopupWindow } from './popup-window';
 import { AppTray } from './app-tray';
 import { formatPathAsUrl } from './utils';
-import alarmReporter from '../alarm-reporter';
 
 let windowStateKeeper = null;
 const minWidth = 1120;
@@ -70,14 +69,6 @@ export class AppWindow extends BaseWindow {
         this.tray.destroy();
         this.tray = null;
       }
-    });
-
-    app.on('gpu-process-crashed', (event, killed) => {
-      alarmReporter.report('MAIN_PROCESS_CRASAH');
-    });
-
-    this.window.webContents.on('crashed', (event, killed) => {
-      alarmReporter.report('RENDER_PROCESS_CRASAH');
     });
 
     ipcMain.on('will-quit', (event) => {
