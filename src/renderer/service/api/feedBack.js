@@ -1,8 +1,8 @@
-import { service } from '../axios';
+import { ylFileService } from '../axios';
 
-const { post } = service;
+const { post } = ylFileService;
 
-export const feedBackReport = (clientId, data) => post(`/softClients/${clientId}/feedback`, data);
+export const feedBackReport = (clientId, data, config) => post(`/clients/${clientId}/feedbacks`, data, config);
 
 export default {
   feedBackReport,

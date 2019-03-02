@@ -6,6 +6,7 @@
         wrapClassName="login-header-modal"
         okText="确认"
         cancelText="取消"
+        @ok="startFeedback"
     >
       <div class="flex flex-col">
         <div>
@@ -48,6 +49,9 @@
 </template>
 
 <script>
+import { feedBackReport } from '../../service/api/feedBack';
+import { getTodayLogData } from '../../proxy/main-process-proxy';
+
 export default {
   name : 'LoginHeaderModal',
   data() {
@@ -74,6 +78,25 @@ export default {
     },
     handleChange({ fileList }) {
       this.fileList = fileList;
+    },
+    async startFeedback() {
+      const formData = await this.getFormData();
+
+      feedBackReport('031b021c040d05c823061f0700080009', formData);
+    },
+    async getFormData() {
+      const logInfo = await getTodayLogData();
+
+      const form = new FormData();
+
+      // form.append('image', this.fileList[0]);
+      form.append('param', JSON.stringify({
+        feedbackTitle    : '这是一条测试反馈信息标题',
+        feedbackContent  : '这是一条测试反馈信息',
+        feedbackCategory : 'user_feedback',
+      }));
+
+      return form;
     },
   },
 };

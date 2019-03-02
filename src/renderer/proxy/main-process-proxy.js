@@ -25,3 +25,13 @@ export function sendNotification(data) {
 export function sendCrashReport(data) {
   ipcRenderer.send('render-crash', data);
 }
+
+export function getTodayLogData(data) {
+  ipcRenderer.send('request-today-log-data', data);
+
+  return new Promise((resolve) => {
+    ipcRenderer.once('send-log-data', (event, arg) => {
+      resolve(arg);
+    });
+  });
+}

@@ -26,6 +26,14 @@ export const ylService = axios.create({
   },
 });
 
+export const ylFileService = axios.create({
+  baseURL : YEALINK_URL,
+  timeout : 1000 * 60 * 30,
+  headers : {
+    'Content-Type' : 'multipart/form-data',
+  },
+});
+
 export default {
   service,
   fileService,

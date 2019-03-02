@@ -30,9 +30,14 @@ export default class LogProvider {
     return form;
   }
 
-  async provideTodayLog() {
+  async getTodayLogFile() {
     const logFiles = await this.readLogfileList();
-    const todayLogFile = logFiles.find((file) => this.isToday(file.logDate));
+
+    return logFiles.find((file) => this.isToday(file.logDate));
+  }
+
+  async provideTodayLog() {
+    const todayLogFile = await this.getTodayLogFile();
 
     return this.provideLogFile(todayLogFile);
   }

@@ -12,6 +12,7 @@ import { getSystemInfo } from './utils/systemInfo';
 import ClientManagement from './api-service/clientManagement';
 import LogReporter from './log-reporter';
 import alarmReport from './alarm-reporter';
+import LogProvider from './log-provider/provider';
 
 
 let mainWindow = null;
@@ -158,6 +159,14 @@ if (!handlingSquirrelEvent) {
         const data = await getSystemInfo();
 
         event.sender.send('system-info', data);
+      });
+      const logProvider = new LogProvider();
+
+      ipcMain.on('request-today-log-data', async(event, arg) => {
+        const logPath = logProvider.logDirectory;
+        const todayLogFile = await logProvider.getTodayLogFile();
+
+        event.sender.send('send-log-data', { logPath, todayLogFile });
       });
 
       let clientManagement;
