@@ -152,7 +152,7 @@ if (!handlingSquirrelEvent) {
       ipcMain.on('get-clientid', async(event) => {
         const id = await getClientId();
         
-        event.sender.send('get-clientid-reply', id);
+        event.sender.send('get-clientid-reply', true, id);
       });
     });
     

@@ -11,9 +11,10 @@ export function sendCrashQuitSync() {
 export function startYTMSService() {
   ipcRenderer.send('start-ytms-service');
 
-  return new Promise((resolve) => {
-    ipcRenderer.once('start-ytms-service-reply', (event, ...args) => {
-      resolve(...args);
+  return new Promise((resolve, reject) => {
+    ipcRenderer.once('start-ytms-service-reply', (event, ret, ...args) => {
+      if (ret) return resolve(...args);
+      reject();
     });
   });
 }
@@ -21,9 +22,10 @@ export function startYTMSService() {
 export function getClientId() {
   ipcRenderer.send('get-clientid');
 
-  return new Promise((resolve) => {
-    ipcRenderer.once('get-clientid-reply', (event, ...args) => {
-      resolve(...args);
+  return new Promise((resolve, reject) => {
+    ipcRenderer.once('get-clientid-reply', (event, ret, ...args) => {
+      if (ret) return resolve(...args);
+      reject();
     });
   });
 }
