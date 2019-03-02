@@ -20,7 +20,7 @@ MESSAGE_TYPE[MESSAGE_TYPE.PUT_CONFIG = 1] = 'PUT_CONFIG';
 MESSAGE_TYPE[MESSAGE_TYPE.PUT_MESSAGE = 2] = 'PUT_MESSAGE';
 MESSAGE_TYPE[MESSAGE_TYPE.GET_LOG = 3] = 'GET_LOG';
 MESSAGE_TYPE[MESSAGE_TYPE.GET_CONFIG = 4] = 'GET_CONFIG';
-MESSAGE_TYPE[MESSAGE_TYPE.GET_NETSTAT = 5] = 'GET_NETSTAT';
+MESSAGE_TYPE[MESSAGE_TYPE.GET_NETLOG = 5] = 'GET_NETLOG';
 
 export { MESSAGE_TYPE };
 
@@ -47,21 +47,28 @@ export class PushService extends EventEmitter {
     }
 
     // ignore anyway, we will check the respones
-    const res = await this.post(PUSH_ACTION.CHECK).catch(() => {});
+    const res = await this.post(PUSH_ACTION.CHECK);
 
     if (!res) {
       return this.poll(1000);
     }
 
-    if (res.code !== undefined) {
+    // poll with result, got messages!
+    if (!res.code) {
+      wait = await this.sync(res);
+
+      return this.poll(wait);
+    }
+
+    // poll with other error
+    if (res.code !== '60600') {
       this.reconnect_attempts += 1;
 
       return this.poll(calcWaitingTime(this.reconnect_attempts));
     }
 
-    wait = await this.sync(res);
-
-    return this.poll(wait);
+    // poll timeout normally
+    return this.poll();
   }
 
   async sync(res) {

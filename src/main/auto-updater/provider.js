@@ -194,11 +194,13 @@ export class Downloader extends EventEmitter {
   }
 
   onDownloaded(info) {
+    this.cancelToken = null;
     this.state = DOWNLOAD_STATE.DONE;
     this.emit('downloaded', info);
   }
 
   onDownloadError(e) {
+    this.cancelToken = null;
     this.state = DOWNLOAD_STATE.FAILED;
     this.emit('download-error', e);
   }
@@ -213,7 +215,7 @@ export class Provider extends Downloader {
 
     this.feedURL = null;
     this.channel = 'stable'; // insiders, fast, stable
-    this.clientId = randomBytes(32).toString(); // used for Staged Rollouts
+    this.clientId = randomBytes(32).toString('hex'); // used for Staged Rollouts
     this.latestVersion = null;
     this.latestFile = null;
   }

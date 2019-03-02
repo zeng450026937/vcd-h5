@@ -1,7 +1,8 @@
 import { EventEmitter } from 'events';
 import { app } from 'electron';
-// import { Provider } from './provider';
-import { YealinkProvider } from './yealink-provider';
+import semver from 'semver';
+import { Provider } from './provider';
+// import { YealinkProvider } from './yealink-provider';
 
 export class AppUpdater extends EventEmitter {
   constructor() {
@@ -68,6 +69,12 @@ export class AppUpdater extends EventEmitter {
     return info;
   }
 
+  async downloadUpdates() {
+    if (!this.provider.latestVersion) throw new Error('Check update first');
+
+    return this.provider.download();
+  }
+
   quitAndInstall(silent = false, runAfter = false) {
     if (this.installing) return;
     if (!this.provider.latestVersionDownloaded) return;
@@ -98,10 +105,20 @@ export class AppUpdater extends EventEmitter {
     });
   }
 
+  setProvider(provider) {
+    if (this.provider.isDownloading) {
+      this.provider.appUpdater = null;
+      this.provider.cancel();
+    }
+
+    provider.appUpdater = this;
+
+    this.provider = provider;
+  }
+
   // private
   genProvider() {
-    // return new Provider(this);
-    return new YealinkProvider(this);
+    return new Provider(this);
   }
 
   async install() {
@@ -109,7 +126,6 @@ export class AppUpdater extends EventEmitter {
   }
 
   handlerQuit(event, exitCode) {
-    console.log(exitCode, this.autoInstallOnAppQuit, this.provider.latestVersionDownloaded);
     if (exitCode !== 0) return;
     if (!this.autoInstallOnAppQuit) return;
     if (!this.provider.latestVersionDownloaded) return;
