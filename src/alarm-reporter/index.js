@@ -5,13 +5,14 @@ import LogProvider from '../log-provider/provider';
 
 
 class AlarmReporter extends LogProvider {
-  constructor() {
+  constructor(api) {
     super();
 
+    this.api = api;
     this.alarmStates = alarmState;
   }
 
-  report(state) {
+  async report(state) {
     const reportInfo = get(this, `alarmStates${state}`, {
       alarmCode  : '008',
       alarmName  : state,
@@ -22,11 +23,13 @@ class AlarmReporter extends LogProvider {
 
     reportInfo.alarmTime = new Date().valueOf();
 
-    const logFormData = this.provideTodayLog();
+    const logFormData = await this.provideTodayLog();
 
-    logFormData.append('param', reportInfo);
+    logFormData.append('param', JSON.stringify(reportInfo));
 
-    ylDeviceManagement.reportAlarm(this.clientId, { param: reportInfo }, { headers: logFormData.getHeaders() });
+    if (this.api) return this.api(this.clientId, logFormData, { headers: logFormData.getHeaders() });
+
+    return ylDeviceManagement.reportAlarm(this.clientId, logFormData, { headers: logFormData.getHeaders() });
   }
 }
 
