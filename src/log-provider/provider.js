@@ -18,21 +18,23 @@ export default class LogProvider {
     });
   }
 
-  async provideLogFile(fileName) {
-    await this.zipFile(fileName);
+  async provideLogFile(file) {
+    if (!file) return new FormData();
+
+    await this.zipFile(file.fileName);
 
     const form = new FormData();
 
-    form.append('log', fs.createReadStream(path.join(this.logDirectory, `/${fileName}.zip`)));
+    form.append('log', fs.createReadStream(path.join(this.logDirectory, `/${file.fileName}.zip`)));
 
     return form;
   }
 
-  provideTodayLog() {
-    const logFiles = this.readLogfileList();
+  async provideTodayLog() {
+    const logFiles = await this.readLogfileList();
     const todayLogFile = logFiles.find((file) => this.isToday(file.logDate));
 
-    return this.provideLogFile(todayLogFile.fileName);
+    return this.provideLogFile(todayLogFile);
   }
 
   removeZipFile(fileName) {

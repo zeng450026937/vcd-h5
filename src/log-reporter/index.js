@@ -5,10 +5,11 @@ import LogProvider from '../log-provider/provider';
 
 const RECORD_FILE_NAME = 'report-record.json';
 
-export default class logReporter extends LogProvider {
-  constructor() {
+export default class LogReporter extends LogProvider {
+  constructor(api) {
     super();
 
+    this.api = api;
     this.checkRecordFile();
   }
 
@@ -44,6 +45,8 @@ export default class logReporter extends LogProvider {
   }
 
   startReport(form) {
+    if (this.api) return this.api(this.clientId, form, { headers: form.getHeaders() });
+    
     return uploadLog(this.clientId, form, { headers: form.getHeaders() });
   }
 
