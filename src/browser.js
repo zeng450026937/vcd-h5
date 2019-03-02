@@ -141,6 +141,9 @@ if (!handlingSquirrelEvent) {
       
       createWindow();
       installYTMS(ytmsService);
+      // installYTMS(ytmsService, (type, body) => {
+      //   mainWindow.sendMessage(type, body);
+      // });
 
       ipcMain.on(
         'log',

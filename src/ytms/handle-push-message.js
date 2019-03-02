@@ -5,7 +5,7 @@ import {
   MESSAGE_TYPE,
 } from './push-service';
 
-function showNotification(title, body) {
+export function showNotification(title, body) {
   if (typeof body === 'object') {
     body = JSON.stringify(body);
   }
@@ -20,7 +20,7 @@ function showNotification(title, body) {
   }
 }
 
-export function handlePushMessage(pushService, hook) {
+export function handlePushMessage(pushService, hook = showNotification) {
   const { 
     PUT_CONFIG,
     PUT_MESSAGE,
@@ -30,10 +30,10 @@ export function handlePushMessage(pushService, hook) {
     GET_NETLOG,
   } = MESSAGE_TYPE;
 
-  pushService.on(PUT_CONFIG, (body) => showNotification(MESSAGE_TYPE[PUT_CONFIG], body));
-  pushService.on(PUT_MESSAGE, (body) => showNotification(MESSAGE_TYPE[PUT_MESSAGE], body));
-  pushService.on(PUT_UPDATE, (body) => showNotification(MESSAGE_TYPE[PUT_UPDATE], body));
-  pushService.on(GET_CONFIG, (body) => showNotification(MESSAGE_TYPE[GET_CONFIG], body));
-  pushService.on(GET_LOG, (body) => showNotification(MESSAGE_TYPE[GET_LOG], body));
-  pushService.on(GET_NETLOG, (body) => showNotification(MESSAGE_TYPE[GET_NETLOG], body));
+  pushService.on(PUT_CONFIG, (body) => hook(MESSAGE_TYPE[PUT_CONFIG], body));
+  pushService.on(PUT_MESSAGE, (body) => hook(MESSAGE_TYPE[PUT_MESSAGE], body));
+  pushService.on(PUT_UPDATE, (body) => hook(MESSAGE_TYPE[PUT_UPDATE], body));
+  pushService.on(GET_CONFIG, (body) => hook(MESSAGE_TYPE[GET_CONFIG], body));
+  pushService.on(GET_LOG, (body) => hook(MESSAGE_TYPE[GET_LOG], body));
+  pushService.on(GET_NETLOG, (body) => hook(MESSAGE_TYPE[GET_NETLOG], body));
 }
