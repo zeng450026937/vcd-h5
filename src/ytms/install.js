@@ -1,24 +1,13 @@
-import { app, ipcMain } from 'electron';
+import { handlePushMessage } from './handle-push-message';
 import { YTMSService } from './ytms-service';
 
-const g_ytms_service = new YTMSService();
-
-global.ytmsService = g_ytms_service;
-// connect default
-g_ytms_service.connect()
-  .then(() => {
+export function install(ytmsService = new YTMSService()) {  
+  ytmsService.connect()
+    .then((service) => {
+      handlePushMessage(service.push);
+    // TODO: update client info
     // TODO: do something else. eg. log report
-  });
-
-if (process.type === 'browser') {
-  app.on('ready', () => {
-    ipcMain.on('start-ytms-service', async(event, url) => {
-      const service = await g_ytms_service.connect(url).catch(() => {});
-      const ret = !!service;
-
-      event.sender.send('start-ytms-service-reply', ret, service && service.client.clientId);
-
-      // TODO: update enterprise info to yealink
     });
-  });
+
+  return ytmsService;
 }

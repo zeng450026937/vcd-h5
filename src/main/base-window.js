@@ -135,6 +135,10 @@ export class BaseWindow extends EventEmitter {
     this.focus();
   }
 
+  sendMessage(...args) {
+    return this.window.webContents.send(...args);
+  }
+
   /** Is the page loaded and has the renderer signalled it's ready? */
   get rendererLoaded() {
     return this.hasFinishedLoading && this.hasFinishedRendering;

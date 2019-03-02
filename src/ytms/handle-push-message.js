@@ -20,7 +20,7 @@ function showNotification(title, body) {
   }
 }
 
-export function handlePushMessage(pushService) {
+export function handlePushMessage(pushService, hook) {
   const { 
     PUT_CONFIG,
     PUT_MESSAGE,

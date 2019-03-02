@@ -1,7 +1,6 @@
 import { getClientId } from './client-info';
 import { YTMSClient } from './ytms-client';
 import { PushService } from './push-service';
-import { handlePushMessage } from './handle-push-message';
 
 const default_url = process.env.VUE_APP_YTMS_URL;
 
@@ -40,8 +39,6 @@ export class YTMSService {
 
     push.poll();
 
-    handlePushMessage(push);
-
     service.push = push;
     service.pushURL = pushURL;
     service.tenantId = tenantId;
@@ -79,6 +76,12 @@ export class YTMSService {
 
   get(url = default_url) {
     return this.services[url];
+  }
+
+  getApi(url = default_url) {
+    const service = this.services[url];
+
+    return service && service.api;
   }
 
   has(url) {

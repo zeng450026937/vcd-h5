@@ -1,6 +1,5 @@
 import './logger/main/install';
 import './main/app-updater';
-import './ytms/install';
 
 import { app, ipcMain } from 'electron';
 import { AppWindow } from './main/app-window';
@@ -8,10 +7,14 @@ import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
 import { showUncaughtException } from './main/show-uncaught-exception';
 import { log as writeLog } from './logger/winston';
+import { install as installYTMS } from './ytms/install';
 import { getClientId } from './ytms/client-info';
+import { YTMSService } from './ytms/ytms-service';
+import { handlePushMessage } from './ytms/handle-push-message';
 import { Alarm } from './ytms/uploader';
 
 let mainWindow = null;
+const ytmsService = new YTMSService();
 
 const launchTime = now();
 
@@ -96,16 +99,12 @@ function createWindow() {
   });
 
   window.onCrashed((killed) => {
-    const ytmsService = global.ytmsService;
+    const api = ytmsService.getApi();
 
-    if (!ytmsService) return;
-
-    const service = ytmsService.get();
-
-    if (!service) return;
+    if (!api) return;
 
     // TODO: handle killed
-    const alarm = Alarm.Create(service.api);
+    const alarm = Alarm.Create(api);
 
     // TODO: setup alarm
     alarm.type = 'gpu-process-crashed';
@@ -141,6 +140,7 @@ if (!handlingSquirrelEvent) {
       readyTime = now() - launchTime;
       
       createWindow();
+      installYTMS(ytmsService);
 
       ipcMain.on(
         'log',
@@ -154,19 +154,29 @@ if (!handlingSquirrelEvent) {
         
         event.sender.send('get-clientid-reply', true, id);
       });
+
+      ipcMain.on('start-ytms-service', async(event, url) => {
+        const service = await ytmsService.connect(url).catch(() => {});
+        const ret = !!service;
+
+        if (ret) {
+          handlePushMessage(service.push);
+        }
+  
+        event.sender.send('start-ytms-service-reply', ret, ret && service.client.clientId);
+  
+        // TODO: update client info
+        // TODO: update enterprise info to yealink
+      });
     });
     
-    app.on('gpu-process-crashed', (event, killed) => {
-      const ytmsService = global.ytmsService;
+    app.on('gpu-process-crashed', (event, killed) => {  
+      const api = ytmsService.getApi();
   
-      if (!ytmsService) return;
-  
-      const service = ytmsService.get();
-  
-      if (!service) return;
+      if (!api) return;
   
       // TODO: handle killed
-      const alarm = Alarm.Create(service.api);
+      const alarm = Alarm.Create(api);
   
       // TODO: setup alarm
       alarm.type = 'gpu-process-crashed';
