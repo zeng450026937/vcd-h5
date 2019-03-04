@@ -14,6 +14,8 @@ import {
 } from './main/report-crash';
 import { log as writeLog } from './logger/winston';
 import { handlePushMessage } from './ytms/handle-push-message';
+import LogProvider from './log-provider/provider';
+import LogReporter from './log-reporter';
 
 let mainWindow = null;
 
@@ -136,6 +138,7 @@ if (!handlingSquirrelEvent) {
       ytms.connect()
         .then((service) => {
           handlePushMessage(service.push);
+          const logReporter = new LogReporter(service.api);
         });
 
       ipcMain.on(
@@ -177,6 +180,13 @@ if (!handlingSquirrelEvent) {
         ytms.disconnect(url);
         
         event.sender.send('stop-ytms-service-reply', true);
+      });
+
+      ipcMain.on('get-today-log', async(event) => {
+        const logProvider = new LogProvider();
+        const logFile = await logProvider.provideTodayLog();
+
+        event.sender.send('get-today-log-reply', logFile);
       });
     });
     

@@ -49,6 +49,8 @@
 
 <script>
 import { readFile } from 'fs-extra';
+import path from 'path';
+import { gzip } from 'zlib';
 import { getTodayLog } from '../../proxy/main-process-proxy';
 
 export default {
@@ -88,6 +90,14 @@ export default {
 
       return true;
     },
+    zipFile(stream) {
+      return new Promise((resolve) => {
+        gzip(stream, (error, buffer) => {
+          resolve(buffer);
+        });
+      });
+    },
+
     reset() {
       this.fileList = [];
       this.problemDescribe = '';
@@ -97,11 +107,11 @@ export default {
       if (!this.check()) return;
       const todayLog = await getTodayLog();
       const formData = new FormData();
+      const input = await readFile(path.join(todayLog.directory, `/${todayLog.fileInfo.fileName}`));
+      const buffer = await this.zipFile(input);
 
       if (this.isUploadLog) {
-        const stream = await readFile(todayLog.fileInfo.path);
-
-        formData.append('log', new Blob(stream), `${todayLog.fileInfo.fileName}.zip`);
+        formData.append('log', new Blob(buffer), `${todayLog.fileInfo.fileName}.zip`);
       }
 
       this.fileList.map((item) => item.originFileObj).forEach((img) => {
@@ -118,7 +128,6 @@ export default {
       if (res == null) return this.$message.info('上报反馈信息失败！');
 
       this.visible = false;
-
       this.close();
     },
   },
