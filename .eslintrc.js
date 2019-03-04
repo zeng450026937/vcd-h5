@@ -17,6 +17,7 @@ module.exports = {
     __WIN32__: true,
     __LINUX__: true,
     logger: true,
+    ytms: true,
   },
   rules : {
     'no-console'            : process.env.NODE_ENV === 'production' ? 2 : 0,
@@ -129,6 +130,7 @@ module.exports = {
     'no-lonely-if'                 : 2,
     'no-mixed-operators'           : 2,
     'no-mixed-spaces-and-tabs'     : 2,
+    'no-multi-assign'              : 0,
     'no-multi-spaces'              : 2,
     'no-multi-str'                 : 2,
     'no-multiple-empty-lines'      : 2,

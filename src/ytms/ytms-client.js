@@ -13,6 +13,7 @@ export class YTMSClient extends EventEmitter {
     this.isChecking = false;
     this.isStop = false;
     this.retryTimes = 0;
+    this.maxRetryTimes = 0;
   }
 
   get baseURL() {
@@ -62,11 +63,17 @@ export class YTMSClient extends EventEmitter {
       await waitFor(wait);
     }
 
+    if (this.isStop) return;
+
     // ignore anyway, we will check isReady instead.
     await this.check().catch(() => {});
 
     if (!this.isReady) {
       this.retryTimes++;
+
+      if (this.maxRetryTimes && this.maxRetryTimes < this.retryTimes) {
+        return;
+      }
 
       return this.start(calcWaitingTime(this.retryTimes));
     }
@@ -76,9 +83,9 @@ export class YTMSClient extends EventEmitter {
     this.heartBeat();
   }
 
-  stop() {
+  stop(stop = true) {
     // stop heartbeat
-    this.isStop = true;
+    this.isStop = stop;
   }
 
   async heartBeat(wait) {

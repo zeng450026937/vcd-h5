@@ -126,7 +126,7 @@ export async function uploadNetLogs(baseURL, clientId, formdata) {
   return res.data.data;
 }
 
-export async function reportNetLogs(baseURL, clientId, sessionId, data, expire = 300) {
+export async function reportNetLogs(baseURL, clientId, sessionId, data, expire = 30) {
   const res = await axios({
     method : 'post',
     baseURL,

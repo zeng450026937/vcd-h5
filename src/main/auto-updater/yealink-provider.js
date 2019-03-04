@@ -1,37 +1,32 @@
-import axios from 'axios';
 import { Provider } from './provider';
 
 export class YealinkProvider extends Provider {
-  constructor(appUpdater) {
+  constructor(appUpdater, ytms) {
     super(appUpdater);
     
-    this.customId = 'default';
-    this.clientModel = 'VCD-H5';
-    this.clientType = 'software';
+    this.ytms = ytms;
   }
 
   async getLatestVersion() {
-    // const { platform, arch } = process;
-    // const { brand, channel, feedURL } = this.appUpdater || {};
-
-    // const res = await axios({
-    //   url  : feedURL,
-    //   data : {
-    //     clientId : this.clientId,
-    //     type     : this.clientType,
-    //     platform,
-    //     arch,
-    //     brand,
-    //     channel,
-    //   },
-    // });
-
-    this.latestVersion = {
-      file : {
-        url : 'http://file.yealinkops.com/publish/enterprise/download/RTVC/vc-desktop-1.0.0-alpha.exe',
-      },
+    const clientId = await this.ytms.getClientId();
+    const clientInfo = {
+      clientId,
+      clientModel    : process.env.VUE_APP_MODEL,
+      clientType     : process.env.VUE_APP_TYPE,
+      clientVersion  : this.appUpdater.appVersion,
+      clientArch     : process.arch,
+      clientPlatform : process.platform,
+      customId       : process.env.VUE_APP_CUSTOMID,
+      updateChannel  : this.channel,
     };
 
-    return this.latestVersion;
+    // is it all right to use default api?
+    const api = this.ytms.getApi();
+
+    const res = await api.getUpdatePackage(clientInfo);
+
+    this.latestVersion = res;
+
+    return res;
   }
 }
