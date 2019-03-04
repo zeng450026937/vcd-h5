@@ -2,7 +2,7 @@
   <a-layout id="frequent-contact" class="h-full">
 
     <div class="flex flex-col h-full">
-      <div class="h-14">
+      <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
             <a-iconfont  v-if="!selectedGroup.isRoot" type="icon-left"
@@ -18,9 +18,8 @@
           <app-header/>
         </div>
       </div>
-      <a-divider class="my-0"/>
-      <div class="flex h-full m-3 bg-white shadow">
-        <div class="h-full w-2/5 border-r overflow-y-auto px-1 py-1">
+      <div class="flex h-full m-3 bg-white border">
+        <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
             <span class="text-sm text-grey-dark">暂未添加常用联系人</span>
@@ -52,8 +51,11 @@
             </a-dropdown>
           </contact-list>
         </div>
-        <div class="h-full w-3/5">
-          <contact-info :user="currentUser" :group="groupInfo" @toGroup="toGroup"/>
+        <div class="flex flex-grow bg-white justify-center">
+          <contact-info :user="currentUser"
+                        :group="groupInfo"
+                        @toGroup="toGroup"
+                        style="width: 368px"/>
         </div>
       </div>
       <a-drawer

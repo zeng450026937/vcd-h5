@@ -62,6 +62,7 @@
                 </a-input>
                 <a-input
                     v-model="meetingData.proxyPort"
+                    v-number-only
                     placeholder='端口'
                     style="width: 76px;"
                 >
@@ -117,6 +118,19 @@ export default {
   components : {
     TabSettingMedia,
     VideoView,
+  },
+  directives : {
+    numberOnly : {
+      bind(el) {
+        el.handler = function() {
+          el.value = el.value.replace(/\D+/, '');
+        };
+        el.addEventListener('input', el.handler);
+      },
+      unbind(el) {
+        el.removeEventListener('input', el.handler);
+      },
+    },
   },
   data() {
     return {

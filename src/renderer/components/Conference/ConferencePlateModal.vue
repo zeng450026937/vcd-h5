@@ -10,8 +10,18 @@
       @cancel="visible = false"
   >
     <div class="flex flex-col">
-      <a-input v-model="callNumber"/>
-      <plate-content @inputNumber="clickNumber" style="margin-top: 10px"/>
+      <div class="flex h-12 border-b justify-center items-center">
+        <span class="text-base">拨号盘</span>
+        <a-iconfont type="icon-guanbi"
+                    class="absolute cursor-pointer hover:text-red"
+                    style="right: 26px"
+                    @click="visible = false"/>
+      </div>
+      <div style="padding: 0 50px; margin-top: 30px">
+        <a-input ref="numberInput" v-model="callNumber"/>
+      </div>
+      <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
+                     style="padding: 0 50px 18px 50px;"/>
     </div>
   </a-modal>
 </template>
@@ -26,21 +36,7 @@ export default {
   },
   data() {
     return {
-      visible   : false,
-      dialPanel : [
-        { num: '1', alpha: '' },
-        { num: '2', alpha: 'ABC', isCenter: true },
-        { num: '3', alpha: 'DEF' },
-        { num: '4', alpha: 'GHI' },
-        { num: '5', alpha: 'JKL', isCenter: true },
-        { num: '6', alpha: 'MNO' },
-        { num: '7', alpha: 'PQRS' },
-        { num: '8', alpha: 'TUV', isCenter: true },
-        { num: '9', alpha: 'WXYZ' },
-        { num: '*', alpha: '. @' },
-        { num: '0', alpha: '+', isCenter: true },
-        { num: '#', alpha: '' },
-      ],
+      visible    : false,
       callNumber : '',
     };
   },
@@ -48,6 +44,18 @@ export default {
     clickNumber(num) {
       this.callNumber = this.callNumber === null ? num : this.callNumber += num;
       this.$rtc.call.sendDTMF(num);
+      this.$refs.numberInput.focus();
+    },
+  },
+  watch : {
+    visible(val) {
+      if (val) {
+        this.$nextTick().then(() => {
+          this.$refs.numberInput.$nextTick().then(() => {
+            this.$refs.numberInput.focus();
+          });
+        });
+      }
     },
   },
 };
@@ -55,7 +63,12 @@ export default {
 
 <style lang="less">
 .conference-plate-modal {
+  .ant-modal-content {
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.20);
+    border-radius: unset;
+  }
   .ant-modal-body {
+    padding: 0 !important;
   }
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
   <div id="main-nav-mini-video" class="bg-white">
     <div class="relative" style="border: 1px solid #1D212F;">
+      <div class="h-8 flex items-center absolute w-full z-10" style="background: rgba(0,0,0,0.65);">
+        <span class="text-white text-xs mx-3 truncate leading-tight">{{conferenceTitle}}</span>
+      </div>
       <div class="video-controls absolute w-full">
       <div class="h-full w-full flex flex-col">
 
@@ -42,7 +45,8 @@
         </div>
       </div>
       </div>
-      <video-view class="nav-mini-video bg-white"
+      <video-view class="nav-mini-video bg-white cursor-pointer"
+                  title="双击回到视频会议界面"
                   source="remote"
                   object-fit="cover"
                   position="relative"
@@ -80,6 +84,9 @@ export default {
     confStatus() {
       return this.$rtc.conference.status;
     },
+    conferenceTitle() {
+      return this.$rtc.conference.information.description.subject;
+    }
   },
   methods : {
     showLeaveModal() {

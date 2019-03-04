@@ -50,11 +50,14 @@
       </div>
       <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
-      <div class="flex justify-center items-center py-2 bg-white">
-        <a-button large type="primary"
-                  class="w-24 text-sm"
-                  @click="enterMeeting"
-        >开始会议</a-button>
+      <div class="h-12">
+        <div class="flex justify-center items-center py-2 bg-white">
+          <a-button large type="primary"
+                    class="w-24 text-sm"
+                    @click="enterMeeting"
+          >开始会议
+          </a-button>
+        </div>
       </div>
     </div>
   </a-layout>

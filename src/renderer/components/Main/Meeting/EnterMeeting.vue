@@ -166,7 +166,6 @@ export default {
 
 <style lang="less">
   #enter-meeting {
-    background-color: rgb(247, 258, 252);
     .controls-content {
       button{
         box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

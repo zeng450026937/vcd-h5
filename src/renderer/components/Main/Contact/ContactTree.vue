@@ -206,7 +206,7 @@ export default {
         &-normal {
           width: 80%;
           height: 56px !important;
-          padding: 0 8px;
+          margin: 0 8px;
           .ant-tree-title {
             display: block;
             height: 100%;

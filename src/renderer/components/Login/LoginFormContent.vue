@@ -83,9 +83,9 @@
       <div class="mt-5 text-xs text-center text-black6">
         <template v-if="type === 'cloud'">
           <span class="cursor-pointer leading-tight">忘记密码</span>
-          <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+          <a-divider type="vertical" class="mx-5 bg-grey"/>
           <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
-          <a-divider type="vertical" class="mx-5 bg-grey h-5"/>
+          <a-divider type="vertical" class="mx-5 bg-grey"/>
         </template>
         <a-badge v-if="hasNewVersion">
               <span slot="count"

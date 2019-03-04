@@ -3,7 +3,7 @@
     <div v-for="n in dialPanel"
          :key="n.num"
          class="mb-3 text-center"
-         :class="{'mx-10': n.isCenter}">
+         :class="{'mx-6': n.isCenter}">
       <div class="flex justify-center">
         <div class="w-14 h-14">
           <a-button class="w-full h-full"
@@ -11,7 +11,7 @@
                     @long-press="longPressNumber(n.alpha)">
             <div class="flex flex-col justify-center items-center h-full">
               <span class="text-xl">{{n.num}}</span>
-              <span class="text-xs text-black6">{{n.alpha}}</span>
+              <span v-if="!hideAlpha" class="text-xs text-black6">{{n.alpha}}</span>
             </div>
           </a-button>
         </div>
@@ -22,7 +22,13 @@
 
 <script>
 export default {
-  name : 'PlateContent',
+  name  : 'PlateContent',
+  props : {
+    hideAlpha : {
+      type    : Boolean,
+      default : false,
+    },
+  },
   data() {
     return {
       dialPanel : [
