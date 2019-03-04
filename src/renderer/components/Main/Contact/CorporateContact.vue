@@ -1,7 +1,7 @@
 <template>
   <a-layout id="corporate-contacts" class="h-full w-full">
     <div class="flex flex-col h-full">
-      <div>
+      <div class="border-b">
         <div class="flex flex-col bg-white min-h-18 dragable">
           <div class="flex">
             <div class="h-4 ml-4 mt-4">
@@ -28,18 +28,18 @@
 
         </div>
       </div>
-      <a-divider class="my-0"/>
-      <div class="flex h-full m-4 bg-white shadow">
-        <div class="w-2/5 p-1">
-          <div class="h-full overflow-y-hidden">
+      <div class="flex h-full m-4 bg-white border">
+        <div class="border-r">
+          <div class="h-full p-1  overflow-y-hidden" style="width: 280px">
             <contact-list :contact-list="currents"
                           more-icon
                           @clickItem="onListItemClicked"/>
           </div>
         </div>
-        <a-divider class="mx-0 h-full" type="vertical"/>
-        <div class="w-3/5 bg-white">
-          <contact-info :user="selectedContact" :group="groupInfo" @toGroup="toGroup"/>
+        <div class="flex flex-grow bg-white justify-center">
+          <contact-info :user="selectedContact"
+                        :group="groupInfo"
+                        @toGroup="toGroup" style="width: 368px"/>
         </div>
       </div>
     </div>
