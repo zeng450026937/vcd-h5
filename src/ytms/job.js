@@ -2,14 +2,14 @@ import { EventEmitter } from 'events';
 
 // in seconds
 const SESSION_EXPIRE_TIME = 30 * 1000;
-const MAX_SESSION_LIFETIME = 30 * 1000;
+const MAX_SESSION_LIFETIME = 3600 * 1000;
 
 export class Session extends EventEmitter {
   constructor(id) {
     super();
 
     this.id = id;
-    this.interval = SESSION_EXPIRE_TIME * 0.9;
+    this.interval = SESSION_EXPIRE_TIME * 0.7;
     this.timer = null;
     this.status = 'stop';
     this.startTime = 0;
