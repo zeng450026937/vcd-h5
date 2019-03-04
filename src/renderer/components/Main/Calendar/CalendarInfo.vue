@@ -37,7 +37,10 @@
               <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">周期</span>
-                  <span>当前会议不是周期性会议</span>
+                  <div class="flex flex-col">
+                    <span>{{currentEvent.pattern.title}}</span>
+                    <span>{{currentEvent.pattern.time}}</span>
+                  </div>
                 </div>
               </div>
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
@@ -62,10 +65,10 @@
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">直播链接</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
-                    <span class="truncate">{{currentEvent.liveShareUrl}}</span>
+                    <a class="truncate" @click="copyShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
                   <span class="text-xs text-indigo cursor-pointer ml-2"
-                        @click="copyShareUrl(currentEvent.liveShareUrl)">复制</span>
+                        @click="copyShareUrl">复制</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -158,10 +161,10 @@ export default {
       });
     },
     audioEnter() {
-      console.warn(this.currentEvent);
+      console.warn(JSON.stringify(this.currentEvent));
     },
-    copyShareUrl(url) {
-      copy(url);
+    copyShareUrl() {
+      copy(this.currentEvent.liveShareUrl);
     },
   },
 };

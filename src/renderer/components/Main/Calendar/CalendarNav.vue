@@ -11,6 +11,7 @@
     <div>
       <plain-calendar ref="calendar"
                       class="calendar-nav-calendar"
+                      :showToday="false"
                       @select="selectDate"
       >
         <template slot="dateRender" slot-scope="current, today">
@@ -22,16 +23,19 @@
           </div>
         </template>
       </plain-calendar>
+      <div class="text-center text-xs text-indigo">
+        <span class="cursor-pointer" @click="onToday">回到今天</span>
+      </div>
     </div>
-    <div class="flex flex-col items-center mt-4 px-3">
-      <a-button type="primary" block
-                disabled
-                class="h-9"
-                @click="reserveMeeting">
-        <a-iconfont type="icon-yuyuehuiyi" class="text-base"/>
-        预约会议
-      </a-button>
-    </div>
+    <!--<div class="flex flex-col items-center mt-4 px-3">-->
+      <!--<a-button type="primary" block-->
+                <!--disabled-->
+                <!--class="h-9"-->
+                <!--@click="reserveMeeting">-->
+        <!--<a-iconfont type="icon-yuyuehuiyi" class="text-base"/>-->
+        <!--预约会议-->
+      <!--</a-button>-->
+    <!--</div>-->
   </a-layout>
 </template>
 
@@ -56,7 +60,7 @@ export default {
     },
     selectedDate : {
       get() {
-        return this.$model.calendar.selectedDate;
+        return this.$model.calendar.selectedDate || new Date();
       },
       set(val) {
         this.$model.calendar.selectedDate = val;
@@ -66,11 +70,13 @@ export default {
   mounted() {
     this.$nextTick(() => {
       // 初始化时候点击 today
-      // this.$refs.calendar.onToday();
       this.$refs.calendar.setDate(this.selectedDate);
     });
   },
   methods : {
+    onToday() {
+      this.$refs.calendar.onToday();
+    },
     reserveMeeting() {
       this.$router.push(MAIN.CALENDAR_RESERVE);
     },

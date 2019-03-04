@@ -97,7 +97,7 @@ const Picker = {
       this.$children[0].onToday();
     },
     setDate(date) {
-      if(!date) return;
+      if (!date) return;
       this.$children[0].onSelect(isMoment(date) ? date : moment(date));
     },
   },
