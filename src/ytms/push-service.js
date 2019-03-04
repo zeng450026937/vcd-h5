@@ -2,7 +2,6 @@ import axios from 'axios';
 import { EventEmitter } from 'events';
 import { createHmac } from 'crypto';
 import { waitFor, calcWaitingTime } from './wait-for';
-import { hexToBytes, encode64 } from './uuid';
 
 const PUSH_ACTION = {};
 
@@ -20,7 +19,8 @@ MESSAGE_TYPE[MESSAGE_TYPE.PUT_CONFIG = 1] = 'PUT_CONFIG';
 MESSAGE_TYPE[MESSAGE_TYPE.PUT_MESSAGE = 2] = 'PUT_MESSAGE';
 MESSAGE_TYPE[MESSAGE_TYPE.GET_LOG = 3] = 'GET_LOG';
 MESSAGE_TYPE[MESSAGE_TYPE.GET_CONFIG = 4] = 'GET_CONFIG';
-MESSAGE_TYPE[MESSAGE_TYPE.GET_NETLOG = 5] = 'GET_NETLOG';
+MESSAGE_TYPE[MESSAGE_TYPE.START_NETLOG = 5] = 'START_NETLOG';
+MESSAGE_TYPE[MESSAGE_TYPE.STOP_NETLOG = 5] = 'STOP_NETLOG';
 
 export { MESSAGE_TYPE };
 
@@ -38,7 +38,13 @@ export class PushService extends EventEmitter {
     this.algorithm = 'sha256';
     this.secretKey = 'yealink'; // fake value
 
-    this.reconnect_attempts = 0;
+    this.isStop = false;
+    this.retryTimes = 0;
+    this.maxRetryTimes = 0;
+  }
+
+  stop(stop = true) {
+    this.isStop = stop;
   }
 
   async poll(wait) {
@@ -48,6 +54,8 @@ export class PushService extends EventEmitter {
 
     // ignore anyway, we will check the respones
     const res = await this.post(PUSH_ACTION.CHECK);
+
+    if (this.isStop) return;
 
     if (!res) {
       return this.poll(1000);
@@ -62,9 +70,13 @@ export class PushService extends EventEmitter {
 
     // poll with other error
     if (res.code !== '60600') {
-      this.reconnect_attempts += 1;
+      this.retryTimes += 1;
 
-      return this.poll(calcWaitingTime(this.reconnect_attempts));
+      if (this.maxRetryTimes && this.maxRetryTimes < this.retryTimes) {
+        return;
+      }
+
+      return this.poll(calcWaitingTime(this.retryTimes));
     }
 
     // poll timeout normally

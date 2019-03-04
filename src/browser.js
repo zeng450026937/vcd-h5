@@ -1,4 +1,5 @@
 import './logger/main/install';
+import './ytms/install';
 import './main/app-updater';
 
 import { app, ipcMain } from 'electron';
@@ -7,14 +8,11 @@ import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
 import { showUncaughtException } from './main/show-uncaught-exception';
 import { log as writeLog } from './logger/winston';
-import { install as installYTMS } from './ytms/install';
 import { getClientId } from './ytms/client-info';
-import { YTMSService } from './ytms/ytms-service';
 import { handlePushMessage } from './ytms/handle-push-message';
 import { Alarm } from './ytms/uploader';
 
 let mainWindow = null;
-const ytmsService = new YTMSService();
 
 const launchTime = now();
 
@@ -99,7 +97,7 @@ function createWindow() {
   });
 
   window.onCrashed((killed) => {
-    const api = ytmsService.getApi();
+    const api = ytms.getApi();
 
     if (!api) return;
 
@@ -140,10 +138,11 @@ if (!handlingSquirrelEvent) {
       readyTime = now() - launchTime;
       
       createWindow();
-      installYTMS(ytmsService);
-      // installYTMS(ytmsService, (type, body) => {
-      //   mainWindow.sendMessage(type, body);
-      // });
+
+      ytms.connect()
+        .then((service) => {
+          handlePushMessage(service.push);
+        });
 
       ipcMain.on(
         'log',
@@ -159,7 +158,7 @@ if (!handlingSquirrelEvent) {
       });
 
       ipcMain.on('start-ytms-service', async(event, url) => {
-        const service = await ytmsService.connect(url).catch(() => {});
+        const service = await ytms.connect(url).catch(() => {});
         const ret = !!service;
 
         if (ret) {
@@ -174,7 +173,7 @@ if (!handlingSquirrelEvent) {
     });
     
     app.on('gpu-process-crashed', (event, killed) => {  
-      const api = ytmsService.getApi();
+      const api = ytms.getApi();
   
       if (!api) return;
   

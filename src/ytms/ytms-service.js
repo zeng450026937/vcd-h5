@@ -14,7 +14,7 @@ export class YTMSService {
     // disconnect first
     this.disconnect(url);
 
-    const service = {};
+    const service = this.services[url] = {};
 
     // prepare client
     const clientId = await getClientId();
@@ -42,8 +42,6 @@ export class YTMSService {
     service.push = push;
     service.pushURL = pushURL;
     service.tenantId = tenantId;
-
-    this.services[url] = service;
 
     return service;
   }
