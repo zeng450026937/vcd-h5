@@ -1,5 +1,7 @@
 import FormData from 'form-data';
 
+const s = JSON.stringify;
+
 export class Uploader {
   constructor(api) {
     this.api = api;
@@ -80,14 +82,14 @@ export class Alarm extends Payload {
 
     data = new FormData();
 
-    data.append('param', {
+    data.append('param', s({
       alarmCode  : this.code,
       alarmName  : this.name,
       alarmType  : this.type,
       alarmLevel : this.level,
       alarmDesc  : this.desc,
       alarmTime  : this.time,
-    });
+    }));
 
     if (this.logfile) {
       data.append('log', this.logfile);
@@ -149,15 +151,15 @@ export class NetLog extends Payload {
     data = new FormData();
 
     if (this.sessionId) {
-      data.append('param', {
+      data.append('param', s({
         sessionId : this.sessionId,
-      });
+      }));
     }
 
     if (this.logfile) {
       data.append('log', this.logfile);
     }
-
+    
     return data;
   }
 }
@@ -207,11 +209,11 @@ export class Feedback extends Payload {
 
     data = new FormData();
 
-    data.append('param', {
+    data.append('param', s({
       feedbackTitle    : this.title,
       feedbackCategory : this.category,
       feedbackContent  : this.content,
-    });
+    }));
 
     if (this.logfile) {
       data.append('log', this.logfile);
