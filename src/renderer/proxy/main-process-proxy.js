@@ -30,12 +30,12 @@ export function getClientId() {
   });
 }
 
-export function getTodayLog() {
-  ipcRenderer.send('get-today-log');
+export function getLogDirectory() {
+  ipcRenderer.send('get-log-directory');
 
-  return new Promise((resolve, reject) => {
-    ipcRenderer.once('get-today-log-reply', (event, log) => {
-      resolve(log);
+  return new Promise((resolve) => {
+    ipcRenderer.once('get-log-directory-reply', (event, dir) => {
+      resolve(dir);
     });
   });
 }

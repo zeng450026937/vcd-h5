@@ -14,7 +14,7 @@ import {
 } from './main/report-crash';
 import { log as writeLog } from './logger/winston';
 import { handlePushMessage } from './ytms/handle-push-message';
-import LogProvider from './log-provider/provider';
+import { getLogDirectoryPath } from './logger/get-log-path';
 import LogReporter from './log-reporter';
 
 let mainWindow = null;
@@ -182,11 +182,10 @@ if (!handlingSquirrelEvent) {
         event.sender.send('stop-ytms-service-reply', true);
       });
 
-      ipcMain.on('get-today-log', async(event) => {
-        const logProvider = new LogProvider();
-        const logFile = await logProvider.provideTodayLog();
+      ipcMain.on('get-log-directory', async(event) => {
+        const logFile = getLogDirectoryPath();
 
-        event.sender.send('get-today-log-reply', logFile);
+        event.sender.send('get-log-directory-reply', logFile);
       });
     });
     

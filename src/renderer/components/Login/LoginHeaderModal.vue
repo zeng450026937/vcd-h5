@@ -51,7 +51,7 @@
 import { readFile } from 'fs-extra';
 import path from 'path';
 import { gzip } from 'zlib';
-import { getTodayLog } from '../../proxy/main-process-proxy';
+import { getLogDirectory } from '../../proxy/main-process-proxy';
 
 export default {
   name : 'LoginHeaderModal',
@@ -97,7 +97,24 @@ export default {
         });
       });
     },
+    async getTodayLog() {
+      const logDir = await getLogDirectory();
+      const fileName = this.getLogFileName();
+      const input = await readFile(path.join(logDir, `/${fileName}`));
 
+      return this.zipFile(input);
+    },
+    getLogFileName() {
+      return `vc-desktop.${this.getDate()}.log`;
+    },
+    getDate(date = new Date()) {
+      const year = new Date(date).getFullYear();
+      const month = new Date(date).getMonth() + 1;
+      const day = new Date(date).getDate();
+      const toDoubule = (num) => (num < 9 ? `0${num}` : num);
+
+      return `${year}-${toDoubule(month)}-${toDoubule(day)}`;
+    },
     reset() {
       this.fileList = [];
       this.problemDescribe = '';
@@ -105,13 +122,13 @@ export default {
     },
     async submitFeedBack() {
       if (!this.check()) return;
-      const todayLog = await getTodayLog();
+
       const formData = new FormData();
-      const input = await readFile(path.join(todayLog.directory, `/${todayLog.fileInfo.fileName}`));
-      const buffer = await this.zipFile(input);
 
       if (this.isUploadLog) {
-        formData.append('log', new Blob(buffer), `${todayLog.fileInfo.fileName}.zip`);
+        const todayLog = await this.getTodayLog();
+
+        formData.append('log', new Blob(todayLog), `${this.getLogFileName()}.zip`);
       }
 
       this.fileList.map((item) => item.originFileObj).forEach((img) => {
