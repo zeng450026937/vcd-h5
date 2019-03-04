@@ -1,6 +1,7 @@
 import archiver from 'archiver';
 import fs from 'fs-extra';
 import path from 'path';
+import { gzip } from 'zlib';
 import { getLogDirectoryPath } from '../logger/get-log-path';
 
 
@@ -12,9 +13,7 @@ export default class LogProvider {
   async provideLogFile(file) {
     if (!file) return null;
 
-    await this.zipFile(file.fileName);
-
-    return fs.createReadStream(path.join(this.logDirectory, `/${file.fileName}.zip`));
+    return this.zipFile(file.fileName);
   }
 
   async getTodayLogFile() {
@@ -25,13 +24,11 @@ export default class LogProvider {
 
   async provideTodayLog() {
     const todayLogFile = await this.getTodayLogFile();
-    const logfileStream = await this.provideLogFile(todayLogFile);
 
     return {
       directory : this.logDirectory,
       fileInfo  : {
         ...todayLogFile,
-        path : logfileStream.path,
       },
 
     };
@@ -43,26 +40,13 @@ export default class LogProvider {
   }
 
   zipFile(fileName) {
-    return new Promise((resolve) => {
-      const archive = archiver('zip', {
-        zlib : { level: 9 },
+    return new Promise(async(resolve, reject) => {
+      const input = await fs.readFile(path.join(this.logDirectory, `/${fileName}`));
+
+      gzip(input, (error, buffer) => {
+        if (error) return reject(error);
+        resolve(buffer);
       });
-
-      const output = fs.createWriteStream(path.join(this.logDirectory, `/${fileName}.zip`));
-
-      output.on('close', () => {
-        console.log(`${archive.pointer()} total bytes`);
-        resolve();
-      });
-
-      archive.pipe(output);
-
-      archive.append(
-        fs.createReadStream(path.join(this.logDirectory, `/${fileName}`)),
-        { name: fileName },
-      );
-
-      archive.finalize();
     });
   }
 

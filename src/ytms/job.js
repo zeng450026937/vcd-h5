@@ -1,33 +1,55 @@
-import { netLog } from 'electron';
-import { resolve } from 'path';
 import { EventEmitter } from 'events';
-import { readFile } from 'fs-extra';
-import { NetLog } from './uploader';
-import { getNetLogDirectoryPath } from '../logger/get-log-path';
 
 // in seconds
 const SESSION_EXPIRE_TIME = 30 * 1000;
+const MAX_SESSION_LIFETIME = 3600 * 1000;
 
-export class Session {
-  constructor(id, job) {
+export class Session extends EventEmitter {
+  constructor(id) {
+    super();
+
     this.id = id;
-    this.job = job;
-    this.interval = SESSION_EXPIRE_TIME * 0.9;
+    this.interval = SESSION_EXPIRE_TIME * 0.7;
     this.timer = null;
     this.status = 'stop';
+    this.startTime = 0;
+    this.endTime = 0;
+    this.lifetime = MAX_SESSION_LIFETIME;
+  }
+
+  get duration() {
+    return Math.max(this.endTime - this.startTime, 0);
+  }
+
+  get isRunning() {
+    return this.status === 'start' 
+    || this.status === 'proceed';
+  }
+
+  get isStop() {
+    return this.status === 'stop';
   }
 
   start() {
-    this.stop();
+    if (this.isRunning) {
+      this.stop();
+    }
+
+    this.startTime = Date.now();
+
     this.timer = setInterval(() => this.progress(), this.interval);
     this.report('start');
   }
 
   progress() {
-    this.report('proceed', this.expire);
+    this.report('proceed');
   }
 
   stop() {
+    if (this.isStop) return;
+
+    this.endTime = Date.now();
+
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
@@ -35,11 +57,9 @@ export class Session {
     this.report('stop');
   }
 
-  // virtual func
   report(status) {
-    if (this.job) {
-      this.job.onReported(status);
-    }
+    this.status = status;
+    this.emit(status, this);
   }
 
   // private
@@ -48,52 +68,16 @@ export class Session {
   }
 }
 
-export class NetLogSession extends Session {
-  constructor(id, api) {
+export class Job extends Session {
+  constructor(api, id) {
     super(id);
 
     this.api = api;
   }
 
-  report(status, expire = this.expire) {
-    this.api.reportNetLogs(this.id, status, expire);
-  }
-}
-
-
-export class Job extends EventEmitter {
-  constructor(api, sessionId) {
-    super();
-
-    this.api = api;
-    this.session = this.genSession(sessionId, this);
-  }
-
-  get sessionId() {
-    return this.session.id;
-  }
-
-  get isRunning() {
-    return this.session.status === 'start' 
-    || this.session.status === 'proceed';
-  }
-
-  start() {
-    this.session.start();
-  }
-
-  stop() {
-    this.session.stop();
-  }
-
-  // private
-  genSession(id) {
-    return new Session(id);
-  }
-
-  onReported(status) {
-    this.status = status;
-    this.emit(this.status, this);
+  report(status) {
+    super.report(status);
+    console.log(`job: ${this.id}`, `-- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
   }
 }
 
@@ -105,60 +89,34 @@ export class JobManager {
   add(job) {
     if (!job) return;
     
-    this.jobs[job.sessionId] = job;
+    this.jobs[job.id] = job;
 
-    job.on('stop', (j) => {
-      delete this.jobs[j.sessionId];
+    if (!job.isRunning) {
+      job.start();
+    }
+
+    job.once('stop', (j) => {
+      delete this.jobs[j.id];
     });
   }
 
-  remove(sessionId) {
-    if (!sessionId) {
-      Object.keys(this.jobs).forEach((j) => this.remove(j.sessionId));
+  remove(id) {
+    if (!id) {
+      Object.keys(this.jobs).forEach((j) => this.remove(j.id));
 
       return;
     }
 
-    const job = this.jobs[sessionId];
+    const job = this.jobs[id];
 
     if (job) {
       job.stop();
     }
 
-    delete this.jobs[sessionId];
-  }
-}
-
-export class NetLogJob extends Job {
-  constructor(api, sessionId) {
-    super(api, sessionId);
-
-    // default logpath
-    this.logpath = resolve(getNetLogDirectoryPath(), `${new Date()}.json`);
+    delete this.jobs[id];
   }
 
-  start(logpath) {
-    if (logpath) {
-      this.logpath = logpath;
-    }
-    netLog.startLogging(this.logpath);
-    super.start();
-  }
-
-  stop() {
-    netLog.stopLogging(async(path) => {
-      const logfile = await readFile(path);
-      const log = NetLog.Create(this.api);
-  
-      log.sessionId = this.sessionId;
-      log.logfile = logfile;
-
-      await log.upload();
-    });
-    super.stop();
-  }
-
-  genSession(id) {
-    return new NetLogSession(id);
+  find(id) {
+    return this.jobs[id];
   }
 }

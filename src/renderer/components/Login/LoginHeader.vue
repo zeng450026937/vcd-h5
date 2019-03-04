@@ -99,6 +99,7 @@ export default {
     },
     reportIssues() {
       this.$refs.headerModal.visible = true;
+      this.helpStatus = false;
     },
 
   },

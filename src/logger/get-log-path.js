@@ -18,7 +18,7 @@ export function getNetLogDirectoryPath() {
   if (!netLogDirectoryPath) {
     const userData = app.getPath('userData');
 
-    netLogDirectoryPath = Path.join(userData, 'net-logs');
+    netLogDirectoryPath = Path.join(userData, 'netlogs');
   }
 
   return netLogDirectoryPath;

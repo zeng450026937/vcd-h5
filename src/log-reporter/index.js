@@ -23,12 +23,12 @@ export default class LogReporter extends LogProvider {
 
   async reportFile(file) {
     try {
-      const form = new FormData();
+      const formData = new FormData();
       const logfile = await this.provideLogFile(file);
 
-      form.append('log', logfile);
+      formData.append('log', logfile, file.fileName);
 
-      const res = await this.startReport(form);
+      const res = await this.startReport(formData);
 
       if (!res) throw new Error('upload log file failed');
 
@@ -42,7 +42,7 @@ export default class LogReporter extends LogProvider {
       await this.writeRecordFile(this.record);
     }
     catch (e) {
-      console.log(e);
+      console.log('erroris', e);
     }
 
     this.removeZipFile(`${file.fileName}.zip`);
