@@ -55,9 +55,9 @@ export class Payload {
 export class Alarm extends Payload {
   static Create(api, data) {
     const uploader = new Uploader(api);
-    const alarm = new Alarm(data, uploader);
+    const payload = new Alarm(data, uploader);
 
-    return alarm;
+    return payload;
   }
 
   constructor(formdata, uploader) {
@@ -100,9 +100,9 @@ export class Alarm extends Payload {
 export class Log extends Payload {
   static Create(api, data) {
     const uploader = new Uploader(api);
-    const alarm = new Log(data, uploader);
+    const payload = new Log(data, uploader);
 
-    return alarm;
+    return payload;
   }
 
   constructor(formdata, uploader) {
@@ -129,9 +129,9 @@ export class Log extends Payload {
 export class NetLog extends Payload {
   static Create(api, data) {
     const uploader = new Uploader(api);
-    const alarm = new NetLog(data, uploader);
+    const payload = new NetLog(data, uploader);
 
-    return alarm;
+    return payload;
   }
 
   constructor(formdata, uploader) {
@@ -165,9 +165,9 @@ export class NetLog extends Payload {
 export class Config extends Payload {
   static Create(api, data) {
     const uploader = new Uploader(api);
-    const alarm = new Config(data, uploader);
+    const payload = new Config(data, uploader);
 
-    return alarm;
+    return payload;
   }
 
   constructor(data, uploader) {
@@ -182,9 +182,9 @@ export class Config extends Payload {
 export class Feedback extends Payload {
   static Create(api, data) {
     const uploader = new Uploader(api);
-    const alarm = new Feedback(data, uploader);
+    const payload = new Feedback(data, uploader);
 
-    return alarm;
+    return payload;
   }
 
   constructor(formdata, uploader) {

@@ -1,9 +1,5 @@
-import {
-  Notification,
-} from 'electron';
-import {
-  MESSAGE_TYPE,
-} from './push-service';
+import { Notification } from 'electron';
+import { MESSAGE_TYPE } from './push-service';
 
 export function showNotification(title, body) {
   if (typeof body === 'object') {
