@@ -29,3 +29,13 @@ export function getClientId() {
     });
   });
 }
+
+export function getTodayLog() {
+  ipcRenderer.send('get-today-log');
+
+  return new Promise((resolve, reject) => {
+    ipcRenderer.once('get-today-log-reply', (event, log) => {
+      resolve(log);
+    });
+  });
+}

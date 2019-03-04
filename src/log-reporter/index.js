@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
+import FormData from 'form-data';
 import { uploadLog } from '../api-service/api/fileUpload';
 import LogProvider from '../log-provider/provider';
 
@@ -22,11 +23,14 @@ export default class LogReporter extends LogProvider {
 
   async reportFile(file) {
     try {
-      const form = await this.provideLogFile(file.fileName);
+      const form = new FormData();
+      const logfile = await this.provideLogFile(file);
+
+      form.append('log', logfile);
 
       const res = await this.startReport(form);
 
-      if (res.data.ret === -1) throw res.data;
+      if (!res) throw new Error('upload log file failed');
 
       this.record.reportRecord.forEach((item) => {
         if (file.fileName === item.fileName) {
@@ -45,9 +49,7 @@ export default class LogReporter extends LogProvider {
   }
 
   startReport(form) {
-    if (this.api) return this.api(this.clientId, form, { headers: form.getHeaders() });
-    
-    return uploadLog(this.clientId, form, { headers: form.getHeaders() });
+    return this.api.uploadLogs(form);
   }
 
   async checkRecordFile() {
