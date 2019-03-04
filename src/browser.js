@@ -12,6 +12,7 @@ import {
   reportRendererCrash,
   reportUncaughtException,
 } from './main/report-crash';
+import { LogUploader } from './main/log-uploader';
 import { log as writeLog } from './logger/winston';
 import { handlePushMessage } from './ytms/handle-push-message';
 
