@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import FormData from 'form-data';
 import alarmState from './alarmState';
 import { ylDeviceManagement } from '../api-service/api/deviceManagements';
 import LogProvider from '../log-provider/provider';
@@ -20,10 +21,13 @@ class AlarmReporter extends LogProvider {
       alarmType  : state,
       alarmDesc  : state,
     });
+    const logFormData = new FormData();
 
     reportInfo.alarmTime = new Date().valueOf();
 
-    const logFormData = await this.provideTodayLog();
+    const logData = await this.provideTodayLog();
+
+    logFormData.append('log', logData);
 
     logFormData.append('param', JSON.stringify(reportInfo));
 

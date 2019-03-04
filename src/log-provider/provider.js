@@ -1,33 +1,20 @@
 import archiver from 'archiver';
 import fs from 'fs-extra';
 import path from 'path';
-import FormData from 'form-data';
 import { getLogDirectoryPath } from '../logger/get-log-path';
-import { getSystemInfo } from '../utils/systemInfo';
 
 
 export default class LogProvider {
   constructor() {
-    this.setClientId();
     this.logDirectory = getLogDirectoryPath();
   }
 
-  setClientId() {
-    getSystemInfo().then((systemInfo) => {
-      this.clientId = systemInfo.clientId;
-    });
-  }
-
   async provideLogFile(file) {
-    if (!file) return new FormData();
+    if (!file) return null;
 
     await this.zipFile(file.fileName);
 
-    const form = new FormData();
-
-    form.append('log', fs.createReadStream(path.join(this.logDirectory, `/${file.fileName}.zip`)));
-
-    return form;
+    return fs.createReadStream(path.join(this.logDirectory, `/${file.fileName}.zip`));
   }
 
   async getTodayLogFile() {
@@ -38,8 +25,16 @@ export default class LogProvider {
 
   async provideTodayLog() {
     const todayLogFile = await this.getTodayLogFile();
+    const logfileStream = await this.provideLogFile(todayLogFile);
 
-    return this.provideLogFile(todayLogFile);
+    return {
+      directory : this.logDirectory,
+      fileInfo  : {
+        ...todayLogFile,
+        path : logfileStream.path,
+      },
+
+    };
   }
 
   removeZipFile(fileName) {

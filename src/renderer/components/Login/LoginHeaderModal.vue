@@ -6,11 +6,14 @@
         wrapClassName="login-header-modal"
         okText="确认"
         cancelText="取消"
+        @ok="submitFeedBack"
+        @cancel="close"
     >
       <div class="flex flex-col">
         <div>
           <span>问题描述</span>
           <a-textarea
+              v-model="problemDescribe"
               placeholder="请输入详细的问题描述"
               :autosize="{ minRows: 4, maxRows: 6 }"
           ></a-textarea>
@@ -20,7 +23,7 @@
         </div>
         <div class="mt-1">
           <a-upload
-              action="//jsonplaceholder.typicode.com/posts/"
+              :beforeUpload="stopAutoUpload"
               listType="picture-card"
               :fileList="fileList"
               @preview="handlePreview"
@@ -31,16 +34,13 @@
               <div class="ant-upload-text">Upload</div>
             </div>
           </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" class="w-full" :src="previewImage" />
-          </a-modal>
         </div>
+        <!--<div class="mt-2">-->
+          <!--<span>联系方式</span>-->
+          <!--<a-input placeholder="请输入联系方式"/>-->
+        <!--</div>-->
         <div class="mt-2">
-          <span>联系方式</span>
-          <a-input placeholder="请输入联系方式"/>
-        </div>
-        <div class="mt-2">
-          <a-checkbox>上传错误日志，帮助我们更好的定位错误</a-checkbox>
+          <a-checkbox v-model="isUploadLog">上传错误日志，帮助我们更好的定位错误</a-checkbox>
         </div>
       </div>
     </a-modal>
@@ -48,25 +48,29 @@
 </template>
 
 <script>
+import { readFile } from 'fs-extra';
+import { getTodayLog } from '../../proxy/main-process-proxy';
+
 export default {
   name : 'LoginHeaderModal',
   data() {
     return {
-      visible        : false,
-      previewVisible : false,
-      previewImage   : '',
-      fileList       : [ {
-        uid    : '-1',
-        name   : 'xxx.png',
-        status : 'done',
-        url    : 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      } ],
+      visible         : false,
+      previewVisible  : false,
+      previewImage    : '',
+      fileList        : [],
+      isUploadLog     : true,
+      problemDescribe : '',
     };
   },
   methods : {
     handleOk() {},
-    handleCancel() {
+    close() {
+      this.reset();
       this.previewVisible = false;
+    },
+    stopAutoUpload() {
+      return false;
     },
     handlePreview(file) {
       this.previewImage = file.url || file.thumbUrl;
@@ -74,6 +78,48 @@ export default {
     },
     handleChange({ fileList }) {
       this.fileList = fileList;
+    },
+    check() {
+      if (!this.problemDescribe) {
+        this.$message.info('请输入问题描述！');
+
+        return false;
+      }
+
+      return true;
+    },
+    reset() {
+      this.fileList = [];
+      this.problemDescribe = '';
+      this.isUploadLog = true;
+    },
+    async submitFeedBack() {
+      if (!this.check()) return;
+      const todayLog = await getTodayLog();
+      const formData = new FormData();
+
+      if (this.isUploadLog) {
+        const stream = await readFile(todayLog.fileInfo.path);
+
+        formData.append('log', new Blob(stream), `${todayLog.fileInfo.fileName}.zip`);
+      }
+
+      this.fileList.map((item) => item.originFileObj).forEach((img) => {
+        formData.append('img', img);
+      });
+      formData.append('param', JSON.stringify({
+        feedbackContent : this.problemDescribe,
+        // feedbackCategory,
+        // feedbackTitle,
+      }));
+
+      const res = await this.$root.$apis.yealink.doFeedback(formData);
+
+      if (res == null) return this.$message.info('上报反馈信息失败！');
+
+      this.visible = false;
+
+      this.close();
     },
   },
 };
