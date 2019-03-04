@@ -1,19 +1,24 @@
 import {
+  app,
+} from 'electron';
+import {
   getSystemId,
   getCpuInfo,
   getNetInfo,
   getMemInfo,
   getOsInfo,
 } from './system-info';
+import { newUUID } from './uuid';
 
-const clientInfo = {
-  clientId       : '',
-  clientName     : '',
+export const clientInfo = {
+  clientId       : newUUID(),
+  clientName     : app.getName(),
   clientModel    : process.env.VUE_APP_MODEL,
   clientType     : process.env.VUE_APP_TYPE,
-  clientVersion  : process.env.VUE_APP_VERSION,
+  clientVersion  : app.getVersion(),
   clientArch     : process.arch,
   clientPlatform : process.platform,
+  customId       : process.env.VUE_APP_CUSTOMID,
   device         : {
     ip       : '',
     mac      : '',

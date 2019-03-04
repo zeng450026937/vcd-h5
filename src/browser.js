@@ -7,10 +7,14 @@ import { AppWindow } from './main/app-window';
 import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
 import { showUncaughtException } from './main/show-uncaught-exception';
+import { 
+  reportGpuCrash,
+  reportRendererCrash,
+  reportUncaughtException,
+} from './main/report-crash';
 import { log as writeLog } from './logger/winston';
 import { getClientId } from './ytms/client-info';
 import { handlePushMessage } from './ytms/handle-push-message';
-import { Alarm } from './ytms/uploader';
 
 let mainWindow = null;
 
@@ -30,11 +34,11 @@ function handleUncaughtException(error) {
 
   const isLaunchError = !mainWindow;
 
+  reportUncaughtException(isLaunchError, error);
   showUncaughtException(isLaunchError, error);
 }
 
 process.on('uncaughtException', (error) => {
-  // reportError(error);
   handleUncaughtException(error);
 });
 
@@ -97,17 +101,8 @@ function createWindow() {
   });
 
   window.onCrashed((killed) => {
-    const api = ytms.getApi();
-
-    if (!api) return;
-
-    // TODO: handle killed
-    const alarm = Alarm.Create(api);
-
-    // TODO: setup alarm
-    alarm.type = 'gpu-process-crashed';
-
-    alarm.upload();
+    if (killed) return;
+    reportRendererCrash();
   });
 
   window.load();
@@ -170,20 +165,17 @@ if (!handlingSquirrelEvent) {
         // TODO: update client info
         // TODO: update enterprise info to yealink
       });
+
+      ipcMain.on('stop-ytms-service', (event, url) => {
+        ytms.disconnect(url);
+        
+        event.sender.send('start-ytms-service-reply', true);
+      });
     });
     
     app.on('gpu-process-crashed', (event, killed) => {  
-      const api = ytms.getApi();
-  
-      if (!api) return;
-  
-      // TODO: handle killed
-      const alarm = Alarm.Create(api);
-  
-      // TODO: setup alarm
-      alarm.type = 'gpu-process-crashed';
-  
-      alarm.upload();
+      if (killed) return;
+      reportGpuCrash();
     });
     
     app.on('activate', () => {

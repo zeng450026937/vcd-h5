@@ -157,8 +157,7 @@ export class PushService extends EventEmitter {
     // null & undefined
     if (type == null) return;
 
-    this.emit(type, body);
-    this.emit(MESSAGE_TYPE[type], body);
+    this.emit('notify', type, body);
   }
 
   genPath(action) {

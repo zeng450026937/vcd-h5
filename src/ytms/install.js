@@ -1,3 +1,8 @@
 import { YTMSService } from './ytms-service';
 
-global.ytms = new YTMSService();
+const ytms = new YTMSService();
+
+// fetch client info
+ytms.getClientInfo();
+
+global.ytms = ytms;
