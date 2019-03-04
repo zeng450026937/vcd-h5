@@ -13,7 +13,6 @@ import {
   reportUncaughtException,
 } from './main/report-crash';
 import { log as writeLog } from './logger/winston';
-import { getClientId } from './ytms/client-info';
 import { handlePushMessage } from './ytms/handle-push-message';
 
 let mainWindow = null;
@@ -147,7 +146,7 @@ if (!handlingSquirrelEvent) {
       );
 
       ipcMain.on('get-clientid', async(event) => {
-        const id = await getClientId();
+        const id = await ytms.getClientId();
         
         event.sender.send('get-clientid-reply', true, id);
       });
@@ -162,14 +161,22 @@ if (!handlingSquirrelEvent) {
   
         event.sender.send('start-ytms-service-reply', ret, ret && service.client.clientId);
   
-        // TODO: update client info
-        // TODO: update enterprise info to yealink
+        const { enterpriseInfo } = service.enterpriseInfo;
+        
+        // update client info
+        ytms.clientInfo.enterprise.id = enterpriseInfo.id;
+        ytms.clientInfo.enterprise.name = enterpriseInfo.name;
+
+        service.client().updateInfo(ytms.clientInfo);
+        
+        // update enterprise info to yealink
+        ytms.getClient().updateInfo(ytms.clientInfo);
       });
 
       ipcMain.on('stop-ytms-service', (event, url) => {
         ytms.disconnect(url);
         
-        event.sender.send('start-ytms-service-reply', true);
+        event.sender.send('stop-ytms-service-reply', true);
       });
     });
     

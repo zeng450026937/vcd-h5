@@ -42,6 +42,8 @@ export class YTMSService {
 
     await client.whenReady();
 
+    service.enterpriseInfo = client.enterpriseInfo;
+
     // prepare push service
     const {
       url: pushURL,
@@ -87,6 +89,18 @@ export class YTMSService {
 
   get(url = default_url) {
     return this.services[url];
+  }
+
+  getClient(url = default_url) {
+    const service = this.services[url];
+
+    return service && service.client;
+  }
+
+  getPush(url = default_url) {
+    const service = this.services[url];
+
+    return service && service.push;
   }
 
   getApi(url = default_url) {
