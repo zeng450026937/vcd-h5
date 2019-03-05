@@ -16,6 +16,7 @@
         <div class="w-1/2 bg-white overflow-hidden">
           <contact-tree ref="contactTree"
                         :checked="checkedKeys"
+                        self-checked
                         @onCheck="onCheck"></contact-tree>
         </div>
         <div class="flex mx-2 justify-center items-center">
@@ -117,7 +118,7 @@ export default {
 
       this.selectedContact.forEach((item) => {
         list.push({
-          requestUri : item.ip,
+          requestUri : item.number,
         });
       });
       this.$rtc.conference.meetnow(list);
@@ -127,15 +128,6 @@ export default {
     },
     onCheck(selectedContact) {
       this.selectedContact = selectedContact;
-      const hasSelf = this.selectedContact.findIndex((c) => c.id === this.currentContact.id) < 0;
-
-      this.selectedContact.splice(hasSelf ? 99 : 100);
-      if (hasSelf) {
-        this.selectedContact.push(this.currentContact.id);
-      }
-      if (this.selectedContact.length >= 100) {
-        this.checkedKeys = this.selectedContact.map((c) => c.id);
-      }
     },
     clearAll() {
       this.selectedContact = [ this.currentContact ];

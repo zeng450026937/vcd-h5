@@ -145,7 +145,7 @@ export default {
     },
     inviteUser() {
       const users = this.selectedContact.map((user) => ({
-        requestUri  : `sip:${user.ip}`, // 用户uri
+        requestUri  : `sip:${user.number}`, // 用户uri
         uid         : user.id, // 用户uid
         displayText : user.name, // 邀请后，用户的显示名字
         type        : 'audio-video', // 邀请类型，包括 audio | video | audio-video

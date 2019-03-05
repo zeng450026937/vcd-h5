@@ -30,7 +30,7 @@
           >
             <a-input placeholder='请输入账号'
                      v-decorator="[
-                          'account',
+                          'number',
                           {rules: [{ required: true, message: '请输入账号!' }]}
                          ]"/>
           </a-form-item>
@@ -117,14 +117,14 @@ export default {
   watch : {
     type(val) {
       if (val === 'add') {
-        this.form.setFieldsValue({ account: '', email: '', name: '', phone: '' });
+        this.form.setFieldsValue({ number: '', email: '', name: '', phone: '' });
       }
     },
     editedContact(val) {
       if (val && this.type === 'edit') {
-        const { account, email, name, phone } = val;
+        const { number, email, name, phone } = val;
 
-        this.form.setFieldsValue({ account, email, name, phone });
+        this.form.setFieldsValue({ number, email, name, phone });
       }
     },
   },

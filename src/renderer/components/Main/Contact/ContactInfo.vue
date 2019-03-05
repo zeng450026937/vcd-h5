@@ -25,7 +25,7 @@
       <div class="flex flex-col my-2 text-xs">
         <div class="mt-3 leading-tight">
           <span class="mr-3 truncate text-black6">账号</span>
-          <span >{{user.ip || user.account}}</span>
+          <span >{{user.number}}</span>
         </div>
         <template v-if="user.parent.isUser">
           <div class="mt-3 leading-tight items-center">

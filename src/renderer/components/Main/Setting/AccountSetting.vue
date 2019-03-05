@@ -35,7 +35,7 @@
       <a-divider class="my-0"/>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">账号</span>
-        <span class="ml-3">{{userInfo.ip || userInfo.account}}</span>
+        <span class="ml-3">{{userInfo.number}}</span>
       </div>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">手机</span>

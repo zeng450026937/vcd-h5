@@ -23,15 +23,15 @@
                   <span v-if="!item.isGroup"
                         class="text-xs opacity-75 leading-none"
                         style="margin-top: 6px">
-                    <span v-if="highlightContent && (item.ip || item.account).indexOf(highlightContent) > -1"
+                    <span v-if="highlightContent && (item.number).indexOf(highlightContent) > -1"
                           class="flex">
-                    {{(item.ip || item.account).substr(0, (item.ip || item.account).indexOf(highlightContent))}}
+                    {{(item.number).substr(0, (item.number).indexOf(highlightContent))}}
                       <span class="text-indigo">{{highlightContent}}</span>
-                      {{(item.ip || item.account)
-                        .substr((item.ip || item.account)
+                      {{(item.number)
+                        .substr((item.number)
                         .indexOf(highlightContent) + highlightContent.length)}}
                     </span>
-                    <span v-else>{{(item.ip || item.account)}}</span>
+                    <span v-else>{{(item.number)}}</span>
                   </span>
                 </div>
               </div>
@@ -74,7 +74,7 @@
                       <div class="flex items-center">
                         <!--<a-iconfont type="icon-ren"></a-iconfont>-->
                         <span class="mr-3 truncate">账号</span>
-                        <span>{{item.ip || item.account}}</span>
+                        <span>{{item.number}}</span>
                         <div class="flex flex-grow"></div>
                         <a-iconfont type="icon-shipin"
                                     class="mr-4 text-indigo cursor-pointer text-base"/>
@@ -221,12 +221,12 @@ export default {
     },
     doVideo(item) {
       this.$rtc.conference.meetnow([ {
-        requestUri : item.ip || item.account,
+        requestUri : item.number,
       } ]);
       // this.$emit('doVideo', item);
     },
     doAudio(item) {
-      this.$dispatch('call.doAudioCall', item.ip || item.account);
+      this.$dispatch('call.doAudioCall', item.number);
       // this.$emit('doAudio', item);
     },
     moreOption(item) {

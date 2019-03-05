@@ -14,7 +14,7 @@ class FavoriteBase {
 class FavoriteContact extends FavoriteBase {
   constructor(data) {
     super(data);
-    this.ip = data.number || '';
+    this.number = data.number || '';
     this.phone = data.extension || '';
     this.email = data.email || '';
     this.avatar = 'indigo-dark';

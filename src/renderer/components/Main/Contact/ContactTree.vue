@@ -31,7 +31,8 @@
           @expand="onExpand"
           @select="onSelect"
       >
-        <div slot="title" slot-scope="contact" class="flex items-center h-14">
+        <div slot="title" slot-scope="contact"
+             class="flex items-center h-14">
           <div>
             <a-avatar v-if="!contact.parent.isUser"
                       :size="32"
@@ -47,7 +48,7 @@
 
           <div class="flex flex-col truncate ml-2 justify-center">
             <span class="text-sm leading-none truncate">{{contact.title}}</span>
-            <span class="text-xs opacity-75 leading-none mt-1">{{contact.ip}}</span>
+            <span class="text-xs opacity-75 leading-none mt-1">{{contact.number}}</span>
           </div>
         </div>
       </a-tree>
@@ -85,6 +86,14 @@ export default {
         return [];
       },
     },
+    selfChecked : { //
+      type    : Boolean,
+      default : false,
+    },
+    maxChecked : {
+      type    : Number,
+      default : 100,
+    },
   },
   data() {
     return {
@@ -99,6 +108,9 @@ export default {
   computed : {
     treeData() {
       return this.$model.contact.formattedPhoneBook.items;
+    },
+    currentContact() {
+      return this.$rtc.account.currentContact;
     },
   },
   watch : {
@@ -133,15 +145,30 @@ export default {
       }
     },
     onCheck(checkedKeys, info) {
+      // if (info.node.dataRef.isSelf && this.selfChecked) return;
+
       const checkedContact = [];
 
-      info.checkedNodes.forEach((c) => {
-        const dataRef = c.data.props;
+      let hasSelf = false;
+
+      info.checkedNodes.every((contact) => { // 选出 maxChecked 个
+        const dataRef = contact.data.props;
 
         if (!dataRef.isGroup) {
           checkedContact.push(dataRef);
+          if (dataRef.isSelf) hasSelf = true;
         }
+        
+        return checkedContact.length < this.maxChecked;
       });
+
+      if (this.selfChecked && !hasSelf) {
+        checkedContact.splice(this.maxChecked - 1); // 能选中的最大值为 100
+        checkedContact.unshift(this.currentContact); // 插入自己
+      }
+      if (this.checkedKeys.length >= this.maxChecked || !hasSelf) { // 选中的联系人数据超过100的话
+        this.checkedKeys = checkedContact.map((c) => c.id); // 设置为上面过滤之后的100个联系人
+      }
       this.$emit('onCheck', checkedContact);
     },
 

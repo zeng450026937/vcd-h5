@@ -125,8 +125,8 @@ export default {
       }
       this.$model.contact.findContacts(val).then((r) => {
         this.searchResult = r;
-        this.localContactExist = this.localContacts.filter((local) => local.account === val).length > 0;
-        this.searchResult.push(...this.localContacts.filter((local) => local.account.indexOf(val) > -1));
+        this.localContactExist = this.localContacts.filter((local) => local.number === val).length > 0;
+        this.searchResult.push(...this.localContacts.filter((local) => local.number.indexOf(val) > -1));
       });
     }, 500);
   },
@@ -189,7 +189,7 @@ export default {
       this.$refs.contactDrawer.visible = true;
       this.$refs.contactDrawer.$nextTick(() => {
         this.$refs.contactDrawer.form.setFieldsValue({
-          account : this.callNumber,
+          number : this.callNumber,
         });
       });
     },
