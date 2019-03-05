@@ -32,8 +32,25 @@
         <div class="border-r">
           <div class="h-full p-1  overflow-y-hidden" style="width: 280px">
             <contact-list :contact-list="currents"
-                          more-icon
-                          @clickItem="onListItemClicked"/>
+                          @clickItem="onListItemClicked">
+              <a-dropdown slot-scope="{item}"
+                          slot="more"
+                          :trigger="['click']"
+                          v-if="!item.isGroup && !item.parent.isVMR">
+                <a-iconfont type="icon-gengduo1"
+                            class="mr-2 text-indigo cursor-pointer text-sm"/>
+                <a-menu slot="overlay">
+                  <a-sub-menu title="添加为常用联系人" key="test">
+                    <template v-if="groupList.length > 0">
+                    <a-menu-item v-for="(group, index) in groupList"
+                                 :key="index"
+                                 @click="addToFavorite(group, item)">{{group.name}}</a-menu-item>
+                    </template>
+                    <a-menu-item class="cursor-not-allowed bg-grey-lightest" v-else>暂无分组</a-menu-item>
+                  </a-sub-menu>
+                </a-menu>
+              </a-dropdown>
+            </contact-list>
           </div>
         </div>
         <div class="flex flex-grow bg-white justify-center">
@@ -78,6 +95,7 @@ export default {
     },
     selectedGroup() {
       const segments = this.breadcrumbs;
+
       let group = this.contacts;
 
       for (let i = 1; i < segments.length; i++) {
@@ -89,6 +107,9 @@ export default {
     },
     contacts() {
       return this.$model.contact.phoneBook;
+    },
+    groupList() {
+      return this.$model.contact.favorite.items;
     },
   },
   methods : {
@@ -112,6 +133,15 @@ export default {
       });
       item.fullPath = item.fullPath || cloneDeep(this.breadcrumbs);
       item.addChildNodes();
+    },
+    addToFavorite(group, contact) { // 添加当前联系人到常用联系人分组
+      this.$rtc.contact.favorite.add({
+        type        : contact.type,
+        contactsId  : contact.id,
+        categoryIds : [ group.id ],
+      }).then(() => {
+        this.$message.success('添加成功');
+      }).catch(() => {});
     },
   },
   watch : {

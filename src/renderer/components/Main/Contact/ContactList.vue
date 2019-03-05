@@ -116,7 +116,8 @@
                 </a-avatar>
               </a-popover>
             </a-list-item-meta>
-            <div class="opacity-0 group-hover:opacity-100 flex justify-around">
+            <div class="opacity-0 group-hover:opacity-100 flex justify-around"
+                 :class="{'opacity-100': selectedContact.id === item.id}">
               <a-iconfont v-if="videoIcon"
                       type="icon-shipin"
                       class="mr-3 text-indigo cursor-pointer text-base"
@@ -129,7 +130,8 @@
                       type="icon-gengduo1"
                       class="mr-2 text-indigo cursor-pointer text-base"
                       @click.stop="moreOption(item)"/>
-              <slot name="more" :item="item"></slot>
+              <slot name="more"
+                    :item="item"></slot>
               <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
                       type="icon-guanbi"
                       class="mr-2 text-black9 cursor-pointer text-base"
