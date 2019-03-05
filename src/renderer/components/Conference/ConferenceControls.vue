@@ -6,6 +6,7 @@
                 shape="circle"
                 class="w-10 h-10 text-lg text-white border-transparent"
                 :class="{[`bg-${videoIcon.color}`] : true}"
+                :title="videoIcon.title"
                 @click="onVideoBtnClick"
       >
         <a-iconfont :type="videoIcon.icon"/>
@@ -15,6 +16,7 @@
                 shape="circle"
                 class="w-10 h-10 text-lg text-white mx-3 border-transparent"
                 :class="{[`bg-${audioIcon.color}`] : true}"
+                :title="audioIcon.title"
                 @click="onAudioBtnClick"
       >
         <a-iconfont :type="audioIcon.icon"/>
@@ -23,6 +25,7 @@
       <a-button :disabled="!shareAvailable"
                 shape="circle"
                 class="w-10 h-10 text-lg text-white border-transparent"
+                :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -43,12 +46,14 @@
           </div>
         </div>
         <a-button shape="circle"
+                  title="更多"
                   class="w-10 h-10 text-lg text-white mx-3 border-transparent"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
+                title="退出会议"
                 class="w-10 h-10 text-lg border-transparent text-white bg-red-light"
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
@@ -95,18 +100,18 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red-light' },
-        unblock    : { icon: 'icon-maikefeng', color: '' },
-        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light' },
-        hand       : { icon: 'icon-jushou', color: '' },
+        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
+        unblock    : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: '取消举手' },
+        hand       : { icon: 'icon-jushou', color: '', title: '举手' },
       };
 
       return iconMap[this.$model.conference.audioStatus || 'unblock'];
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: '' },
-        block   : { icon: 'icon-shipinjinyong', color: 'red-light' },
+        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
       };
 
       return iconMap[this.$model.conference.videoStatus];

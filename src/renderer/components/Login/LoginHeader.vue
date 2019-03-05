@@ -27,14 +27,21 @@
               <a-menu-item key="yms" class="px-6" @click="reportIssues">反馈</a-menu-item>
             </a-menu>
             <a-iconfont type="icon-fankui"
+                        title="反馈"
                     class="ant-dropdown-link mr-6 text-base h-full flex items-center"/>
           </a-dropdown>
 
-          <a-iconfont type="icon-zuixiaohua" class="mx-2 text-base hover:text-indigo no-dragable"
+          <a-iconfont type="icon-zuixiaohua"
+                      title="最小化"
+                      class="mx-2 text-base hover:text-indigo no-dragable"
                   @click="clickMinimize"/>
-          <a-iconfont type="icon-zuidahua" class="mx-2 text-base hover:text-indigo no-dragable"
+          <a-iconfont type="icon-zuidahua"
+                      title="最大化"
+                      class="mx-2 text-base hover:text-indigo no-dragable"
                   @click="clickMaximize"/>
-          <a-iconfont type="icon-guanbi" class="mx-2 text-base hover:text-red no-dragable"
+          <a-iconfont type="icon-guanbi"
+                      title="关闭"
+                      class="mx-2 text-base hover:text-red no-dragable"
                   @click="clickClose"/>
         </div>
       </div>

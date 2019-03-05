@@ -27,7 +27,7 @@
         <div style="height: 420px;">
           <div class="flex h-full p-5">
 
-            <div class="w-1/2 bg-white overflow-hidden shadow">
+            <div class="w-1/2 bg-white overflow-hidden">
               <contact-tree ref="contactTree"
                             :checked="checkedKeys"
                             @onCheck="onCheck"></contact-tree>
@@ -35,8 +35,8 @@
             <div class="flex mx-3 justify-center items-center">
               <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
             </div>
-            <div class="flex w-1/2 bg-white overflow-hidden shadow">
-              <div class="w-full flex flex-col">
+            <div class="flex w-1/2 bg-white overflow-hidden">
+              <div class="w-full flex flex-col border">
                 <div class="border-b">
                   <div class="flex flex-col">
                     <div class="flex h-10 items-center px-3">
@@ -75,6 +75,7 @@
             <div class="flex items-center mt-10">
               <span class="leading-normal">{{numberTitle}}</span>
               <a-input :placeholder="inputPlaceholder"
+                       ref="numberInput"
                        v-model="address"
                        style="width: 280px;" class="ml-5"/>
             </div>
@@ -232,6 +233,15 @@ export default {
           this.showCopySuccess = false;
         }, 3000);
       });
+    },
+  },
+  watch : {
+    async currentTab(val) {
+      if (val === 'inviteOther') {
+        await this.$nextTick();
+        await this.$refs.numberInput.$nextTick()
+        this.$refs.numberInput.focus();
+      }
     },
   },
 };

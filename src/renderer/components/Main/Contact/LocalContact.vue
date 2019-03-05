@@ -1,4 +1,3 @@
-
 <template>
   <a-layout id="local-contact" class="h-full">
     <div class="flex flex-col h-full">
@@ -7,8 +6,9 @@
           <div class="flex items-center h-full px-4 text-base">
             <span>本地联系人</span>
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
-                    type="icon-tianjialianxiren"
-                    @click="addLocalContact"/>
+                        title="添加本地联系人"
+                        type="icon-tianjialianxiren"
+                        @click="addLocalContact"/>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
@@ -26,14 +26,15 @@
                         @click.stop=""
                         :trigger="['click']">
               <a-iconfont type="icon-gengduo1"
-                      class="mr-2 text-indigo cursor-pointer text-base"/>
+                          title="更多"
+                          class="mr-2 text-indigo cursor-pointer text-base"/>
               <a-menu slot="overlay">
                 <a-menu-item @click="editContact(item)">
-                  <a-iconfont type="icon-bianji" />
+                  <a-iconfont type="icon-bianji"/>
                   <span>编辑该联系人</span>
                 </a-menu-item>
                 <a-menu-item @click="deleteContact(item)">
-                  <a-iconfont type="icon-shanchu" />
+                  <a-iconfont type="icon-shanchu"/>
                   <span>删除该联系人</span>
                 </a-menu-item>
               </a-menu>
@@ -43,7 +44,8 @@
             <span class="text-sm text-grey-dark">暂未添加本地联系人</span>
             <a-button type="primary" ghost
                       class="mt-8"
-                      @click="addLocalContact">添加联系人</a-button>
+                      @click="addLocalContact">添加联系人
+            </a-button>
           </div>
         </div>
         <div class="flex flex-grow bg-white justify-center">

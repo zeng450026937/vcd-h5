@@ -5,14 +5,16 @@
       <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <a-iconfont  v-if="!selectedGroup.isRoot" type="icon-left"
-                     class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
-                     @click="goBack"/>
+            <a-iconfont v-if="!selectedGroup.isRoot" type="icon-left"
+                        title="返回"
+                        class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
+                        @click="goBack"/>
             <span>{{selectedGroup.name}}</span>
             <a-iconfont v-if="selectedGroup.isRoot"
-                    class="ml-4 text-indigo cursor-pointer no-dragable"
-                    type="icon-tianjiafenzu"
-                    theme="filled" @click="addGroup"/>
+                        title="添加常用联系人分组"
+                        class="ml-4 text-indigo cursor-pointer no-dragable"
+                        type="icon-tianjiafenzu"
+                        theme="filled" @click="addGroup"/>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
@@ -36,13 +38,14 @@
                         slot="more"
                         :trigger="['click']">
               <a-iconfont type="icon-gengduo1"
+                          title="更多"
                       class="mr-2 text-indigo cursor-pointer text-sm"
                       @click.stop="moreOption(item)"/>
               <a-menu slot="overlay" v-if="item.isGroup">
                 <a-menu-item @click="editGroup(item)">
                   编辑分组
                 </a-menu-item>
-                <a-menu-item @click="deleteGroup(item)">
+                <a-menu-item @click="removeGroup(item)">
                   删除分组
                 </a-menu-item>
               </a-menu>
@@ -80,7 +83,6 @@
 <script>
 /* eslint-disable no-loop-func */
 import AppHeader from '../MainHeader.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactInfo from './ContactInfo.vue';
 import FrequentContactDrawer from './FrequentContactDrawer.vue';
 import ContactList from './ContactList.vue';
@@ -90,7 +92,6 @@ export default {
   components : {
     AppHeader,
     ContactInfo,
-    CommonEmpty,
     FrequentContactDrawer,
     ContactList,
   },
@@ -160,7 +161,7 @@ export default {
       });
       this.ensureModal.display();
     },
-    deleteGroup(group) {
+    removeGroup(group) {
       this.genEnsurePopup('确认删除当前分组?', () => {
         // 删除当前分组
         this.$rtc.contact.favorite.categoryDelete({ id: group.id }).then(() => {
@@ -210,7 +211,7 @@ export default {
         this.$rtc.contact.favorite.delete({
           relations : [ {
             categoryId : group.id,
-            contacts   : [ contact.id ],
+            contacts   : [ { contactsId: contact.id, type: contact.type } ],
           } ],
         }).then(() => {
           this.$rtc.contact.favorite.doSync().then(() => {

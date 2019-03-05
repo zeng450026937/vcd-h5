@@ -32,11 +32,13 @@
       </div>
       <div v-if="!isOnHold && !isAudioApplicant">
         <a-iconfont :type="videoIcon.icon"
+                    :title="videoIcon.title"
                     class="ml-4 text-base"
                     :class="{[`text-${videoIcon.color}`] : true,
                   [`cursor-${hasPermission ? 'pointer' : 'not-allowed'}`] : true,}"
                     @click="onVideoOperation()"/>
         <a-iconfont :type="audioIcon.icon"
+                    :title="audioIcon.title"
                     class="ml-4 cursor-pointer text-base"
                     :class="{[`text-${audioIcon.color}`] : true,
                   [`cursor-${hasPermission ? 'pointer' : 'not-allowed'}`] : true,}"
@@ -45,6 +47,7 @@
                     overlayClassName="member-list-popover">
           <a class="ant-dropdown-link" href="#">
             <a-iconfont v-if="hasPermission"
+                        title="更多"
                         type="icon-gengduo1"
                         class="ml-4 text-indigo cursor-pointer text-base"/>
           </a>
@@ -78,8 +81,14 @@
         </a-dropdown>
       </div>
       <div v-else-if="currentIsPresenter">
-        <a-iconfont type="icon-tongguo" class="ml-4 text-base text-indigo cursor-pointer" @click="handleApply(true)"/>
-        <a-iconfont type="icon-yichu" class="ml-4 text-base text-red cursor-pointer" @click="handleApply(false)"/>
+        <a-iconfont type="icon-tongguo"
+                    class="ml-4 text-base text-indigo cursor-pointer"
+                    :title="isAudioApplicant ? '允许发言' : '允许入会'"
+                    @click="handleApply(true)"/>
+        <a-iconfont type="icon-yichu"
+                    class="ml-4 text-base text-red cursor-pointer"
+                    :title="isAudioApplicant ? '拒绝发言' : '拒绝入会'"
+                    @click="handleApply(false)"/>
       </div>
     </div>
     <div v-if="isShowDeviceInfo"
@@ -91,10 +100,14 @@
           <div class="flex flex-grow w-1 truncate">
             <span class="truncate">Yealink VC Desktop</span>
           </div>
-          <a-iconfont type="icon-shuaxin" class="text-base cursor-pointer text-black9"
+          <a-iconfont type="icon-shuaxin"
+                      title="刷新设备信息"
+                      class="text-base cursor-pointer text-black9"
                       :spin="isUpdating"
                       @click="updateDeviceInfo"></a-iconfont>
-          <a-iconfont type="icon-guanbi" class="text-base cursor-pointer text-black9 ml-4"
+          <a-iconfont type="icon-guanbi"
+                      title="关闭设备详情"
+                      class="text-base cursor-pointer text-black9 ml-4"
                       @click="isShowDeviceInfo = false"></a-iconfont>
         </div>
       </div>
@@ -186,10 +199,10 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red' },
-        unblock    : { icon: 'icon-maikefeng', color: 'indigo' },
-        unblocking : { icon: 'icon-maikefeng', color: 'blue' },
-        hand       : { icon: 'icon-maikefeng', color: 'indigo' },
+        block      : { icon: 'icon-maikefengjinyong', color: 'red', title: '打开麦克风' },
+        unblock    : { icon: 'icon-maikefeng', color: 'indigo', title: '禁言麦克风' },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'blue', title: '取消举手' },
+        hand       : { icon: 'icon-jushou', color: 'indigo', title: '举手' },
       };
       const iconStatus = iconMap[this.$model.conference.getUserAudioStatus(this.item)];
 
@@ -200,8 +213,8 @@ export default {
 
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shexiangtou', color: 'indigo' },
-        block   : { icon: 'icon-shexiangtoujinyong', color: 'red' },
+        unblock : { icon: 'icon-shipin', color: 'indigo', title: '禁用摄像头' },
+        block   : { icon: 'icon-shipinjinyong', color: 'red', title: '打开摄像头' },
       };
       const iconStatus = iconMap[this.$model.conference.getUserVideoStatus(this.item)];
 

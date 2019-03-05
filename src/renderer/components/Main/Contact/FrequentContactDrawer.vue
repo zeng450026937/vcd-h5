@@ -66,12 +66,14 @@
 <script>
 import ContactList from './ContactList.vue';
 import ContactTree from './ContactTree.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 
 export default {
   name       : 'FrequentContactDrawer',
   components : {
     ContactList,
     ContactTree,
+    CommonEmpty,
   },
   props : {
     modalType : { // add edit

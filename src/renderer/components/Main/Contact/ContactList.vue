@@ -116,26 +116,29 @@
                 </a-avatar>
               </a-popover>
             </a-list-item-meta>
-            <div class="opacity-0 group-hover:opacity-100 flex justify-around"
-                 :class="{'opacity-100': selectedContact.id === item.id}">
+            <div class="opacity-0 group-hover:opacity-100 flex justify-around">
               <a-iconfont v-if="videoIcon"
-                      type="icon-shipin"
-                      class="mr-3 text-indigo cursor-pointer text-base"
-                      @click.stop="doVideo(item)"/>
+                          title="视频呼叫"
+                          type="icon-shipin"
+                          class="mr-3 text-indigo cursor-pointer text-base"
+                          @click.stop="doVideo(item)"/>
               <a-iconfont v-if="audioIcon"
-                      type="icon-yuyin"
-                      class="mr-3 text-indigo cursor-pointer text-base"
-                      @click.stop="doAudio(item)"/>
+                          title="音频呼叫"
+                          type="icon-yuyin"
+                          class="mr-3 text-indigo cursor-pointer text-base"
+                          @click.stop="doAudio(item)"/>
               <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
-                      type="icon-gengduo1"
-                      class="mr-2 text-indigo cursor-pointer text-base"
-                      @click.stop="moreOption(item)"/>
+                          title="更多"
+                          type="icon-gengduo1"
+                          class="mr-2 text-indigo cursor-pointer text-base"
+                          @click.stop="moreOption(item)"/>
               <slot name="more"
                     :item="item"></slot>
               <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
-                      type="icon-guanbi"
-                      class="mr-2 text-black9 cursor-pointer text-base"
-                      @click.stop="deleteContact(item)"/>
+                          title="删除"
+                          type="icon-guanbi"
+                          class="mr-2 text-black9 cursor-pointer text-base"
+                          @click.stop="deleteContact(item)"/>
             </div>
           </a-list-item>
         </template>

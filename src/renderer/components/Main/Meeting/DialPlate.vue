@@ -22,28 +22,34 @@
                      @input="inputNumber"
                      @keyup.enter="audioCall">
               <a-iconfont v-show="!!callNumber"
+                          title="清空"
                           slot="suffix"
                           type="icon-guanbi"
                           class="text-sm text-grey cursor-pointer hover:text-red"
                           @click="clearNumber"/>
             </a-input>
             <a-iconfont type="icon-huishan"
-                        class="text-2xl ml-3 cursor-pointer" @click="removeTailNumber"/>
+                        title="退格"
+                        class="text-2xl ml-3 cursor-pointer"
+                        @click="removeTailNumber"/>
           </div>
           <span v-show="!localContactExist"
                 class="text-indigo cursor-pointer text-center text-xs leading-tight"
                 style="margin: 10px 0;"
-                @click="showAddLocalContact">添加为本地联系人</span>
+                @click="showAddLocalContact"
+          >添加为本地联系人</span>
 
           <plate-content :class="{'mt-10': localContactExist}" @inputNumber="clickNumber"/>
           <div class="flex mt-8 w-full">
             <a-button type="primary" class="w-1/2" :disabled="!callNumber"
                       @click="videoCall">
               <a-iconfont type="icon-shipin" class="text-base"/>
+              视频呼叫
             </a-button>
             <a-button type="primary" class="ml-4 w-1/2"
                       @click="audioCall" :disabled="!callNumber">
               <a-iconfont type="icon-yuyin" class="text-base"/>
+              音频呼叫
             </a-button>
           </div>
         </div>
