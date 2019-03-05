@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { remote } from 'electron';
-import delegate from 'delegates';
+import delegates from 'delegates';
 import { sendWillQuitSync } from '../proxy/main-process-proxy';
 
 const USE_SQUIRREL = process.env.VUE_APP_USE_SQUIRREL && process.env.VUE_APP_USE_SQUIRREL === 'true';
@@ -48,7 +48,7 @@ export class Updater extends EventEmitter {
       autoUpdater.removeListener('download-progress', updateDownloading);
     });
 
-    delegate(this, 'autoUpdater')
+    delegates(this, 'autoUpdater')
       .access('channel')
       .access('autoDownload')
       .access('autoInstallOnAppQuit')

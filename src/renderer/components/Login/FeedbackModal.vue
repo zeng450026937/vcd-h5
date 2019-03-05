@@ -72,7 +72,7 @@ import { gzip } from 'zlib';
 import { getLogDirectory } from '../../proxy/main-process-proxy';
 
 export default {
-  name : 'LoginHeaderModal',
+  name : 'FeedbackModal',
   data() {
     return {
       visible         : false,
