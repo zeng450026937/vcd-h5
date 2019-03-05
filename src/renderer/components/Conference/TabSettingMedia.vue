@@ -47,6 +47,7 @@
         </a-select>
         <div class="mt-2 flex items-center text-indigo">
           <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
+                      title="播放测试音频"
                       class="test-audio-text text-base cursor-pointer"
                       @click="playTestMusic"/>
           <span class="test-audio-text ml-1 text-xs leading-tight">播放测试音频</span>

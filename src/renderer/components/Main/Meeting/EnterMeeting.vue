@@ -25,6 +25,7 @@
           <div class="controls-content flex self-end w-full justify-center">
             <div class="flex mb-4">
               <a-button shape="circle"
+                        :title="videoIcon.title"
                         class="controls-btn text-lg w-10 h-10 border-transparent"
                         :class="{[`bg-${videoIcon.color}`] : true}"
                         @click="triggerVideo"
@@ -33,12 +34,15 @@
               </a-button>
               <a-button shape="circle"
                         class="controls-btn text-lg w-10 h-10 mx-4 border-transparent"
+                        :title="audioIcon.title"
                         :class="{[`bg-${audioIcon.color}`] : true}"
                         @click="triggerAudio"
               >
-                <a-iconfont :type="audioIcon.icon" class="text-white"/>
+                <a-iconfont :type="audioIcon.icon"
+                            class="text-white"/>
               </a-button>
               <a-button shape="circle"
+                        title="设置"
                         class="controls-btn text-lg w-10 h-10 border-transparent"
                         @click="showSetting = true"
               >
@@ -84,7 +88,9 @@
         <div class="mt-5 px-20 relative">
           <!--返回按钮区域-->
           <div class="absolute" style="left: 20px; top: 3px">
-            <a-iconfont type="icon-left" class="cursor-pointer text-black9"
+            <a-iconfont type="icon-left"
+                        title="返回"
+                        class="cursor-pointer text-black9"
                         @click="showSetting = false"/>
           </div>
           <media-content class="media-content text-black3"/>
@@ -128,15 +134,25 @@ export default {
     },
     videoIcon() {
       return this.muteVideo ? {
+        title : '打开摄像头',
         icon  : 'icon-shipinjinyong',
         color : 'red-light',
-      } : { icon: 'icon-shipin', color: '' };
+      } : {
+        title : '关闭摄像头',
+        icon  : 'icon-shipin',
+        color : '',
+      };
     },
     audioIcon() {
       return this.muteAudio ? {
+        title : '打开麦克风',
         icon  : 'icon-maikefengjinyong',
         color : 'red-light',
-      } : { icon: 'icon-maikefeng', color: '' };
+      } : {
+        title : '关闭麦克风',
+        icon  : 'icon-maikefeng',
+        color : '',
+      };
     },
   },
   data() {
@@ -166,7 +182,6 @@ export default {
 
 <style lang="less">
   #enter-meeting {
-    background-color: rgb(247, 258, 252);
     .controls-content {
       button{
         box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

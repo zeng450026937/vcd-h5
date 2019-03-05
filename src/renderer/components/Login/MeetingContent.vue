@@ -4,7 +4,9 @@
       <div class="flex h-full flex-col justify-center absolute w-full">
         <div v-if="!isInSetting" class="enter-meeting-content mr-5 self-end rounded-sm">
           <div class="flex justify-end">
-            <a-iconfont type='icon-kongzhi' class="text-lg cursor-pointer text-white"
+            <a-iconfont type='icon-kongzhi'
+                        title="设置"
+                        class="text-lg cursor-pointer text-white"
                         @click="isInSetting = true"/>
           </div>
           <div class="p-4">
@@ -62,6 +64,7 @@
                 </a-input>
                 <a-input
                     v-model="meetingData.proxyPort"
+                    v-number-only
                     placeholder='端口'
                     style="width: 76px;"
                 >
@@ -70,14 +73,19 @@
 
             </div>
             <div class="mt-5 flex flex-col">
-              <a-button type="primary" block @click="joinMeeting">加入</a-button>
+              <a-button type="primary"
+                        :disabled="!meetingData.account" block
+                        @click="joinMeeting">加入</a-button>
               <a-button block class="mt-4" @click="returnLogin">返回登录</a-button>
             </div>
           </div>
         </div>
         <div v-else class="setting-content self-end rounded-sm mr-5">
           <div class="text-white">
-            <a-iconfont type="icon-left" class="cursor-pointer text-base" @click="isInSetting = false"/>
+            <a-iconfont type="icon-left"
+                        title="返回"
+                        class="cursor-pointer text-base"
+                        @click="isInSetting = false"/>
           </div>
           <div class="setting-media-content m-4">
             <tab-setting-media :show-video="false"/>
@@ -88,11 +96,13 @@
       <div class="controls-content flex justify-center pb-5">
         <a-button shape="circle"
                   class="controls-btn text-lg w-10 h-10 border-transparent"
+                  :title="videoIcon.title"
                   :class="{[`bg-${videoIcon.color}`] : true}"
                   @click="triggerVideo">
           <a-iconfont :type="videoIcon.icon" class="text-white"/>
         </a-button>
         <a-button class="controls-btn text-lg w-10 h-10 ml-3 border-transparent"
+                  :title="audioIcon.title"
                   :class="{[`bg-${audioIcon.color}`] : true}"
                   shape="circle"
                   @click="triggerAudio">
@@ -118,14 +128,27 @@ export default {
     TabSettingMedia,
     VideoView,
   },
+  directives : {
+    numberOnly : {
+      bind(el) {
+        el.handler = function() {
+          el.value = el.value.replace(/\D+/, '');
+        };
+        el.addEventListener('input', el.handler);
+      },
+      unbind(el) {
+        el.removeEventListener('input', el.handler);
+      },
+    },
+  },
   data() {
     return {
       meetingData : {
-        account     : '9001',
-        pin         : '123456',
-        displayName : '小萌',
-        server      : 'academia.com',
-        proxy       : '10.86.112.165',
+        account     : '',
+        pin         : '',
+        displayName : '',
+        server      : '',
+        proxy       : '',
       },
       showProxyItem       : false,
       isInSetting         : false,
@@ -154,15 +177,24 @@ export default {
     },
     videoIcon() {
       return this.muteVideo ? {
+        title : '打开摄像头',
         icon  : 'icon-shipinjinyong',
         color : 'red-light',
-      } : { icon: 'icon-shipin', color: '' };
+      } : {
+        title : '关闭摄像头',
+        icon  : 'icon-shipin',
+        color : '',
+      };
     },
     audioIcon() {
       return this.muteAudio ? {
+        title : '打开麦克风',
         icon  : 'icon-maikefengjinyong',
         color : 'red-light',
-      } : { icon: 'icon-maikefeng', color: '' };
+      } : {
+        title : '关闭麦克风',
+        icon  : 'icon-maikefeng',
+        color : '' };
     },
     meetingBtnClasses() {
       return {};

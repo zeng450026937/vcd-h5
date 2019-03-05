@@ -23,15 +23,15 @@
                   <span v-if="!item.isGroup"
                         class="text-xs opacity-75 leading-none"
                         style="margin-top: 6px">
-                    <span v-if="highlightContent && (item.ip || item.account).indexOf(highlightContent) > -1"
+                    <span v-if="highlightContent && (item.number).indexOf(highlightContent) > -1"
                           class="flex">
-                    {{(item.ip || item.account).substr(0, (item.ip || item.account).indexOf(highlightContent))}}
+                    {{(item.number).substr(0, (item.number).indexOf(highlightContent))}}
                       <span class="text-indigo">{{highlightContent}}</span>
-                      {{(item.ip || item.account)
-                        .substr((item.ip || item.account)
+                      {{(item.number)
+                        .substr((item.number)
                         .indexOf(highlightContent) + highlightContent.length)}}
                     </span>
-                    <span v-else>{{(item.ip || item.account)}}</span>
+                    <span v-else>{{(item.number)}}</span>
                   </span>
                 </div>
               </div>
@@ -40,7 +40,7 @@
                   trigger="hover"
                   slot="avatar"
                   overlayClassName="avatar-popover">
-                <template v-if="!item.isGroup" slot="content">
+                <template v-if="!item.isGroup && !hidePopup" slot="content">
                   <div class="flex w-80 flex-col shadow">
                     <!--头部-->
                     <div class="flex items-center w-full px-5 py-4 bg-card-title rounded-t text-white">
@@ -74,7 +74,7 @@
                       <div class="flex items-center">
                         <!--<a-iconfont type="icon-ren"></a-iconfont>-->
                         <span class="mr-3 truncate">账号</span>
-                        <span>{{item.ip || item.account}}</span>
+                        <span>{{item.number}}</span>
                         <div class="flex flex-grow"></div>
                         <a-iconfont type="icon-shipin"
                                     class="mr-4 text-indigo cursor-pointer text-base"/>
@@ -116,24 +116,30 @@
                 </a-avatar>
               </a-popover>
             </a-list-item-meta>
-            <div class="opacity-0 group-hover:opacity-100 flex justify-around">
+            <div class="opacity-0 group-hover:opacity-100 flex justify-around"
+                 :class="{'opacity-100': selectedContact.id === item.id}">
               <a-iconfont v-if="videoIcon"
-                      type="icon-shipin"
-                      class="mr-3 text-indigo cursor-pointer text-base"
-                      @click.stop="doVideo(item)"/>
-              <a-iconfont v-if="audioIcon"
-                      type="icon-yuyin"
-                      class="mr-3 text-indigo cursor-pointer text-base"
-                      @click.stop="doAudio(item)"/>
+                          title="视频呼叫"
+                          type="icon-shipin"
+                          class="mr-3 text-indigo cursor-pointer text-base"
+                          @click.stop="doVideo(item)"/>
+              <a-iconfont v-if="audioIcon && !item.isGroup"
+                          title="音频呼叫"
+                          type="icon-yuyin"
+                          class="mr-3 text-indigo cursor-pointer text-base"
+                          @click.stop="doAudio(item)"/>
               <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
-                      type="icon-gengduo1"
-                      class="mr-2 text-indigo cursor-pointer text-base"
-                      @click.stop="moreOption(item)"/>
-              <slot name="more" :item="item"></slot>
+                          title="更多"
+                          type="icon-gengduo1"
+                          class="mr-2 text-indigo cursor-pointer text-base"
+                          @click.stop="moreOption(item)"/>
+              <slot name="more"
+                    :item="item"></slot>
               <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
-                      type="icon-guanbi"
-                      class="mr-2 text-black9 cursor-pointer text-base"
-                      @click.stop="deleteContact(item)"/>
+                          title="删除"
+                          type="icon-guanbi"
+                          class="mr-2 text-black9 cursor-pointer text-base"
+                          @click.stop="deleteContact(item)"/>
             </div>
           </a-list-item>
         </template>
@@ -187,6 +193,10 @@ export default {
       type    : String,
       default : '',
     },
+    hidePopup : {
+      type    : Boolean,
+      default : false,
+    },
   },
   components : {
     RecycleScroller,
@@ -216,13 +226,29 @@ export default {
       this.$emit('deleteContact', item);
     },
     doVideo(item) {
-      this.$rtc.conference.meetnow([ {
-        requestUri : item.ip || item.account,
-      } ]);
+      const list = [];
+
+      if (!item.isGroup) {
+        list.push({
+          requestUri : item.number,
+        });
+      }
+      else {
+        item.items.every((contact) => {
+          if (!contact.isGroup) {
+            list.push({ requestUri: contact.number });
+          }
+          
+          return list.length < 100;
+        });
+      }
+      this.$rtc.conference.meetnow(list);
       // this.$emit('doVideo', item);
     },
     doAudio(item) {
-      this.$dispatch('call.doAudioCall', item.ip || item.account);
+      if (!item.isGroup) {
+        this.$dispatch('call.doAudioCall', item.number);
+      }
       // this.$emit('doAudio', item);
     },
     moreOption(item) {

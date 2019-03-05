@@ -1,7 +1,7 @@
 <template>
   <a-layout id="corporate-contacts" class="h-full w-full">
     <div class="flex flex-col h-full">
-      <div>
+      <div class="border-b">
         <div class="flex flex-col bg-white min-h-18 dragable">
           <div class="flex">
             <div class="h-4 ml-4 mt-4">
@@ -28,18 +28,35 @@
 
         </div>
       </div>
-      <a-divider class="my-0"/>
-      <div class="flex h-full m-4 bg-white shadow">
-        <div class="w-2/5 p-1">
-          <div class="h-full overflow-y-hidden">
+      <div class="flex h-full m-4 bg-white border">
+        <div class="border-r">
+          <div class="h-full p-1  overflow-y-hidden" style="width: 280px">
             <contact-list :contact-list="currents"
-                          more-icon
-                          @clickItem="onListItemClicked"/>
+                          @clickItem="onListItemClicked">
+              <a-dropdown slot-scope="{item}"
+                          slot="more"
+                          :trigger="['click']"
+                          v-if="!item.isGroup && !item.parent.isVMR">
+                <a-iconfont type="icon-gengduo1"
+                            class="mr-2 text-indigo cursor-pointer text-sm"/>
+                <a-menu slot="overlay">
+                  <a-sub-menu title="添加为常用联系人" key="test">
+                    <template v-if="groupList.length > 0">
+                    <a-menu-item v-for="(group, index) in groupList"
+                                 :key="index"
+                                 @click="addToFavorite(group, item)">{{group.name}}</a-menu-item>
+                    </template>
+                    <a-menu-item class="cursor-not-allowed bg-grey-lightest" v-else>暂无分组</a-menu-item>
+                  </a-sub-menu>
+                </a-menu>
+              </a-dropdown>
+            </contact-list>
           </div>
         </div>
-        <a-divider class="mx-0 h-full" type="vertical"/>
-        <div class="w-3/5 bg-white">
-          <contact-info :user="selectedContact" :group="groupInfo" @toGroup="toGroup"/>
+        <div class="flex flex-grow bg-white justify-center">
+          <contact-info :user="selectedContact"
+                        :group="groupInfo"
+                        @toGroup="toGroup" style="width: 368px"/>
         </div>
       </div>
     </div>
@@ -78,6 +95,7 @@ export default {
     },
     selectedGroup() {
       const segments = this.breadcrumbs;
+
       let group = this.contacts;
 
       for (let i = 1; i < segments.length; i++) {
@@ -89,6 +107,9 @@ export default {
     },
     contacts() {
       return this.$model.contact.phoneBook;
+    },
+    groupList() {
+      return this.$model.contact.favorite.items;
     },
   },
   methods : {
@@ -112,6 +133,15 @@ export default {
       });
       item.fullPath = item.fullPath || cloneDeep(this.breadcrumbs);
       item.addChildNodes();
+    },
+    addToFavorite(group, contact) { // 添加当前联系人到常用联系人分组
+      this.$rtc.contact.favorite.add({
+        type        : contact.type,
+        contactsId  : contact.id,
+        categoryIds : [ group.id ],
+      }).then(() => {
+        this.$message.success('添加成功');
+      }).catch(() => {});
     },
   },
   watch : {

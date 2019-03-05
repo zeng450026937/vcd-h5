@@ -2,25 +2,26 @@
   <a-layout id="frequent-contact" class="h-full">
 
     <div class="flex flex-col h-full">
-      <div class="h-14">
+      <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <a-iconfont  v-if="!selectedGroup.isRoot" type="icon-left"
-                     class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
-                     @click="goBack"/>
+            <a-iconfont v-if="!selectedGroup.isRoot" type="icon-left"
+                        title="返回"
+                        class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
+                        @click="goBack"/>
             <span>{{selectedGroup.name}}</span>
             <a-iconfont v-if="selectedGroup.isRoot"
-                    class="ml-4 text-indigo cursor-pointer no-dragable"
-                    type="icon-tianjiafenzu"
-                    theme="filled" @click="addGroup"/>
+                        title="添加常用联系人分组"
+                        class="ml-4 text-indigo cursor-pointer no-dragable"
+                        type="icon-tianjiafenzu"
+                        theme="filled" @click="addGroup"/>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
         </div>
       </div>
-      <a-divider class="my-0"/>
-      <div class="flex h-full m-3 bg-white shadow">
-        <div class="h-full w-2/5 border-r overflow-y-auto px-1 py-1">
+      <div class="flex h-full m-3 bg-white border">
+        <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
             <span class="text-sm text-grey-dark">暂未添加常用联系人</span>
@@ -37,83 +38,44 @@
                         slot="more"
                         :trigger="['click']">
               <a-iconfont type="icon-gengduo1"
+                          title="更多"
                       class="mr-2 text-indigo cursor-pointer text-sm"
                       @click.stop="moreOption(item)"/>
               <a-menu slot="overlay" v-if="item.isGroup">
                 <a-menu-item @click="editGroup(item)">
-                  <a-iconfont type="edit" />
-                  <span>编辑分组</span>
+                  编辑分组
                 </a-menu-item>
-                <a-menu-item @click="deleteGroup(item)">
-                  <a-iconfont type="delete" />
-                  <span>删除分组</span>
+                <a-menu-item @click="removeGroup(item)">
+                  删除分组
+                </a-menu-item>
+              </a-menu>
+              <a-menu slot="overlay" v-else>
+                <a-sub-menu title="移动该联系人至" key="test">
+                  <template v-if="groupList.length > 0">
+                    <a-menu-item v-for="(group, index) in groupList"
+                                 v-if="group.id !== item.parent.id"
+                                 :key="index"
+                                 @click="moveContact(group, item)">{{group.name}}</a-menu-item>
+                  </template>
+                  <a-menu-item class="cursor-not-allowed bg-grey-lightest" v-else>暂无分组</a-menu-item>
+                </a-sub-menu>
+
+                <a-menu-item @click="removeContact(item)">
+                  移除该常用联系人
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
           </contact-list>
         </div>
-        <div class="h-full w-3/5">
-          <contact-info :user="currentUser" :group="groupInfo" @toGroup="toGroup"/>
+        <div class="flex flex-grow bg-white justify-center">
+          <contact-info :user="currentUser"
+                        :group="groupInfo"
+                        @toGroup="toGroup"
+                        style="width: 368px"/>
         </div>
       </div>
-      <a-drawer
-          :title="modalTitle"
-          placement="right"
-          :width="728"
-          :closable="false"
-          @close="showDrawer = false"
-          :visible="showDrawer"
-          wrapClassName = "frequent-contact-drawer"
-      >
-        <div class="flex flex-col h-full w-full">
-          <div class="flex flex-col p-5 flex-grow">
-            <div>
-              <a-input placeholder="请输入分组名称" v-model="groupName"/>
-            </div>
-            <div class="flex flex-grow mt-5">
-              <div class="w-1/2">
-                <contact-tree ref="contactTree"
-                              :checked="checkedKeys"
-                              @onCheck="onCheck"></contact-tree>
-              </div>
-              <div class="flex justify-center items-center"
-                   style="width: 48px;">
-                <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
-              </div>
-              <div class="flex flex-col border w-1/2">
-                <div class="border-b">
-                  <div class="flex flex-col">
-                    <div class="flex h-10 items-center px-3">
-                      <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
-                      <span class="flex text-indigo text-xs cursor-pointer"
-                            :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
-                            @click="clearAll">全部清空</span>
-                    </div>
-                  </div>
-                </div>
-                <template v-if="!selectedContact.length">
-                  <common-empty class="mt-10 text-grey"
-                                text="暂未选择联系人"/>
-                </template>
-                <contact-list v-else
-                              :contactList="selectedContact"
-                              :video-icon="false"
-                              :audio-icon="false"
-                              delete-icon highlightSelected
-                              @deleteContact="deleteContact"
-                ></contact-list>
-              </div>
-            </div>
-
-          </div>
-          <div>
-            <div class="flex h-12 border-t justify-center items-center">
-              <a-button type="primary" class="mx-2" @click="ensure">确定</a-button>
-              <a-button class="mx-2" @click="showDrawer = false">取消</a-button>
-            </div>
-          </div>
-        </div>
-      </a-drawer>
+      <frequent-contact-drawer ref="contactDrawer"
+                               :modal-type="modalType"/>
     </div>
   </a-layout>
 </template>
@@ -121,31 +83,27 @@
 <script>
 /* eslint-disable no-loop-func */
 import AppHeader from '../MainHeader.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactInfo from './ContactInfo.vue';
+import FrequentContactDrawer from './FrequentContactDrawer.vue';
 import ContactList from './ContactList.vue';
-import ContactTree from './ContactTree.vue';
 
 export default {
   name       : 'FrequentContact',
   components : {
     AppHeader,
     ContactInfo,
+    FrequentContactDrawer,
     ContactList,
-    ContactTree,
-    CommonEmpty,
   },
   data() {
     return {
-      currentUser     : {},
-      showDrawer      : false,
-      selectedGroup   : {},
-      selectedContact : [],
-      groupName       : '',
-      checkedKeys     : [],
-      modalType       : '', // add or edit
-      editedGroup     : {},
+      currentUser   : {},
+      selectedGroup : {},
+      modalType     : 'add',
     };
+  },
+  mounted() {
+    this.$rtc.contact.favorite.doSync().then(() => {});
   },
   destroyed() {
     this.$popup.destroy(this.ensureModal);
@@ -164,26 +122,46 @@ export default {
     frequentContacts() {
       return this.$model.contact.favorite;
     },
-    modalTitle() {
-      return this.modalType === 'add' ? '添加分组' : '更新分组';
+    groupList() {
+      return this.frequentContacts.items;
     },
   },
   methods : {
     editGroup(group) {
       this.modalType = 'edit';
-      this.showDrawer = true;
-      this.editedGroup = group;
-      this.groupName = group.name;
-      this.checkedKeys = group.items.map((g) => g.id);
-      this.selectedContact = group.items;
+
+      const { contactDrawer } = this.$refs;
+
+      contactDrawer.visible = true;
+      contactDrawer.groupName = group.name;
+      contactDrawer.editedGroup = group;
+      contactDrawer.groupName = group.name;
+      contactDrawer.checkedKeys = group.items.map((g) => g.id);
+      contactDrawer.selectedContact = group.items;
     },
     addGroup() {
-      this.groupName = '';
-      this.checkedKeys = [];
       this.modalType = 'add';
-      this.showDrawer = true;
+      const { contactDrawer } = this.$refs;
+
+      contactDrawer.visible = true;
+      contactDrawer.groupName = '';
+      contactDrawer.checkedKeys = [];
     },
-    deleteGroup(group) {
+    genEnsurePopup(content, ensureFn, cancelFn) {
+      this.$popup.destroy(this.ensureModal);
+      this.ensureModal = this.$popup.prepared('ensureModal', { content });
+      this.ensureModal.vm.$on('cancel', () => {
+        this.ensureModal.$off('cancel');
+        cancelFn();
+      });
+      this.ensureModal.vm.$on('ok', () => {
+        this.ensureModal.$off('ok');
+        this.ensureModal.hide();
+        ensureFn();
+      });
+      this.ensureModal.display();
+    },
+    removeGroup(group) {
       this.genEnsurePopup('确认删除当前分组?', () => {
         // 删除当前分组
         this.$rtc.contact.favorite.categoryDelete({ id: group.id }).then(() => {
@@ -212,67 +190,37 @@ export default {
         this.currentUser = contact;
       }
     },
-    onCheck(selectedContact) {
-      this.selectedContact = selectedContact;
-    },
-    deleteContact(contact) {
-      const { checkedKeys } = this.$refs.contactTree;
-      let parent = contact;
-      const i = this.selectedContact.findIndex((c) => c.id === contact.id);
-
-      if (i >= 0) this.selectedContact.splice(i, 1);
-
-      while (parent) {
-        const index = checkedKeys.findIndex((c) => c === parent.id);
-
-        if (index >= 0) checkedKeys.splice(index, 1);
-        parent = parent.parent;
-      }
-    },
-    clearAll() {
-      if (this.selectedContact.length <= 0) return;
-      this.genEnsurePopup('确认清除所有的联系人?', () => {
-        this.selectedContact = [];
-        this.$refs.contactTree.checkedKeys = [];
-      }, () => {});
-    },
-    genEnsurePopup(content, ensureFn, cancelFn) {
-      this.$popup.destroy(this.ensureModal);
-      this.ensureModal = this.$popup.prepared('ensureModal', { content });
-      this.ensureModal.vm.$on('cancel', () => {
-        this.ensureModal.$off('cancel');
-        cancelFn();
-      });
-      this.ensureModal.vm.$on('ok', () => {
-        this.ensureModal.$off('ok');
-        this.ensureModal.hide();
-        ensureFn();
-      });
-      this.ensureModal.display();
-    },
-    async ensure() {
-      if (this.modalType === 'edit') {
-        await this.$rtc.contact.favorite.categoryEdit({
-          id       : this.editedGroup.id,
-          name     : this.groupName,
-          contacts : this.selectedContact.map((c) => ({
-            contactsId : c.id,
-            type       : c.type,
-          })),
+    moveContact(group, contact) {
+      this.$rtc.contact.favorite.add({
+        type        : contact.type,
+        contactsId  : contact.id,
+        categoryIds : [ group.id ],
+      }).then(() => {
+        this.$rtc.contact.favorite.doSync().then(() => {
+          this.$message.success('移动成功');
         });
-      }
-      else {
-        await this.$rtc.contact.favorite.categoryAdd({
-          groupName : this.groupName,
-          contacts  : this.selectedContact.map((c) => ({
-            contactsId : c.id,
-            type       : c.type,
-          })),
+      }).catch(() => {
+        this.$message.error('移动失败，请重试');
+      });
+    },
+    removeContact(contact) {
+      const group = contact.parent;
+
+      this.genEnsurePopup('确认删除当前常用联系人?', () => {
+        // 删除当前联系人
+        this.$rtc.contact.favorite.delete({
+          relations : [ {
+            categoryId : group.id,
+            contacts   : [ { contactsId: contact.id, type: contact.type } ],
+          } ],
+        }).then(() => {
+          this.$rtc.contact.favorite.doSync().then(() => {
+            this.$message.success('删除成功');
+          });
+        }).catch(() => {
+          this.$message.error('删除失败，请重试');
         });
-      }
-      this.$rtc.contact.favorite.doSync().then(() => {
-        this.$message.success(this.modalType === 'edit' ? '更新成功' : '添加成功');
-        this.showDrawer = false;
+      }, () => {
       });
     },
   },
@@ -288,18 +236,5 @@ export default {
 </script>
 
 <style lang="less">
-  .frequent-contact-drawer {
-    .ant-drawer-wrapper-body {
-      display: flex;
-      flex-direction: column;
-    }
-    .ant-drawer-header {
-      padding: 13px 18px;
-    }
-    .ant-drawer-body {
-      display: flex;
-      height: 100%;
-      padding: 0;
-    }
-  }
+
 </style>

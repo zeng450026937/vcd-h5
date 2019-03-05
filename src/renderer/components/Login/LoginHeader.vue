@@ -6,7 +6,7 @@
           <span class="text-xl text-white font-bold ml-2">Yealink</span>
         </div>
         <div class="flex-grow dragable my-1"></div>
-        <div v-if="loginType === 'login'" class="flex items-center mr-4 text-white text-xs">
+        <div class="flex items-center mr-4 text-white text-xs">
           <a-dropdown v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
               <a-menu-item key="cloud" class="py-2 text-xs">云服务版</a-menu-item>
@@ -27,14 +27,21 @@
               <a-menu-item key="yms" class="px-6" @click="reportIssues">反馈</a-menu-item>
             </a-menu>
             <a-iconfont type="icon-fankui"
+                        title="反馈"
                     class="ant-dropdown-link mr-6 text-base h-full flex items-center"/>
           </a-dropdown>
 
-          <a-iconfont type="icon-zuixiaohua" class="mx-2 text-base hover:text-indigo no-dragable"
+          <a-iconfont type="icon-zuixiaohua"
+                      title="最小化"
+                      class="mx-2 text-base hover:text-indigo no-dragable"
                   @click="clickMinimize"/>
-          <a-iconfont type="icon-zuidahua" class="mx-2 text-base hover:text-indigo no-dragable"
+          <a-iconfont type="icon-zuidahua"
+                      title="最大化"
+                      class="mx-2 text-base hover:text-indigo no-dragable"
                   @click="clickMaximize"/>
-          <a-iconfont type="icon-guanbi" class="mx-2 text-base hover:text-red no-dragable"
+          <a-iconfont type="icon-guanbi"
+                      title="关闭"
+                      class="mx-2 text-base hover:text-red no-dragable"
                   @click="clickClose"/>
         </div>
       </div>

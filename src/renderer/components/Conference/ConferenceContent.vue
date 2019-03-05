@@ -6,17 +6,22 @@
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
+                        title="弹出辅流"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
             <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
+                        title="最大化/最小化"
                         @click="maxConferenceContent"/>
             <!--<a-iconfont type="icon-suoding" class="ml-4 cursor-pointer hover:text-indigo text-base"/>-->
             <template v-if="isInConferenceMain">
               <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
+                          title="邀请成员"
                           @click="showInviteModal"/>
               <template v-for="(tab, index) in tabList">
                 <a-iconfont :key="index" :type="tab.icon"
+                            :title="tab.title"
                             class="ml-4 cursor-pointer hover:text-indigo-light text-base"
+
                             @click="openDrawer(tab)"/>
               </template>
             </template>
@@ -63,10 +68,10 @@ export default {
   },
   data() {
     const tabList = [
-      { icon: 'icon-suoding', comp: 'TabLockConference' },
-      { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView' },
-      { icon: 'icon-liaotian', comp: 'TabChatting' },
-      { icon: 'icon-kongzhi', comp: 'TabSetting' },
+      { icon: 'icon-suoding', comp: 'TabLockConference', title: '锁定会议' },
+      { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: '成员列表' },
+      { icon: 'icon-liaotian', comp: 'TabChatting', title: '聊天' },
+      { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
     ];
 
     return {

@@ -82,7 +82,7 @@ class Contact extends ContactBase {
   constructor(data = {}) {
     super(data);
     this.name = data.name || '';
-    this.ip = data.number || '';
+    this.number = data.number || '';
     if (data.number === rtc.account.username) {
       this.isSelf = true;
       rtc.account.currentContact = this;
@@ -156,7 +156,6 @@ class ContactGroup extends ContactBase {
 
       // NOTICE the param'seq is fixed
       this.items = unique([ ...this.items, ...contactItems ]);
-      this.children = this.items;
     });
   }
 }

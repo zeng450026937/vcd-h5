@@ -16,36 +16,6 @@ import { AppWindowProxy } from './proxy/app-window-proxy';
 
 Vue.config.productionTip = false;
 
-
-// const options = { duration: 2000 };
-//
-// Vue.directive('long-press', {
-//   bind(el, binding) {
-//     const self = this;
-//
-//     this._timeout = null;
-//     this._onmouseup = function() {
-//       clearTimeout(self._timeout);
-//     };
-//
-//     this._onmousedown = function(e) {
-//       const context = this;
-//
-//       self._timeout = setTimeout(() => {
-//         binding.value.call(context, e);
-//       }, options.duration);
-//     };
-//
-//     el.addEventListener('mousedown', this._onmousedown);
-//     document.addEventListener('mouseup', this._onmouseup);
-//   },
-//   unbind(el) {
-//     clearTimeout(this._timeout);
-//     el.removeEventListener('mousedown', this._onmousedown);
-//     document.removeEventListener('mouseup', this._onmouseup);
-//   },
-// });
-
 new Vue({
   mixins : [
     AppWindowProxy,

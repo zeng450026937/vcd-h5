@@ -14,14 +14,17 @@
                            overlayClassName="calendar-info-popover">
                   <template slot="content">
                     <div class="flex flex-col justify-between items-center p-3"
-                         style="width: 144px; height: 332px;">
+                         style="width: 144px;">
                       <div class="flex flex-col items-center h-full">
                         <span class="text-xs leading-tight">分享会议</span>
                         <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
                       </div>
-                      <div class="flex flex-col items-center h-full mt-3">
+                      <div class="flex flex-col items-center select-none h-full mt-3"
+                           v-if="currentEvent.isLive" >
                         <span class="text-xs leading-tight">观看直播</span>
-                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
+                        <img style="width: 120px; height: 120px;"
+                             class="bg-grey-darkest mt-2"
+                             :src="liveQRCode"/>
                       </div>
                     </div>
                   </template>
@@ -37,7 +40,10 @@
               <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">周期</span>
-                  <span>当前会议不是周期性会议</span>
+                  <div class="flex flex-col">
+                    <span>{{currentEvent.pattern.title}}</span>
+                    <span>{{currentEvent.pattern.time}}</span>
+                  </div>
                 </div>
               </div>
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
@@ -62,10 +68,10 @@
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">直播链接</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
-                    <span class="truncate">{{currentEvent.liveShareUrl}}</span>
+                    <a class="truncate" @click="copyShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
                   <span class="text-xs text-indigo cursor-pointer ml-2"
-                        @click="copyShareUrl(currentEvent.liveShareUrl)">复制</span>
+                        @click="copyShareUrl">复制</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -128,6 +134,7 @@
 </template>
 
 <script>
+import jrQrcode from 'jr-qrcode';
 import copy from 'clipboard-copy';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import NoFound from '../../Shared/CommonEmpty.vue';
@@ -146,6 +153,9 @@ export default {
     hasEvent() {
       return Object.keys(this.currentEvent).length > 0;
     },
+    liveQRCode() {
+      return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
+    },
   },
   methods : {
     clickOk() {
@@ -158,10 +168,10 @@ export default {
       });
     },
     audioEnter() {
-      console.warn(this.currentEvent);
+      console.warn(JSON.stringify(this.currentEvent));
     },
-    copyShareUrl(url) {
-      copy(url);
+    copyShareUrl() {
+      copy(this.currentEvent.liveShareUrl);
     },
   },
 };

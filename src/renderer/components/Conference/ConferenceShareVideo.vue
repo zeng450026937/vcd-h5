@@ -11,9 +11,12 @@
            :class="{'opacity-0': videoCursor !== 0}">
         <div class="flex px-4 justify-end pt-2">
           <a-iconfont v-if="videoCursor !== 0"
-                      :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'" class="text-base text-white"
+                      :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'"
+                      :title="videoCursor === 1 ? '放大' : '缩小'"
+                      class="text-base text-white"
                       @click="switchShrinkOrExpand"/>
           <a-iconfont :type="videoCursor === 0 ? 'icon-zhankai' : 'icon-yincang'"
+                      :title="videoCursor === 0 ? '展开' : '隐藏'"
                       class="text-base text-white ml-4"
                       @click="switchMaxOrMin"/>
         </div>

@@ -59,6 +59,7 @@ export default {
 
 <style lang="less">
 #conference-remote-video {
+  background-color: #1b1f2d;
   #video-view {
     background-color: #1b1f2d;
   }

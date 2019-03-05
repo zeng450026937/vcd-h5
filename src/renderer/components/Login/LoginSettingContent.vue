@@ -99,6 +99,12 @@ export default {
       text-align: center;
       margin: 0;
     }
+    .ant-tabs-tab {
+      height: 48px;
+      font-size: 16px;
+      text-align: center;
+      line-height: 24px;
+    }
   }
 
 </style>

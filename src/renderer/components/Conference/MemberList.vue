@@ -38,8 +38,14 @@
       </template>
       <template slot="operation">
         <div class="text-white" v-if="selectedGroup === '2' && isPresenter && waitingList.length > 0">
-          <a-iconfont type="icon-tongguo" class="ml-4 text-base cursor-pointer" @click.stop="allowAllAttend"/>
-          <a-iconfont type="icon-yichu" class="ml-4 text-base cursor-pointer" @click.stop="removeAllAttend"/>
+          <a-iconfont type="icon-tongguo"
+                      title="全部允许"
+                      class="ml-4 text-base cursor-pointer"
+                      @click.stop="allowAllAttend"/>
+          <a-iconfont type="icon-yichu"
+                      title="全部拒绝"
+                      class="ml-4 text-base cursor-pointer"
+                      @click.stop="removeAllAttend"/>
         </div>
       </template>
     </member-list-wrapper>
@@ -54,8 +60,14 @@
       </template>
       <template slot="operation">
         <div class="text-white" v-if="selectedGroup === '3' && isPresenter && speakApplyList.length > 0">
-          <a-iconfont type="icon-tongguo" class="ml-4 text-base cursor-pointer" @click.stop="allowAllSpeak"/>
-          <a-iconfont type="icon-yichu" class="ml-4 text-base cursor-pointer" @click.stop="removeAllSpeak"/>
+          <a-iconfont type="icon-tongguo"
+                      title="全部允许"
+                      class="ml-4 text-base cursor-pointer"
+                      @click.stop="allowAllSpeak"/>
+          <a-iconfont type="icon-yichu"
+                      title="全部拒绝"
+                      class="ml-4 text-base cursor-pointer"
+                      @click.stop="removeAllSpeak"/>
         </div>
       </template>
     </member-list-wrapper>

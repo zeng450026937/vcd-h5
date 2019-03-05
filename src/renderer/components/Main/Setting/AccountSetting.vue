@@ -1,6 +1,6 @@
 <template>
 <a-layout id="account-setting" class="h-full">
-  <div class="h-14">
+  <div class="h-14 border-b">
     <div class="flex bg-white dragable h-full">
       <div class="flex items-center h-full px-4 text-base">
         <span>个人资料</span>
@@ -9,8 +9,7 @@
       <app-header/>
     </div>
   </div>
-  <a-divider class="my-0"/>
-  <div class="flex flex-col items-center bg-white h-full m-4">
+  <div class="flex flex-col border items-center bg-white h-full m-4">
     <div class="mt-5" style="width: 440px;">
       <div class="flex mt-2 mb-4 items-center w-full">
         <div class="flex flex-col truncate">
@@ -36,7 +35,7 @@
       <a-divider class="my-0"/>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">账号</span>
-        <span class="ml-3">{{userInfo.ip || userInfo.account}}</span>
+        <span class="ml-3">{{userInfo.number}}</span>
       </div>
       <div class="mt-5 leading-normal">
         <span class="opacity-75">手机</span>
@@ -109,20 +108,10 @@ export default {
     };
   },
   created() {
-    if (!this.userInfo.parent.fullPath) {
-      let parent = this.userInfo.parent;
+    const { fullPath } = this.userInfo.parent;
 
-      let fullPath = [];
-
-      while (parent.id) {
-        fullPath = [ {
-          id   : parent.id,
-          text : parent.name,
-        } ].concat(fullPath);
-
-        parent = parent.parent;
-      }
-      this.userInfo.parent.fullPath = fullPath;
+    if (!fullPath || fullPath.length <= 0) {
+      this.genFullPath();
     }
   },
   computed : {
@@ -137,10 +126,25 @@ export default {
     },
     clickOk() {
     },
+    genFullPath() {
+      let parent = this.userInfo.parent;
+
+      let fullPath = [];
+
+      while (parent.id) {
+        fullPath = [ {
+          id   : parent.id,
+          text : parent.name,
+        } ].concat(fullPath);
+
+        parent = parent.parent;
+      }
+      this.userInfo.parent.fullPath = fullPath;
+    },
   },
   filters : {
     fullName(fullPath) {
-      return fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
+      return fullPath.length < 1 ? '' : fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
     },
   },
 };
