@@ -10,7 +10,6 @@ export class YTMSClient extends EventEmitter {
 
     this.enterpriseInfo = null;
     this.isReady = false;
-    this.isChecking = false;
     this.isStop = false;
     this.retryTimes = 0;
     this.maxRetryTimes = 0;
@@ -41,8 +40,6 @@ export class YTMSClient extends EventEmitter {
   // check register
   async check() {
     if (this.isReady) return;
-
-    this.isChecking = true;
 
     await this.getEnterpriseInfo();
 
@@ -80,24 +77,27 @@ export class YTMSClient extends EventEmitter {
     // start heartbeat
     this.isStop = false;
 
-    this.heartBeat();
+    this.heartbeat();
   }
 
   stop(stop = true) {
     // stop heartbeat
     this.isStop = stop;
+    this.isReady = false;
   }
 
-  async heartBeat(wait) {
+  async heartbeat(wait) {
     if (this.isStop) return;
 
     if (wait) {
       await waitFor(wait);
     }
 
-    await this.api.heartBeat();
+    await this.api.heartbeat();
 
-    return this.heartBeat(250 * 1000);
+    this.emit('heartbeat');
+
+    return this.heartbeat(250 * 1000);
   }
 
   async getEnterpriseInfo() {

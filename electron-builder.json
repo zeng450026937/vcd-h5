@@ -17,7 +17,7 @@
     "shortcutName": "VC Desktop",
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "artifactName": "${productName}-${version}.${ext}",
+    "artifactName": "vc-desktop-${version}.${ext}",
     "differentialPackage": false
   },
   "mac": {

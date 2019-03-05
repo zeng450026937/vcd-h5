@@ -14,7 +14,6 @@ import {
 } from './main/report-crash';
 import { LogUploader } from './main/log-uploader';
 import { log as writeLog } from './logger/winston';
-import { handlePushMessage } from './ytms/handle-push-message';
 
 const launchTime = now();
 
@@ -136,10 +135,8 @@ if (!handlingSquirrelEvent) {
       
       createWindow();
 
-      ytms.connect()
+      ytms.yealink.connect()
         .then((service) => {
-          handlePushMessage(service.push);
-
           new LogUploader(service.api).walkAndUpload();
 
           autoUpdater.checkForUpdates();
@@ -159,29 +156,22 @@ if (!handlingSquirrelEvent) {
       });
 
       ipcMain.on('start-ytms-service', async(event, url) => {
-        const service = await ytms.connect(url).catch(() => {});
-        const ret = !!service;
-
-        if (ret) {
-          handlePushMessage(service.push);
-        }
+        const service = await ytms.enterprise.connect(url);
   
-        event.sender.send('start-ytms-service-reply', ret, ret && service.client.clientId);
-  
-        const { enterpriseInfo } = service.enterpriseInfo;
-        
+        event.sender.send('start-ytms-service-reply', true, service.clientId);
+          
         // update client info
-        ytms.clientInfo.enterprise.id = enterpriseInfo.id;
-        ytms.clientInfo.enterprise.name = enterpriseInfo.name;
-
-        service.client().updateInfo(ytms.clientInfo);
+        ytms.clientInfo.enterprise = service.enterpriseInfo;
         
         // update enterprise info to yealink
-        ytms.getClient().updateInfo(ytms.clientInfo);
+        ytms.yealink.updateInfo(ytms.clientInfo);
+
+        // replace default service to yealink provider
+        autoUpdater.provider.service = ytms.enterprise;
       });
 
       ipcMain.on('stop-ytms-service', (event, url) => {
-        ytms.disconnect(url);
+        ytms.enterprise.disconnect(url);
         
         event.sender.send('stop-ytms-service-reply', true);
       });

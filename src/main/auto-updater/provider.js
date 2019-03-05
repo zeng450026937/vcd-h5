@@ -7,7 +7,7 @@ import axios from 'axios';
 import { FileCache } from './file-cache';
 
 export class DigestTransform extends Transform {
-  constructor(expected, algorithm = 'md5', encoding = 'base64') {
+  constructor(expected, algorithm = 'md5', encoding = 'hex') {
     super();
 
     this.expected = expected;
@@ -27,6 +27,8 @@ export class DigestTransform extends Transform {
 
     const valid = this.validate();
 
+    console.log(this.actual, this.expected);
+
     if (!valid) return callback(new Error(`${this.algorithm} checksum mismatch`));
 
     callback(null);
@@ -34,9 +36,9 @@ export class DigestTransform extends Transform {
 
   validate() {
     if (!this.expected) return true;
-    if (this.actual && this.actual === this.expected) return true;
+    if (!this.actual) return false;
 
-    return false;
+    return this.actual.toUpperCase() === this.expected.toUpperCase();
   }
 }
 
@@ -172,7 +174,7 @@ export class Downloader extends EventEmitter {
           if (!this.cancelToken.token.reason) {
             this.onDownloadError(e);
           }
-          reject();
+          reject(e);
         });
       });
 

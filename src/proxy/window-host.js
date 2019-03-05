@@ -1,9 +1,17 @@
 import {
   ipcMain,
+  ipcRenderer,
 } from 'electron';
 import {
   eventNames,
 } from './event-names';
+
+function IPCHost() {}
+
+eventNames.forEach((event) => {
+  IPCHost.prototype.event = () => {};
+  ipcMain.on(event, (...args) => this.handleEvent(event, ...args));
+});
 
 export class WindowHost {
   constructor(ns) {

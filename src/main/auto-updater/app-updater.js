@@ -19,6 +19,8 @@ export class AppUpdater extends EventEmitter {
     this.installing = false;
     this.installError = null;
 
+    this.isAutoInstall = true;
+
     // AppUpdater is designed to be only one instance.
     app.once('quit', this.handlerQuit.bind(this));
   }
@@ -58,13 +60,15 @@ export class AppUpdater extends EventEmitter {
 
     const avariable = this.provider.isVersionAvariable(info);
 
+    console.log(`update-avariable: ${avariable}`, info);
+
     if (!avariable) return;
 
     this.emit('update-avariable', info);
 
     if (this.autoDownload) {
       // async download
-      this.provider.download(info);
+      this.provider.download(info).catch((e) => console.log(e));
     }
 
     return info;
@@ -101,6 +105,8 @@ export class AppUpdater extends EventEmitter {
 
     if (this.installError) return;
 
+    this.isAutoInstall = false;
+
     setImmediate(() => {
       app.quit();
     });
@@ -130,6 +136,7 @@ export class AppUpdater extends EventEmitter {
     if (exitCode !== 0) return;
     if (!this.autoInstallOnAppQuit) return;
     if (!this.provider.latestVersionDownloaded) return;
+    if (!this.isAutoInstall) return;
 
     const { latestFile } = this.provider;
 

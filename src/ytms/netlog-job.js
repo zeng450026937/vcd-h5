@@ -27,22 +27,17 @@ export class NetLogJob extends Job {
   }
 
   stop() {
+    if (this.isStop) return;
+
+    super.stop();
+    
     netLog.stopLogging(async(path) => {
       const logfile = await readFile(path);
-      const log = NetLog.Create(this.api);
+      const log = new NetLog(this.api);
   
-      log.sessionId = this.id;
-      log.logfile = logfile;
+      log.addLog(logfile, this.id);
 
       await log.upload().catch((e) => console.log(e));
-      // fire stop when upload is finished.
-      super.stop();
     });
-  }
-
-  report(status) {
-    super.report(status);
-    
-    this.api.reportNetLogs(this.id, status, this.expire);
   }
 }

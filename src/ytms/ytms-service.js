@@ -1,115 +1,84 @@
-import { getClientId, getClientInfo, clientInfo } from './client-info';
+import delegates from 'delegates';
+import { getClientId, clientInfo } from './client-info';
 import { YTMSClient } from './ytms-client';
 import { PushService } from './push-service';
+import { handlePushMessage } from './handle-push-message';
 
 const default_url = process.env.VUE_APP_YTMS_URL;
 
-// TODO: rename to YTMSServiceManager
 export class YTMSService {
-  constructor() {
-    this.services = {};
-    this.clientInfo = clientInfo;
+  constructor(url = default_url) {
+    this.url = url;
+    this.client = null;
+    this.push = null;
+
+    delegates(this, 'client')
+      .method('updateInfo')
+      .getter('api')
+      .getter('isReady')
+      .getter('clientId')
+      .getter('enterpriseInfo');
+
+    delegates(this, 'push')
+      .getter('baseURL')
+      .getter('tenantId');
   }
 
-  get clientId() {
-    return this.clientInfo.clientId;
-  }
-
-  async getClientId() {
+  getClientId() {
     return getClientId();
   }
 
-  async getClientInfo() {
-    return getClientInfo();
+  get clientInfo() {
+    return clientInfo;
   }
 
-  async connect(url = default_url) {    
+  async connect(url = default_url) {
+    this.url = url;
+
     // disconnect first
-    this.disconnect(url);
-
-    const service = this.services[url] = {};
-
+    this.disconnect();
+    
     // prepare client
     const clientId = await getClientId();
-
-    const client = new YTMSClient(url, clientId);
-
+    
+    const client = this.client = new YTMSClient(url, clientId);
+    
     client.start();
-
-    service.client = client;
-    service.api = client.api;
-    service.clientId = client.clientId;
-
+    
     await client.whenReady();
 
-    service.enterpriseInfo = client.enterpriseInfo;
-
+    client.updateInfo(clientInfo);
+    
     // prepare push service
     const {
       url: pushURL,
       tenantId,
     } = client.enterpriseInfo.pushService;
-
-    const push = new PushService(pushURL, clientId, Number.parseInt(tenantId, 10));
-
+    
+    const push = this.push = new PushService(
+      pushURL, clientId, Number.parseInt(tenantId, 10)
+    );
+    
     push.poll();
 
-    service.push = push;
-    service.pushURL = pushURL;
-    service.tenantId = tenantId;
+    handlePushMessage(push);
 
-    return service;
+    return this;
   }
 
-  disconnect(url) {
-    // disconnect all
-    if (!url) {
-      Object.keys(this.services).forEach((s) => this.disconnect(s));
-
-      return;
+  disconnect() {
+    if (this.client) {
+      this.client.removeAllListeners();
+      this.client.stop();
+      this.client = null;
     }
 
-    // disconnect specific
-    const service = this.services[url];
-
-    if (!service) return;
-
-    const { client, push } = service;
-
-    if (client) {
-      client.stop();
+    if (this.push) {
+      this.push.removeAllListeners();
+      this.push.stop();
+      this.push = null;
     }
 
-    if (push) {
-      push.stop();
-    }
-
-    delete this.services[url];
-  }
-
-  get(url = default_url) {
-    return this.services[url];
-  }
-
-  getClient(url = default_url) {
-    const service = this.services[url];
-
-    return service && service.client;
-  }
-
-  getPush(url = default_url) {
-    const service = this.services[url];
-
-    return service && service.push;
-  }
-
-  getApi(url = default_url) {
-    const service = this.services[url];
-
-    return service && service.api;
-  }
-
-  has(url) {
-    return !!this.services[url];
+    this.url = default_url;
   }
 }

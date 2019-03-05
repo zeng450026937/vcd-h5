@@ -1,230 +1,159 @@
 import FormData from 'form-data';
+import delegates from 'delegates';
 
-const s = JSON.stringify;
+const PAYLOAD_TYPE = {};
 
-export class Uploader {
-  constructor(api) {
+PAYLOAD_TYPE[PAYLOAD_TYPE.ALARM = 0] = 'ALARM';
+PAYLOAD_TYPE[PAYLOAD_TYPE.LOG = 1] = 'LOG';
+PAYLOAD_TYPE[PAYLOAD_TYPE.NETLOG = 2] = 'NETLOG';
+PAYLOAD_TYPE[PAYLOAD_TYPE.CONFIG = 3] = 'CONFIG';
+PAYLOAD_TYPE[PAYLOAD_TYPE.FEEDBACK = 4] = 'FEEDBACK';
+
+export class Payload {
+  constructor(api, data) {
     this.api = api;
+    this.data = data;
   }
 
-  async upload(payload) {
-    if (!payload || !this.api) return;
+  async upload(type) {
+    if (!this.api) return;
 
     let res;
 
-    switch (payload.id) {
-      case 'alarm':
-        res = await this.api.doAlarm(payload.toData());
+    switch (type) {
+      case PAYLOAD_TYPE.ALARM:
+        res = await this.api.doAlarm(this.data);
         break;
-      case 'log':
-        res = await this.api.uploadLogs(payload.toData());
+      case PAYLOAD_TYPE.LOG:
+        res = await this.api.uploadLogs(this.data);
         break;
-      case 'netlog':
-        res = await this.api.uploadNetLogs(payload.toData());
+      case PAYLOAD_TYPE.NETLOG:
+        res = await this.api.uploadNetLogs(this.data);
         break;
-      case 'config':
-        res = await this.api.uploadConfig(payload.toData());
+      case PAYLOAD_TYPE.CONFIG:
+        res = await this.api.uploadConfig(this.data);
         break;
-      case 'feedback':
-        res = await this.api.doFeedback(payload.toData());
+      case PAYLOAD_TYPE.FEEDBACK:
+        res = await this.api.doFeedback(this.data);
         break;
       default:
         throw new Error('Unknown payload type');
     }
 
+    if (res.errorCode) throw new Error(res.msg);
+
     return res;
   }
 }
 
-export class Payload {
-  constructor(id, data, uploader) {
-    this.id = id;
-    this.data = data;
-    this.uploader = uploader;
+export class JsonPayload extends Payload {
+  constructor(api, data) {
+    super(api, data || {});
   }
 
-  toData() {
-    if (this.data instanceof FormData) return this.data;
+  add(value) {
+    if (typeof value === 'object') {
+      Object.assign(this.data, value);
+    }
+    else {
+      this.data[value] = value;
+    }
 
-    return null;
+    return this;
   }
 
-  async upload() {
-    return this.uploader.upload(this);
+  set(key, value) {
+    this.data[key] = value;
+
+    return this;
+  }
+
+  del(key) {
+    delete this.data[key];
+
+    return this;
   }
 }
 
-export class Alarm extends Payload {
-  static Create(api, data) {
-    const uploader = new Uploader(api);
-    const payload = new Alarm(data, uploader);
+export class FormPayload extends Payload {
+  constructor(api, data) {
+    super(api, data || new FormData());
 
-    return payload;
+    delegates(this, 'data')
+      .method('append')
+      .method('getHeaders');
   }
 
-  constructor(formdata, uploader) {
-    super('alarm', formdata, uploader);
+  add(key, value, name) {
+    if (typeof value === 'object') value = JSON.stringify(value);
 
-    this.code = '';
-    this.name = '';
-    this.type = '';
-    this.level = 0;
-    this.desc = '';
-    this.time = '';
-    this.logfile = null;
-  }
+    this.data.append(key, value, name);
 
-  toData() {
-    let data = super.toData();
-
-    if (data) return data;
-
-    data = new FormData();
-
-    data.append('param', s({
-      alarmCode  : this.code,
-      alarmName  : this.name,
-      alarmType  : this.type,
-      alarmLevel : this.level,
-      alarmDesc  : this.desc,
-      alarmTime  : this.time,
-    }));
-
-    if (this.logfile) {
-      data.append('log', this.logfile);
-    }
-
-    return data;
+    return this;
   }
 }
 
-export class Log extends Payload {
-  static Create(api, data) {
-    const uploader = new Uploader(api);
-    const payload = new Log(data, uploader);
-
-    return payload;
+export class Alarm extends FormPayload {
+  addParam(param) {
+    return this.add('param', param);
   }
 
-  constructor(formdata, uploader) {
-    super('log', formdata, uploader);
-
-    this.logfile = null;
+  addLog(log, name = `${Date.now()}.log`) {
+    return this.add('log', log, name);
   }
 
-  toData() {
-    let data = super.toData();
-
-    if (data) return data;
-
-    data = new FormData();
-
-    if (this.logfile) {
-      data.append('log', this.logfile);
-    }
-
-    return data;
+  upload() {
+    return super.upload(PAYLOAD_TYPE.ALARM);
   }
 }
 
-export class NetLog extends Payload {
-  static Create(api, data) {
-    const uploader = new Uploader(api);
-    const payload = new NetLog(data, uploader);
-
-    return payload;
+export class Log extends FormPayload {
+  addLog(log, name = `${Date.now()}.log`) {
+    return this.add('log', log, name);
   }
 
-  constructor(formdata, uploader) {
-    super('netlog', formdata, uploader);
-
-    this.sessionId = null;
-    this.logfile = null;
-  }
-
-  toData() {
-    let data = super.toData();
-
-    if (data) return data;
-
-    data = new FormData();
-
-    if (this.sessionId) {
-      data.append('param', s({
-        sessionId : this.sessionId,
-      }));
-    }
-
-    if (this.logfile) {
-      data.append('log', this.logfile);
-    }
-    
-    return data;
+  upload() {
+    return super.upload(PAYLOAD_TYPE.LOG);
   }
 }
 
-export class Config extends Payload {
-  static Create(api, data) {
-    const uploader = new Uploader(api);
-    const payload = new Config(data, uploader);
+export class NetLog extends FormPayload {
+  addLog(log, sessionId) {
+    this.add('param', { sessionId });
+    this.add('log', log, `${sessionId}.json`);
 
-    return payload;
+    return this;
   }
 
-  constructor(data, uploader) {
-    super('config', data, uploader);
-  }
-
-  toData() {
-    return this.data;
+  upload() {
+    return super.upload(PAYLOAD_TYPE.NETLOG);
   }
 }
 
-export class Feedback extends Payload {
-  static Create(api, data) {
-    const uploader = new Uploader(api);
-    const payload = new Feedback(data, uploader);
+export class Config extends JsonPayload {
+  upload() {
+    return super.upload(PAYLOAD_TYPE.CONFIG);
+  }
+}
 
-    return payload;
+export class Feedback extends FormPayload {
+  addParam(param) {
+    return this.add('param', param);
   }
 
-  constructor(formdata, uploader) {
-    super('feedback', formdata, uploader);
-
-    this.title = '';
-    this.category = '';
-    this.content = '';
-    this.contact = '';
-
-    this.logfile = null;
-    this.image = null;
-    this.video = null;
+  addLog(log, name = `${Date.now()}.log`) {
+    return this.add('log', log, name);
   }
 
-  toData() {
-    let data = super.toData();
+  addImage(log, name = `${Date.now()}.jpg`) {
+    return this.add('image', log, name);
+  }
 
-    if (data) return data;
+  addVideo(log, name = `${Date.now()}.mp4`) {
+    return this.add('video', log, name);
+  }
 
-    data = new FormData();
-
-    data.append('param', s({
-      feedbackTitle    : this.title,
-      feedbackCategory : this.category,
-      feedbackContent  : this.content,
-      contactInfo      : this.contact,
-    }));
-
-    if (this.logfile) {
-      data.append('log', this.logfile);
-    }
-    if (this.image) {
-      data.append('image', this.image);
-    }
-    if (this.video) {
-      data.append('video', this.video);
-    }
-
-    return data;
+  upload() {
+    return super.upload(PAYLOAD_TYPE.FEEDBACK);
   }
 }

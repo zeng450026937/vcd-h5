@@ -1,15 +1,19 @@
-import semver, { SemVer } from 'semver';
+import semver from 'semver';
 import { Provider } from './provider';
 
 export class YealinkProvider extends Provider {
-  constructor(appUpdater, ytms) {
+  constructor(appUpdater, service) {
     super(appUpdater);
     
-    this.ytms = ytms;
+    this.service = service;
+  }
+
+  setService(service) {
+    this.service = service;
   }
 
   async getLatestVersion() {
-    const clientId = await this.ytms.getClientId();
+    const clientId = await this.service.getClientId();
     const clientInfo = {
       clientId,
       clientModel    : process.env.VUE_APP_MODEL,
@@ -22,7 +26,7 @@ export class YealinkProvider extends Provider {
     };
 
     // is it all right to use default api?
-    const api = this.ytms.getApi();
+    const api = this.service.api;
 
     const res = await api.getUpdatePackage(clientInfo);
 
@@ -51,7 +55,7 @@ export class YealinkProvider extends Provider {
       return false;
     }
 
-    if (clientModel !== process.env.VUE_APP_MODE
+    if (clientModel !== process.env.VUE_APP_MODEL
       || clientPlatform !== process.platform
       || customId !== process.env.VUE_APP_CUSTOMID) {
       console.warn('Received wrong update info.', JSON.stringify(info));
@@ -63,6 +67,8 @@ export class YealinkProvider extends Provider {
     const currentVersion = semver.parse(this.currentVersion);
 
     const gt = semver.gt(version, currentVersion);
+
+    return true;
 
     if (gt) return true;
     

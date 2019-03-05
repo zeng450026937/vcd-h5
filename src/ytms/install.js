@@ -1,8 +1,14 @@
 import { YTMSService } from './ytms-service';
+import { getClientId, getClientInfo, clientInfo } from './client-info';
 
-const ytms = new YTMSService();
+const ytms = {
+  yealink    : new YTMSService(),
+  enterprise : new YTMSService(),
+  getClientId,
+  getClientInfo,
+  clientInfo,
+};
 
-// fetch client info
 ytms.getClientInfo();
 
 global.ytms = ytms;

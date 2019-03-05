@@ -6,7 +6,7 @@ const USE_SQUIRREL = process.env.VUE_APP_USE_SQUIRREL && process.env.VUE_APP_USE
 const autoUpdater = USE_SQUIRREL ? electron.autoUpdater : require('./auto-updater').autoUpdater;
 
 if (!USE_SQUIRREL && global.ytms) {
-  const provider = new YealinkProvider(autoUpdater, global.ytms);
+  const provider = new YealinkProvider(autoUpdater, global.ytms.yealink);
 
   autoUpdater.setProvider(provider);
 }

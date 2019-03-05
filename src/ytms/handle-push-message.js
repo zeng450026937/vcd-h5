@@ -23,11 +23,11 @@ export function showNotification(title, body) {
 
 export function handlePushMessage(pushService, hook) {
   pushService.on('notify', (type, body) => {
-    console.log(type, body);
+    console.log('PUSH SERVICE: ', type, body);
     
     showNotification(MESSAGE_TYPE[type], body);
 
-    const api = ytms.getApi();
+    const api = ytms.yealink.api;
 
     let sessionId = null;
 
@@ -56,14 +56,12 @@ export function handlePushMessage(pushService, hook) {
           job.stop();
         }
         break;
-      case MESSAGE_TYPE.GET_CONFIG:
-        payload = Log.Create(api);
-        payload.logfile = null;
+      case MESSAGE_TYPE.GET_LOG:
+        payload = new Log(api);
         payload.upload();
         break;
-      case MESSAGE_TYPE.GET_LOG:
-        payload = Config.Create(api);
-        payload.data = {};
+      case MESSAGE_TYPE.GET_CONFIG:
+        payload = new Config(api);
         payload.upload();
         break;
       default:

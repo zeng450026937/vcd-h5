@@ -15,7 +15,9 @@ module.exports = async function(context) {
   packageInfo.packageName = path.basename(artifact);
   packageInfo.packageVersion = pkg.version;
   packageInfo.clientModel = pkg.model;
+  packageInfo.clientCategory = pkg.category;
   packageInfo.clientArch = process.arch;
+  packageInfo.clientOs = process.platform;
   packageInfo.clientPlatform = process.platform;
   packageInfo.customId = pkg.customId;
   packageInfo.releaseDate = new Date().toISOString();
@@ -26,7 +28,7 @@ module.exports = async function(context) {
 
   md5.update(stream);
 
-  packageInfo.md5 = md5.digest('base64');
+  packageInfo.md5 = md5.digest('hex').toUpperCase();
 
   const hash = crypto.createHmac('sha512', 'yealink');
 
@@ -34,7 +36,7 @@ module.exports = async function(context) {
 
   packageInfo.sign = {
     algorithm : 'sha512',
-    digest    : hash.digest('base64'),
+    digest    : hash.digest('hex').toUpperCase(),
   };
 
   await fs.outputJSON(path.resolve(context.outDir, 'package-info.json'), packageInfo);

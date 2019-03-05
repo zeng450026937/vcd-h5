@@ -6,17 +6,18 @@ const __DEV__ = process.env.NODE_ENV === 'development';
 const __RENDERER__ = process.type === 'renderer';
 
 const inspectRequest = false;
-const inspectResponse = !!__DEV__;
+const inspectResponse = __DEV__;
 
 if (inspectRequest) {
   inst.interceptors.request.use(
     (config) => {      
       console.log(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
-      
+      // console.log('YTMS API DATA: \n', config.data);
+
       return config;
     },
     (error) => {
-      console.warn(error);
+      console.warn(`${error}`);
 
       return Promise.reject(error);
     }
@@ -36,7 +37,7 @@ if (inspectResponse) {
       return response;
     },
     (error) => {
-      console.warn(error);
+      console.warn(`${error}`);
 
       return Promise.reject(error);
     }
@@ -110,7 +111,7 @@ export async function getClientStatus(baseURL, clientId, data) {
   return res.data.data;
 }
 
-export async function heartBeat(baseURL, clientId, expire = 300) {
+export async function heartbeat(baseURL, clientId, expire = 300) {
   const res = await inst({
     method : 'post',
     baseURL,
@@ -167,7 +168,9 @@ export async function uploadNetLogs(baseURL, clientId, formdata) {
   return res.data.data;
 }
 
-export async function reportNetLogs(baseURL, clientId, sessionId, data, expire = 30) {
+export async function reportSessionState(baseURL, clientId, sessionId, data, expire = 30) {
+  if (expire > 30) expire = 30;
+
   const res = await inst({
     method : 'post',
     baseURL,

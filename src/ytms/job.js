@@ -1,20 +1,21 @@
 import { EventEmitter } from 'events';
 
 // in seconds
-const SESSION_EXPIRE_TIME = 30 * 1000;
-const MAX_SESSION_LIFETIME = 3600 * 1000;
+const SESSION_EXPIRE_TIME = 30;
+const MAX_SESSION_LIFETIME = 3600;
 
-export class Session extends EventEmitter {
-  constructor(id) {
+export class Job extends EventEmitter {
+  constructor(api, id) {
     super();
 
+    this.api = api;
     this.id = id;
-    this.interval = SESSION_EXPIRE_TIME * 0.7;
+    this.interval = SESSION_EXPIRE_TIME * 700;
     this.timer = null;
     this.status = 'stop';
     this.startTime = 0;
     this.endTime = 0;
-    this.lifetime = MAX_SESSION_LIFETIME;
+    this.lifetime = MAX_SESSION_LIFETIME * 1000;
   }
 
   get duration() {
@@ -59,25 +60,16 @@ export class Session extends EventEmitter {
 
   report(status) {
     this.status = status;
+    if (this.api) {
+      this.api.reportSessionState(this.id, status, this.expire);
+    }
     this.emit(status, this);
+    console.log(`job: ${this.id}`, `-- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
   }
 
   // private
   get expire() {
     return SESSION_EXPIRE_TIME;
-  }
-}
-
-export class Job extends Session {
-  constructor(api, id) {
-    super(id);
-
-    this.api = api;
-  }
-
-  report(status) {
-    super.report(status);
-    console.log(`job: ${this.id}`, `-- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
   }
 }
 
