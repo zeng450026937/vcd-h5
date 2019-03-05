@@ -10,12 +10,26 @@
         <div class="flex flex-grow"></div>
         <div class="flex justify-center py-3 items-center">
           <div class="button-content flex h-8 items-center z-10">
-            <a-button shape="circle"
-                      class="text-white mx-2"
-            ><a-iconfont type="icon-shexiangtou"/></a-button>
-            <a-button shape="circle"
-                      class="text-white mx-2"
-            ><a-iconfont type="icon-maikefeng"/></a-button>
+
+            <a-button :disabled="videoDisabled"
+                      shape="circle"
+                      class="mx-2 text-white border-transparent"
+                      :class="{[`bg-${videoIcon.color}`] : true}"
+                      :title="videoIcon.title"
+                      @click="onVideoBtnClick"
+            >
+              <a-iconfont :type="videoIcon.icon"/>
+            </a-button>
+
+            <a-button :disabled="audioDisabled"
+                      shape="circle"
+                      class="mx-2 text-white border-transparent"
+                      :class="{[`bg-${audioIcon.color}`] : true}"
+                      :title="audioIcon.title"
+                      @click="onAudioBtnClick"
+            >
+              <a-iconfont :type="audioIcon.icon"/>
+            </a-button>
 
             <a-popover
                 trigger="click"
@@ -24,21 +38,25 @@
             >
               <div slot="content" class="popover-content">
                 <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-grey-light">
-                  <a-iconfont type="icon-yuyin" class="text-base text-indigo"/>
+                  <a-iconfont type="icon-yuyin"
+                              class="text-base text-indigo"/>
                   <span class="ml-3 text-xs">切换为音频通话</span>
                 </div>
                 <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-grey-light">
-                  <a-iconfont type="icon-bohao" theme="filled" class="text-base text-indigo"/>
+                  <a-iconfont type="icon-bohao"
+                              class="text-base text-indigo"/>
                   <span class="ml-3 text-xs">拨号盘</span>
                 </div>
               </div>
               <a-button shape="circle"
+                        title="更多"
                         class="text-white mx-2"
                         @click="showMorePanel = !showMorePanel"
               ><a-iconfont type="icon-gengduo1"/></a-button>
             </a-popover>
             <a-button shape="circle"
-                      class="text-white mx-2 bg-red-light"
+                      title="退出"
+                      class="text-white mx-2 bg-red-light border-transparent"
                       @click="showLeaveModal"
             ><a-iconfont type="icon-guaduan"/></a-button>
           </div>
@@ -86,7 +104,35 @@ export default {
     },
     conferenceTitle() {
       return this.$rtc.conference.information.description.subject;
-    }
+    },
+    videoDisabled() {
+      const { status } = this.$rtc.media.localMedia;
+
+      return !status.active || !status.video;
+    },
+    audioDisabled() {
+      const { status } = this.$rtc.media.localMedia;
+
+      return !status.active || !status.audio;
+    },
+    audioIcon() {
+      const iconMap = {
+        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
+        unblock    : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: '取消举手' },
+        hand       : { icon: 'icon-jushou', color: '', title: '举手' },
+      };
+
+      return iconMap[this.$model.conference.audioStatus || 'unblock'];
+    },
+    videoIcon() {
+      const iconMap = {
+        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
+      };
+
+      return iconMap[this.$model.conference.videoStatus];
+    },
   },
   methods : {
     showLeaveModal() {
@@ -96,6 +142,12 @@ export default {
       this.$model.state.isInMiniConference = false;
       this.isInConferenceView = true;
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
+    },
+    onAudioBtnClick() {
+      this.$dispatch('conference.toggleAudio');
+    },
+    onVideoBtnClick() {
+      this.$dispatch('conference.toggleVideo');
     },
   },
 };

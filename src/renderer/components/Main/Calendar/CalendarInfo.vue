@@ -14,14 +14,17 @@
                            overlayClassName="calendar-info-popover">
                   <template slot="content">
                     <div class="flex flex-col justify-between items-center p-3"
-                         style="width: 144px; height: 332px;">
+                         style="width: 144px;">
                       <div class="flex flex-col items-center h-full">
                         <span class="text-xs leading-tight">分享会议</span>
                         <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
                       </div>
-                      <div class="flex flex-col items-center h-full mt-3">
+                      <div class="flex flex-col items-center select-none h-full mt-3"
+                           v-if="currentEvent.isLive" >
                         <span class="text-xs leading-tight">观看直播</span>
-                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
+                        <img style="width: 120px; height: 120px;"
+                             class="bg-grey-darkest mt-2"
+                             :src="liveQRCode"/>
                       </div>
                     </div>
                   </template>
@@ -131,6 +134,7 @@
 </template>
 
 <script>
+import jrQrcode from 'jr-qrcode';
 import copy from 'clipboard-copy';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import NoFound from '../../Shared/CommonEmpty.vue';
@@ -148,6 +152,9 @@ export default {
     },
     hasEvent() {
       return Object.keys(this.currentEvent).length > 0;
+    },
+    liveQRCode() {
+      return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
     },
   },
   methods : {

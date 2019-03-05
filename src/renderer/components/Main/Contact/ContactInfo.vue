@@ -52,7 +52,8 @@
         </a-button>
         <a-button type="primary"
                   block
-                  class="mt-3">
+                  class="mt-3"
+                  @click="clickAudio">
           <a-iconfont type="icon-yuyin" class="text-base"/>音频通话
         </a-button>
       </div>
@@ -87,7 +88,7 @@ export default {
   },
   data() {
     return {
-      ensureModal : null,
+      // ensureModal : null,
     };
   },
   computed : {
@@ -96,24 +97,19 @@ export default {
     },
   },
   destroyed() {
-    this.$popup.destroy(this.ensureModal);
+    // this.$popup.destroy(this.ensureModal);
   },
   methods : {
     clickDept(path) {
       this.$emit('toGroup', path);
     },
     clickVideo() {
-      if (!this.ensureModal) {
-        this.ensureModal = this.$popup.prepared('ensureModal', { content: '是否开启群组会议？' });
-        this.ensureModal.vm.$on('cancel', () => {
-          console.warn('已经关闭Modal');
-        });
-        this.ensureModal.vm.$on('ok', () => {
-          console.warn('已经开始会议');
-          this.ensureModal.hide();
-        });
-      }
-      this.ensureModal.display();
+      this.$rtc.conference.meetnow([ {
+        requestUri : this.user.number,
+      } ]);
+    },
+    clickAudio() {
+      this.$dispatch('call.doAudioCall', this.user.number);
     },
   },
   filters : {

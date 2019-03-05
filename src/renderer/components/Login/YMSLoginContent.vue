@@ -6,7 +6,7 @@
       </div>
 
       <login-setting-content v-if="isInSettingContent"
-                                 @closeSetting="isInSettingContent = false"/>
+                             @closeSetting="isInSettingContent = false"/>
     </div>
   </a-layout>
 </template>

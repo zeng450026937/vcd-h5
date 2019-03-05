@@ -108,20 +108,10 @@ export default {
     };
   },
   created() {
-    if (!this.userInfo.parent.fullPath) {
-      let parent = this.userInfo.parent;
+    const { fullPath } = this.userInfo.parent;
 
-      let fullPath = [];
-
-      while (parent.id) {
-        fullPath = [ {
-          id   : parent.id,
-          text : parent.name,
-        } ].concat(fullPath);
-
-        parent = parent.parent;
-      }
-      this.userInfo.parent.fullPath = fullPath;
+    if (!fullPath || fullPath.length <= 0) {
+      this.genFullPath();
     }
   },
   computed : {
@@ -135,6 +125,21 @@ export default {
     handleOk() {
     },
     clickOk() {
+    },
+    genFullPath() {
+      let parent = this.userInfo.parent;
+
+      let fullPath = [];
+
+      while (parent.id) {
+        fullPath = [ {
+          id   : parent.id,
+          text : parent.name,
+        } ].concat(fullPath);
+
+        parent = parent.parent;
+      }
+      this.userInfo.parent.fullPath = fullPath;
     },
   },
   filters : {

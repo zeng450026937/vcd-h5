@@ -116,13 +116,14 @@
                 </a-avatar>
               </a-popover>
             </a-list-item-meta>
-            <div class="opacity-0 group-hover:opacity-100 flex justify-around">
+            <div class="opacity-0 group-hover:opacity-100 flex justify-around"
+                 :class="{'opacity-100': selectedContact.id === item.id}">
               <a-iconfont v-if="videoIcon"
                           title="视频呼叫"
                           type="icon-shipin"
                           class="mr-3 text-indigo cursor-pointer text-base"
                           @click.stop="doVideo(item)"/>
-              <a-iconfont v-if="audioIcon"
+              <a-iconfont v-if="audioIcon && !item.isGroup"
                           title="音频呼叫"
                           type="icon-yuyin"
                           class="mr-3 text-indigo cursor-pointer text-base"
@@ -225,13 +226,29 @@ export default {
       this.$emit('deleteContact', item);
     },
     doVideo(item) {
-      this.$rtc.conference.meetnow([ {
-        requestUri : item.number,
-      } ]);
+      const list = [];
+
+      if (!item.isGroup) {
+        list.push({
+          requestUri : item.number,
+        });
+      }
+      else {
+        item.items.every((contact) => {
+          if (!contact.isGroup) {
+            list.push({ requestUri: contact.number });
+          }
+          
+          return list.length < 100;
+        });
+      }
+      this.$rtc.conference.meetnow(list);
       // this.$emit('doVideo', item);
     },
     doAudio(item) {
-      this.$dispatch('call.doAudioCall', item.number);
+      if (!item.isGroup) {
+        this.$dispatch('call.doAudioCall', item.number);
+      }
       // this.$emit('doAudio', item);
     },
     moreOption(item) {
