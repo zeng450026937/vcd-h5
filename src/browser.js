@@ -13,6 +13,7 @@ import {
   reportUncaughtException,
 } from './main/report-crash';
 import { log as writeLog } from './logger/winston';
+import { getLogDirectoryPath } from './logger/get-log-path';
 
 const launchTime = now();
 
@@ -162,6 +163,10 @@ if (!handlingSquirrelEvent) {
 
         // replace default service to yealink provider
         autoUpdater.provider.service = ytms.enterprise;
+      });
+
+      ipcMain.on('get-log-directory', async(event) => {
+        event.sender.send('get-log-directory-reply', getLogDirectoryPath());
       });
 
       ipcMain.on('stop-ytms-service', (event, url) => {
