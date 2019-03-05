@@ -16,12 +16,14 @@ import { LogUploader } from './main/log-uploader';
 import { log as writeLog } from './logger/winston';
 import { handlePushMessage } from './ytms/handle-push-message';
 
-let mainWindow = null;
-
 const launchTime = now();
 
+let mainWindow = null;
+
 let preventQuit = false;
+
 let readyTime = null;
+
 let onDidLoadFns = [];
 
 function handleUncaughtException(error) {
@@ -137,6 +139,10 @@ if (!handlingSquirrelEvent) {
       ytms.connect()
         .then((service) => {
           handlePushMessage(service.push);
+
+          new LogUploader(service.api).walkAndUpload();
+
+          autoUpdater.checkForUpdates();
         });
 
       ipcMain.on(

@@ -25,6 +25,8 @@ export class YealinkProvider extends Provider {
 
     const res = await api.getUpdatePackage(clientInfo);
 
+    if (!res) return;
+
     this.latestVersion = res;
 
     return res;

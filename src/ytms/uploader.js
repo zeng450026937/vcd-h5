@@ -65,13 +65,12 @@ export class Alarm extends Payload {
   constructor(formdata, uploader) {
     super('alarm', formdata, uploader);
 
-    // need default value for all props
-    this.code = null;
-    this.name = null;
-    this.type = null;
-    this.level = null;
-    this.desc = null;
-    this.time = null || new Date().toISOString();
+    this.code = '';
+    this.name = '';
+    this.type = '';
+    this.level = 0;
+    this.desc = '';
+    this.time = '';
     this.logfile = null;
   }
 
@@ -192,10 +191,10 @@ export class Feedback extends Payload {
   constructor(formdata, uploader) {
     super('feedback', formdata, uploader);
 
-    // need default value for all props
-    this.title = null;
-    this.category = null;
-    this.content = null;
+    this.title = '';
+    this.category = '';
+    this.content = '';
+    this.contact = '';
 
     this.logfile = null;
     this.image = null;
@@ -213,6 +212,7 @@ export class Feedback extends Payload {
       feedbackTitle    : this.title,
       feedbackCategory : this.category,
       feedbackContent  : this.content,
+      contactInfo      : this.contact,
     }));
 
     if (this.logfile) {

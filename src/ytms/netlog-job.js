@@ -27,8 +27,6 @@ export class NetLogJob extends Job {
   }
 
   stop() {
-    super.stop();
-
     netLog.stopLogging(async(path) => {
       const logfile = await readFile(path);
       const log = NetLog.Create(this.api);
@@ -37,6 +35,8 @@ export class NetLogJob extends Job {
       log.logfile = logfile;
 
       await log.upload().catch((e) => console.log(e));
+      // fire stop when upload is finished.
+      super.stop();
     });
   }
 
