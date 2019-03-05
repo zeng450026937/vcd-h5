@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const inst = axios.create();
+const inst = axios.create({
+  headers : {
+    'user-agent' : 'VCD-H5',
+  },
+});
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 const __RENDERER__ = process.type === 'renderer';
@@ -12,7 +16,7 @@ if (inspectRequest) {
   inst.interceptors.request.use(
     (config) => {      
       console.log(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
-      // console.log('YTMS API DATA: \n', config.data);
+      console.log('YTMS API DATA: \n', config.data);
 
       return config;
     },
@@ -44,6 +48,14 @@ if (inspectResponse) {
   );
 }
 
+export function throwIfError(res) {
+  const { data } = res;
+
+  if (data.error || data.ret === -1) {
+    throw new Error(JSON.stringify(data.error || data));
+  }
+}
+
 export async function doFeedback(baseURL, clientId, formdata) {
   const res = await inst({
     method  : 'post',
@@ -52,6 +64,8 @@ export async function doFeedback(baseURL, clientId, formdata) {
     headers : __RENDERER__ ? null : formdata.getHeaders(),
     data    : formdata,
   });
+
+  throwIfError(res);
 
   return res.data.data;
 }
@@ -64,6 +78,8 @@ export async function getEnterpriseInfo(baseURL, clientId, data) {
     data,
   });
 
+  throwIfError(res);
+
   return res.data.data;
 }
 
@@ -74,6 +90,8 @@ export async function getUpdatePackage(baseURL, clientId, data) {
     url    : '/packages/pollLatest',
     data,
   });
+
+  throwIfError(res);
 
   return res.data.data;
 }
@@ -86,6 +104,8 @@ export async function resetClientInfo(baseURL, clientId, data) {
     data,
   });
 
+  throwIfError(res);
+
   return res.data.data;
 }
 
@@ -96,6 +116,8 @@ export async function updateClientInfo(baseURL, clientId, data) {
     url    : `/clients/${clientId}`,
     data,
   });
+
+  throwIfError(res);
 
   return res.data.data;
 }
@@ -108,6 +130,8 @@ export async function getClientStatus(baseURL, clientId, data) {
     data,
   });
 
+  throwIfError(res);
+
   return res.data.data;
 }
 
@@ -117,6 +141,8 @@ export async function heartbeat(baseURL, clientId, expire = 300) {
     baseURL,
     url    : `/clients/${clientId}/heart?expire=${expire}`,
   });
+
+  throwIfError(res);
 
   return res.data.data;
 }
@@ -130,6 +156,8 @@ export async function doAlarm(baseURL, clientId, formdata) {
     data    : formdata,
   });
 
+  throwIfError(res);
+
   return res.data.data;
 }
 
@@ -140,6 +168,8 @@ export async function uploadConfig(baseURL, clientId, data) {
     url    : `/clients/${clientId}/configs`,
     data,
   });
+
+  throwIfError(res);
 
   return res.data.data;
 }
@@ -153,6 +183,8 @@ export async function uploadLogs(baseURL, clientId, formdata) {
     data    : formdata,
   });
 
+  throwIfError(res);
+
   return res.data.data;
 }
 
@@ -164,6 +196,8 @@ export async function uploadNetLogs(baseURL, clientId, formdata) {
     headers : __RENDERER__ ? null : formdata.getHeaders(),
     data    : formdata,
   });
+
+  throwIfError(res);
 
   return res.data.data;
 }
@@ -177,6 +211,8 @@ export async function reportSessionState(baseURL, clientId, sessionId, data, exp
     url    : `/clients/${clientId}/sessions/${sessionId}/progress?expire=${expire}`,
     data,
   });
+  
+  throwIfError(res);
 
   return res.data.data;
 }

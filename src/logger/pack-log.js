@@ -18,7 +18,7 @@ export function packLog(filename = 'log', format = 'tar', gzip = true) {
       });
 
       archive.on('error', reject);
-      archive.on('close', () => resolve(path));
+      archive.on('end', () => resolve(path));
 
       archive.pipe(output);
 

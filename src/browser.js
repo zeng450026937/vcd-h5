@@ -12,7 +12,6 @@ import {
   reportRendererCrash,
   reportUncaughtException,
 } from './main/report-crash';
-import { LogUploader } from './main/log-uploader';
 import { log as writeLog } from './logger/winston';
 
 const launchTime = now();
@@ -135,12 +134,7 @@ if (!handlingSquirrelEvent) {
       
       createWindow();
 
-      ytms.yealink.connect()
-        .then((service) => {
-          new LogUploader(service.api).walkAndUpload();
-
-          autoUpdater.checkForUpdates();
-        });
+      ytms.yealink.connect();
 
       ipcMain.on(
         'log',

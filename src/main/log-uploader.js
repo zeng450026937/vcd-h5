@@ -1,6 +1,5 @@
 import { ensureDir, readFile, readdir, readJson, outputJson } from 'fs-extra';
 import { resolve, basename } from 'path';
-import moment from 'moment';
 import { getLogDirectoryPath } from '../logger/get-log-path';
 import { Log } from '../ytms/uploader';
 
@@ -18,7 +17,8 @@ export class LogUploader {
     const logfile = await readFile(path);
     const log = new Log(this.api);
 
-    log.addLog(logfile, basename(path));
+    log.addParam({ sessionId: 'why!!!' });
+    log.addLog(logfile, `${basename(path)}.gz`);
 
     await log.upload();
   }

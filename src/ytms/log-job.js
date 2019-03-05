@@ -8,16 +8,19 @@ export class LogJob extends Job {
   async start() {
     super.start();
 
-    const path = await packLog();
+    const path = await packLog(this.id);
     
     const logfile = await readFile(path);
   
     const log = new Log(this.api);
 
+    log.addParam({ sessionId: this.id });
     log.addLog(logfile, basename(path));
 
     await log.upload().catch((e) => console.log(e));
+    // ignore anyway
+    await unlink(path).catch(() => {});
 
-    await unlink(path);
+    this.stop();
   }
 }

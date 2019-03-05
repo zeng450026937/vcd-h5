@@ -40,8 +40,6 @@ export class Payload {
         throw new Error('Unknown payload type');
     }
 
-    if (res.errorCode) throw new Error(res.msg);
-
     return res;
   }
 }
@@ -108,6 +106,10 @@ export class Alarm extends FormPayload {
 }
 
 export class Log extends FormPayload {
+  addParam(param) {
+    return this.add('param', param);
+  }
+
   addLog(log, name = `${Date.now()}.log`) {
     return this.add('log', log, name);
   }
@@ -118,9 +120,13 @@ export class Log extends FormPayload {
 }
 
 export class NetLog extends FormPayload {
+  addParam(param) {
+    return this.add('param', param);
+  }
+
   addLog(log, sessionId) {
     this.add('param', { sessionId });
-    this.add('log', log, `${sessionId}.json`);
+    this.add('packet', log, `${sessionId}.json`);
 
     return this;
   }

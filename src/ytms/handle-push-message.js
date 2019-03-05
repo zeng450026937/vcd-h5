@@ -2,7 +2,7 @@ import { Notification } from 'electron';
 import { MESSAGE_TYPE } from './push-service';
 import { JobManager } from './job';
 import { NetLogJob } from './netlog-job';
-import { Config, Log } from './uploader';
+import { LogJob } from './log-job';
 
 const jobManager = new JobManager();
 
@@ -57,12 +57,15 @@ export function handlePushMessage(pushService, hook) {
         }
         break;
       case MESSAGE_TYPE.GET_LOG:
-        payload = new Log(api);
-        payload.upload();
-        break;
-      case MESSAGE_TYPE.GET_CONFIG:
-        payload = new Config(api);
-        payload.upload();
+        ({ sessionId } = body);
+
+        job = jobManager.find(sessionId);
+
+        if (!job) {
+          job = new LogJob(api, sessionId);
+        }
+
+        jobManager.add(job);
         break;
       default:
         break;

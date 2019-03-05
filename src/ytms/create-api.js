@@ -6,8 +6,8 @@ export function YTMSAPI(baseURL, clientId) {
 }
 
 Object.keys(apis).forEach((api) => {
-  YTMSAPI.prototype[api] = function(data) {
-    return apis[api](this.baseURL, this.clientId, data);
+  YTMSAPI.prototype[api] = function(...args) {
+    return apis[api](this.baseURL, this.clientId, ...args);
   };
 });
 
