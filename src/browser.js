@@ -15,6 +15,7 @@ import {
 import { LogUploader } from './main/log-uploader';
 import { log as writeLog } from './logger/winston';
 import { handlePushMessage } from './ytms/handle-push-message';
+import { getLogDirectoryPath } from './logger/get-log-path';
 
 const launchTime = now();
 
@@ -184,6 +185,10 @@ if (!handlingSquirrelEvent) {
         ytms.disconnect(url);
         
         event.sender.send('stop-ytms-service-reply', true);
+      });
+
+      ipcMain.on('get-log-directory', async(event) => {
+        event.sender.send('get-log-directory-reply', getLogDirectoryPath());
       });
     });
     
