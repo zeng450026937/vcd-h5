@@ -72,7 +72,7 @@
           </div>
         </template>
         <div class="flex flex-grow"/>
-        <div class="no-dragable cursor-pointer
+        <div  @click="openFeedback" class="no-dragable cursor-pointer
               w-full flex flex-col items-center
               justify-center hover:text-indigo h-12 mb-2">
           <a-iconfont type="icon-fankui" class="text-base"/>
@@ -80,12 +80,14 @@
         </div>
       </div>
     </div>
+    <Feedback-Modal ref="feedbackModal"/>
   </a-layout-sider>
 </template>
 
 <script>
 import CommonAvatar from '../Shared/CommonAvatar.vue';
 import { LOGIN, MAIN, MODULE_NAME } from '../../router/constants';
+import FeedbackModal from '../Login/FeedbackModal.vue';
 
 const avatarList = [
   'http://img2.touxiang.cn/file/20170614/03130f686db2220fc3a252eec01d2eb6.jpg',
@@ -103,6 +105,7 @@ export default {
   name       : 'MainSidebar',
   components : {
     CommonAvatar,
+    FeedbackModal,
   },
   data() {
     return {
@@ -181,6 +184,9 @@ export default {
       this.$model.state.sidebarStatus.mainRoute = this.$router.currentRoute.path;
       this.$rtc.account.signout();
       this.$router.push(LOGIN.LOGIN_CONTENT);
+    },
+    openFeedback() {
+      this.$refs.feedbackModal.visible = true;
     },
   },
   watch : {
