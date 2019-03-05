@@ -12,17 +12,18 @@ import {
   reportRendererCrash,
   reportUncaughtException,
 } from './main/report-crash';
+import { LogUploader } from './main/log-uploader';
 import { log as writeLog } from './logger/winston';
 import { handlePushMessage } from './ytms/handle-push-message';
-import { getLogDirectoryPath } from './logger/get-log-path';
-import LogReporter from './log-reporter';
-
-let mainWindow = null;
 
 const launchTime = now();
 
+let mainWindow = null;
+
 let preventQuit = false;
+
 let readyTime = null;
+
 let onDidLoadFns = [];
 
 function handleUncaughtException(error) {
@@ -138,7 +139,10 @@ if (!handlingSquirrelEvent) {
       ytms.connect()
         .then((service) => {
           handlePushMessage(service.push);
-          const logReporter = new LogReporter(service.api);
+
+          new LogUploader(service.api).walkAndUpload();
+
+          autoUpdater.checkForUpdates();
         });
 
       ipcMain.on(
@@ -180,12 +184,6 @@ if (!handlingSquirrelEvent) {
         ytms.disconnect(url);
         
         event.sender.send('stop-ytms-service-reply', true);
-      });
-
-      ipcMain.on('get-log-directory', async(event) => {
-        const logFile = getLogDirectoryPath();
-
-        event.sender.send('get-log-directory-reply', logFile);
       });
     });
     

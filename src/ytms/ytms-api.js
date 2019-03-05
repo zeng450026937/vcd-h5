@@ -1,9 +1,50 @@
 import axios from 'axios';
 
+const inst = axios.create();
+
+const __DEV__ = process.env.NODE_ENV === 'development';
 const __RENDERER__ = process.type === 'renderer';
 
+const inspectRequest = false;
+const inspectResponse = !!__DEV__;
+
+if (inspectRequest) {
+  inst.interceptors.request.use(
+    (config) => {      
+      console.log(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
+      
+      return config;
+    },
+    (error) => {
+      console.warn(error);
+
+      return Promise.reject(error);
+    }
+  );
+}
+if (inspectResponse) {
+  inst.interceptors.response.use(
+    (response) => {
+      const { status, config, data } = response;
+      
+      console.log(`YTMS API: ${status} ${config.method.toUpperCase()} ${config.url}`);
+      
+      if (data.error) {
+        console.error(data.error);
+      }
+
+      return response;
+    },
+    (error) => {
+      console.warn(error);
+
+      return Promise.reject(error);
+    }
+  );
+}
+
 export async function doFeedback(baseURL, clientId, formdata) {
-  const res = await axios({
+  const res = await inst({
     method  : 'post',
     baseURL,
     url     : `/clients/${clientId}/feedbacks`,
@@ -15,7 +56,7 @@ export async function doFeedback(baseURL, clientId, formdata) {
 }
 
 export async function getEnterpriseInfo(baseURL, clientId, data) {
-  const res = await axios({
+  const res = await inst({
     method : 'get',
     baseURL,
     url    : '/system/enterpriseInfo',
@@ -26,7 +67,7 @@ export async function getEnterpriseInfo(baseURL, clientId, data) {
 }
 
 export async function getUpdatePackage(baseURL, clientId, data) {
-  const res = await axios({
+  const res = await inst({
     method : 'post',
     baseURL,
     url    : '/packages/pollLatest',
@@ -37,7 +78,7 @@ export async function getUpdatePackage(baseURL, clientId, data) {
 }
 
 export async function resetClientInfo(baseURL, clientId, data) {
-  const res = await axios({
+  const res = await inst({
     method : 'post',
     baseURL,
     url    : '/clients',
@@ -48,7 +89,7 @@ export async function resetClientInfo(baseURL, clientId, data) {
 }
 
 export async function updateClientInfo(baseURL, clientId, data) {
-  const res = await axios({
+  const res = await inst({
     method : 'put',
     baseURL,
     url    : `/clients/${clientId}`,
@@ -59,7 +100,7 @@ export async function updateClientInfo(baseURL, clientId, data) {
 }
 
 export async function getClientStatus(baseURL, clientId, data) {
-  const res = await axios({
+  const res = await inst({
     method : 'get',
     baseURL,
     url    : `/clients/${clientId}/status`,
@@ -70,7 +111,7 @@ export async function getClientStatus(baseURL, clientId, data) {
 }
 
 export async function heartBeat(baseURL, clientId, expire = 300) {
-  const res = await axios({
+  const res = await inst({
     method : 'post',
     baseURL,
     url    : `/clients/${clientId}/heart?expire=${expire}`,
@@ -80,7 +121,7 @@ export async function heartBeat(baseURL, clientId, expire = 300) {
 }
 
 export async function doAlarm(baseURL, clientId, formdata) {
-  const res = await axios({
+  const res = await inst({
     method  : 'post',
     baseURL,
     url     : `/clients/${clientId}/alarms`,
@@ -92,7 +133,7 @@ export async function doAlarm(baseURL, clientId, formdata) {
 }
 
 export async function uploadConfig(baseURL, clientId, data) {
-  const res = await axios({
+  const res = await inst({
     method : 'post',
     baseURL,
     url    : `/clients/${clientId}/configs`,
@@ -103,7 +144,7 @@ export async function uploadConfig(baseURL, clientId, data) {
 }
 
 export async function uploadLogs(baseURL, clientId, formdata) {
-  const res = await axios({
+  const res = await inst({
     method  : 'post',
     baseURL,
     url     : `/clients/${clientId}/logs`,
@@ -115,7 +156,7 @@ export async function uploadLogs(baseURL, clientId, formdata) {
 }
 
 export async function uploadNetLogs(baseURL, clientId, formdata) {
-  const res = await axios({
+  const res = await inst({
     method  : 'post',
     baseURL,
     url     : `/clients/${clientId}/packets`,
@@ -127,7 +168,7 @@ export async function uploadNetLogs(baseURL, clientId, formdata) {
 }
 
 export async function reportNetLogs(baseURL, clientId, sessionId, data, expire = 30) {
-  const res = await axios({
+  const res = await inst({
     method : 'post',
     baseURL,
     url    : `/clients/${clientId}/sessions/${sessionId}/progress?expire=${expire}`,

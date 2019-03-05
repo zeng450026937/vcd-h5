@@ -1,7 +1,7 @@
 import { app, Menu, ipcMain, BrowserWindow, shell, Tray } from 'electron';
 import { EventEmitter } from 'events';
 import Path from 'path';
-import delegate from 'delegates';
+import delegates from 'delegates';
 
 export class AppTray extends EventEmitter {
   constructor() {
@@ -48,7 +48,7 @@ export class AppTray extends EventEmitter {
     this.tray.setToolTip(process.env.VUE_APP_TITLE);
     this.tray.setContextMenu(contextMenu);
 
-    delegate(this, 'tray')
+    delegates(this, 'tray')
       .method('isDestroyed')
       .method('destroy');
   }

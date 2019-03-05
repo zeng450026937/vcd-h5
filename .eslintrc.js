@@ -18,6 +18,7 @@ module.exports = {
     __LINUX__: true,
     logger: true,
     ytms: true,
+    autoUpdater: true,
   },
   rules : {
     'no-console'            : process.env.NODE_ENV === 'production' ? 2 : 0,

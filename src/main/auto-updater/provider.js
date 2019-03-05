@@ -4,7 +4,6 @@ import { randomBytes, createHash } from 'crypto';
 import { createWriteStream } from 'fs-extra';
 import { basename } from 'path';
 import axios from 'axios';
-import semver from 'semver';
 import { FileCache } from './file-cache';
 
 export class DigestTransform extends Transform {
@@ -228,6 +227,10 @@ export class Provider extends Downloader {
     return this.latestFile && this.latestFile.path;
   }
 
+  get currentVersion() {
+    return this.appUpdater.appVersion;
+  }
+
   async getLatestVersion() {
     return this.latestVersion;
   }
@@ -271,6 +274,11 @@ export class Provider extends Downloader {
     this.latestFile = file;
 
     return file;
+  }
+  
+
+  isVersionAvariable(info) {
+    return !!info;
   }
   
   onProgress(info) {

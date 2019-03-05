@@ -1,7 +1,7 @@
 import { BrowserWindow, ipcMain, Menu, app, powerSaveBlocker } from 'electron';
 import { EventEmitter } from 'events';
 import Path from 'path';
-import delegate from 'delegates';
+import delegates from 'delegates';
 import { now } from './utils';
 
 export class BaseWindow extends EventEmitter {
@@ -82,7 +82,7 @@ export class BaseWindow extends EventEmitter {
       }
     });
 
-    delegate(this, 'window')
+    delegates(this, 'window')
       .method('isMinimized')
       .method('isVisible')
       .method('restore')

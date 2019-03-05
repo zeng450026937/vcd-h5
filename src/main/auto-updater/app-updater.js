@@ -1,8 +1,6 @@
 import { EventEmitter } from 'events';
 import { app } from 'electron';
-import semver from 'semver';
 import { Provider } from './provider';
-// import { YealinkProvider } from './yealink-provider';
 
 export class AppUpdater extends EventEmitter {
   constructor() {
@@ -58,12 +56,15 @@ export class AppUpdater extends EventEmitter {
 
     if (!info) return;
 
-    // TODO: compare version
+    const avariable = this.provider.isVersionAvariable(info);
+
+    if (!avariable) return;
 
     this.emit('update-avariable', info);
 
     if (this.autoDownload) {
-      await this.provider.download(info);
+      // async download
+      this.provider.download(info);
     }
 
     return info;
@@ -93,7 +94,7 @@ export class AppUpdater extends EventEmitter {
     }
     catch (error) {
       this.installError = error;
-      // TODO: log some error
+      console.error('Install app error', error);
     }
 
     this.installing = false;
