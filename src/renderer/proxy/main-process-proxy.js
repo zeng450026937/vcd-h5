@@ -29,3 +29,13 @@ export function getClientId() {
     });
   });
 }
+
+export function getLogDirectory() {
+  ipcRenderer.send('get-log-directory');
+
+  return new Promise((resolve) => {
+    ipcRenderer.once('get-log-directory-reply', (event, dir) => {
+      resolve(dir);
+    });
+  });
+}

@@ -39,19 +39,19 @@
         </div>
       </div>
     </div>
-    <login-header-modal ref="headerModal"/>
+    <feedback-modal ref="headerModal"/>
   </div>
 </template>
 
 <script>
 import screenfull from 'screenfull';
-import LoginHeaderModal from './LoginHeaderModal.vue';
+import FeedbackModal from './FeedbackModal.vue';
 import { LOGIN } from '../../router/constants';
 
 export default {
   name       : 'LoginHeader',
   components : {
-    LoginHeaderModal,
+    FeedbackModal,
   },
   data() {
     return {
@@ -99,6 +99,7 @@ export default {
     },
     reportIssues() {
       this.$refs.headerModal.visible = true;
+      this.helpStatus = false;
     },
 
   },
