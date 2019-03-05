@@ -57,6 +57,7 @@
                             text="暂无搜索结果"/>
             </template>
             <contact-list v-else
+                          hide-popup
                           :contactList="searchResult"
                           :highlightContent="callNumber"
                           highlightSelected

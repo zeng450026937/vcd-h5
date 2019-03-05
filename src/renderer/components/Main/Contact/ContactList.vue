@@ -40,7 +40,7 @@
                   trigger="hover"
                   slot="avatar"
                   overlayClassName="avatar-popover">
-                <template v-if="!item.isGroup" slot="content">
+                <template v-if="!item.isGroup && !hidePopup" slot="content">
                   <div class="flex w-80 flex-col shadow">
                     <!--头部-->
                     <div class="flex items-center w-full px-5 py-4 bg-card-title rounded-t text-white">
@@ -186,6 +186,10 @@ export default {
     highlightContent : { // 用于搜索 高亮搜索内容
       type    : String,
       default : '',
+    },
+    hidePopup : {
+      type    : Boolean,
+      default : false,
     },
   },
   components : {

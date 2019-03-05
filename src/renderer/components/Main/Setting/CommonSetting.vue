@@ -1,6 +1,6 @@
 <template>
   <a-layout id="common-setting" class="h-full">
-    <div class="h-14">
+    <div class="h-14 border-b">
       <div class="flex bg-white dragable h-full">
         <div class="flex items-center h-full px-4 text-base">
           <span>通用</span>
@@ -9,8 +9,7 @@
         <app-header/>
       </div>
     </div>
-    <a-divider class="my-0"/>
-    <div class="flex flex-col h-full m-4 bg-white p-5">
+    <div class="flex flex-col border h-full m-4 bg-white p-5">
       <div>
         <div>
           <a-switch size="small" v-model="autoStart"/>

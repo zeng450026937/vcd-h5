@@ -71,7 +71,9 @@
 
             </div>
             <div class="mt-5 flex flex-col">
-              <a-button type="primary" block @click="joinMeeting">加入</a-button>
+              <a-button type="primary"
+                        :disabled="!meetingData.account" block
+                        @click="joinMeeting">加入</a-button>
               <a-button block class="mt-4" @click="returnLogin">返回登录</a-button>
             </div>
           </div>
@@ -135,11 +137,11 @@ export default {
   data() {
     return {
       meetingData : {
-        account     : '9001',
-        pin         : '123456',
-        displayName : '小萌',
-        server      : 'academia.com',
-        proxy       : '10.86.112.165',
+        account     : '',
+        pin         : '',
+        displayName : '',
+        server      : '',
+        proxy       : '',
       },
       showProxyItem       : false,
       isInSetting         : false,

@@ -42,6 +42,7 @@
                           :video-icon="false"
                           :audio-icon="false"
                           delete-icon highlightSelected
+                          hide-popup
                           self-un-deleted
                           @deleteContact="deleteContact"
             ></contact-list>

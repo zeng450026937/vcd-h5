@@ -1,6 +1,6 @@
 <template>
 <a-layout id="account-setting" class="h-full">
-  <div class="h-14">
+  <div class="h-14 border-b">
     <div class="flex bg-white dragable h-full">
       <div class="flex items-center h-full px-4 text-base">
         <span>个人资料</span>
@@ -9,8 +9,7 @@
       <app-header/>
     </div>
   </div>
-  <a-divider class="my-0"/>
-  <div class="flex flex-col items-center bg-white h-full m-4">
+  <div class="flex flex-col border items-center bg-white h-full m-4">
     <div class="mt-5" style="width: 440px;">
       <div class="flex mt-2 mb-4 items-center w-full">
         <div class="flex flex-col truncate">
@@ -140,7 +139,7 @@ export default {
   },
   filters : {
     fullName(fullPath) {
-      return fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
+      return fullPath.length < 1 ? '' : fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
     },
   },
 };

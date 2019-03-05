@@ -8,7 +8,7 @@
                'border-indigo': event.scheduleId === currentEvent.scheduleId,
                'bg-grey-lighter': meetingStatus(event.startTime, event.expiryTime).isEnded,
                'bg-white': !meetingStatus(event.startTime, event.expiryTime).isEnded,
-               'border-l-4': meetingStatus(event.startTime, event.expiryTime).isRunning,
+               'border-l-4 border-l-indigo': meetingStatus(event.startTime, event.expiryTime).isRunning,
              }"
              @click="clickCalendar(event)">
           <div class="text-sm flex w-full">
@@ -90,6 +90,8 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="less">
+  .border-l-indigo {
+    border-left-color: #4a5fc4 !important;
+  }
 </style>

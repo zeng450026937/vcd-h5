@@ -7,10 +7,6 @@
 
       <login-setting-content v-if="isInSettingContent"
                                  @closeSetting="isInSettingContent = false"/>
-
-      <div class="flex mt-4 items-center">
-        <p class="text-xs text-white leading-tight">Copyright © 2018 Yealink Inc. All rights reserved.</p>
-      </div>
     </div>
   </a-layout>
 </template>

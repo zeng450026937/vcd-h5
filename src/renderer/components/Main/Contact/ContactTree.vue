@@ -29,8 +29,9 @@
           :loadData="onLoadData"
           @check="onCheck"
           @expand="onExpand"
+          @select="onSelect"
       >
-        <div slot="title" slot-scope="contact" class="flex h-full items-center">
+        <div slot="title" slot-scope="contact" class="flex items-center h-14">
           <div>
             <a-avatar v-if="!contact.parent.isUser"
                       :size="32"
@@ -116,9 +117,20 @@ export default {
       
       return Promise.resolve();
     },
-    onExpand(expandedKeys) {
+    onExpand(expandedKeys, info) {
       this.expandedKeys = expandedKeys;
       this.autoExpandParent = false;
+    },
+    onSelect(selectedKeys, info) {
+      const hasChildren = info.node.$children.length > 0;
+      const isContact = !info.node.dataRef.isGroup;
+
+      if (hasChildren && !isContact) {
+        info.node.onExpand(info.nativeEvent);
+      }
+      else {
+        info.node.onCheck(info.nativeEvent);
+      }
     },
     onCheck(checkedKeys, info) {
       const checkedContact = [];
@@ -182,34 +194,42 @@ export default {
           margin: 12px 0 12px 0 !important;
         }
         > .ant-tree-switcher{
-          margin: 8px 6px 8px 0 !important;
+          &_open, &_close{
+            margin: 8px 6px 8px 0 !important;
+          }
           .ant-tree-switcher-icon{
             font-size: 16px;
             color: #999;
           }
         }
         > .ant-tree-node-content-wrapper {
-          margin: 8px 0 8px 0 !important;
-          padding: 0 8px;
+          width: 75%;
+          margin: 8px 4px !important;
+          /*padding: 0 8px;*/
         }
       }
     }
+
     .ant-tree-switcher-noop {
       width: 30px;
     }
-    li{
+
+    li {
       padding: 0;
+
       .ant-tree-checkbox {
         margin: 20px 0 0 0 !important;
       }
+
       .ant-tree-node-content-wrapper {
         &-normal {
-          width: 80%;
-          height: 56px !important;
+          width: 75%;
+          height: auto;
           margin: 0 8px;
+
           .ant-tree-title {
             display: block;
-            height: 100%;
+            height: auto;
           }
         }
       }

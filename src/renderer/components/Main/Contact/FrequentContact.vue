@@ -98,6 +98,7 @@
                                 text="暂未选择联系人"/>
                 </template>
                 <contact-list v-else
+                              hide-popup
                               :contactList="selectedContact"
                               :video-icon="false"
                               :audio-icon="false"
