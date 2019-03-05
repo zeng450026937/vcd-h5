@@ -57,9 +57,9 @@
                 <span class="text-xs">{{setAsPresenterText}}</span>
               </div>
             </a-menu-item>
-            <a-menu-item key="1" @click="setSpeaker">
+            <a-menu-item v-if="currentIsPresenter" key="1" @click="setFocus">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
-                <span class="text-xs">{{setAsSpeakerText}}</span>
+                <span class="text-xs">设为焦点视频</span>
               </div>
             </a-menu-item>
             <a-menu-item v-if="showSetWaitItem" key="2" @click="setWaiting">
@@ -67,16 +67,23 @@
                 <span class="text-xs">设为等待</span>
               </div>
             </a-menu-item>
-            <a-menu-item key="3" @click="setMute">
-              <div class="h-8 px-3 w-full popover-content-item flex items-center">
-                <span class="text-xs">{{setMuteText}}</span>
-              </div>
-            </a-menu-item>
+            <!--<a-menu-item key="3" @click="setMute">-->
+              <!--<div class="h-8 px-3 w-full popover-content-item flex items-center">-->
+                <!--<span class="text-xs">{{setMuteText}}</span>-->
+              <!--</div>-->
+            <!--</a-menu-item>-->
             <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="4" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设备详情</span>
               </div>
             </a-menu-item>
+
+            <a-menu-item v-if="currentIsPresenter" key="5" @click="kickFromMeeting">
+              <div class="h-8 px-3 w-full popover-content-item flex items-center">
+                <span class="text-xs">移出会议</span>
+              </div>
+            </a-menu-item>
+
           </a-menu>
         </a-dropdown>
       </div>
@@ -286,20 +293,25 @@ export default {
         this.item.setPermission('presenter');
       }
     },
-    setSpeaker() {
-      this.item.setDemonstrator(!this.item.isDemonstrator());
+    setFocus() {
+      // 设为焦点视频
     },
     setWaiting() {
       this.item.hold();
     },
-    setMute() {
-      const status = this.item.getAudioFilter().egress['#text'] || 'unblock';
-      const egress = !(status === 'unblock');
-
-      this.item.setAudioFilter({
-        egress,
-      });
+    kickFromMeeting() { // 移出会议
+      this.item.kick()
+        .then(() => {})
+        .catch(() => {});
     },
+    // setMute() {
+    //   const status = this.item.getAudioFilter().egress['#text'] || 'unblock';
+    //   const egress = !(status === 'unblock');
+    //
+    //   this.item.setAudioFilter({
+    //     egress,
+    //   });
+    // },
     handleApply(status) {
       if (this.isAudioApplicant) { // 处理发言申请
         this.$model.conference.updateAudioStatus(this.item, status);
