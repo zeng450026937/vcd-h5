@@ -6444,6 +6444,11 @@ joi@^14.3.0:
     isemail "3.x.x"
     topo "3.x.x"
 
+jr-qrcode@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/jr-qrcode/-/jr-qrcode-1.1.4.tgz#c419bf3ab655f3233360308939d71b13849690be"
+  integrity sha512-041B7axC/tzKRFbCc4g5QCaPzga2IgyBGmUBkWQ+t4CMl83DBzFv9tq9XdJr7uIqe9X6zYZC7Cy5J9ttiBNxrw==
+
 js-base64@^2.1.9:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"

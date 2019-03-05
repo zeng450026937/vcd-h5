@@ -68,11 +68,12 @@ export class YealinkProvider extends Provider {
 
     const gt = semver.gt(version, currentVersion);
 
-    return true;
-
     if (gt) return true;
+
+    const eq = semver.eq(version, currentVersion);
     
-    if (forceUpdate) return true;
+    // TODO: check releaseDate
+    if (forceUpdate && !eq) return true;
 
     return false;
   }

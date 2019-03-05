@@ -60,7 +60,7 @@ export class AppUpdater extends EventEmitter {
 
     const avariable = this.provider.isVersionAvariable(info);
 
-    console.log(`update-avariable: ${avariable}`, info);
+    console.log(`update-avariable: ${avariable} \n`, info);
 
     if (!avariable) return;
 
