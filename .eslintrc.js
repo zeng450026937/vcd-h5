@@ -19,6 +19,8 @@ module.exports = {
     logger: true,
     ytms: true,
     autoUpdater: true,
+    ipcHost: true,
+    ipcProxy: true,
   },
   rules : {
     'no-console'            : process.env.NODE_ENV === 'production' ? 2 : 0,

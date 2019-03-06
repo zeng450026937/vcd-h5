@@ -1,5 +1,5 @@
 import '../logger/renderer/install';
-// import '../ytms/install';
+import '../ipc/ipc-proxy';
 
 import Vue from 'vue';
 import App from './App.vue';

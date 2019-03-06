@@ -1,6 +1,7 @@
 import './logger/main/install';
 import './ytms/install';
 import './main/app-updater';
+import './ipc/install';
 
 import { app, ipcMain } from 'electron';
 import { AppWindow } from './main/app-window';
@@ -13,7 +14,6 @@ import {
   reportUncaughtException,
 } from './main/report-crash';
 import { log as writeLog } from './logger/winston';
-import { getLogDirectoryPath } from './logger/get-log-path';
 
 const launchTime = now();
 
@@ -143,37 +143,6 @@ if (!handlingSquirrelEvent) {
           writeLog(level, message);
         }
       );
-
-      ipcMain.on('get-clientid', async(event) => {
-        const id = await ytms.getClientId();
-        
-        event.sender.send('get-clientid-reply', true, id);
-      });
-
-      ipcMain.on('start-ytms-service', async(event, url) => {
-        const service = await ytms.enterprise.connect(url);
-  
-        event.sender.send('start-ytms-service-reply', true, service.clientId);
-          
-        // update client info
-        ytms.clientInfo.enterprise = service.enterpriseInfo;
-        
-        // update enterprise info to yealink
-        ytms.yealink.updateInfo(ytms.clientInfo);
-
-        // replace default service to yealink provider
-        autoUpdater.provider.service = ytms.enterprise;
-      });
-
-      ipcMain.on('get-log-directory', async(event) => {
-        event.sender.send('get-log-directory-reply', getLogDirectoryPath());
-      });
-
-      ipcMain.on('stop-ytms-service', (event, url) => {
-        ytms.enterprise.disconnect(url);
-        
-        event.sender.send('stop-ytms-service-reply', true);
-      });
     });
     
     app.on('gpu-process-crashed', (event, killed) => {  

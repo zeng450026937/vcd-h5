@@ -140,10 +140,7 @@ export class Downloader extends EventEmitter {
     const res = await axios({
       url          : file.url,
       responseType : 'stream',
-      headers      : {
-        'User-Agent' : 'VCD-H5',
-      },
-      cancelToken : this.cancelToken.token,
+      cancelToken  : this.cancelToken.token,
     });
 
     const { data, headers } = res;

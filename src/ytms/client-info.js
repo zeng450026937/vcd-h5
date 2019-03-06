@@ -8,11 +8,12 @@ import {
   getMemInfo,
   getOsInfo,
 } from './system-info';
-import { newUUID } from './uuid';
+import { newPlainUUID } from '../utils/uuid';
 
 export const clientInfo = {
-  clientId       : newUUID(),
+  clientId       : newPlainUUID(),
   clientName     : app.getName(),
+  clientCategory : process.env.VUE_APP_CATEGORY,
   clientModel    : process.env.VUE_APP_MODEL,
   clientType     : process.env.VUE_APP_TYPE,
   clientVersion  : app.getVersion(),

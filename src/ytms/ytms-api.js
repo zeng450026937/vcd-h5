@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-const inst = axios.create({
-  headers : {
-    'user-agent' : 'VCD-H5',
-  },
-});
+const inst = axios.create();
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 const __RENDERER__ = process.type === 'renderer';
@@ -16,7 +12,7 @@ if (inspectRequest) {
   inst.interceptors.request.use(
     (config) => {      
       console.log(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
-      console.log('YTMS API DATA: \n', config.data);
+      console.log('YTMS API DATA: \n', config.data || '');
 
       return config;
     },

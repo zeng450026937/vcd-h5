@@ -14,7 +14,6 @@ export class AppUpdater extends EventEmitter {
 
     this.appName = app.getName() || 'VCD-H5';
     this.appVersion = app.getVersion() || '1.0.0';
-    this.appType = 'software';
 
     this.installing = false;
     this.installError = null;

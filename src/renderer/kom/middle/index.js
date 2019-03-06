@@ -1,6 +1,6 @@
 import ERROR_MAP from './constant';
 import afterLogin from './afterLogin';
-import crashReport from './crashReport'
+import crashReport from './crashReport';
 
 let errorQueue = Promise.resolve();
 

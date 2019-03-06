@@ -3,14 +3,14 @@ import { cpu } from 'systeminformation/lib/cpu';
 import { networkInterfaces } from 'systeminformation/lib/network';
 import { mem } from 'systeminformation/lib/memory';
 import { osInfo as os } from 'systeminformation/lib/osinfo';
-import { newUUID } from './uuid';
+import { newPlainUUID } from '../utils/uuid';
 
 let systemInfo = null;
 
 export async function getSystemInfo() {
   if (systemInfo) return systemInfo;
 
-  systemInfo = await system().catch(() => ({ uuid: newUUID() }));
+  systemInfo = await system().catch(() => ({ uuid: newPlainUUID() }));
 
   return systemInfo;
 }
