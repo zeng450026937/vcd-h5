@@ -10,15 +10,8 @@ export function showNotification(title, body) {
   if (typeof body === 'object') {
     body = JSON.stringify(body);
   }
-
-  if (process.type === 'browser') {
-    new Notification({ title, body }).show();
-  }
-  else if (process.type === 'renderer') {
-    /* eslint-disable no-new */
-    new window.Notification(title, { body });
-    /* eslint-enable no-new */
-  }
+  
+  new Notification({ title, body }).show();
 }
 
 export function handlePushMessage(pushService, hook) {
@@ -32,8 +25,6 @@ export function handlePushMessage(pushService, hook) {
     let sessionId = null;
 
     let job = null;
-    
-    let payload = null;
 
     switch (type) {
       case MESSAGE_TYPE.START_NETLOG:

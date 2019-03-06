@@ -43,6 +43,17 @@ process.on('uncaughtException', (error) => {
   handleUncaughtException(error);
 });
 
+const __DEV__ = process.env.NODE_ENV === 'development';
+
+// On Windows 10, a shortcut to your app with an Application User Model ID
+// must be installed to the Start Menu.
+// This can be overkill during development,
+// so adding node_modules\electron\dist\electron.exe
+// to your Start Menu also does the trick.
+// Navigate to the file in Explorer,
+// right-click and 'Pin to Start Menu'.
+app.setAppUserModelId(__DEV__ ? process.execPath : 'com.ylyun.meeting.vcd');
+
 /**
  * Register a function to be called once the window has been loaded. If the
  * window has already been loaded, the function will be called immediately.
