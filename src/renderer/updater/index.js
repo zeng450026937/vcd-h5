@@ -36,7 +36,7 @@ export class Updater extends EventEmitter {
     autoUpdater.on('checking-for-update', checkingForUpdate);
     autoUpdater.on('update-available', updateAvailable);
     autoUpdater.on('update-not-available', updateNotAvailable);
-    autoUpdater.on('update-downloaded', updateDownloaded);
+    autoUpdater.on('downloaded', updateDownloaded);
     autoUpdater.on('download-progress', updateDownloading);
     
     window.addEventListener('beforeunload', () => {
