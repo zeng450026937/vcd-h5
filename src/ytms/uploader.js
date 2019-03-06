@@ -83,8 +83,6 @@ export class FormPayload extends Payload {
   }
 
   add(key, value, name) {
-    if (typeof value === 'object') value = JSON.stringify(value);
-
     this.data.append(key, value, name);
 
     return this;
@@ -93,6 +91,8 @@ export class FormPayload extends Payload {
 
 export class Alarm extends FormPayload {
   addParam(param) {
+    if (typeof param === 'object') param = JSON.stringify(param);
+
     return this.add('param', param);
   }
 
@@ -107,6 +107,8 @@ export class Alarm extends FormPayload {
 
 export class Log extends FormPayload {
   addParam(param) {
+    if (typeof param === 'object') param = JSON.stringify(param);
+
     return this.add('param', param);
   }
 
@@ -121,11 +123,13 @@ export class Log extends FormPayload {
 
 export class NetLog extends FormPayload {
   addParam(param) {
+    if (typeof param === 'object') param = JSON.stringify(param);
+
     return this.add('param', param);
   }
 
   addLog(log, sessionId) {
-    this.add('param', { sessionId });
+    this.addParam({ sessionId });
     this.add('packet', log, `${sessionId}.json`);
 
     return this;
@@ -144,6 +148,8 @@ export class Config extends JsonPayload {
 
 export class Feedback extends FormPayload {
   addParam(param) {
+    if (typeof param === 'object') param = JSON.stringify(param);
+
     return this.add('param', param);
   }
 

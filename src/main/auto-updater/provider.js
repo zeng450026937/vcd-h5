@@ -133,6 +133,10 @@ export class Downloader extends EventEmitter {
     this.state = DOWNLOAD_STATE.DONE;
     this.cancelToken = null;
   }
+  
+  get isDownloading() {
+    return this.state === DOWNLOAD_STATE.PROGRESS || this.cancelToken;
+  }
 
   async download(file, dist) {
     this.cancelToken = axios.CancelToken.source();
@@ -218,10 +222,6 @@ export class Provider extends Downloader {
     this.latestFile = null;
   }
 
-  get isDownloading() {
-    return this.state === DOWNLOAD_STATE.PROGRESS;
-  }
-
   get latestVersionDownloaded() {
     return this.latestFile && this.latestFile.path;
   }
@@ -235,6 +235,12 @@ export class Provider extends Downloader {
   }
 
   async download(info) {
+    if (this.isDownloading) {
+      this.cancel();
+
+      return;
+    }
+
     if (!info) {
       info = this.latestVersion || await this.getLatestVersion();
     }

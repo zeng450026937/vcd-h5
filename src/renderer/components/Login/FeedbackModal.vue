@@ -68,8 +68,6 @@
 <script>
 import { readFile } from 'fs-extra';
 import path from 'path';
-import { gzip } from 'zlib';
-import { getLogDirectory } from '../../proxy/main-process-proxy';
 
 export default {
   name : 'FeedbackModal',
@@ -81,7 +79,7 @@ export default {
       fileList        : [],
       isUploadLog     : true,
       problemDescribe : '',
-      useUploadImg    : false,
+      useUploadImg    : true,
       contactInfo     : '',
     };
   },
@@ -110,19 +108,12 @@ export default {
 
       return true;
     },
-    zipFile(stream) {
-      return new Promise((resolve) => {
-        gzip(stream, (error, buffer) => {
-          resolve(buffer);
-        });
-      });
-    },
     async getTodayLog() {
-      const logDir = await getLogDirectory();
+      const logDir = await ipcProxy.getLogDirectoryPath();
       const fileName = this.getLogFileName();
       const input = await readFile(path.join(logDir, `/${fileName}`));
 
-      return this.zipFile(input);
+      return input;
     },
     getLogFileName() {
       return `vc-desktop.${this.getDate()}.log`;
@@ -147,8 +138,11 @@ export default {
 
       if (this.isUploadLog) {
         const todayLog = await this.getTodayLog();
+        const content = todayLog.toString();
+        const filename = this.getLogFileName();
+        const blob = new Blob([ content ], { type: 'text/plain' });
 
-        formData.append('log', new Blob(todayLog), `${this.getLogFileName()}.zip`);
+        formData.append('log', blob, filename);
       }
 
       if (this.useUploadImg) {

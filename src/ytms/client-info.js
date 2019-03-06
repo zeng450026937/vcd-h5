@@ -69,7 +69,7 @@ export async function getClientInfo() {
   clientInfo.device.hostname = osInfo.hostname;
   clientInfo.device.cpu = cpuInfo.brand;
   clientInfo.device.memory = memInfo.total;
-  clientInfo.device.os = osInfo.platform;
+  clientInfo.device.os = osInfo.distro;
 
   return clientInfo;
 }
