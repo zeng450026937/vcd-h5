@@ -26,7 +26,7 @@ export default {
       await next();
       const { account, pin, server } = ctx.payload;
 
-      const protocol = ctx.payload.protocol || 'wss';
+      const protocol = ctx.payload.protocol || 'tls';
       const defaultPort = this.proxyPort || 5061;
 
       let servers;

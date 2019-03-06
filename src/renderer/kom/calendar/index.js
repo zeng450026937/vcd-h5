@@ -99,25 +99,41 @@ const genPattern = (decurs, recurrencePattern) => {
   };
 };
 
+const genMeetingStatus = (startTime, expiryTime) => {
+  const currentTime = new Date().getTime();
+
+  startTime = new Date(startTime).getTime();
+  expiryTime = new Date(expiryTime).getTime();
+
+  const isPrepared = currentTime < startTime;
+  const isEnded = currentTime >= expiryTime;
+  const isRunning = !isPrepared && !isEnded;
+
+  return { isPrepared, isEnded, isRunning };
+};
+
 export const formatCalendar = (data) => {
   if (!data) return null;
 
   const calendars = [];
-  const titles = [];
+  // const titles = [];
 
   data.forEach((cal) => {
     if (!cal['start-time']) return;
 
-    const startTime = moment(new Date(`${cal['start-time']} GMT`), 'YYYYMMDD');
-    const title = startTime.format('LL');
+    cal.startMoment = moment(new Date(`${cal['start-time']} GMT`), 'YYYYMMDD');
+    // const title = startTime.format('LL');
 
-    cal['start-time'] = startTime.format('YYYY-MM-DD HH:mm');
-    cal['expiry-time'] = moment(new Date(`${cal['expiry-time']} GMT`)).format('YYYY-MM-DD HH:mm');
+    cal['start-time'] = cal.startMoment.format('YYYY-MM-DD HH:mm');
+    cal.expiryMoment = moment(new Date(`${cal['expiry-time']} GMT`), 'YYYYMMDD');
+    cal['expiry-time'] = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
+
+    cal.status = genMeetingStatus(cal['start-time'], cal['expiry-time']);
 
     const plainCalendar = {};
 
     Object.keys(cal).forEach((key) => {
-      if ([ '@', '-', '_' ].some((r) => key.startsWith(r))) return;
+      if ([ '-', '_' ].some((r) => key.startsWith(r))) return;
 
       plainCalendar[lineToUppercase(key)] = cal[key];
       plainCalendar.isLive = !!plainCalendar.rtmpInvitees;
@@ -137,22 +153,13 @@ export const formatCalendar = (data) => {
         const type = recurrencePattern['@recurrence-type'];
 
         plainCalendar.isRecurrence = type && type !== 'RECURS_ONCE';
-        plainCalendar.pattern = genPattern(type, recurrencePattern);
+        if (plainCalendar.isRecurrence) {
+          plainCalendar.pattern = genPattern(type, recurrencePattern);
+        }
         Reflect.deleteProperty(plainCalendar, 'recurrencePattern'); // for save memory
       }
     });
-
-    if (!titles.includes(title)) {
-      titles.push(title);
-      calendars.push({
-        title,
-        startTime,
-        events : [ plainCalendar ],
-      });
-    }
-    else {
-      calendars.find((item) => item.title === title).events.push(plainCalendar);
-    }
+    calendars.push(plainCalendar);
   });
 
   return calendars;

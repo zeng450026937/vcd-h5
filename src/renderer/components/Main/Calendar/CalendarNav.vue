@@ -83,7 +83,7 @@ export default {
     getNoticeInfo(value) {
       let noticeInfo;
 
-      if (this.eventList.some((e) => this.isDateMatched(e.startTime, value))) {
+      if (this.eventList.some((e) => this.isDateMatched(e.startMoment, value))) {
         noticeInfo = { type: 'error' };
       }
 
@@ -98,8 +98,8 @@ export default {
       this.selectedDate = date.raw;
       this.$model.calendar.currentDateEvents = [];
       this.eventList.forEach((e) => {
-        if (e.startTime.toDate() >= date.raw.toDate() || this.isDateMatched(e.startTime, date.raw)) {
-          this.$model.calendar.currentDateEvents.push(...e.events);
+        if (e.expiryMoment.toDate() >= date.raw.toDate() || e.startMoment.toDate() >= date.raw.toDate()) {
+          this.$model.calendar.currentDateEvents.push(e);
         }
       });
     },

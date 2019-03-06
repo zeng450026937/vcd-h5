@@ -9,7 +9,8 @@
                 <div class="w-1 text-base text-black flex flex-grow truncate">
                   <span class="truncate leading-loose">{{currentEvent.subject}}</span>
                 </div>
-                <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2">复制信息</span>
+                <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2"
+                      @click="copyShareUrl">复制信息</span>
                 <a-popover placement="bottomRight" trigger="click"
                            overlayClassName="calendar-info-popover">
                   <template slot="content">
@@ -17,7 +18,9 @@
                          style="width: 144px;">
                       <div class="flex flex-col items-center h-full">
                         <span class="text-xs leading-tight">分享会议</span>
-                        <div style="width: 120px; height: 120px;" class="bg-grey-darkest mt-2"></div>
+                        <img style="width: 120px; height: 120px;"
+                             class="bg-grey-darkest mt-2"
+                             :src="shareQRCode"/>
                       </div>
                       <div class="flex flex-col items-center select-none h-full mt-3"
                            v-if="currentEvent.isLive" >
@@ -68,10 +71,10 @@
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">直播链接</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
-                    <a class="truncate" @click="copyShareUrl">{{currentEvent.liveShareUrl}}</a>
+                    <a class="truncate" @click="copyLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
                   <span class="text-xs text-indigo cursor-pointer ml-2"
-                        @click="copyShareUrl">复制</span>
+                        @click="copyLiveShareUrl">复制</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -115,17 +118,23 @@
       <a-divider class="m-0"/>
       <div class="my-2 flex justify-center items-center">
         <a-button class="w-1/3 mx-2" type="primary"
-                  @click="enterMeeting"><a-iconfont type="icon-shipin"/>视频加入</a-button>
+                  @click="enterMeeting">
+          <a-iconfont type="icon-shipin"/>
+          视频加入
+        </a-button>
         <a-button class="w-1/3 mx-2" type="primary"
-                  @click="audioEnter"><a-iconfont type="icon-yuyin"/>音频加入</a-button>
+                  @click="audioEnter">
+          <a-iconfont type="icon-yuyin"/>
+          音频加入
+        </a-button>
       </div>
       <div>
-      <plain-modal ref="deleteModal"
-                   type="warning"
-                   content="确定删除该会议"
-                   @ok="clickOk">
-      </plain-modal>
-    </div>
+        <plain-modal ref="deleteModal"
+                     type="warning"
+                     content="确定删除该会议"
+                     @ok="clickOk">
+        </plain-modal>
+      </div>
     </div>
     <div v-else class="flex justify-center mt-10">
       <no-found class="mt-10 text-grey" text="暂未选择日程信息"/>
@@ -153,8 +162,17 @@ export default {
     hasEvent() {
       return Object.keys(this.currentEvent).length > 0;
     },
+    enterpriseId() {
+      return this.$rtc.account.schedule.enterpriseId;
+    },
     liveQRCode() {
       return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
+    },
+    shareUrl() {
+      return `http://${this.$model.login.proxy}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+    },
+    shareQRCode() {
+      return jrQrcode.getQrBase64(this.shareUrl);
     },
   },
   methods : {
@@ -168,10 +186,13 @@ export default {
       });
     },
     audioEnter() {
-      console.warn(JSON.stringify(this.currentEvent));
+      console.warn(this.currentEvent);
+    },
+    copyLiveShareUrl() {
+      copy(this.currentEvent.liveShareUrl);
     },
     copyShareUrl() {
-      copy(this.currentEvent.liveShareUrl);
+      copy(this.shareUrl);
     },
   },
 };
