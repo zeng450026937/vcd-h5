@@ -10,7 +10,7 @@
         <a-form-item>
           <a-auto-complete
               v-decorator="['account']"
-              class="certain-category-search w-full"
+              class="certain-category-search w-full overflow-x-hidden"
               :dropdownMatchSelectWidth="false"
               optionLabelProp="value"
               @select="onAccountSelect"
@@ -136,11 +136,12 @@ export default {
   name : 'YMSLoginFormContent',
   data() {
     return {
-      form         : this.$form.createForm(this),
-      searchResult : [],
-      accountList  : [],
-      isCapsLockOn : false,
-      showPassword : false,
+      form                : this.$form.createForm(this),
+      searchResult        : [],
+      accountList         : [],
+      isCapsLockOn        : false,
+      showPassword        : false,
+      preRememberPassword : true,
     };
   },
   mounted() {
@@ -151,7 +152,6 @@ export default {
     this.$nextTick(() => {
       if (this.autoLogin && !this.autoLoginDisabled && this.rememberPassword) {
         this.handleLogin();
-        this.autoLoginDisabled = true;
       }
     });
   },
@@ -195,7 +195,17 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
-            this.$dispatch('login.doLogin', values);
+            const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+            const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
+
+            if (!values.account) this.$message.error('账号不能为空');
+            else if (values.account.length > 128) this.$message.error('无法输入超过128个字符');
+            else if (!values.pin) this.$message.error('密码不能为空');
+            else if (!values.pin.length > 128) this.$message.error('无法输入超过128个字符');
+            else if (!values.server) this.$message.error('服务器地址不能为空');
+            else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) this.$message.error('服务器地址格式错误');
+            else this.$dispatch('login.doLogin', values);
+            this.autoLoginDisabled = true;
           }
         });
     },
@@ -252,6 +262,20 @@ export default {
     type(val) {
       if (this.accountList.length <= 0) {
         this.initAccountList();
+      }
+    },
+    autoLogin(val) {
+      if (val) {
+        this.preRememberPassword = this.rememberPassword;
+        this.rememberPassword = true;
+      }
+      else {
+        this.rememberPassword = this.preRememberPassword;
+      }
+    },
+    rememberPassword(val) {
+      if (!val && this.autoLogin) {
+        this.rememberPassword = true;
       }
     },
   },

@@ -5,7 +5,7 @@ export default async(ctx, next) => {
     await next();
   }
   catch (e) {
-    const errorKey = e.cause || (e.data && e.data.cause);
+    // const errorKey = e.cause || (e.data && e.data.cause);
 
     throw e;
   }

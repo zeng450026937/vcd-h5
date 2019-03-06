@@ -118,11 +118,13 @@
       <a-divider class="m-0"/>
       <div class="my-2 flex justify-center items-center">
         <a-button class="w-1/3 mx-2" type="primary"
+                  :disabled="currentEvent.status.isEnded"
                   @click="enterMeeting">
           <a-iconfont type="icon-shipin"/>
           视频加入
         </a-button>
         <a-button class="w-1/3 mx-2" type="primary"
+                  :disabled="currentEvent.status.isEnded"
                   @click="audioEnter">
           <a-iconfont type="icon-yuyin"/>
           音频加入

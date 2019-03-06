@@ -15,8 +15,8 @@ export default {
       autoLogin,
       autoLoginDisabled : false,
       loginType         : 'login',
-      proxy             : '10.200.112.165',
-      proxyPort         : 5061,
+      proxy             : '',
+      proxyPort         : '',
     };
   },
   mounted() {
@@ -27,7 +27,7 @@ export default {
       const { account, pin, server } = ctx.payload;
 
       const protocol = ctx.payload.protocol || 'tls';
-      const defaultPort = this.proxyPort || 5061;
+      const defaultPort = this.proxyPort;
 
       let servers;
 
