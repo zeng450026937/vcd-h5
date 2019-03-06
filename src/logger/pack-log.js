@@ -2,8 +2,9 @@ import archiver from 'archiver';
 import { createWriteStream, ensureDir } from 'fs-extra';
 import { resolve as resolvePath } from 'path';
 import { getLogDirectoryPath, getNetLogDirectoryPath } from './get-log-path';
+import { newPlainUUID } from '../utils/uuid';
 
-export function packLog(filename = 'log', format = 'tar', gzip = true) {
+export function packLog(filename = newPlainUUID(), format = 'tar', gzip = true) {
   const dir = getLogDirectoryPath();
 
   return ensureDir(dir)
@@ -28,7 +29,7 @@ export function packLog(filename = 'log', format = 'tar', gzip = true) {
     }));
 }
 
-export function packNetlog(filename = 'log', format = 'tar', gzip = true) {
+export function packNetlog(filename = newPlainUUID(), format = 'tar', gzip = true) {
   const dir = getNetLogDirectoryPath();
 
   return ensureDir(dir)
