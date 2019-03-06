@@ -71,7 +71,7 @@
                 <div class="flex w-full leading-tight">
                   <span class="w-20 opacity-75">直播链接</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
-                    <a class="truncate" @click="copyLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
+                    <a class="truncate" @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
                   <span class="text-xs text-indigo cursor-pointer ml-2"
                         @click="copyLiveShareUrl">复制</span>
@@ -148,7 +148,7 @@ import copy from 'clipboard-copy';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import NoFound from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
-
+const { shell } = require('electron');
 export default {
   name       : 'CalendarInfo',
   components : {
@@ -187,6 +187,9 @@ export default {
     },
     audioEnter() {
       console.warn(this.currentEvent);
+    },
+    toLiveShareUrl() {
+      shell.openExternal(this.currentEvent.liveShareUrl);
     },
     copyLiveShareUrl() {
       copy(this.currentEvent.liveShareUrl);

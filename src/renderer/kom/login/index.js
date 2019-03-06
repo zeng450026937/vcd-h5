@@ -6,8 +6,8 @@ import { LOGIN_STORAGE } from '../../storage/constants';
 export default {
   data() {
     const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE) || 'cloud';
-    const rememberPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD) || true;
-    const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN) || false;
+    const rememberPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD);
+    const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN);
 
     return {
       serverType,

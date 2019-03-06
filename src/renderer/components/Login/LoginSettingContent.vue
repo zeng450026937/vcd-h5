@@ -5,10 +5,10 @@
         <a-tab-pane tab="基本设置" key="1">
           <div class="flex h-full flex-col px-20 pt-10">
             <span class="mb-3 leading-normal">代理服务器设置</span>
-            <a-input v-model="proxy" placeholder='代理服务器地址'>
+            <a-input v-model="tmpProxy" placeholder='代理服务器地址'>
             </a-input>
             <div class="mt-4"></div>
-            <a-input v-model="proxyPort" placeholder='端口'>
+            <a-input v-model="tmpProxyPort" placeholder='端口'>
             </a-input>
           </div>
         </a-tab-pane>
@@ -62,7 +62,13 @@ export default {
   name : 'LoginSettingContent',
   data() {
     return {
+      tmpProxy     : '',
+      tmpProxyPort : '',
     };
+  },
+  mounted() {
+    this.tmpProxy = this.proxy;
+    this.tmpProxyPort = this.proxyPort;
   },
   computed : {
     proxy : {
@@ -84,6 +90,8 @@ export default {
   },
   methods : {
     ensure() {
+      this.proxy = this.tmpProxy;
+      this.proxyPort = this.tmpProxyPort;
       this.$emit('closeSetting');
     },
     cancel() {

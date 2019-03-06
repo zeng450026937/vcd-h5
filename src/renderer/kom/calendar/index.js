@@ -136,27 +136,58 @@ export const formatCalendar = (data) => {
       if ([ '-', '_' ].some((r) => key.startsWith(r))) return;
 
       plainCalendar[lineToUppercase(key)] = cal[key];
-      plainCalendar.isLive = !!plainCalendar.rtmpInvitees;
-      if (plainCalendar.isLive) {
-        // 添加直播地址
-        plainCalendar.liveShareUrl = plainCalendar.rtmpInvitees['rtmp-invitee'][0].session[0]['web-share-url'];
+    });
+    plainCalendar.isLive = !!plainCalendar.rtmpInvitees;
+    if (plainCalendar.isLive) {
+      // 添加直播地址
+      plainCalendar.liveShareUrl = plainCalendar.rtmpInvitees['rtmp-invitee'][0].session[0]['web-share-url'];
+    }
+    // RECURS_DAILY每天,
+    // RECURS_WEEKLY每周,
+    // RECURS_MONTHLY 每月的第一种, 每个月的第12天
+    // RECURS_MONTH_NTH 每月的第二种,
+    // RECURS_YEARLY每年的第一种,每年的10月份的第12天
+    // RECURS_YEAR_NTH 每年的第二种每年的10月份的第一个星期天
+    const { recurrencePattern } = plainCalendar;
+
+    if (recurrencePattern) {
+      const type = recurrencePattern['@recurrence-type'];
+
+      plainCalendar.isRecurrence = type && type !== 'RECURS_ONCE';
+      if (plainCalendar.isRecurrence) {
+        plainCalendar.pattern = genPattern(type, recurrencePattern);
       }
-      // RECURS_DAILY每天,
-      // RECURS_WEEKLY每周,
-      // RECURS_MONTHLY 每月的第一种, 每个月的第12天
-      // RECURS_MONTH_NTH 每月的第二种,
-      // RECURS_YEARLY每年的第一种,每年的10月份的第12天
-      // RECURS_YEAR_NTH 每年的第二种每年的10月份的第一个星期天
-      const { recurrencePattern } = plainCalendar;
+      Reflect.deleteProperty(plainCalendar, 'recurrencePattern'); // for save memory
+    }
 
-      if (recurrencePattern) {
-        const type = recurrencePattern['@recurrence-type'];
+    // 排序参会成员
+    const { invitee } = plainCalendar.invitees;
+    // AL 1
+    // const tmpInvitee = [];
+    //
+    // invitee.forEach((c) => {
+    //   if (c.role === 'organizer') {
+    //     tmpInvitee.unshift(c);
+    //   }
+    //   else {
+    //     tmpInvitee.push(c);
+    //   }
+    // });
+    // invitee.length = 0;
+    // invitee.push(...tmpInvitee);
 
-        plainCalendar.isRecurrence = type && type !== 'RECURS_ONCE';
-        if (plainCalendar.isRecurrence) {
-          plainCalendar.pattern = genPattern(type, recurrencePattern);
+    // AL 2
+    let cursor = 0;
+
+    invitee.forEach((c, index) => {
+      if (c.role === 'organizer') {
+        if (index !== cursor) {
+          const tmp = invitee[cursor];
+
+          invitee[cursor] = invitee[index];
+          invitee[index] = tmp;
         }
-        Reflect.deleteProperty(plainCalendar, 'recurrencePattern'); // for save memory
+        cursor += 1;
       }
     });
     calendars.push(plainCalendar);

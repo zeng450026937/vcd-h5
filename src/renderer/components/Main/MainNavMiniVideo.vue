@@ -50,7 +50,7 @@
               </div>
               <a-button shape="circle"
                         title="更多"
-                        class="text-white mx-2"
+                        class="text-white mx-2 border-transparent"
                         @click="showMorePanel = !showMorePanel"
               ><a-iconfont type="icon-gengduo1"/></a-button>
             </a-popover>
@@ -167,6 +167,9 @@ export default {
   }
   .nav-mini-video {
 
+  }
+  button {
+    box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
   }
 }
 </style>

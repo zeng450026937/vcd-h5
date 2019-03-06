@@ -42,7 +42,9 @@
         </a-form-item>
         <a-form-item>
           <a-input v-decorator="['pin']"
-                   @keypress="passwordInputted" type='password' placeholder='密码'>
+                   @keypress="passwordInputted"
+                   :type="showPassword ? 'text': 'password'"
+                   placeholder='密码'>
             <a-tooltip
                 slot="prefix"
                 :visible="isCapsLockOn"
@@ -53,21 +55,32 @@
               </template>
               <a-iconfont type='icon-mima' class="text-base text-black9"/>
             </a-tooltip>
+            <a-iconfont :title="showPassword ? '隐藏密码':'查看密码'"
+                        slot="suffix"
+                        :type="showPassword ? 'icon-mimayincang' : 'icon-mimaxianshi'"
+                        class="text-base text-grey cursor-pointer"
+                        @click="showPassword = !showPassword"/>
           </a-input>
         </a-form-item>
         <a-form-item
             class="mb-2">
+          <!--:read-only="type === 'cloud'"-->
           <a-input v-decorator="['server']"
-                   placeholder='服务器地址'
-                   :read-only="type === 'cloud'">
+                   placeholder='服务器地址'>
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
         </a-form-item>
         <div class="flex justify-between">
           <a-checkbox class="text-xs text-black6"
-                      v-model="rememberPassword">记住密码</a-checkbox>
+                      :checked="rememberPassword"
+                      @change="rememberPassword = !rememberPassword"
+          >记住密码
+          </a-checkbox>
           <a-checkbox class="text-xs text-black6"
-                      v-model="autoLogin">自动登录</a-checkbox>
+                      :checked="autoLogin"
+                      @change="autoLogin = !autoLogin"
+          >自动登录
+          </a-checkbox>
         </div>
         <a-form-item class="mt-9 mb-0">
           <div class="flex">
@@ -82,9 +95,11 @@
       </a-form>
       <div class="mt-5 text-xs text-center text-black6">
         <template v-if="type === 'cloud'">
-          <span class="cursor-pointer leading-tight">忘记密码</span>
+          <span class="cursor-pointer leading-tight"
+                @click="toForget">忘记密码</span>
           <a-divider type="vertical" class="mx-5 bg-grey"/>
-          <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
+          <span class="cursor-pointer leading-tight"
+                @click="toRegister">注册账号</span>
           <a-divider type="vertical" class="mx-5 bg-grey"/>
         </template>
         <a-badge v-if="hasNewVersion">
@@ -115,6 +130,8 @@ import { LOGIN } from '../../router/constants';
 import { LOGIN_STORAGE } from '../../storage';
 import { isCapsLockOn } from '../../utils';
 
+const { shell } = require('electron');
+
 export default {
   name : 'YMSLoginFormContent',
   data() {
@@ -123,6 +140,7 @@ export default {
       searchResult : [],
       accountList  : [],
       isCapsLockOn : false,
+      showPassword : false,
     };
   },
   mounted() {
@@ -131,7 +149,7 @@ export default {
     }, 200);
     this.initAccountList();
     this.$nextTick(() => {
-      if (this.autoLogin && !this.autoLoginDisabled) {
+      if (this.autoLogin && !this.autoLoginDisabled && this.rememberPassword) {
         this.handleLogin();
         this.autoLoginDisabled = true;
       }
@@ -181,7 +199,11 @@ export default {
           }
         });
     },
-    registerAccount() {
+    toForget() { // 跳转到忘记密码页面
+      shell.openExternal('https://meeting.ylyun.com/meeting/forget');
+    },
+    toRegister() { // 跳转到注册页面
+      shell.openExternal('https://meeting.ylyun.com/enterprise/register');
     },
     joinMeeting() {
       this.$model.login.loginType = 'meeting';
