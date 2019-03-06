@@ -13,36 +13,7 @@
           </div>
         </a-tab-pane>
         <a-tab-pane tab="关于" key="2">
-          <div class="flex flex-col h-full items-center">
-            <div class="mt-10">
-              <a-avatar class="cursor-pointer rounded-lger hover:shadow bg-green-dark"
-                        shape="square"
-                        :size="128">
-                <span class="text-xl">Yealink</span>
-              </a-avatar>
-            </div>
-            <div class="mt-5 text-base leading-loose">
-              Yealink VC Desktop
-            </div>
-            <div class="mt-1 text-black6 text-xs leading-tight">
-              版本号： 1.0.9-alpha
-            </div>
-            <div class="mt-5 w-1/2">
-              <a-button class="w-full h-9" type="primary">检查更新</a-button>
-            </div>
-            <div class="mt-5">
-              <a-switch size="small"/>
-              <span class="ml-2">自动更新</span>
-            </div>
-            <div class="flex text-indigo mt-5 items-center text-xs">
-              <span class="cursor-pointer">用户协议</span>
-              <a-divider class="mx-4" type="vertical"></a-divider>
-              <span class="cursor-pointer">隐私政策</span>
-            </div>
-            <p class="mt-5 text-xs leading-tight text-black9">
-              Copyright © 2018 Yealink Inc. All rights reserved.
-            </p>
-          </div>
+          <update-panel></update-panel>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -58,10 +29,16 @@
 </template>
 
 <script>
+import updatePanel from '../Common/update-panel.vue';
+
 export default {
-  name : 'LoginSettingContent',
+  name       : 'LoginSettingContent',
+  components : {
+    updatePanel,
+  },
   data() {
     return {
+      status : 0,
     };
   },
   computed : {
@@ -73,6 +50,7 @@ export default {
         this.$model.login.proxy = val;
       },
     },
+
     proxyPort : {
       get() {
         return this.$model.login.proxyPort;

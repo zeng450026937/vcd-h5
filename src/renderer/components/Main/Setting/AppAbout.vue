@@ -10,44 +10,20 @@
       </div>
     </div>
     <div class="flex flex-col border h-full m-4 bg-white p-5 text-center">
-      <div class="mt-9">
-        <a-avatar class="cursor-pointer rounded-lg hover:shadow bg-green-dark"
-                  shape="square"
-                  :size="128">
-          <span class="text-xl font-bold">Yealink</span>
-        </a-avatar>
-      </div>
-      <div class="mt-6 text-base">
-        Yealink VC Desktop
-      </div>
-      <div class="mt-2 text-black6 text-xs">
-        版本号： 1.0.9-alpha
-      </div>
-      <div class="mt-12">
-        <a-button class="w-60 h-9" type="primary">检查更新</a-button>
-      </div>
-      <div class="mt-5 leading-normal">
-        <a-switch size="small" v-model="autoUpdate"/>
-        <span class="ml-2">自动更新</span>
-      </div>
-      <div class="text-indigo text-xs text-center mt-10">
-        <span class="cursor-pointer">用户协议</span>
-        <span class="cursor-pointer ml-8">隐私政策</span>
-      </div>
-      <div class="flex mt-8 justify-center">
-        <p class="text-xs text-black9 leading-tight">Copyright © 2018 Yealink Inc. All rights reserved.</p>
-      </div>
+      <update-panel></update-panel>
     </div>
   </a-layout>
 </template>
 
 <script>
 import AppHeader from '../MainHeader.vue';
+import updatePanel from '../../Common/update-panel.vue';
 
 export default {
   name       : 'AppAbout',
   components : {
     AppHeader,
+    updatePanel,
   },
   data() {
     return {};

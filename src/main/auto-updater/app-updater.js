@@ -54,17 +54,23 @@ export class AppUpdater extends EventEmitter {
   }
 
   async checkForUpdates() {
-    const info = await this.provider.getLatestVersion();
+    const info = await this.provider.getLatestVersion().catch((e) => {
+      this.emit('error', e);
+    });
 
-    if (!info) return;
+    if (!info) {
+      this.emit('error', new Error('Recevied empty info'));
+
+      return;
+    }
 
     const avariable = this.provider.isVersionAvariable(info);
 
-    console.log(`update-avariable: ${avariable} \n`, info);
+    console.log(`update-available: ${avariable} \n`, info);
 
-    if (!avariable) return;
+    if (!avariable) return this.emit('update-not-available', info);
 
-    this.emit('update-avariable', info);
+    this.emit('update-available', info);
 
     if (this.autoDownload) {
       // async download
