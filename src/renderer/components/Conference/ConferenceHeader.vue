@@ -59,8 +59,8 @@ export default {
       this.$dispatch('sys.minimize');
     },
     clickMaximize() {
-      screenfull.toggle(document.getElementById('app'));
-      // this.$dispatch('sys.maximize');
+      // screenfull.toggle(document.getElementById('app'));
+      this.$dispatch('sys.maximize');
     },
     clickClose() {
       this.$dispatch('sys.close');

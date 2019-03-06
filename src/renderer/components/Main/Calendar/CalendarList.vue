@@ -6,9 +6,9 @@
                     cursor-pointer rounded border hover:border-indigo"
              :class="{
                'border-indigo': event.scheduleId === currentEvent.scheduleId,
-               'bg-grey-lighter': meetingStatus(event.startTime, event.expiryTime).isEnded,
-               'bg-white': !meetingStatus(event.startTime, event.expiryTime).isEnded,
-               'border-l-4 border-l-indigo': meetingStatus(event.startTime, event.expiryTime).isRunning,
+               'bg-grey-lighter': event.status.isEnded,
+               'bg-white': !event.status.isEnded,
+               'border-l-4 border-l-indigo': event.status.isRunning,
              }"
              @click="clickCalendar(event)">
           <div class="text-sm flex w-full">
@@ -58,21 +58,8 @@ export default {
     },
   },
   mounted() {
-
   },
   methods : {
-    meetingStatus(startTime, expiryTime) {
-      const currentTime = new Date().getTime();
-
-      startTime = new Date(startTime).getTime();
-      expiryTime = new Date(expiryTime).getTime();
-
-      const isPrepared = currentTime < startTime;
-      const isEnded = currentTime >= expiryTime;
-      const isRunning = !isPrepared && !isEnded;
-
-      return { isPrepared, isEnded, isRunning };
-    },
     clickCalendar(event) {
       this.$model.calendar.currentEvent = event;
     },

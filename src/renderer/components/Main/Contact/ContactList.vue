@@ -2,6 +2,7 @@
   <a-layout id="contact-list" class="h-full bg-white">
     <div class="h-full overflow-y-hidden">
       <recycle-scroller
+          v-if="contactList.length > 0"
           :items="contactListWithHeight"
           :buffer="20"
           :min-item-size="48"
@@ -77,8 +78,10 @@
                         <span>{{item.number}}</span>
                         <div class="flex flex-grow"></div>
                         <a-iconfont type="icon-shipin"
+                                    @click.stop="doVideo(item)"
                                     class="mr-4 text-indigo cursor-pointer text-base"/>
                         <a-iconfont type="icon-yuyin"
+                                    @click.stop="doAudio(item)"
                                     class="text-indigo cursor-pointer text-base"/>
                       </div>
                       <template v-if="item.parent.isUser">
@@ -144,12 +147,16 @@
           </a-list-item>
         </template>
       </recycle-scroller>
+      <div v-else>
+        <common-empty class="mt-20 text-grey" text="当前分组暂联系人"/>
+      </div>
     </div>
   </a-layout>
 </template>
 
 <script>
 import { RecycleScroller } from 'vue-virtual-scroller';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
 export default {
@@ -200,6 +207,7 @@ export default {
   },
   components : {
     RecycleScroller,
+    CommonEmpty,
   },
   data() {
     return {

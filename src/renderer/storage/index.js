@@ -18,7 +18,7 @@ const storage = new VueStorage({
     { // 服务器类型
       store   : LOGIN_STORAGE.SERVER_TYPE,
       type    : String,
-      default : 'yms', // cloud yms
+      default : 'cloud', // cloud yms
     },
     { // 是否记住密码
       store   : LOGIN_STORAGE.REMEMBER_PASSWORD,

@@ -99,60 +99,98 @@ const genPattern = (decurs, recurrencePattern) => {
   };
 };
 
+const genMeetingStatus = (startTime, expiryTime) => {
+  const currentTime = new Date().getTime();
+
+  startTime = new Date(startTime).getTime();
+  expiryTime = new Date(expiryTime).getTime();
+
+  const isPrepared = currentTime < startTime;
+  const isEnded = currentTime >= expiryTime;
+  const isRunning = !isPrepared && !isEnded;
+
+  return { isPrepared, isEnded, isRunning };
+};
+
 export const formatCalendar = (data) => {
   if (!data) return null;
 
   const calendars = [];
-  const titles = [];
+  // const titles = [];
 
   data.forEach((cal) => {
     if (!cal['start-time']) return;
 
-    const startTime = moment(new Date(`${cal['start-time']} GMT`), 'YYYYMMDD');
-    const title = startTime.format('LL');
+    cal.startMoment = moment(new Date(`${cal['start-time']} GMT`), 'YYYYMMDD');
+    // const title = startTime.format('LL');
 
-    cal['start-time'] = startTime.format('YYYY-MM-DD HH:mm');
-    cal['expiry-time'] = moment(new Date(`${cal['expiry-time']} GMT`)).format('YYYY-MM-DD HH:mm');
+    cal['start-time'] = cal.startMoment.format('YYYY-MM-DD HH:mm');
+    cal.expiryMoment = moment(new Date(`${cal['expiry-time']} GMT`), 'YYYYMMDD');
+    cal['expiry-time'] = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
+
+    cal.status = genMeetingStatus(cal['start-time'], cal['expiry-time']);
 
     const plainCalendar = {};
 
     Object.keys(cal).forEach((key) => {
-      if ([ '@', '-', '_' ].some((r) => key.startsWith(r))) return;
+      if ([ '-', '_' ].some((r) => key.startsWith(r))) return;
 
       plainCalendar[lineToUppercase(key)] = cal[key];
-      plainCalendar.isLive = !!plainCalendar.rtmpInvitees;
-      if (plainCalendar.isLive) {
-        // 添加直播地址
-        plainCalendar.liveShareUrl = plainCalendar.rtmpInvitees['rtmp-invitee'][0].session[0]['web-share-url'];
-      }
-      // RECURS_DAILY每天,
-      // RECURS_WEEKLY每周,
-      // RECURS_MONTHLY 每月的第一种, 每个月的第12天
-      // RECURS_MONTH_NTH 每月的第二种,
-      // RECURS_YEARLY每年的第一种,每年的10月份的第12天
-      // RECURS_YEAR_NTH 每年的第二种每年的10月份的第一个星期天
-      const { recurrencePattern } = plainCalendar;
+    });
+    plainCalendar.isLive = !!plainCalendar.rtmpInvitees;
+    if (plainCalendar.isLive) {
+      // 添加直播地址
+      plainCalendar.liveShareUrl = plainCalendar.rtmpInvitees['rtmp-invitee'][0].session[0]['web-share-url'];
+    }
+    // RECURS_DAILY每天,
+    // RECURS_WEEKLY每周,
+    // RECURS_MONTHLY 每月的第一种, 每个月的第12天
+    // RECURS_MONTH_NTH 每月的第二种,
+    // RECURS_YEARLY每年的第一种,每年的10月份的第12天
+    // RECURS_YEAR_NTH 每年的第二种每年的10月份的第一个星期天
+    const { recurrencePattern } = plainCalendar;
 
-      if (recurrencePattern) {
-        const type = recurrencePattern['@recurrence-type'];
+    if (recurrencePattern) {
+      const type = recurrencePattern['@recurrence-type'];
 
-        plainCalendar.isRecurrence = type && type !== 'RECURS_ONCE';
+      plainCalendar.isRecurrence = type && type !== 'RECURS_ONCE';
+      if (plainCalendar.isRecurrence) {
         plainCalendar.pattern = genPattern(type, recurrencePattern);
-        Reflect.deleteProperty(plainCalendar, 'recurrencePattern'); // for save memory
+      }
+      Reflect.deleteProperty(plainCalendar, 'recurrencePattern'); // for save memory
+    }
+
+    // 排序参会成员
+    const { invitee } = plainCalendar.invitees;
+    // AL 1
+    // const tmpInvitee = [];
+    //
+    // invitee.forEach((c) => {
+    //   if (c.role === 'organizer') {
+    //     tmpInvitee.unshift(c);
+    //   }
+    //   else {
+    //     tmpInvitee.push(c);
+    //   }
+    // });
+    // invitee.length = 0;
+    // invitee.push(...tmpInvitee);
+
+    // AL 2
+    let cursor = 0;
+
+    invitee.forEach((c, index) => {
+      if (c.role === 'organizer') {
+        if (index !== cursor) {
+          const tmp = invitee[cursor];
+
+          invitee[cursor] = invitee[index];
+          invitee[index] = tmp;
+        }
+        cursor += 1;
       }
     });
-
-    if (!titles.includes(title)) {
-      titles.push(title);
-      calendars.push({
-        title,
-        startTime,
-        events : [ plainCalendar ],
-      });
-    }
-    else {
-      calendars.find((item) => item.title === title).events.push(plainCalendar);
-    }
+    calendars.push(plainCalendar);
   });
 
   return calendars;

@@ -6,8 +6,8 @@ import { LOGIN_STORAGE } from '../../storage/constants';
 export default {
   data() {
     const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE) || 'cloud';
-    const rememberPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD) || true;
-    const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN) || false;
+    const rememberPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD);
+    const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN);
 
     return {
       serverType,
@@ -15,8 +15,8 @@ export default {
       autoLogin,
       autoLoginDisabled : false,
       loginType         : 'login',
-      proxy             : '10.200.112.165',
-      proxyPort         : 5061,
+      proxy             : '',
+      proxyPort         : '',
     };
   },
   mounted() {
@@ -26,8 +26,8 @@ export default {
       await next();
       const { account, pin, server } = ctx.payload;
 
-      const protocol = ctx.payload.protocol || 'wss';
-      const defaultPort = this.proxyPort || 5061;
+      const protocol = ctx.payload.protocol || 'tls';
+      const defaultPort = this.proxyPort;
 
       let servers;
 

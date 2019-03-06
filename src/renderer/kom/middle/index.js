@@ -4,13 +4,22 @@ import crashReport from './crashReport';
 
 let errorQueue = Promise.resolve();
 
+
 const errorNotice = async(ctx, next) => {
   try {
     await next();
   }
   catch (e) {
-    console.warn(e);
-    const errorKey = e.cause || (e.data && e.data.cause);
+    if (!e) throw e;
+    console.warn(e.cause);
+    console.warn(e.data);
+    console.warn(e.message);
+    let errorKey = e.cause || (e.data && e.data.cause);
+
+    if (e.message && e.message.startsWith('getaddrinfo ENOTFOUND')) {
+      errorKey = 'ENOTFOUND';
+    }
+    console.warn(errorKey);
 
     errorQueue = errorQueue.then(() => ctx.vm.$message.error(ERROR_MAP[errorKey] || e.message)).catch(() => {});
     throw e;

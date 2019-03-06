@@ -5,10 +5,10 @@
         <a-tab-pane tab="基本设置" key="1">
           <div class="flex h-full flex-col px-20 pt-10">
             <span class="mb-3 leading-normal">代理服务器设置</span>
-            <a-input v-model="proxy" placeholder='代理服务器地址'>
+            <a-input v-model="tmpProxy" placeholder='代理服务器地址'>
             </a-input>
             <div class="mt-4"></div>
-            <a-input v-model="proxyPort" placeholder='端口'>
+            <a-input v-number-only v-model="tmpProxyPort" placeholder='端口'>
             </a-input>
           </div>
         </a-tab-pane>
@@ -36,10 +36,28 @@ export default {
   components : {
     updatePanel,
   },
+  directives : {
+    numberOnly : {
+      bind(el) {
+        el.handler = function() {
+          el.value = el.value.replace(/\D+/, '');
+        };
+        el.addEventListener('input', el.handler);
+      },
+      unbind(el) {
+        el.removeEventListener('input', el.handler);
+      },
+    },
+  },
   data() {
     return {
-      status : 0,
+      tmpProxy     : '',
+      tmpProxyPort : '',
     };
+  },
+  mounted() {
+    this.tmpProxy = this.proxy;
+    this.tmpProxyPort = this.proxyPort;
   },
   computed : {
     proxy : {
@@ -62,7 +80,17 @@ export default {
   },
   methods : {
     ensure() {
-      this.$emit('closeSetting');
+      const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+      const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
+
+      if (this.tmpProxy && this.tmpProxyPort && !IP_REG.test(this.tmpProxy) && !DOMAIN_REG.test(this.tmpProxyPort)) {
+        this.$message.error('代理服务器地址格式错误');
+      }
+      else {
+        this.proxy = this.tmpProxy;
+        this.proxyPort = this.tmpProxyPort;
+        this.$emit('closeSetting');
+      }
     },
     cancel() {
       this.$emit('closeSetting');

@@ -17,7 +17,7 @@ export default class VueStorage {
 
       const value = this.query(s.store);
 
-      if (!value && value !== s.default) {
+      if ((value === null && value !== s.default) || (!value && s.type === Array)) {
         this.insert(s.store, s.default);
       }
       this[s.store] = s.store;
@@ -134,7 +134,7 @@ export default class VueStorage {
       value = [ value ];
     }
 
-    const result = item.filter((i) => value.some((v) => v !== i[key])) || [];
+    const result = item.filter((i) => !value.some((v) => v === i[key])) || [];
 
     return this.insert(store, result);
   }

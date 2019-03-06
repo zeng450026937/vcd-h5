@@ -10,7 +10,7 @@
         <a-form-item>
           <a-auto-complete
               v-decorator="['account']"
-              class="certain-category-search w-full"
+              class="certain-category-search w-full overflow-x-hidden"
               :dropdownMatchSelectWidth="false"
               optionLabelProp="value"
               @select="onAccountSelect"
@@ -42,7 +42,9 @@
         </a-form-item>
         <a-form-item>
           <a-input v-decorator="['pin']"
-                   @keypress="passwordInputted" type='password' placeholder='密码'>
+                   @keypress="passwordInputted"
+                   :type="showPassword ? 'text': 'password'"
+                   placeholder='密码'>
             <a-tooltip
                 slot="prefix"
                 :visible="isCapsLockOn"
@@ -53,21 +55,32 @@
               </template>
               <a-iconfont type='icon-mima' class="text-base text-black9"/>
             </a-tooltip>
+            <a-iconfont :title="showPassword ? '隐藏密码':'查看密码'"
+                        slot="suffix"
+                        :type="showPassword ? 'icon-mimayincang' : 'icon-mimaxianshi'"
+                        class="text-base text-grey cursor-pointer"
+                        @click="showPassword = !showPassword"/>
           </a-input>
         </a-form-item>
         <a-form-item
             class="mb-2">
+          <!--:read-only="type === 'cloud'"-->
           <a-input v-decorator="['server']"
-                   placeholder='服务器地址'
-                   :read-only="type === 'cloud'">
+                   placeholder='服务器地址'>
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
         </a-form-item>
         <div class="flex justify-between">
           <a-checkbox class="text-xs text-black6"
-                      v-model="rememberPassword">记住密码</a-checkbox>
+                      :checked="rememberPassword"
+                      @change="rememberPassword = !rememberPassword"
+          >记住密码
+          </a-checkbox>
           <a-checkbox class="text-xs text-black6"
-                      v-model="autoLogin">自动登录</a-checkbox>
+                      :checked="autoLogin"
+                      @change="autoLogin = !autoLogin"
+          >自动登录
+          </a-checkbox>
         </div>
         <a-form-item class="mt-9 mb-0">
           <div class="flex">
@@ -82,9 +95,11 @@
       </a-form>
       <div class="mt-5 text-xs text-center text-black6">
         <template v-if="type === 'cloud'">
-          <span class="cursor-pointer leading-tight">忘记密码</span>
+          <span class="cursor-pointer leading-tight"
+                @click="toForget">忘记密码</span>
           <a-divider type="vertical" class="mx-5 bg-grey"/>
-          <span class="cursor-pointer leading-tight" @click="registerAccount">注册账号</span>
+          <span class="cursor-pointer leading-tight"
+                @click="toRegister">注册账号</span>
           <a-divider type="vertical" class="mx-5 bg-grey"/>
         </template>
         <a-badge v-if="hasNewVersion">
@@ -115,14 +130,18 @@ import { LOGIN } from '../../router/constants';
 import { LOGIN_STORAGE } from '../../storage';
 import { isCapsLockOn } from '../../utils';
 
+const { shell } = require('electron');
+
 export default {
   name : 'YMSLoginFormContent',
   data() {
     return {
-      form         : this.$form.createForm(this),
-      searchResult : [],
-      accountList  : [],
-      isCapsLockOn : false,
+      form                : this.$form.createForm(this),
+      searchResult        : [],
+      accountList         : [],
+      isCapsLockOn        : false,
+      showPassword        : false,
+      preRememberPassword : true,
     };
   },
   mounted() {
@@ -131,9 +150,8 @@ export default {
     }, 200);
     this.initAccountList();
     this.$nextTick(() => {
-      if (this.autoLogin && !this.autoLoginDisabled) {
+      if (this.autoLogin && !this.autoLoginDisabled && this.rememberPassword) {
         this.handleLogin();
-        this.autoLoginDisabled = true;
       }
     });
   },
@@ -177,11 +195,25 @@ export default {
         { force: true },
         (err, values) => {
           if (!err) {
-            this.$dispatch('login.doLogin', values);
+            const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+            const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
+
+            if (!values.account) this.$message.error('账号不能为空');
+            else if (values.account.length > 128) this.$message.error('无法输入超过128个字符');
+            else if (!values.pin) this.$message.error('密码不能为空');
+            else if (!values.pin.length > 128) this.$message.error('无法输入超过128个字符');
+            else if (!values.server) this.$message.error('服务器地址不能为空');
+            else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) this.$message.error('服务器地址格式错误');
+            else this.$dispatch('login.doLogin', values);
+            this.autoLoginDisabled = true;
           }
         });
     },
-    registerAccount() {
+    toForget() { // 跳转到忘记密码页面
+      shell.openExternal('https://meeting.ylyun.com/meeting/forget');
+    },
+    toRegister() { // 跳转到注册页面
+      shell.openExternal('https://meeting.ylyun.com/enterprise/register');
     },
     joinMeeting() {
       this.$model.login.loginType = 'meeting';
@@ -230,6 +262,20 @@ export default {
     type(val) {
       if (this.accountList.length <= 0) {
         this.initAccountList();
+      }
+    },
+    autoLogin(val) {
+      if (val) {
+        this.preRememberPassword = this.rememberPassword;
+        this.rememberPassword = true;
+      }
+      else {
+        this.rememberPassword = this.preRememberPassword;
+      }
+    },
+    rememberPassword(val) {
+      if (!val && this.autoLogin) {
+        this.rememberPassword = true;
       }
     },
   },

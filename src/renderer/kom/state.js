@@ -63,7 +63,7 @@ export default {
       else {
         if (val === 'registered') {
           // 登录成功状态
-          await wait(2000); // 添加延时 增加体验
+          await wait(1000); // 添加延时 增加体验
           if (this.loginStatus === 'registered') { // 防止中途退出
             router.push(this.sidebarStatus.mainRoute || MAIN.DIAL_PLATE);
           }
@@ -117,7 +117,7 @@ export default {
         if (this.isNotInCallOrConference()) { // 解决会议中来电时的preRoute错误
           this.sidebarStatus.preRoute = router.currentRoute;
         }
-        const width = 270;
+        const width = 320;
         const height = 180;
         const offsetLeft = window.screen.width - width - 10;
         const offsetTop = window.screen.height - height - 10;
