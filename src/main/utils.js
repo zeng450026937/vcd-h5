@@ -1,8 +1,6 @@
 import Path from 'path';
 import { format as formatUrl } from 'url';
 
-export const isDevelopment = process.env.NODE_ENV !== 'production';
-
 export function formatPathAsUrl(...pathSegments) {
   return formatUrl({
     pathname : Path.join(...pathSegments),

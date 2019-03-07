@@ -57,7 +57,7 @@ export class AppWindow extends BaseWindow {
     this.blocker = powerSaveBlocker.start('prevent-app-suspension');
     this.tray = new AppTray();
 
-    this.tray.onClick(() => this.restoreWindow);
+    this.tray.onClick(() => this.restoreWindow());
 
     app.on('before-quit', () => {
       this.quitting = true;
@@ -121,6 +121,10 @@ export class AppWindow extends BaseWindow {
       });
 
       event.newGuest = popup.window;
+    });
+
+    this.window.webContents.on('update-tray-menu', (event, template) => {
+      this.tray.updateMenu(template);
     });
   }
 

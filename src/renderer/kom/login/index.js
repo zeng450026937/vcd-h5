@@ -26,8 +26,8 @@ export default {
       await next();
       const { account, pin, server } = ctx.payload;
 
-      const protocol = ctx.payload.protocol || 'tls';
-      const defaultPort = this.proxyPort;
+      const protocol = ctx.payload.protocol || 'wss';
+      const defaultPort = protocol === 'wss' ? 7443 : 5061;
 
       let servers;
 
@@ -44,7 +44,7 @@ export default {
       else {
         const [ address, port ] = this.proxy.split(':');
 
-        servers = [ { address, port } ];
+        servers = [ { address, port: port || this.proxyPort } ];
       }
 
       rtc.account.uri = `${account}@${server}`;
@@ -58,7 +58,7 @@ export default {
       return rtc.account.signin().then(() => {
         const loginData = Object.assign({}, { account, server }, {
           proxy         : this.proxy,
-          proxyPort     : defaultPort,
+          proxyPort     : this.proxyPort,
           lastLoginDate : Date.now(),
           type          : this.serverType,
         });

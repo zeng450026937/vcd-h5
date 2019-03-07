@@ -47,7 +47,8 @@ export class YTMSService {
     
     await client.whenReady();
 
-    client.updateInfo(clientInfo);
+    // ignore error
+    client.updateInfo(clientInfo).catch(() => {});
     
     // prepare push service
     const {

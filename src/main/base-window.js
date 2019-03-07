@@ -70,6 +70,7 @@ export class BaseWindow extends EventEmitter {
       }
     });
 
+    // TODO: change F12 into more complicate key combination
     this.window.webContents.on('before-input-event', (event, input) => {
       if (input.type === 'keyDown') {
         switch (input.key) {

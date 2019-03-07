@@ -57,10 +57,10 @@ export async function getClientInfo() {
     memInfo, 
     osInfo, 
   ] = await Promise.all([
-    getCpuInfo().catch(() => ({})),
-    getNetInfo().catch(() => ({})),
-    getMemInfo().catch(() => ({})),
-    getOsInfo().catch(() => ({})),
+    getCpuInfo(),
+    getNetInfo(),
+    getMemInfo(),
+    getOsInfo(),
   ]);
 
   clientInfo.clientName = osInfo.hostname;
