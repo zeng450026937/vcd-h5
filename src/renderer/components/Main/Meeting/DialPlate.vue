@@ -130,9 +130,11 @@ export default {
         return;
       }
       this.$model.contact.findContacts(val).then((r) => {
-        this.searchResult = r;
+        this.searchResult = r || [];
         this.localContactExist = this.localContacts.filter((local) => local.number === val).length > 0;
         this.searchResult.push(...this.localContacts.filter((local) => local.number.indexOf(val) > -1));
+      }).catch((err) => {
+        console.warn(err.message);
       });
     }, 500);
   },

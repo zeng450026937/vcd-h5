@@ -43,6 +43,9 @@ export default {
     };
   },
   computed : {
+    isCloud() {
+      return this.$model.login.serverType === 'cloud';
+    },
   },
   created() {
     this.initNav();
@@ -65,9 +68,11 @@ export default {
         case 'contact':
           this.navs = [
             { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', bg: 'blue', isTop: true },
-            { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人', bg: 'yellow-dark' },
             { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人', bg: 'teal' },
           ];
+          if (!this.isCloud) {
+            this.navs.splice(1, 0, { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人', bg: 'yellow-dark' });
+          }
           break;
         case 'setting':
           this.navs = [

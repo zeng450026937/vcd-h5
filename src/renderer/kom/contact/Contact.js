@@ -19,20 +19,12 @@ const groupMap = {
     name       : '其他联系人',
     isExternal : true,
   },
-  其他联系人 : {
-    name       : '其他联系人',
-    isExternal : true,
-  },
   'phone.book.vmr.root.name' : {
     name  : '虚拟会议室',
     isVMR : true,
   },
   'phone.book.servicenumber.root.name' : {
     name      : '服务号',
-    isService : true,
-  },
-  亿联云视讯体验大厅与技术支持 : {
-    name      : '亿联云视讯体验大厅与技术支持',
     isService : true,
   },
 };
@@ -116,7 +108,10 @@ class ContactGroup extends ContactBase {
       });
     }
     else if (this.parent.isRoot) {
-      this.info = groupMap[data.name];
+      this.info = groupMap[data.name] || {
+        name      : data.name,
+        isService : true,
+      };
     }
     else {
       Object.assign(this.info, this.parent.info, {

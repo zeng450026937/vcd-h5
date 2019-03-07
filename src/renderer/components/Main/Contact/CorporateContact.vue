@@ -33,10 +33,10 @@
           <div class="h-full p-1  overflow-y-hidden" style="width: 280px">
             <contact-list :contact-list="currents"
                           @clickItem="onListItemClicked">
-              <a-dropdown slot-scope="{item}"
+              <a-dropdown v-if="!isCloud && !item.isGroup && !item.parent.isVMR"
+                          slot-scope="{item}"
                           slot="more"
-                          :trigger="['click']"
-                          v-if="!item.isGroup && !item.parent.isVMR">
+                          :trigger="['click']">
                 <a-iconfont type="icon-gengduo1"
                             class="mr-2 text-indigo cursor-pointer text-sm"/>
                 <a-menu slot="overlay">
@@ -58,6 +58,7 @@
                         :group="groupInfo"
                         @toGroup="toGroup" style="width: 368px"/>
         </div>
+
       </div>
     </div>
   </a-layout>
@@ -110,6 +111,9 @@ export default {
     },
     groupList() {
       return this.$model.contact.favorite.items;
+    },
+    isCloud() {
+      return this.$model.login.serverType === 'cloud';
     },
   },
   methods : {

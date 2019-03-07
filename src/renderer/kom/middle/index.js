@@ -16,10 +16,11 @@ const errorNotice = async(ctx, next) => {
     console.warn(e.message);
     let errorKey = e.cause || (e.data && e.data.cause);
 
-    if (e.message && e.message.startsWith('getaddrinfo ENOTFOUND')) {
-      errorKey = 'ENOTFOUND';
+    if (typeof e.message === 'string' && !errorKey) {
+      if (e.message.startsWith('getaddrinfo ENOTFOUND')) {
+        errorKey = 'ENOTFOUND';
+      }
     }
-    console.warn(errorKey);
 
     errorQueue = errorQueue.then(() => ctx.vm.$message.error(ERROR_MAP[errorKey] || e.message)).catch(() => {});
     throw e;
