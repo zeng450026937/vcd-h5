@@ -76,12 +76,7 @@ export default {
       },
     },
     serverText() {
-      const textMap = {
-        cloud : '云服务版',
-        yms   : '企业版',
-      };
-
-      return textMap[this.serverType] || '请选择服务器';
+      return this.serverType === 'cloud' ? '云服务版' : '企业版';
     },
     loginType() {
       return this.$model.login.loginType;
@@ -93,7 +88,6 @@ export default {
     },
     clickMaximize() {
       this.$dispatch('sys.maximize');
-      // screenfull.toggle(document.getElementById('app'));
     },
     clickClose() {
       this.$dispatch('sys.close');
@@ -107,22 +101,19 @@ export default {
       this.$refs.headerModal.visible = true;
       this.helpStatus = false;
     },
+    updateRoute() {
+      const ROUTE = this.loginType === 'login' ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
 
+      this.$router.push(ROUTE);
+    },
   },
   watch : {
     serverType : {
-      handler(val) {
-        const ROUTE_MAP = this.loginType === 'login' ? {
-          cloud : LOGIN.CLOUD_LOGIN,
-          yms   : LOGIN.YMS_LOGIN,
-        } : {
-          cloud : LOGIN.MEETING_CONTENT,
-          yms   : LOGIN.MEETING_CONTENT,
-        };
-
-        this.$router.push(ROUTE_MAP[val]);
-      },
+      handler   : 'updateRoute',
       immediate : true,
+    },
+    loginType() {
+      this.updateRoute();
     },
   },
 };

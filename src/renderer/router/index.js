@@ -15,28 +15,17 @@ const router = new Router({
       children  : [
         {
           name       : 'loginContent',
-          path       : 'content',
+          path       : 'loginContent',
           components : {
-            header  : () => import(/* webpackChunkName: "loginHeader" */ '@/renderer/components/Login/LoginHeader.vue'),
             default : () => import(/* webpackChunkName: "loginContent" */ '@/renderer/components/Login/LoginContent.vue'),
           },
-          children : [
-            {
-              name      : 'cloudLoginContent',
-              path      : 'cloudLogin',
-              component : () => import(/* webpackChunkName: "cloudLoginContent" */ '@/renderer/components/Login/CloudLoginContent.vue'),
-            },
-            {
-              name      : 'ymsLoginContent',
-              path      : 'ymsLogin',
-              component : () => import(/* webpackChunkName: "ymsLoginContent" */ '@/renderer/components/Login/YMSLoginContent.vue'),
-            },
-            {
-              name      : 'meetingContent',
-              path      : 'meetingContent',
-              component : () => import(/* webpackChunkName: "meetingContent" */ '@/renderer/components/Login/MeetingContent.vue'),
-            },
-          ],
+        },
+        {
+          name       : 'meetingContent',
+          path       : 'meetingContent',
+          components : {
+            default : () => import(/* webpackChunkName: "meetingContent" */ '@/renderer/components/Login/MeetingContent.vue'),
+          },
         },
       ],
     },
@@ -205,13 +194,13 @@ const router = new Router({
     },
     {
       path     : '*',
-      redirect : LOGIN.YMS_LOGIN,
+      redirect : LOGIN.LOGIN_CONTENT,
     },
   ],
 });
 
 if (router.mode === 'abstract') {
-  router.replace(LOGIN.YMS_LOGIN);
+  router.replace(LOGIN.LOGIN_CONTENT);
 }
 
 window.router = router;

@@ -70,9 +70,7 @@ export default {
         }
         else {
           // 未登录状态 登录状态
-          const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE);
-
-          router.push(serverType === 'cloud' ? LOGIN.CLOUD_LOGIN : LOGIN.YMS_LOGIN);
+          router.push(LOGIN.LOGIN_CONTENT);
           this.isOnLine = navigator.onLine;
         }
         if (this.loginPopup) popup.destroy(this.loginPopup);

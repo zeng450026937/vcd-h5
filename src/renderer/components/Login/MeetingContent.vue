@@ -212,7 +212,7 @@ export default {
     },
     returnLogin() {
       this.$model.login.loginType = 'login';
-      this.$router.push(LOGIN.YMS_LOGIN);
+      this.$router.push(LOGIN.LOGIN_CONTENT);
     },
     handleMeeting() {
     },

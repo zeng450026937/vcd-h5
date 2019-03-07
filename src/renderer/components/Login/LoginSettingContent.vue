@@ -18,10 +18,10 @@
       </a-tabs>
     </div>
     <div class="flex justify-center h-12 border-t items-center">
-      <a-button type="primary" style="width: 68px" @click="ensure">
+      <a-button type="primary" style="width: 68px" @click="handlerEnsure">
         确定
       </a-button>
-      <a-button class="ml-4" style="width: 68px" @click="cancel">
+      <a-button class="ml-4" style="width: 68px" @click="handlerCancel">
         取消
       </a-button>
     </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { IP_REG, DOMAIN_REG } from '../../utils';
 import updatePanel from '../Common/update-panel.vue';
 
 export default {
@@ -79,20 +80,21 @@ export default {
     },
   },
   methods : {
-    ensure() {
-      const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
-      const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
-
-      if (this.tmpProxy && this.tmpProxyPort && !IP_REG.test(this.tmpProxy) && !DOMAIN_REG.test(this.tmpProxyPort)) {
-        this.$message.error('代理服务器地址格式错误');
-      }
-      else {
+    validateProxy() {
+      return (!this.tmpProxy && !this.tmpProxyPort)
+        || (IP_REG.test(this.tmpProxy) || DOMAIN_REG.test(this.tmpProxy));
+    },
+    handlerEnsure() {
+      if (this.validateProxy()) {
         this.proxy = this.tmpProxy;
         this.proxyPort = this.tmpProxyPort;
         this.$emit('closeSetting');
       }
+      else {
+        this.$message.error('代理服务器格式错误');
+      }
     },
-    cancel() {
+    handlerCancel() {
       this.$emit('closeSetting');
     },
   },
@@ -105,6 +107,7 @@ export default {
       text-align: center;
       margin: 0;
     }
+
     .ant-tabs-tab {
       height: 48px;
       font-size: 16px;
