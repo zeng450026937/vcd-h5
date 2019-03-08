@@ -140,7 +140,7 @@ export default {
   },
   computed : {
     localContacts() {
-      return this.$model.storage.localContacts;
+      return this.$model.storage.localContactGroup.items;
     },
   },
   methods : {

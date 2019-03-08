@@ -76,7 +76,6 @@
 
                       <div class="flex flex-col px-5 py-3 text-xs">
                         <div class="flex items-center">
-                          <!--<a-iconfont type="icon-ren"></a-iconfont>-->
                           <span class="mr-3 truncate">账号</span>
                           <span>{{item.number}}</span>
                           <div class="flex flex-grow"></div>
@@ -89,17 +88,14 @@
                         </div>
                         <template v-if="item.parent.isUser">
                           <div class="flex items-center mt-3 ">
-                            <!--<a-iconfont type="phone"></a-iconfont>-->
                             <span class="mr-3">手机</span>
                             <span>{{item.phone}}</span>
                           </div>
                           <div class="flex mt-3 items-center">
-                            <!--<a-iconfont type="mail"></a-iconfont>-->
                             <span class="mr-3">邮箱</span>
                             <span>{{item.email || '暂无邮箱'}}</span>
                           </div>
                           <div class="mt-3 flex items-start">
-                            <!--<a-iconfont type="home" class="leading-tight"></a-iconfont>-->
                             <span class="mr-3 whitespace-no-wrap">部门</span>
                             <span class="text-indigo">{{item | fullName}}</span>
                           </div>
@@ -268,7 +264,7 @@ export default {
           if (!contact.isGroup) {
             list.push({ requestUri: contact.number });
           }
-          
+
           return list.length < 100;
         });
       }
@@ -364,6 +360,10 @@ export default {
 
     .ant-popover-inner-content {
       padding: 0;
+      .ant-avatar-string {
+        left: 0;
+        position: relative;
+      }
     }
   }
 </style>
