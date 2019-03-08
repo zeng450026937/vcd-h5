@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import pinyin from '../../../utils/pinyin';
+
 export default {
   name  : 'LocalContactDrawer',
   props : {
@@ -92,25 +94,19 @@ export default {
   methods : {
     handleSubmit(e) {
       e.preventDefault();
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          this.newLocalContact = values;
-          if (this.type === 'add') {
-            this.newLocalContact.parent = { name: '本地联系人', isUser: true };
-            this.$dispatch('storage.insertData', this.newLocalContact).then(() => {
-              this.visible = false;
-              this.$message.success('添加成功');
-            });
-          }
-          else {
-            this.newLocalContact.parent = { name: '本地联系人', isUser: true };
-            this.newLocalContact.id = this.editedContact.id;
-            this.$dispatch('storage.updateData', this.newLocalContact).then(() => {
-              this.visible = false;
-              this.$message.success('更新成功');
-            });
-          }
+      this.form.validateFields(async(err, values) => {
+        if (err) return;
+        this.newLocalContact = values;
+        this.newLocalContact.group = pinyin.convertToPinyin(values.name.slice(0, 1)).slice(0, 1).toUpperCase();
+        if (this.type === 'add') {
+          await this.$dispatch('storage.insertData', this.newLocalContact);
         }
+        else {
+          this.newLocalContact.id = this.editedContact.id;
+          await this.$dispatch('storage.updateData', this.newLocalContact);
+        }
+        this.visible = false;
+        this.$message.success('操作成功');
       });
     },
   },

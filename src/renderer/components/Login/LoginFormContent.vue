@@ -58,7 +58,7 @@
             </a-tooltip>
             <a-iconfont :title="showPassword ? '隐藏密码':'查看密码'"
                         slot="suffix"
-                        :type="showPassword ? 'icon-mimayincang' : 'icon-mimaxianshi'"
+                        :type="showPassword ? 'icon-mimaxianshi' : 'icon-mimayincang'"
                         class="text-base text-grey cursor-pointer"
                         @click="showPassword = !showPassword"/>
           </a-input>
@@ -255,7 +255,7 @@ export default {
       this.form.setFieldsValue({
         account : data.account,
         pin     : data.pin,
-        server  : this.serverType === 'cloud' ? 'yealinkvc.com' : data.server,
+        server  : this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server,
       });
       this.$model.login.proxy = data.proxy;
       this.$model.login.proxyPort = data.proxyPort;

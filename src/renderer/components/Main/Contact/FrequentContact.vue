@@ -20,7 +20,7 @@
           <app-header/>
         </div>
       </div>
-      <div class="flex h-full m-3 bg-white border">
+      <div class="flex h-full m-4 bg-white border">
         <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
@@ -32,6 +32,7 @@
           <contact-list
               v-else
               :contact-list="currents"
+              enable-keyboard
               :audio-icon="false"
               @clickItem="clickItem">
             <a-dropdown slot-scope="{item}"

@@ -14,12 +14,12 @@
           <app-header/>
         </div>
       </div>
-      <div class="flex h-full m-3 bg-white border">
+      <div class="flex h-full m-4 bg-white border">
         <div class="h-full border-r overflow-y-auto px-1 py-1"
              style="width: 280px">
           <contact-list
-              v-if="localContacts.length"
-              :contact-list="localContacts"
+              enable-keyboard
+              :contact-list="gapLocalContact"
               @clickItem="clickItem">
             <a-dropdown slot-scope="{item}"
                         slot="more"
@@ -40,13 +40,6 @@
               </a-menu>
             </a-dropdown>
           </contact-list>
-          <div v-else class="flex flex-col h-full justify-center items-center">
-            <span class="text-sm text-grey-dark">暂未添加本地联系人</span>
-            <a-button type="primary" ghost
-                      class="mt-8"
-                      @click="addLocalContact">添加联系人
-            </a-button>
-          </div>
         </div>
         <div class="flex flex-grow bg-white justify-center">
           <contact-info :user="currentUser" :group="groupInfo"
@@ -54,7 +47,6 @@
         </div>
       </div>
       <local-contact-drawer ref="localContactDrawer" :type="drawerType"/>
-
     </div>
   </a-layout>
 </template>
@@ -87,7 +79,28 @@ export default {
   },
   computed : {
     localContacts() {
-      return this.$model.storage.localContacts;
+      return this.$model.storage.localContactGroup.items;
+    },
+    gapLocalContact() {
+      const list = [];
+      const tmp = this.localContacts;
+
+      tmp.sort((c1, c2) => (c1.group < c2.group ? -1 : 1));
+      let preGapText = '';
+
+      tmp.forEach((contact, index) => {
+        if (preGapText !== contact.group) {
+          preGapText = contact.group;
+          list.push({
+            id      : index,
+            isGap   : true,
+            gapText : preGapText,
+          });
+        }
+        list.push(contact);
+      });
+      
+      return list;
     },
     groupInfo() {
       return {
@@ -106,8 +119,7 @@ export default {
     },
     deleteContact(item) {
       this.ensureModal = this.$popup.prepared('ensureModal', { content: `确认删除用户 ${item.name}?` });
-      this.ensureModal.vm.$on('cancel', () => {
-      });
+      this.ensureModal.vm.$on('cancel', () => {});
       this.ensureModal.vm.$on('ok', () => {
         this.$dispatch('storage.deleteData', { id: item.id }).then(() => {
           this.$refs.localContactDrawer.visible = false;

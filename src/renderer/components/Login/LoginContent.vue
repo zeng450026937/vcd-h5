@@ -4,7 +4,6 @@
       <div v-show="!isInSettingContent">
         <login-form-content @openSetting="isInSettingContent = true"/>
       </div>
-
       <login-setting-content v-if="isInSettingContent"
                              @closeSetting="isInSettingContent = false"/>
     </div>

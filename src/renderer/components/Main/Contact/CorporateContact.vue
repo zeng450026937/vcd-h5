@@ -32,6 +32,7 @@
         <div class="border-r">
           <div class="h-full p-1  overflow-y-hidden" style="width: 280px">
             <contact-list :contact-list="currents"
+                          enable-keyboard
                           @clickItem="onListItemClicked">
               <a-dropdown v-if="!isCloud && !item.isGroup && !item.parent.isVMR"
                           slot-scope="{item}"

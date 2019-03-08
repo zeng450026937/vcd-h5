@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import screenfull from 'screenfull';
 import FeedbackModal from './FeedbackModal.vue';
 import { LOGIN } from '../../router/constants';
 
