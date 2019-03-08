@@ -28,6 +28,7 @@ const getRandomString = (num = 16) => {
 };
 
 export const createRecord = () => ({
+  callTitle : getRandomString(),
   type      : Math.random() < 0.5 ? 'incoming' : 'outcall',
   connected : Math.random() < 0.5,
   media     : Math.random() < 0.5 ? 'audio' : 'video',
