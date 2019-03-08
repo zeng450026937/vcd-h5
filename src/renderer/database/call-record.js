@@ -1,29 +1,41 @@
 import Base from './base';
 
-class CallRecord extends Base {
-  async getRecordByOtherId(val) {
+export class CallRecord extends Base {
+  async getRecordByOtherId(val) { // otherId 通话过程中 对方的id
     return this.find('callRecord', 'otherId', val).toArray();
   }
 }
 
-export default new CallRecord(
+export const callRecord = new CallRecord(
   'callRecord',
   {
-    callRecord : '++id, type, channelId,  otherId',
+    callRecord : '++id, type, callId,  otherId',
   },
   1,
 );
 
-const record = {
-  type      : 'incoming',
-  connected : true,
-  media     : 'audio',
-  callId    : '12aewof103f10caof10rj1391030',
-  startTime : 123423458293,
-  endTime   : 123431492344,
-  otherId   : 'eadf13434slf1ff29jf020039103',
-  other     : {
-    name : '9001',
-    id   : '12312312312',
-  },
+
+const getRandomString = (num = 16) => {
+  const allowedChars = '0123456789ABCDEF';
+
+  let result = '';
+
+  for (let i = 0; i < num; ++i) {
+    result += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+  }
+  
+  return result;
 };
+
+export const createRecord = () => ({
+  type      : Math.random() < 0.5 ? 'incoming' : 'outcall',
+  connected : Math.random() < 0.5,
+  media     : Math.random() < 0.5 ? 'audio' : 'video',
+  callId    : getRandomString(),
+  startTime : new Date().valueOf(),
+  endTime   : new Date().valueOf() + 1000 * 60 * 30,
+  otherId   : getRandomString(),
+  other     : {
+    name : getRandomString(4),
+  },
+});

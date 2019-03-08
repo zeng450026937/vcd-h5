@@ -126,6 +126,36 @@ const recordColumns = [
   },
 ];
 
+function genDouble(num) {
+  return num < 10 ? `0${num}` : `${num}`;
+}
+
+function genDurationTime(start, end) {
+  start = new Date(start).valueOf();
+  end = new Date(end).valueOf();
+  const diff = end - start;
+  const format = pipe(Math.floor, Math.abs, genDouble);
+  const seconds = format((Math.abs(diff) / 1000) % 60);
+  const minutes = format((Math.abs(diff) / 1000 / 60) % 60);
+  const hours = format((Math.abs(diff) / (1000 * 60 * 60)));
+
+  if (!hours) return `${minutes}:${seconds}`;
+
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+function isToday(time) {
+  return new Date().valueOf() - time.valueOf() < 1000 * 60 * 60 * 24;
+}
+
+function genStartTime(time) {
+  time = new Date(time);
+  const hours = genDouble(time.getHours());
+  const minutes = genDouble(time.getMinutes());
+
+  return isToday(time) ? `今天${hours}:${minutes}` : `${hours}:${minutes}`;
+}
+
 export default {
   name       : 'CallRecord',
   components : {
