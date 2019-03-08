@@ -91,6 +91,7 @@ export default {
 
   .remote-video-content-normal {
     position: absolute;
+    max-height: 100%;
     height: auto !important;
 
     #video-view {

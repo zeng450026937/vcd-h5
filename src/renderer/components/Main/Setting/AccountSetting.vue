@@ -116,7 +116,7 @@ export default {
   },
   computed : {
     userInfo() {
-      return this.$rtc.account.currentContact;
+      return this.$model.account.currentContact;
     },
   },
   methods : {

@@ -122,8 +122,6 @@ export const formatCalendar = (data) => {
     if (!cal['start-time']) return;
 
     cal.startMoment = moment(new Date(`${cal['start-time']} GMT`), 'YYYYMMDD');
-    // const title = startTime.format('LL');
-
     cal['start-time'] = cal.startMoment.format('YYYY-MM-DD HH:mm');
     cal.expiryMoment = moment(new Date(`${cal['expiry-time']} GMT`), 'YYYYMMDD');
     cal['expiry-time'] = cal.expiryMoment.format('YYYY-MM-DD HH:mm');

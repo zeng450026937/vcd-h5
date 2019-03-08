@@ -2,7 +2,7 @@
   <a-layout-sider
       :trigger="null"
       collapsible
-      class="dragable bg-indigo-darker"
+      class="dragable bg-indigo-darkest"
       :value="true"
       :width="64"
   >

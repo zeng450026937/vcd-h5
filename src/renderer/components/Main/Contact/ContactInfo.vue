@@ -18,7 +18,7 @@
             <a-iconfont :type="user.avatar" class="text-3xl mt-5"/>
           </a-avatar>
           <a-avatar v-else :size="72" :class="{[`bg-${user.avatar || 'indigo-dark'}`]: true}">
-            <span class="text-lg">{{user.name.substr(-2, 2)}}</span>
+            <span class="text-lg">{{user.name|avatarTrim}}</span>
           </a-avatar>
         </div>
       </div>
@@ -115,6 +115,10 @@ export default {
   filters : {
     fullName(fullPath) {
       return fullPath.map((b) => b.text).join('/');
+    },
+    avatarTrim(val) {
+      // 考虑名称后面有加 () 来备注英文名
+      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
     },
   },
 };

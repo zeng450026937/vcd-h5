@@ -8,15 +8,17 @@
           :min-item-size="48"
           :page-mode="false"
           key-field="id"
-          class="h-full"
-      >
-        <template v-slot="{item}">
-          <a-list-item class="px-1 cursor-pointer group"
+          class="h-full">
+        <template v-slot="{item, index}">
+          <a-list-item tabindex='-1'
+                       class="px-1 cursor-pointer group"
                        :class="{'bg-grey-light':selectedContact.id === item.id,
                              'hover:bg-grey-lighter': selectedContact.id !== item.id,
                              'h-14' : !item.isGroup,
                              'h-12' : item.isGroup}"
-                       @click="clickItem(item)">
+                       @click="clickItem(item)"
+                       @keyup.up="preContact"
+                       @keyup.down="nextContact">
             <a-list-item-meta class="w-full">
               <div slot="title" class="truncate">
                 <div class="flex flex-col justify-center">
@@ -28,9 +30,7 @@
                           class="flex">
                     {{(item.number).substr(0, (item.number).indexOf(highlightContent))}}
                       <span class="text-indigo">{{highlightContent}}</span>
-                      {{(item.number)
-                        .substr((item.number)
-                        .indexOf(highlightContent) + highlightContent.length)}}
+                      {{(item.number).substr((item.number).indexOf(highlightContent) + highlightContent.length)}}
                     </span>
                     <span v-else>{{(item.number)}}</span>
                   </span>
@@ -224,6 +224,16 @@ export default {
     },
   },
   mounted() {
+    this.$nextTick().then(() => {
+      document.getElementById('contact-list').onkeydown = (evt) => { // 阻止按键导致的滚动
+        evt = evt || window.event;
+        const keyCode = evt.keyCode;
+
+        if (keyCode >= 37 && keyCode <= 40) {
+          return false;
+        }
+      };
+    });
   },
   methods : {
     clickItem(item) {
@@ -262,13 +272,32 @@ export default {
     moreOption(item) {
       this.$emit('moreOption', item);
     },
+    switchContact(direction) {
+      const { items } = this.selectedContact.parent;
+      const index = items.findIndex((c) => c.id === this.selectedContact.id);
+      const length = items.length;
+      const cursor = direction === 'down' ? index + 1 : index - 1;
+
+      if (!(cursor < length && cursor >= 0)) return;
+      if (items[cursor].isGroup) return;
+      this.clickItem(items[cursor]);
+    },
+    nextContact() {
+      if (!this.selectedContact.parent) return;
+      this.switchContact('down');
+    },
+    preContact() {
+      if (!this.selectedContact.parent) return;
+      this.switchContact('up');
+    },
   },
   watch   : {},
   filters : {
     avatarTrim(val) {
-      return val.substr(-2, 2);
+      // 考虑名称后面有加 () 来备注英文名
+      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
     },
-    nameTrim({ name, amount, isGroup }, isToolTip) {
+    nameTrim({ name = '', amount, isGroup }, isToolTip) {
       if (!isToolTip) name = name.length > 20 ? `${name.slice(0, 20)}...` : name;
       if (isGroup) name = `${name}（${amount}）`;
 

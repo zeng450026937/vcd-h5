@@ -103,7 +103,7 @@ const colors = {
   'teal-lightest' : '#e8fffe',
 
 
-  'indigo-darkest'  : '#191e38',
+  'indigo-darkest'  : '#1F2436',
   'indigo-darker'   : '#252B41',
   'card-title'      : '#3F4967',
   'indigo-dark'     : '#4A577F',

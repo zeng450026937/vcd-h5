@@ -1,4 +1,5 @@
 import rtc from '../../rtc';
+import kom from '..';
 
 const avatarColor = () => 'indigo-dark';
 
@@ -85,7 +86,7 @@ class Contact extends ContactBase {
     this.number = data.number || '';
     if (data.number === rtc.account.username) {
       this.isSelf = true;
-      rtc.account.currentContact = this;
+      kom.vm.account.currentContact = this;
     }
     this.phone = data.extension || '';
     this.email = data.email || '';
@@ -108,10 +109,7 @@ class ContactGroup extends ContactBase {
       });
     }
     else if (this.parent.isRoot) {
-      this.info = groupMap[data.name] || {
-        name      : data.name,
-        isService : true,
-      };
+      this.info = groupMap[data.name] || Object.assign({}, groupMap[data.i18nKey], { name: data.name });
     }
     else {
       Object.assign(this.info, this.parent.info, {

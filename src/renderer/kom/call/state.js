@@ -15,6 +15,7 @@ export default {
   methods : {
     initSignal() {
       let checkInterval = 1; // 1 2 4 8 循环时长
+
       let checkTimes = 0;
       // 设置会议进行时间
       const meetTime = new Date();

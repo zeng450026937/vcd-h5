@@ -1,5 +1,5 @@
 <template>
-  <div id="common-empty" class="flex flex-col items-center">
+  <div id="common-empty" class="flex flex-col items-center select-none">
     <img src="./static/empty.svg" alt="">
     <span>{{text}}</span>
   </div>

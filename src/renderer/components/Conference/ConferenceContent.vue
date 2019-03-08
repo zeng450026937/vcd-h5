@@ -12,7 +12,6 @@
             <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
                         title="最大化/最小化"
                         @click="maxConferenceContent"/>
-            <!--<a-iconfont type="icon-suoding" class="ml-4 cursor-pointer hover:text-indigo text-base"/>-->
             <template v-if="isInConferenceMain">
               <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
                           title="邀请成员"
@@ -42,7 +41,6 @@
             :source="leftSource"
             @video-clicked="shareScreenClicked"/>
       </div>
-      <conference-notice/>
       <conference-inviting-modal ref="invitingModal"/>
     </div>
   </a-layout>
@@ -53,7 +51,6 @@ import screenfull from 'screenfull';
 import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
-import ConferenceNotice from './ConferenceNotice.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 import { CONFERENCE } from '../../router/constants';
 
@@ -63,7 +60,6 @@ export default {
     ConferenceRemoteVideo,
     ConferenceLocalVideo,
     ConferenceShareVideo,
-    ConferenceNotice,
     ConferenceInvitingModal,
   },
   data() {
@@ -122,6 +118,9 @@ export default {
         this.$model.conference.hideControls = val;
       },
     },
+    noticeTextList() {
+      return this.$model.conference.noticeTextList;
+    },
   },
   mounted() {
     this.contentClicked();
@@ -176,6 +175,9 @@ export default {
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
+    },
+    noticeTextList(val) {
+      if (val && val.length) this.$message.info(val[val.length - 1]);
     },
   },
 };

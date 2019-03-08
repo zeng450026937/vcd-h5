@@ -58,25 +58,6 @@
 </template>
 
 <script>
-// const getParentKey = (key, tree) => {
-//   let parentKey;
-//
-//   for (let i = 0; i < tree.length; i++) {
-//     const node = tree[i];
-//
-//     if (node.children) {
-//       if (node.children.some((item) => item.key === key)) {
-//         parentKey = node.key;
-//       }
-//       else if (getParentKey(key, node.children)) {
-//         parentKey = getParentKey(key, node.children);
-//       }
-//     }
-//   }
-//
-//   return parentKey;
-// };
-
 export default {
   name  : 'ContactTree',
   props : {
@@ -107,10 +88,12 @@ export default {
   },
   computed : {
     treeData() {
-      return this.$model.contact.formattedPhoneBook.items;
+      const { formattedPhoneBook } = this.$model.contact;
+      
+      return formattedPhoneBook && formattedPhoneBook.items;
     },
     currentContact() {
-      return this.$rtc.account.currentContact;
+      return this.$model.account.currentContact;
     },
   },
   watch : {
@@ -173,36 +156,6 @@ export default {
     },
 
     onChange(e) {
-      // if (this.dataList.length <= 0) {
-      //   const generateList = (data) => {
-      //     for (let i = 0; i < data.length; i++) {
-      //       const node = data[i];
-      //       const key = node.key;
-      //
-      //       this.dataList.push({ key, title: key });
-      //       if (node.children) {
-      //         generateList(node.children, node.key);
-      //       }
-      //     }
-      //   };
-      //
-      //   generateList(this.treeData);
-      // }
-      //
-      // const value = e.target.value;
-      // const expandedKeys = this.dataList.map((item) => {
-      //   if (item.key.indexOf(value) > -1) {
-      //     return getParentKey(item.key, this.treeData);
-      //   }
-      //
-      //   return null;
-      // }).filter((item, i, self) => item && self.indexOf(item) === i);
-      //
-      // Object.assign(this, {
-      //   expandedKeys,
-      //   searchValue      : value,
-      //   autoExpandParent : true,
-      // });
     },
   },
 };

@@ -90,12 +90,10 @@ export default {
   },
   computed : {
     currentContact() {
-      return this.$rtc.account.currentContact;
+      return this.$model.account.currentContact;
     },
   },
   mounted() {
-    this.checkedKeys.push(this.currentContact.id);
-    this.selectedContact.push(this.currentContact);
   },
   methods : {
     deleteContact(contact) {
@@ -123,15 +121,23 @@ export default {
       });
       this.$rtc.conference.meetnow(list);
     },
-    cancelEnter() {
-      console.warn('Enter Canceled');
-    },
     onCheck(selectedContact) {
       this.selectedContact = selectedContact;
     },
     clearAll() {
       this.selectedContact = [ this.currentContact ];
       this.$refs.contactTree.checkedKeys = [ this.currentContact.id ];
+    },
+  },
+  watch : {
+    currentContact : {
+      handler(val) {
+        if (val && this.checkedKeys.length <= 0) {
+          this.checkedKeys.push(this.currentContact.id);
+          this.selectedContact.push(this.currentContact);
+        }
+      },
+      immediate : true,
     },
   },
 };
