@@ -1,4 +1,3 @@
-import delegates from 'delegates';
 import { getClientId, clientInfo } from './client-info';
 import { YTMSClient } from './ytms-client';
 import { PushService } from './push-service';
@@ -11,25 +10,45 @@ export class YTMSService {
     this.url = url;
     this.client = null;
     this.push = null;
-
-    delegates(this, 'client')
-      .method('updateInfo')
-      .getter('api')
-      .getter('isReady')
-      .getter('clientId')
-      .getter('enterpriseInfo');
-
-    delegates(this, 'push')
-      .getter('baseURL')
-      .getter('tenantId');
   }
 
+  // use in yealink-provider
   getClientId() {
     return getClientId();
   }
 
+  get api() {
+    return this.client && this.client.api;
+  }
+
+  get isReady() {
+    return this.client && this.client.isReady;
+  }
+
+  get clientId() {
+    return this.client && this.client.clientId;
+  }
+
+  get enterpriseInfo() {
+    return this.client && this.client.enterpriseInfo;
+  }
+
   get clientInfo() {
     return clientInfo;
+  }
+
+  get baseURL() {
+    return this.push && this.push.baseURL;
+  }
+
+  get tenantId() {
+    return this.push && this.push.tenantId;
+  }
+
+  updateInfo(info) {
+    if (this.client) {
+      this.client.updateInfo(info || clientInfo).catch(() => {});
+    }
   }
 
   async connect(url = default_url) {

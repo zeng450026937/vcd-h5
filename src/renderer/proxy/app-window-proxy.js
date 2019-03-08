@@ -10,6 +10,14 @@ export const AppWindowProxy = {
   async mounted() {
     ipcRenderer.send('renderer-ready', performance.now() - startTime);
 
+    ipcRenderer.on(
+      'menu-event',
+      (event) => {
+        // test code
+        new Notification(event.name).body = 'this is a menu-event';
+      }
+    );
+
     const clientId = await ipcProxy.getClientId();
 
     const apis = {};

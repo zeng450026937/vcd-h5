@@ -2,7 +2,7 @@
   "appId": "com.ylyun.meeting.vcd",
   "productName": "VC Desktop",
   "copyright": "Copyright ©2019 Yealink",
-  "generateUpdatesFilesForAllChannels": true,
+  "generateUpdatesFilesForAllChannels": false,
   "afterAllArtifactBuild": "./script/package-info.js",
   "win": {
     "target": [

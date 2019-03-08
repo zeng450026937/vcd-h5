@@ -1,33 +1,19 @@
-import { BrowserWindow, ipcMain, Menu, app, powerSaveBlocker } from 'electron';
+import { ipcMain, Menu, Tray, app, powerSaveBlocker } from 'electron';
+import { resolve } from 'path';
 import { BaseWindow } from './base-window';
 import { PopupWindow } from './popup-window';
-import { AppTray } from './app-tray';
 import { formatPathAsUrl } from './utils';
+import { buildMenu } from './menu/build-menu';
+import * as trayMenu from './menu/tray-menu';
 
-let windowStateKeeper = null;
 const minWidth = 1120;
 const minHeight = 630;
 
 export class AppWindow extends BaseWindow {
   constructor() {
-    if (!windowStateKeeper) {
-      // `electron-window-state` requires Electron's `screen` module, which can
-      // only be required after the app has emitted `ready`. So require it
-      // lazily.
-      /* eslint-disable global-require */
-      windowStateKeeper = require('electron-window-state');
-    }
-    
-    const savedWindowState = windowStateKeeper({
-      defaultWidth  : minWidth,
-      defaultHeight : minHeight,
-    });
-
     const windowOptions = {
-      x               : savedWindowState.x,
-      y               : savedWindowState.y,
-      width           : savedWindowState.width,
-      height          : savedWindowState.height,
+      width           : minWidth,
+      height          : minHeight,
       minWidth,
       minHeight,
       show            : false,
@@ -48,16 +34,49 @@ export class AppWindow extends BaseWindow {
 
     super(windowOptions);
 
-    savedWindowState.manage(this.window);
-
     this.blocker = null;
     this.tray = null;
     this.quitting = false;
 
     this.blocker = powerSaveBlocker.start('prevent-app-suspension');
-    this.tray = new AppTray();
+    // setup tray
+    this.tray = new Tray(resolve(__public, 'favicon.png'));
 
-    this.tray.onClick(() => this.restoreWindow());
+    this.tray.setToolTip(process.env.VUE_APP_TITLE);
+    this.tray.setContextMenu(
+      buildMenu([
+        trayMenu.showAppWindow,
+        trayMenu.separator,
+        trayMenu.quit,
+      ])
+    );
+    this.tray.on('click', () => this.restoreWindow());
+
+    ipcMain.on(
+      'menu-event',
+      (event) => {
+        switch (event.name) {
+          case trayMenu.showAppWindow.id:
+            this.restoreWindow();
+            break;
+          case trayMenu.joinConference.id:
+          case trayMenu.logout.id:
+            this.window.webContents.send('menu-event', event);
+          default:
+            break;
+        }
+      }
+    );
+
+    this.window.webContents.on(
+      'update-tray-menu',
+      (event, template) => {
+        this.tray.setContextMenu(
+          buildMenu(template)
+        );
+      }
+    );
+    // end of setup tray
 
     app.on('before-quit', () => {
       this.quitting = true;
@@ -121,10 +140,6 @@ export class AppWindow extends BaseWindow {
       });
 
       event.newGuest = popup.window;
-    });
-
-    this.window.webContents.on('update-tray-menu', (event, template) => {
-      this.tray.updateMenu(template);
     });
   }
 

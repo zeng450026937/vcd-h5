@@ -10,6 +10,13 @@ import {
 } from './system-info';
 import { newPlainUUID } from '../utils/uuid';
 
+function normalizePlatform(platform) {
+  return platform === 'win32' 
+    ? 'windows' 
+    : platform === 'darwin'
+      ? 'mac' : platform;
+}
+
 export const clientInfo = {
   clientId       : newPlainUUID(),
   clientName     : app.getName(),
@@ -18,7 +25,7 @@ export const clientInfo = {
   clientType     : process.env.VUE_APP_TYPE,
   clientVersion  : app.getVersion(),
   clientArch     : process.arch,
-  clientPlatform : process.platform,
+  clientPlatform : normalizePlatform(process.platform),
   customId       : process.env.VUE_APP_CUSTOMID,
   device         : {
     ip       : '',

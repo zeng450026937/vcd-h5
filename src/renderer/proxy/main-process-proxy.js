@@ -8,4 +8,6 @@ export function sendCrashQuitSync() {
   ipcRenderer.sendSync('crash-quit');
 }
 
-export function sendUpdateTrayMenu() {}
+export function updateTrayMenu(template) {
+  
+}
