@@ -22,12 +22,22 @@
 
     <div class="mt-5 w-1/2">
       <a-button
+          v-if="status!==3"
           :disabled="status!==2"
           @click="checkUpdate"
           class="w-60 h-9"
           type="primary">
         检查更新
       </a-button>
+
+      <a-button
+          v-if="status===3"
+          @click="quitAndInstall"
+          class="w-60 h-9"
+          type="primary">
+        退出并安装
+      </a-button>
+
     </div>
     <div class="mt-5">
       <a-switch v-model="isAutoUpdate" size="small"/>
@@ -96,6 +106,9 @@ export default {
     },
     onError() {
       this.status = updater.status;
+    },
+    quitAndInstall() {
+      updater.quitAndInstallUpdate();
     },
   },
   mounted() {

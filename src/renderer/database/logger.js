@@ -1,6 +1,6 @@
 import Base from './base';
 
-class LoggerDB extends Base {
+class Logger extends Base {
   constructor(dbName, storesOpt, version) {
     super(dbName, storesOpt, version);
   }
@@ -29,4 +29,4 @@ class LoggerDB extends Base {
   }
 }
 
-export default window.loggerDB = new LoggerDB('logger', { log: '++id, timestamp' }, 1);
+export default window.loggerDB = new Logger('logger', { log: '++id, timestamp' }, 1);

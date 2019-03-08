@@ -58,7 +58,7 @@ export default {
           this.navs = [
             { icon: 'icon-jishihuiyi', route: MAIN.MEETING_INSTANCE, text: '即时会议', isTop: true },
             { icon: 'icon-jiaruhuiyi', route: MAIN.MEETING_ENTER, text: '加入会议' },
-            // { icon: 'icon-tonghuajilu', route: MAIN.CALL_RECORD, text: '通话记录' },
+            { icon: 'icon-tonghuajilu', route: MAIN.CALL_RECORD, text: '通话记录' },
             { icon: 'icon-bohao', route: MAIN.DIAL_PLATE, text: '拨号' },
           ];
           break;

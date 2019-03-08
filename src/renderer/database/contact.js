@@ -1,13 +1,13 @@
 import Base from './base';
 
-class ContactDB extends Base {
+class Contact extends Base {
   constructor(dbName, storesOpt, version) {
     super(dbName, storesOpt, version);
   }
 
   async updateContactInfo(storeName, key, val, data) {
     const contactCollection = this.find(storeName, key, val);
-    const contactList = await contactCollection.toArray().then((contacts) => Promise.resolve(contacts));
+    const contactList = await contactCollection.toArray();
 
     if (contactList.length > 0) {
       contactCollection.modify(data);
@@ -50,7 +50,7 @@ class ContactDB extends Base {
   }
 }
 
-export default new ContactDB(
+export default new Contact(
   'contactDB',
   {
     contacts         : '++sn, parentId, id, dataVersion',
