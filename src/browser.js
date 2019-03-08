@@ -113,7 +113,11 @@ function createWindow() {
   });
 
   window.onCrashed((killed) => {
-    if (killed) return;
+    if (killed) {
+      logger.info('renderer-process is killed by user');
+
+      return;
+    }
     reportRendererCrash();
   });
 
@@ -156,8 +160,12 @@ if (!handlingSquirrelEvent) {
       );
     });
     
-    app.on('gpu-process-crashed', (event, killed) => {  
-      if (killed) return;
+    app.on('gpu-process-crashed', (event, killed) => { 
+      if (killed) {
+        logger.info('gpu-process is killed by user');
+
+        return;
+      }
       reportGpuCrash();
     });
     

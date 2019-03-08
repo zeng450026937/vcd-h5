@@ -16,7 +16,7 @@ export function showNotification(title, body) {
 
 export function handlePushMessage(pushService, hook) {
   pushService.on('notify', (type, body) => {
-    console.log('PUSH SERVICE: ', type, body);
+    logger.info('PUSH SERVICE: ', type, body);
     
     showNotification(MESSAGE_TYPE[type], body);
 

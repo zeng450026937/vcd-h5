@@ -17,7 +17,7 @@ export class LogJob extends Job {
     log.addParam({ sessionId: this.id });
     log.addLog(logfile, basename(path));
 
-    await log.upload().catch((e) => console.log(e));
+    await log.upload().catch((e) => logger.error(e));
     // ignore anyway
     await unlink(path).catch(() => {});
 

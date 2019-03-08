@@ -64,7 +64,7 @@ export class Job extends EventEmitter {
       this.api.reportSessionState(this.id, { status }, this.expire);
     }
     this.emit(status, this);
-    console.log(`job: ${this.id}`, `-- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
+    logger.info(`job: ${this.id}`, `-- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
   }
 
   // private

@@ -79,7 +79,7 @@ export default {
       fileList        : [],
       isUploadLog     : true,
       problemDescribe : '',
-      useUploadImg    : true,
+      useUploadImg    : false,
       contactInfo     : '',
     };
   },

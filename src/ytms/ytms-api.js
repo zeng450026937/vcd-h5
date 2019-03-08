@@ -2,22 +2,21 @@ import axios from 'axios';
 
 const inst = axios.create();
 
-const __DEV__ = process.env.NODE_ENV === 'development';
 const __RENDERER__ = process.type === 'renderer';
 
 const inspectRequest = false;
-const inspectResponse = __DEV__;
+const inspectResponse = true;
 
 if (inspectRequest) {
   inst.interceptors.request.use(
     (config) => {      
-      console.log(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
-      console.log('YTMS API DATA: \n', config.data || '');
+      logger.debug(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
+      logger.debug(`YTMS API DATA: \n ${JSON.stringify(config.data || '')}`);
 
       return config;
     },
     (error) => {
-      console.warn(`${error}`);
+      logger.error('YTMS API request', error);
 
       return Promise.reject(error);
     }
@@ -28,16 +27,16 @@ if (inspectResponse) {
     (response) => {
       const { status, config, data } = response;
       
-      console.log(`YTMS API: ${status} ${config.method.toUpperCase()} ${config.url}`);
+      logger.info(`YTMS API: ${status} ${config.method.toUpperCase()} ${config.url}`);
       
       if (data.error) {
-        console.error(data.error);
+        logger.error('YTMS API respone with error', data.error);
       }
 
       return response;
     },
     (error) => {
-      console.warn(`${error}`);
+      logger.error('YTMS API respone', error);
 
       return Promise.reject(error);
     }

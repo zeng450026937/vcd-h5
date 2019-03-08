@@ -4,6 +4,13 @@ const semver = require('semver');
 const crypto = require('crypto');
 const pkg = require('../package.json');
 
+function normalizePlatform(platform) {
+  return platform === 'win32' 
+    ? 'windows' 
+    : platform === 'darwin'
+      ? 'mac' : platform;
+}
+
 module.exports = async function(context) {
   const artifact = context.artifactPaths[0];
   const packageInfo = {};
@@ -17,8 +24,8 @@ module.exports = async function(context) {
   packageInfo.clientModel = pkg.model;
   packageInfo.clientCategory = pkg.category;
   packageInfo.clientArch = process.arch;
-  packageInfo.clientOs = process.platform;
-  packageInfo.clientPlatform = process.platform;
+  packageInfo.clientOs = normalizePlatform(process.platform);
+  packageInfo.clientPlatform = normalizePlatform(process.platform);
   packageInfo.customId = pkg.customId;
   packageInfo.releaseDate = new Date().toISOString();
   packageInfo.semver = version;

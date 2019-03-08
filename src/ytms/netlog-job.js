@@ -1,4 +1,4 @@
-import { netLog } from 'electron';
+import { netLog, net } from 'electron';
 import { resolve } from 'path';
 import { readFile, ensureDir } from 'fs-extra';
 import { Job } from './job';
@@ -22,6 +22,12 @@ export class NetLogJob extends Job {
 
     ensureDir(getNetLogDirectoryPath())
       .then(() => {
+        if (netLog.currentlyLogging) {
+          logger.warn('netLog currently logging');
+
+          return;
+        }
+        
         netLog.startLogging(this.logpath);
       });
   }
@@ -31,13 +37,19 @@ export class NetLogJob extends Job {
 
     super.stop();
     
+    if (!netLog.currentlyLogging) {
+      logger.warn('netLog has been stopped');
+
+      return;
+    }
+
     netLog.stopLogging(async(path) => {
       const logfile = await readFile(path);
       const log = new NetLog(this.api);
   
       log.addLog(logfile, this.id);
 
-      await log.upload().catch((e) => console.log(e));
+      await log.upload().catch((e) => logger.error(e));
     });
   }
 }

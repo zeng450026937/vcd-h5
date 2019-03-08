@@ -17,6 +17,8 @@ function getLogFilePath(directory) {
 
 
 function initializeWinston(path) {
+  const { combine, timestamp, colorize, prettyPrint, simple, splat } = winston.format;
+
   const fileLogger = new winston.transports.DailyRotateFile({
     filename         : path,
     handleExceptions : false,
@@ -32,6 +34,10 @@ function initializeWinston(path) {
   });
 
   winston.configure({
+    format : combine(
+      timestamp(),
+      simple(),
+    ),
     transports : [ consoleLogger, fileLogger ],
   });
 
