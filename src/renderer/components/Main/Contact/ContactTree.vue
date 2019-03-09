@@ -36,13 +36,11 @@
           <div>
             <a-avatar v-if="!contact.parent.isUser"
                       :size="32"
-                      class="text-white bg-indigo-dark">
+                      class="text-white">
               <a-iconfont :type="contact.avatar"/>
             </a-avatar>
             <a-avatar v-if="contact.parent.isUser"
-                      :size="32"
-                      :class="{[`bg-${contact.avatar}`]: true}"
-            >{{contact.name.substr(-2, 2)}}
+                      :size="32">{{contact.name.substr(-2, 2)}}
             </a-avatar>
           </div>
 

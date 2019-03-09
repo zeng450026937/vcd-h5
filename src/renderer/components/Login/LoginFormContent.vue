@@ -2,7 +2,7 @@
   <div id="login-form-content"
        class="flex flex-col bg-white shadow"
        style="width: 480px;height: 538px;">
-    <div class="flex items-center justify-center w-full bg-indigo" style="height: 160px;">
+    <div class="flex items-center justify-center w-full bg-main-theme" style="height: 160px;">
       <span class="text-4xl font-semibold text-white">Yealink</span>
     </div>
     <div class="flex flex-col pt-10 px-24">
@@ -98,14 +98,14 @@
         <template v-if="serverType === 'cloud'">
           <span class="cursor-pointer leading-tight"
                 @click="toForget">忘记密码</span>
-          <a-divider type="vertical" class="mx-5 bg-grey"/>
+          <a-divider type="vertical" class="mx-5 bg-divider"/>
           <span class="cursor-pointer leading-tight"
                 @click="toRegister">注册账号</span>
-          <a-divider type="vertical" class="mx-5 bg-grey"/>
+          <a-divider type="vertical" class="mx-5 bg-divider"/>
         </template>
         <a-badge v-if="hasNewVersion">
               <span slot="count"
-                    class="text-white bg-indigo rounded-lg h-4 leading-none"
+                    class="text-white bg-active rounded-lg h-4 leading-none"
                     style="transform: translate(100%, -50%);font-size: 10px;width: 31px;">
                 <span class="leading-tightest">NEW</span>
               </span>

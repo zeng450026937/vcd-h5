@@ -1,5 +1,5 @@
 <template>
-  <div id="call-header" class="bg-indigo-darker h-9">
+  <div id="call-header" class="bg-meeting-top h-9">
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
         <template v-if="callStatus === 'connected'">

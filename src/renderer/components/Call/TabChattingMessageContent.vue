@@ -12,8 +12,8 @@
               <span class="text-black6">{{message.date}}</span>
             </div>
             <div style="margin-top: 6px;"
-                 class="rounded-sm px-2 py-1 bg-grey-light"
-                 :class="{'bg-grey-lighter': message.type === 'receive'}">
+                 class="rounded-sm px-2 py-1 bg-chat-others"
+                 :class="{'bg-chat-mine': message.type === 'receive'}">
               <div class="leading-normal">{{message.content}}</div>
             </div>
           </div>

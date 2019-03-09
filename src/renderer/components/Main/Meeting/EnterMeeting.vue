@@ -14,13 +14,13 @@
             style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
            class="flex flex-col bg-white"
            @keyup.enter="enterMeeting">
-        <div style="height: 270px;background-color: #1F2437;"
-             class="relative flex">
+        <div style="height: 270px;"
+             class="relative flex bg-media">
           <video-view v-if="!muteVideo" class="w-full h-full"
                       style="background-color: #1F2437;"
                       object-fit="cover"/>
           <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
-            <a-iconfont type="icon-huiyishi" class="display-icon"/>
+            <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
           </div>
           <div class="controls-content flex self-end w-full justify-center">
             <div class="flex mb-4">

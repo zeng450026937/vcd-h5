@@ -1,5 +1,5 @@
 <template>
-  <div id="conference-header" class="bg-indigo-darker h-9">
+  <div id="conference-header" class="bg-meeting-top h-9">
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable my-1 mr-12" @dblclick="maxAppContent">
         <a-iconfont type="icon-tonghuabaohu"

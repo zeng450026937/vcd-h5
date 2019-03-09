@@ -14,10 +14,10 @@
         <div class="ml-3">
           <a-avatar v-if="!user.parent.isUser"
                     :size="72"
-                    class="bg-indigo-dark text-white">
+                    class="text-white">
             <a-iconfont :type="user.avatar" class="text-3xl mt-5"/>
           </a-avatar>
-          <a-avatar v-else :size="72" :class="{[`bg-${user.avatar || 'indigo-dark'}`]: true}">
+          <a-avatar v-else :size="72">
             <span class="text-lg">{{user.name|avatarTrim}}</span>
           </a-avatar>
         </div>

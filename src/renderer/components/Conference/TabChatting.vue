@@ -23,7 +23,7 @@
             <div class="w-1/6 bg-grey-light">
               <a-button type="primary"
                         class="w-full h-full p-0 text-xs"
-                        :class="{'bg-indigo-lighter': isSendingDisabled}"
+                        :class="{'bg-disabled': isSendingDisabled}"
                         :disabled="isSendingDisabled || !message"
                         @click="sendMessage">
                 <span v-if="isSendingDisabled" class="text-base text-white">{{timeout}}</span>

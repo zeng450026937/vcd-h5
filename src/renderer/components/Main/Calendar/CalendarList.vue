@@ -6,7 +6,7 @@
                     cursor-pointer rounded border hover:border-indigo"
              :class="{
                'border-indigo': event.scheduleId === currentEvent.scheduleId,
-               'bg-grey-lighter': event.status.isEnded,
+               'bg-disabled': event.status.isEnded,
                'bg-white': !event.status.isEnded,
                'border-l-4 border-l-indigo': event.status.isRunning,
              }"

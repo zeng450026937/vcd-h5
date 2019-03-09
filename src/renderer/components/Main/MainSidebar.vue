@@ -2,7 +2,7 @@
   <a-layout-sider
       :trigger="null"
       collapsible
-      class="dragable bg-indigo-darkest"
+      class="dragable bg-sidebar"
       :value="true"
       :width="64"
   >
@@ -14,32 +14,13 @@
             <div class="flex flex-col w-48">
               <div class="flex flex-col items-center">
                 <div class="text-center">
-                  <common-avatar
-                      class="cursor-pointer"
-                      :image="randomAvatar()"
-                      :size="32"
-                      badge
-                      badge-status="online"
-                      badgeSize="sm"/>
+                  <a-avatar :size="32" :src="randomAvatar()"></a-avatar>
                 </div>
                 <div class="my-1 font-semibold">{{userInfo.userName}}</div>
                 <div class="mb-1">VCS产品线-软件开发部</div>
-                <div class="mb-1 text-grey cursor-pointer hover:text-grey-dark">
-                  <a-iconfont type="edit"/>
-                  编辑个性签名
-                </div>
               </div>
               <a-divider class="my-1"/>
               <div class="flex flex-col my-1">
-                <div class="flex items-center cursor-pointer">
-                  <div class="w-3 h-3 rounded-full bg-green"></div>
-                  <span class="ml-2">我在线上</span>
-                </div>
-                <div class="flex items-center my-1 cursor-pointer">
-                  <div class="w-3 h-3 rounded-full bg-red"></div>
-                  <span class="ml-2">请勿打扰</span>
-                </div>
-                <a-divider class="my-1"/>
                 <div class="my-1 cursor-pointer text-center hover:text-red" @click="clickLogout">
                   退出账号
                 </div>
@@ -47,14 +28,8 @@
               </div>
             </div>
           </template>
-          <div>
-            <common-avatar
-                class="cursor-pointer"
-                :image="randomAvatar()"
-                :size="32"
-                badge
-                badgeSize="sm"
-                badge-status="online"/>
+          <div class="cursor-pointer">
+            <a-avatar :size="32" :src="randomAvatar()"></a-avatar>
           </div>
         </a-popover>
 
@@ -64,7 +39,7 @@
           <div :key="index"
                class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
                :class="{'mt-2':sidebar.isTop,
-                       'bg-indigo':currentSidebar === index,
+                       'bg-active':currentSidebar === index,
                        'hover:text-indigo': currentSidebar !== index}"
                @click="clickMenu(sidebar, index)">
             <a-iconfont :type="sidebar.icon" class="text-base"/>

@@ -18,8 +18,6 @@
 </template>
 
 <script>
-import screenfull from 'screenfull';
-
 export default {
   name  : 'MainHeader',
   props : {

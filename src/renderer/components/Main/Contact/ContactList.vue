@@ -12,8 +12,8 @@
           <template v-if="!item.isGap">
             <a-list-item tabindex='-1'
                          class="px-1 cursor-pointer group"
-                         :class="{'bg-grey-light':selectedContact.id === item.id,
-                             'hover:bg-grey-lighter': selectedContact.id !== item.id,
+                         :class="{'bg-list-select':selectedContact.id === item.id,
+                             'hover:bg-list-hover': selectedContact.id !== item.id,
                              'h-14' : !item.isGroup,
                              'h-12' : item.isGroup}"
                          @click="clickItem(item)"
@@ -47,7 +47,7 @@
                   <template v-if="!item.isGroup && !hidePopup" slot="content">
                     <div class="flex w-80 flex-col shadow">
                       <!--头部-->
-                      <div class="flex items-center w-full px-5 py-4 bg-card-title rounded-t text-white">
+                      <div class="flex items-center w-full px-5 py-4 bg-card rounded-t text-white">
                         <div class="flex flex-col max-w-4/5 flex-grow">
                           <div class="text-base flex leading-loose">
                           <span class="w-1 flex flex-grow truncate">
@@ -62,15 +62,11 @@
                         <div class="flex justify-center ml-3">
                           <a-avatar v-if="item.isGroup || !item.parent.isUser"
                                     :size="48"
-                                    :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
-                                  [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
+                                    :class="{ 'bg-transparent' : item.isGroup,
+                                    [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
                             <a-iconfont :type="item.avatar" class="text-base"/>
                           </a-avatar>
-                          <a-avatar v-else :size="48"
-                                    class="bg-indigo-dark"
-                                    :class="{[`bg-${item.avatar }`]: item.avatar}">
-                            {{item.name|avatarTrim}}
-                          </a-avatar>
+                          <a-avatar v-else :size="48">{{item.name|avatarTrim}}</a-avatar>
                         </div>
                       </div>
 
@@ -106,14 +102,13 @@
                   </template>
                   <a-avatar v-if="item.isGroup || !item.parent.isUser"
                             class="text-sm"
-                            :class="{[`bg-${item.isGroup ? 'transparent' : 'indigo-dark'}`]: true,
+                            :class="{'bg-transparent' : item.isGroup,
                                   [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true,
                                   'mx-2': !item.isGroup}">
                     <a-iconfont :type="item.avatar" class="text-base"/>
                   </a-avatar>
                   <a-avatar v-else
-                            class="bg-indigo-dark text-sm mx-2"
-                            :class="{[`bg-${item.avatar}`]: item.avatar}">
+                            class="text-sm mx-2">
                     {{item.name|avatarTrim}}
                   </a-avatar>
                 </a-popover>

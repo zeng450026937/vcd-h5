@@ -44,10 +44,14 @@
             </div>
           </div>
         </div>
-        <div class="mt-3 relative" style="height: 180px;width: 320px;">
-          <video-view class="w-full h-full bg-white"
+        <div class="mt-3 relative bg-media" style="height: 180px;width: 320px;">
+          <video-view v-if="!muteVideo"
+                      class="w-full h-full bg-white"
                       position="absolute"
                       object-fit="cover"/>
+          <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
+            <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
+          </div>
         </div>
       </div>
       <div class="flex flex-col mt-3">
@@ -87,6 +91,9 @@ export default {
     };
   },
   computed : {
+    muteVideo() {
+      return this.$rtc.media.localMedia.muteVideo;
+    },
     videoInput : {
       get() { return this.$model.setting.device.videoInput; },
       set(val) { this.$model.setting.device.videoInput = val; },
@@ -120,6 +127,21 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less">
+  #video-setting {
 
+    .local-video-bg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+
+      .display-icon {
+        opacity: 0.4;
+        color: white;
+        font-size: 84px;
+      }
+
+    }
+  }
 </style>

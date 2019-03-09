@@ -12,8 +12,8 @@
     </div>
     <div class="flex items-center h-12 px-4 cursor-pointer"
          :class="{'mt-0': nav.isTop,
-         'bg-grey-light':currentNav === index,
-         'hover:bg-grey-lighter': currentNav !== index}"
+         'bg-list-select':currentNav === index,
+         'hover:bg-list-hover': currentNav !== index}"
          v-for="(nav, index) in navs"
          :key="index" @click="clickNav(nav, index)">
       <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"/>
@@ -67,11 +67,11 @@ export default {
           break;
         case 'contact':
           this.navs = [
-            { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', bg: 'blue', isTop: true },
-            { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人', bg: 'teal' },
+            { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', isTop: true },
+            { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人' },
           ];
           if (!this.isCloud) {
-            this.navs.splice(1, 0, { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人', bg: 'yellow-dark' });
+            this.navs.splice(1, 0, { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人' });
           }
           break;
         case 'setting':

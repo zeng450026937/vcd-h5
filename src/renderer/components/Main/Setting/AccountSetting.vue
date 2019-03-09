@@ -27,7 +27,7 @@
         </div>
         <div class="flex flex-grow"></div>
         <div class="ml-4">
-          <a-avatar :size="72" class="bg-indigo-dark">
+          <a-avatar :size="72">
             <span class="text-lg">{{userInfo.name.substr(-2, 2)}}</span>
           </a-avatar>
         </div>
