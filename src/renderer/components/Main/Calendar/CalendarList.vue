@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-if="!eventList || eventList.length <= 0">
-        <common-empty class="mt-20 text-grey" text="暂无日程信息"/>
+        <common-empty class="mt-20 text-grey" image="empty-calendar"/>
       </div>
     </div>
   </a-layout>

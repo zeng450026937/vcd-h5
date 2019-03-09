@@ -24,7 +24,7 @@
         <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
-            <span class="text-sm text-grey-dark">暂未添加常用联系人</span>
+            <common-empty image="empty-contact" text="暂未添加常用联系人"/>
             <a-button type="primary" ghost
                       class="mt-8"
                       @click="addGroup">添加分组</a-button>
@@ -84,6 +84,7 @@
 <script>
 /* eslint-disable no-loop-func */
 import AppHeader from '../MainHeader.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactInfo from './ContactInfo.vue';
 import FrequentContactDrawer from './FrequentContactDrawer.vue';
 import ContactList from './ContactList.vue';
@@ -95,6 +96,7 @@ export default {
     ContactInfo,
     FrequentContactDrawer,
     ContactList,
+    CommonEmpty,
   },
   data() {
     return {

@@ -36,6 +36,7 @@
             </div>
             <template v-if="!selectedContact.length">
               <common-empty class="mt-10 text-grey"
+                            image="empty-contact"
                             text="当前只有本人加入会议"/>
             </template>
             <contact-list v-else

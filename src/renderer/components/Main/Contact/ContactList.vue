@@ -148,7 +148,7 @@
         </template>
       </recycle-scroller>
       <div v-else>
-        <common-empty class="mt-20 text-grey" text="当前分组暂联系人"/>
+        <common-empty class="mt-20 text-grey" image="empty-contact" text="当前分组暂联系人"/>
       </div>
     </div>
   </a-layout>

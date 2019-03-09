@@ -60,7 +60,7 @@
             <a-divider class="my-0"/>
             <template v-if="!searchResult.length">
               <common-empty class="mt-10 text-grey"
-                            text="暂无搜索结果"/>
+                            image="empty-result"/>
             </template>
             <contact-list v-else
                           hide-popup
