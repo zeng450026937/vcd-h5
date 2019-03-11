@@ -72,7 +72,7 @@ export default {
     return {
       updateStatus,
       status              : updater.status,
-      isAutoUpdate        : false,
+      isAutoUpdate        : true,
       currentVersion      : window.autoUpdater.appVersion,
       lastSuccessfulCheck : null,
       progress            : null,
@@ -113,7 +113,7 @@ export default {
   },
   mounted() {
     if (!this.$storage.query('AUTO_UPDATE')) {
-      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: false });
+      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: true });
     }
     updater.autoInstallOnAppQuit = this.isAutoUpdate = this.$storage.query('AUTO_UPDATE').isAutoUpdate;
     updater.on('error', this.onError);
