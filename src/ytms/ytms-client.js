@@ -43,7 +43,7 @@ export class YTMSClient extends EventEmitter {
 
     await this.getEnterpriseInfo();
 
-    const status = await this.api.getClientStatus().catch(() => {});
+    const status = await this.api.getClientStatus();
 
     if (!status || !status.exist) {
       // reset with full info
@@ -63,7 +63,9 @@ export class YTMSClient extends EventEmitter {
     if (this.isStop) return;
 
     // ignore anyway, we will check isReady instead.
-    await this.check().catch(() => {});
+    await this.check().catch((e) => {
+      this.emit('failed', e);
+    });
 
     if (!this.isReady) {
       this.retryTimes++;

@@ -9,13 +9,22 @@
 /**
  * alarmCode
  * 
- * 000000 ~ 099999 critical
- * 100000 ~ 199999 error
- * 200000 ~ 299999 warn
+ * 480000 ~ 489999 critical
  */
 
-export function normalizeCode(code, length = 6) {
-  return (Array(length).join('0') + code).slice(-length);
+/**
+ * alarmType
+ * 
+ * 0 - process
+ * 1 - api
+ */
+
+// export function normalizeCode(code, length = 6) {
+//   return (Array(length).join('0') + code).slice(-length);
+// }
+
+export function normalizeCode(code) {
+  return `${480000 + code}`;
 }
 
 const ALARM_NAME = {};
@@ -42,15 +51,19 @@ const ALARM_LEVEL = {};
 
 ALARM_LEVEL[ALARM_LEVEL.CRITICAL = 0] = 'CRITICAL';
 ALARM_LEVEL[ALARM_LEVEL.ERROR = 1] = 'ERROR';
-ALARM_LEVEL[ALARM_LEVEL.WARN = 1] = 'WARN';
+ALARM_LEVEL[ALARM_LEVEL.WARN = 2] = 'WARN';
 
 export { ALARM_LEVEL };
 
 export function getAlarm(name, desc = '') {
   let alarmCode = '';
+
   let alarmName = '';
-  let alarmLevel = 0;
-  let alarmType = '';
+
+  let alarmLevel = ALARM_LEVEL.WARN;
+
+  let alarmType = ALARM_TYPE.PROCESS_ERROR;
+
   let alarmDesc = '';
   const alarmTime = Date.now();
 

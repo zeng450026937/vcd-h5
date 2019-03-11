@@ -10,13 +10,12 @@ const inspectResponse = true;
 if (inspectRequest) {
   inst.interceptors.request.use(
     (config) => {      
-      logger.debug(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`);
-      logger.debug(`YTMS API DATA: \n ${JSON.stringify(config.data || '')}`);
+      logger.debug(`YTMS API: ${config.method.toUpperCase()} ${config.url} ${config.baseURL}`, { data: config.data });
 
       return config;
     },
     (error) => {
-      logger.error('YTMS API request', error);
+      logger.error('YTMS API request error', error);
 
       return Promise.reject(error);
     }
@@ -29,14 +28,14 @@ if (inspectResponse) {
       
       logger.info(`YTMS API: ${status} ${config.method.toUpperCase()} ${config.url}`);
       
-      if (data.error) {
+      if (data.error || data.ret === -1) {
         logger.error('YTMS API respone with error', data.error);
       }
 
       return response;
     },
     (error) => {
-      logger.error('YTMS API respone', error);
+      logger.error('YTMS API respone error', error);
 
       return Promise.reject(error);
     }

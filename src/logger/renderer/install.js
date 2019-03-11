@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron';
-import { formatLogMessage } from '../format-log-message';
 
 const g = global;
 
@@ -8,29 +7,25 @@ const g = global;
  * written to all log transports. See initializeWinston in logger.ts for more
  * details about what transports we set up.
  */
-function log(level, message, error) {
+function log(level, ...args) {
   ipcRenderer.send(
     'log',
     level,
-    formatLogMessage(`[${process.type}] ${message}`, error)
+    ...args,
   );
 }
 
 g.logger = {
-  error(message, error) {
-    log('error', message, error);
-    console.error(formatLogMessage(message, error));
+  error(...args) {
+    log('error', ...args);
   },
-  warn(message, error) {
-    log('warn', message, error);
-    console.warn(formatLogMessage(message, error));
+  warn(...args) {
+    log('warn', ...args);
   },
-  info(message, error) {
-    log('info', message, error);
-    console.info(formatLogMessage(message, error));
+  info(...args) {
+    log('info', ...args);
   },
-  debug(message, error) {
-    log('debug', message, error);
-    console.debug(formatLogMessage(message, error));
+  debug(...args) {
+    log('debug', ...args);
   },
 };

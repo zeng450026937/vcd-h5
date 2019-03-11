@@ -1,26 +1,23 @@
-import Path from 'path';
 import winston from 'winston';
-import { ensureDir } from 'fs-extra';
-import { app } from 'electron';
+import { ensureDirSync } from 'fs-extra';
 import { getLogDirectoryPath } from '../get-log-path';
 
 require('winston-daily-rotate-file');
 
 const MaxLogFiles = 14;
 
-function getLogFilePath(directory) {
-  // const channel = 'alpha';
-  const fileName = 'vc-desktop.%DATE%.log';
+export const loggers = winston.loggers;
 
-  return Path.join(directory, fileName);
-}
+export function initializeWinston() {
+  const logDirectoryPath = getLogDirectoryPath();
 
+  ensureDirSync(logDirectoryPath);
 
-function initializeWinston(path) {
-  const { combine, timestamp, colorize, prettyPrint, simple, splat } = winston.format;
+  const { combine, timestamp, colorize, prettyPrint, simple, splat, logstash, label } = winston.format;
 
   const fileLogger = new winston.transports.DailyRotateFile({
-    filename         : path,
+    dirname          : logDirectoryPath,
+    filename         : 'vc-desktop.%DATE%.log',
     handleExceptions : false,
     json             : false,
     datePattern      : 'YYYY-MM-DD',
@@ -33,58 +30,36 @@ function initializeWinston(path) {
     level : process.env.NODE_ENV === 'development' ? 'debug' : 'error',
   });
 
+
+  winston.loggers.add('browser', {
+    format : combine(
+      label({ label: 'browser' }),
+      timestamp(),
+      splat(),
+      prettyPrint(),
+    ),
+    transports : [ consoleLogger, fileLogger ],
+  });
+
+  winston.loggers.add('renderer', {
+    format : combine(
+      label({ label: 'renderer' }),
+      timestamp(),
+      splat(),
+      prettyPrint(),
+    ),
+    transports : [ consoleLogger, fileLogger ],
+  });
+
   winston.configure({
     format : combine(
+      label({ label: 'main' }),
       timestamp(),
-      simple(),
+      splat(),
+      prettyPrint(),
     ),
     transports : [ consoleLogger, fileLogger ],
   });
 
   return winston.log;
-}
-let loggerPromise;
-
-function getLogger() {
-  if (loggerPromise) {
-    return loggerPromise;
-  }
-
-  loggerPromise = new Promise((resolve, reject) => {
-    const logDirectory = getLogDirectoryPath();
-
-    ensureDir(logDirectory)
-      .then(() => {
-        try {
-          const logger = initializeWinston(getLogFilePath(logDirectory));
-
-          resolve(logger);
-        }
-        catch (err) {
-          reject(err);
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-
-  return loggerPromise;
-}
-
-export async function log(level, message) {
-  try {
-    const logger = await getLogger();
-
-    logger(level, message);
-  }
-  catch (error) {
-    /**
-     * Welp. I guess we have to ignore this for now, we
-     * don't have any good mechanisms for reporting this.
-     * In the future we can discuss whether we should
-     * IPC to the renderer or dump it somewhere else
-     * but for now logging isn't a critical thing.
-     */
-  }
 }

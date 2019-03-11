@@ -1,4 +1,5 @@
 import { Notification } from 'electron';
+import axios from 'axios';
 import { MESSAGE_TYPE } from './push-service';
 import { JobManager } from './job';
 import { NetLogJob } from './netlog-job';
@@ -16,7 +17,7 @@ export function showNotification(title, body) {
 
 export function handlePushMessage(pushService, hook) {
   pushService.on('notify', (type, body) => {
-    logger.info('PUSH SERVICE: ', type, body);
+    logger.info('receive push message: %s', type, body);
     
     showNotification(MESSAGE_TYPE[type], body);
 
@@ -38,6 +39,7 @@ export function handlePushMessage(pushService, hook) {
 
         jobManager.add(job);
         break;
+
       case MESSAGE_TYPE.STOP_NETLOG:
         ({ sessionId } = body);
 
@@ -47,6 +49,7 @@ export function handlePushMessage(pushService, hook) {
           job.stop();
         }
         break;
+
       case MESSAGE_TYPE.GET_LOG:
         ({ sessionId } = body);
 
@@ -58,6 +61,10 @@ export function handlePushMessage(pushService, hook) {
 
         jobManager.add(job);
         break;
+
+      case MESSAGE_TYPE.PUT_CONFIG:
+        break;
+
       default:
         break;
     }

@@ -3,7 +3,7 @@ import './ytms/install';
 import './main/app-updater';
 import './ipc/install';
 
-import { app, ipcMain } from 'electron';
+import { app } from 'electron';
 import { AppWindow } from './main/app-window';
 import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
@@ -13,7 +13,6 @@ import {
   reportRendererCrash,
   reportUncaughtException,
 } from './main/report-crash';
-import { log as writeLog } from './logger/winston';
 
 const launchTime = now();
 
@@ -42,6 +41,8 @@ function handleUncaughtException(error) {
 process.on('uncaughtException', (error) => {
   handleUncaughtException(error);
 });
+
+logger.info('-- App start-up --');
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 
@@ -115,8 +116,6 @@ function createWindow() {
   window.onCrashed((killed) => {
     if (killed) {
       logger.info('renderer-process is killed by user');
-
-      return;
     }
     reportRendererCrash();
   });
@@ -150,21 +149,15 @@ if (!handlingSquirrelEvent) {
       
       createWindow();
 
-      ytms.yealink.connect();
-
-      ipcMain.on(
-        'log',
-        (event, level, message) => {
-          writeLog(level, message);
-        }
-      );
+      ytms.yealink.connect()
+        .then((service) => {
+          logger.info(`yealink ytms connected, url: ${service.url}`);
+        });
     });
     
     app.on('gpu-process-crashed', (event, killed) => { 
       if (killed) {
         logger.info('gpu-process is killed by user');
-
-        return;
       }
       reportGpuCrash();
     });

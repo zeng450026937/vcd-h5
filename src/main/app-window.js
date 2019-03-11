@@ -167,7 +167,12 @@ export class AppWindow extends BaseWindow {
 
   /** Send the app launch timing stats to the renderer. */
   sendLaunchTimingStats(stats) {
-    logger.info(JSON.stringify(stats));
+    logger.info(
+      'loadTime: %s, mainReadyTime: %s, rendererReadyTime: %s',
+      stats.loadTime,
+      stats.mainReadyTime,
+      stats.rendererReadyTime,
+    );
     this.window.webContents.send('launch-timing-stats', { stats });
   }
 }
