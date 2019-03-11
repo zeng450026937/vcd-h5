@@ -47,7 +47,7 @@
                                  :key="index"
                                  @click="addToFavorite(group, item)">{{group.name}}</a-menu-item>
                     </template>
-                    <a-menu-item class="cursor-not-allowed bg-disabled text-black9" v-else>暂无分组</a-menu-item>
+                    <a-menu-item class="cursor-not-allowed text-black9" v-else>暂无分组</a-menu-item>
                   </a-sub-menu>
                 </a-menu>
               </a-dropdown>
@@ -57,7 +57,7 @@
         <div class="flex flex-grow bg-white justify-center">
           <contact-info :user="selectedContact"
                         :group="groupInfo"
-                        @toGroup="toGroup" style="width: 368px"/>
+                        @toGroup="toGroup"/>
         </div>
 
       </div>

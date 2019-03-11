@@ -49,7 +49,7 @@ export default {
       }
       else {
         if (val === 'registered') { // 登录成功状态
-          await wait(600);
+          await wait(1000);
           if (this.loginStatus === 'registered') { // 防止中途退出
             router.push(this.sidebarStatus.mainRoute || MAIN.MEETING_INSTANCE);
           }

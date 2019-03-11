@@ -58,7 +58,7 @@
                                  :key="index"
                                  @click="moveContact(group, item)">{{group.name}}</a-menu-item>
                   </template>
-                  <a-menu-item class="cursor-not-allowed bg-disabled text-black9" v-else>暂无其他分组</a-menu-item>
+                  <a-menu-item class="cursor-not-allowed text-black9" v-else>暂无其他分组</a-menu-item>
                 </a-sub-menu>
 
                 <a-menu-item @click="removeContact(item)">
@@ -71,8 +71,7 @@
         <div class="flex flex-grow bg-white justify-center">
           <contact-info :user="currentUser"
                         :group="groupInfo"
-                        @toGroup="toGroup"
-                        style="width: 368px"/>
+                        @toGroup="toGroup"/>
         </div>
       </div>
       <frequent-contact-drawer ref="contactDrawer"

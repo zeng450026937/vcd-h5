@@ -17,7 +17,16 @@
       <div class="flex h-full m-4 bg-white border">
         <div class="h-full border-r overflow-y-auto px-1 py-1"
              style="width: 280px">
+          <div v-if="gapLocalContact.length <= 0"
+               class="flex flex-col h-full justify-center items-center">
+            <common-empty image="empty-contact" text="暂未添加本地联系人"/>
+            <a-button type="primary" ghost
+                      class="mt-8"
+                      @click="addGroup">添加联系人</a-button>
+          </div>
+
           <contact-list
+              v-else
               enable-keyboard
               :contact-list="gapLocalContact"
               @clickItem="clickItem">
@@ -42,8 +51,7 @@
           </contact-list>
         </div>
         <div class="flex flex-grow bg-white justify-center">
-          <contact-info :user="currentUser" :group="groupInfo"
-                        style="width: 368px"/>
+          <contact-info :user="currentUser" :group="groupInfo"/>
         </div>
       </div>
       <local-contact-drawer ref="localContactDrawer" :type="drawerType"/>
@@ -53,6 +61,7 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactInfo from './ContactInfo.vue';
 import ContactList from './ContactList.vue';
 import LocalContactDrawer from './LocalContactDrawer.vue';
@@ -62,6 +71,7 @@ export default {
   components : {
     AppHeader,
     ContactInfo,
+    CommonEmpty,
     ContactList,
     LocalContactDrawer,
   },
