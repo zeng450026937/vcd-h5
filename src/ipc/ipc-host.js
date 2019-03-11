@@ -40,6 +40,8 @@ export const ipcHost = {
   async startYTMSService(url) {
     const service = await ytms.enterprise.connect(url);
 
+    logger.info(`enterprise ytms connected, url: ${service.url}`);
+
     // update client info
     ytms.clientInfo.enterprise = service.enterpriseInfo.enterprise;
     
