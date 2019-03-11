@@ -64,49 +64,41 @@ export function getAlarm(name, desc = '') {
 
   let alarmType = ALARM_TYPE.PROCESS_ERROR;
 
-  let alarmDesc = '';
+  const alarmDesc = desc || ALARM_NAME[name];
   const alarmTime = Date.now();
 
   switch (name) {
     case ALARM_NAME.MAIN_PROCESS_CRASAH:
       alarmLevel = ALARM_LEVEL.CRITICAL;
       alarmType = ALARM_TYPE.PROCESS_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.GPU_PROCESS_CRASAH:
       alarmLevel = ALARM_LEVEL.CRITICAL;
       alarmType = ALARM_TYPE.PROCESS_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.RENDER_PROCESS_CRASAH:
       alarmLevel = ALARM_LEVEL.CRITICAL;
       alarmType = ALARM_TYPE.PROCESS_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.CONFERENCE_CONNECT_ERROR:
       alarmLevel = ALARM_LEVEL.ERROR;
       alarmType = ALARM_TYPE.API_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.CONFERENCE_ABRUPT_ERROR:
       alarmLevel = ALARM_LEVEL.ERROR;
       alarmType = ALARM_TYPE.API_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.CONFERENCE_CONTROL_API_ERROR:
       alarmLevel = ALARM_LEVEL.ERROR;
       alarmType = ALARM_TYPE.API_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.CONTACT_API_ERROR:
       alarmLevel = ALARM_LEVEL.ERROR;
       alarmType = ALARM_TYPE.API_ERROR;
-      alarmDesc = desc;
       break;
     case ALARM_NAME.SCHEDULE_API_ERROR:
       alarmLevel = ALARM_LEVEL.ERROR;
       alarmType = ALARM_TYPE.API_ERROR;
-      alarmDesc = desc;
       break;
     default:
       break;

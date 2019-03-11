@@ -22,12 +22,20 @@ export function initializeWinston() {
     json             : false,
     datePattern      : 'YYYY-MM-DD',
     prepend          : true,
-    level            : 'info',
     maxFiles         : MaxLogFiles,
+    level            : 'info',
+    format           : prettyPrint(),
   });
 
   const consoleLogger = new winston.transports.Console({
-    level : process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+    level  : process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+    format : prettyPrint(),
+  });
+
+  const httpLogger = new winston.transports.Http({
+    host  : process.env.VUE_APP_ES_HOST,
+    port  : process.env.VUE_APP_LOGSTASH_PORT,
+    level : 'info',
   });
 
 
@@ -36,9 +44,8 @@ export function initializeWinston() {
       label({ label: 'browser' }),
       timestamp(),
       splat(),
-      prettyPrint(),
     ),
-    transports : [ consoleLogger, fileLogger ],
+    transports : [ consoleLogger, fileLogger, httpLogger ],
   });
 
   winston.loggers.add('renderer', {
@@ -46,9 +53,8 @@ export function initializeWinston() {
       label({ label: 'renderer' }),
       timestamp(),
       splat(),
-      prettyPrint(),
     ),
-    transports : [ consoleLogger, fileLogger ],
+    transports : [ consoleLogger, fileLogger, httpLogger ],
   });
 
   winston.configure({
@@ -56,9 +62,8 @@ export function initializeWinston() {
       label({ label: 'main' }),
       timestamp(),
       splat(),
-      prettyPrint(),
     ),
-    transports : [ consoleLogger, fileLogger ],
+    transports : [ consoleLogger, fileLogger, httpLogger ],
   });
 
   return winston.log;
