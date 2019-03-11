@@ -17,13 +17,13 @@
         </div>
       </div>
 
-      <div class="flex m-4 h-full bg-white">
+      <div class="flex m-4 bg-white auto-scroll-y">
         <a-table
+            :pagination="false"
             :rowKey="record => record.callId"
             :columns="recordColumns"
             :dataSource="callRecord"
-            align="center"
-            class="bg-white h-full w-full"
+            class="bg-white w-full"
         >
           <div class="flex items-center" slot="callTitle" slot-scope="text, record">
             <div class="cursor-pointer mr-1">
@@ -67,7 +67,7 @@
 
             <a-iconfont type='icon-right'
                         class="text-indigo text-base cursor-pointer hover:text-blue"
-                        @click="clickMore">
+                        @click="clickMore(record)">
             </a-iconfont>
 
           </div>
@@ -78,40 +78,11 @@
 </template>
 
 <script>
-import { flow as pipe } from 'lodash/fp';
-import { callRecord, createRecord } from '../../../database/call-record';
+import { CallRecord, genStoreName, createRecord } from '../../../database/call-record';
+import { genDurationTime, genStartTime } from '../../../utils/date';
+import { callIcon, callType } from '../../../utils/filters';
 import AppHeader from '../MainHeader.vue';
 import { MAIN } from '../../../router/constants';
-
-function genDouble(num) {
-  return num < 10 ? `0${num}` : `${num}`;
-}
-
-function genDurationTime(start, end) {
-  start = new Date(start).valueOf();
-  end = new Date(end).valueOf();
-  const diff = end - start;
-  const format = pipe(Math.floor, Math.abs, genDouble);
-  const seconds = format((Math.abs(diff) / 1000) % 60);
-  const minutes = format((Math.abs(diff) / 1000 / 60) % 60);
-  const hours = format((Math.abs(diff) / (1000 * 60 * 60)));
-
-  if (!hours) return `${minutes}:${seconds}`;
-
-  return `${hours}:${minutes}:${seconds}`;
-}
-
-function isToday(time) {
-  return new Date().valueOf() - time.valueOf() < 1000 * 60 * 60 * 24;
-}
-
-function genStartTime(time) {
-  time = new Date(time);
-  const hours = genDouble(time.getHours());
-  const minutes = genDouble(time.getMinutes());
-
-  return isToday(time) ? `今天${hours}:${minutes}` : `${hours}:${minutes}`;
-}
 
 const recordColumns = [
   {
@@ -149,51 +120,42 @@ export default {
   data() {
     return {
       recordColumns,
-      callRecord : [],
+      callRecord  : [],
+      tableHeight : 500,
     };
   },
   methods : {
-    clickMore() {
-      this.$router.push(MAIN.CALL_RECORD_INFO);
+    clickMore(record) {
+      this.$router.push({ path: MAIN.CALL_RECORD_INFO, query: record });
+    },
+    genStoreName() {
+      const accountInfo = this.$storage.query('CURRENT_ACCOUNT');
+
+      return `callRecord-${accountInfo.account}-${accountInfo.server}`;
     },
   },
   filters : {
-    callType(record) {
-      if (!record.connected) return '未接通';
-      if (record.type === 'incoming') return '呼入';
-      if (record.type === 'outcall') return '呼出';
-    },
-    callIcon(record) {
-      const iconMap = {
-        audio : {
-          base     : 'icon-yuyin',
-          outcall  : 'icon-yuyinhuchu',
-          incoming : 'icon-yuyinhuru',
-        },
-        video : {
-          base     : 'icon-shipin',
-          outcall  : 'icon-shipinhuchu',
-          incoming : 'icon-shipinhuru' },
-      };
-      const media = iconMap[record.media];
-
-      if (!record.connected) return media.base;
-
-      return media[record.type];
-    },
+    callType,
+    callIcon,
     genStartTime,
     duration({ startTime, endTime }) {
       return genDurationTime(startTime, endTime);
     },
   },
-  async mounted() {
-    this.callRecord = await callRecord.getAllData('callRecord');
+  async beforeCreate() {
+    const storeName = genStoreName();
+    const callRecordDb = CallRecord.Create();
 
+    this.callRecord = await callRecordDb.getRecordByRecent(storeName, 100);
+
+    if (this.callRecord.length > 100) return;
     const newRecord = createRecord();
 
-    if (this.callRecord.length > 6) return;
-
-    await callRecord.add('callRecord', newRecord);
+    await callRecordDb.add(storeName, newRecord);
+  },
+  mounted() {
+  },
+  beforeDestroy() {
   },
 };
 </script>
@@ -230,5 +192,8 @@ export default {
         }
       }
     }
+  }
+  .auto-scroll-y{
+    overflow-y: auto !important;
   }
 </style>

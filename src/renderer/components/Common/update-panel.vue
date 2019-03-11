@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full items-center">
-    <div class="mt-10">
-      <a-avatar class="cursor-pointer rounded-lger hover:shadow bg-green-dark"
+    <div class="mt-4">
+      <a-avatar class="cursor-pointer rounded-lger hover:shadow yealink-logo-color"
                 shape="square"
                 :size="128">
         <span class="text-xl">Yealink</span>
@@ -131,5 +131,7 @@ export default {
 </script>
 
 <style>
-
+.yealink-logo-color {
+  background-color:#06B676
+}
 </style>

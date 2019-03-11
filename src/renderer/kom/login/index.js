@@ -66,6 +66,7 @@ export default {
           loginData.pin = pin;
         }
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
+        storage.update('CURRENT_ACCOUNT', loginData);
         this.storeConfig(); // 登录成功之后保存登录前的状态
       }).then((err) => console.warn(err));
     },
