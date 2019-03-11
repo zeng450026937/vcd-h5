@@ -53,6 +53,7 @@ const colors = {
   black7 : '#777777',
   black9 : '#999999',
 
+
   'grey-darkest'  : '#3d4852',
   'grey-darker'   : '#606f7b',
   'grey-dark'     : '#8795a1',
@@ -70,22 +71,6 @@ const colors = {
   'red-lighter'  : '#f9acaa',
   'red-lightest' : '#fcebea',
 
-  'orange-darkest'  : '#462a16',
-  'orange-darker'   : '#613b1f',
-  'orange-dark'     : '#de751f',
-  orange            : '#F3932F',
-  'orange-light'    : '#faad63',
-  'orange-lighter'  : '#fcd9b6',
-  'orange-lightest' : '#fff5eb',
-
-  'yellow-darkest'  : '#453411',
-  'yellow-darker'   : '#684f1d',
-  'yellow-dark'     : '#f2d024',
-  yellow            : '#ffed4a',
-  'yellow-light'    : '#fff382',
-  'yellow-lighter'  : '#fff9c2',
-  'yellow-lightest' : '#fcfbeb',
-
   'green-darkest'  : '#0f2f21',
   'green-darker'   : '#1a4731',
   'green-dark'     : '#06B676',
@@ -94,16 +79,7 @@ const colors = {
   'green-lighter'  : '#a2f5bf',
   'green-lightest' : '#e3fcec',
 
-  'teal-darkest'  : '#0d3331',
-  'teal-darker'   : '#20504f',
-  'teal-dark'     : '#38a89d',
-  teal            : '#4dc0b5',
-  'teal-light'    : '#64d5ca',
-  'teal-lighter'  : '#a0f0ed',
-  'teal-lightest' : '#e8fffe',
-
-
-  'indigo-darkest'  : '#191e38',
+  'indigo-darkest'  : '#1F2436',
   'indigo-darker'   : '#252B41',
   'card-title'      : '#3F4967',
   'indigo-dark'     : '#4A577F',
@@ -111,7 +87,6 @@ const colors = {
   'indigo-light'    : '#7886d7',
   'indigo-lighter'  : '#93A3DD',
   'indigo-lightest' : '#e6e8ff',
-
 
 };
 
@@ -180,42 +155,7 @@ module.exports = {
   |
   */
 
-  fonts : {
-    sans : [
-      'system-ui',
-      'BlinkMacSystemFont',
-      '-apple-system',
-      'Segoe UI',
-      'Roboto',
-      'Oxygen',
-      'Ubuntu',
-      'Cantarell',
-      'Fira Sans',
-      'Droid Sans',
-      'Helvetica Neue',
-      'sans-serif',
-    ],
-    serif : [
-      'Constantia',
-      'Lucida Bright',
-      'Lucidabright',
-      'Lucida Serif',
-      'Lucida',
-      'DejaVu Serif',
-      'Bitstream Vera Serif',
-      'Liberation Serif',
-      'Georgia',
-      'serif',
-    ],
-    mono : [
-      'Menlo',
-      'Monaco',
-      'Consolas',
-      'Liberation Mono',
-      'Courier New',
-      'monospace',
-    ],
-  },
+  fonts : {},
 
 
   /*
@@ -317,11 +257,7 @@ module.exports = {
   |
   */
 
-  tracking : {
-    tight  : '-0.05em',
-    normal : '0',
-    wide   : '0.05em',
-  },
+  tracking : {},
 
 
   /*
@@ -355,7 +291,37 @@ module.exports = {
   |
   */
 
-  backgroundColors : colors,
+  backgroundColors : {
+    transparent : 'transparent',
+    white       : '#FFFFFF',
+
+    'main-theme'  : '#4A5FC4',
+    avatar        : '#55638C',
+    card          : '#252B41',
+    'meeting-top' : '#252B41',
+    sidebar       : '#1F2436',
+    media         : '#1D212F',
+
+    'list-select'    : '#D6DAEB',
+    'list-hover'     : '#E1E5F2',
+    divider          : '#E1E5F2',
+    'card-border'    : '#E1E5F2',
+    'under-painting' : '#F0F2F8',
+
+    host    : '#E79743',
+    visitor : '#BBC3E6',
+
+    success : '#FAAD14',
+    error   : '#FAAD14',
+    warning : '#FAAD14',
+
+    'chat-others' : '#F7F8FC',
+    'chat-mine'   : '#D6DAEB',
+
+    'red-light' : '#FF5050',
+    disabled    : '#CCCCCC',
+    active      : '#4A5FC4',
+  },
 
 
   /*
@@ -372,11 +338,7 @@ module.exports = {
   |
   */
 
-  backgroundSize : {
-    auto    : 'auto',
-    cover   : 'cover',
-    contain : 'contain',
-  },
+  backgroundSize : {},
 
 
   /*
@@ -611,17 +573,7 @@ module.exports = {
   */
 
   maxWidth : {
-    '1/2' : '50%',
-    '1/3' : '33.33333%',
-    '2/3' : '66.66667%',
-    '1/4' : '25%',
-    '3/4' : '75%',
-    '1/5' : '20%',
-    '2/5' : '40%',
-    '3/5' : '60%',
     '4/5' : '80%',
-    '1/6' : '16.66667%',
-    '5/6' : '83.33333%',
     full  : '100%',
   },
 
@@ -775,11 +727,6 @@ module.exports = {
 
   shadows : {
     default : '0 2px 4px 0 rgba(0,0,0,0.10)',
-    md      : '0px 1px 1px 0 rgba(0,0,0,0.10), -1px -1px 4px 0 rgba(0,0,0,0.10)',
-    lg      : '0 15px 30px 0 rgba(0,0,0,0.11), 0 5px 15px 0 rgba(0,0,0,0.08)',
-    inner   : 'inset 0 2px 4px 0 rgba(0,0,0,0.06)',
-    outline : '0 0 0 1px rgba(52,144,220,0.5)',
-    none    : 'none',
   },
 
 

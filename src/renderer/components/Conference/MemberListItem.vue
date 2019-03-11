@@ -4,7 +4,7 @@
          :class="{'member-selected': isSelected}"
          @click="selectMember">
       <div class="relative">
-        <a-avatar class="bg-indigo">
+        <a-avatar>
           {{item.displayText.substr(-2, 2)}}
         </a-avatar>
         <template v-if="item.isSharing()">
@@ -99,7 +99,7 @@
       </div>
     </div>
     <div v-if="isShowDeviceInfo"
-         class="flex flex-col w-full bg-grey-lightest"
+         class="flex flex-col w-full bg-under-painting"
          style="height: 180px;">
       <div>
         <div class="flex h-8 items-center border-b px-4 text-xs leading-tight">

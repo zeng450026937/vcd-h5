@@ -3,7 +3,7 @@
     <div class="flex flex-col p-5 h-full">
       <div class="flex flex-grow mt-5">
         <div class="flex h-12">
-          <a-avatar :size="48" class="bg-indigo-dark target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
+          <a-avatar :size="48" class="target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
           <div class="flex flex-col ml-5">
             <span class="text-base leading-none font-bold">{{this.displayName}}</span>
             <span class="text-base leading-none mt-4">邀请您参加语言通话</span>

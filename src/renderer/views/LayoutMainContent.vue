@@ -1,7 +1,7 @@
 <template>
   <a-layout id="main-contact" class="h-full">
     <div class="flex h-full">
-      <div v-if="!hideNav" class="flex flex-col h-full bg-grey-lighter">
+      <div v-if="!hideNav" class="flex flex-col h-full bg-under-painting">
         <component style="width: 240px;" :is="currentNav"/>
         <main-nav-mini-video v-if="showMiniVideo" style="width: 240px;"/>
         <main-nav-mini-call v-if="showMiniCall" style="width: 240px;"/>

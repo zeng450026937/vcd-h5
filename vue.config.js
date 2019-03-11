@@ -7,13 +7,13 @@ module.exports = {
   pages : {
     index       : 'src/renderer/index.js',
     shareScreen : {
-      entry    : 'src/window/shareScreen.js',
+      entry    : 'src/renderer/window/shareScreen.js',
       template : 'public/shareScreen.html',
       title    : 'shareScreen',
       filename : 'shareScreen.html',
     },
     ringing : {
-      entry    : 'src/window/ringing.js',
+      entry    : 'src/renderer/window/ringing.js',
       template : 'public/ringing.html',
       title    : 'ringing',
       filename : 'ringing.html',

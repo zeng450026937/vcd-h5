@@ -35,11 +35,11 @@
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
-          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-grey-light">
+          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">切换为音频通话</span>
           </div>
-          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-grey-light"
+          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                @click="openPlateModal">
             <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">拨号盘</span>

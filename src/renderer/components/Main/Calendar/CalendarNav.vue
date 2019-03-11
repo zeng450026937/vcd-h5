@@ -67,12 +67,6 @@ export default {
       },
     },
   },
-  mounted() {
-    this.$nextTick(() => {
-      // 初始化时候点击 today
-      this.$refs.calendar.setDate(this.selectedDate);
-    });
-  },
   methods : {
     onToday() {
       this.$refs.calendar.onToday();
@@ -105,6 +99,14 @@ export default {
     },
   },
   watch : {
+    eventList : {
+      async handler(val) {
+        await this.$nextTick();
+        await this.$refs.calendar.$nextTick();
+        this.$refs.calendar.setDate(this.selectedDate);
+      },
+      immediate : true,
+    },
   },
 };
 </script>

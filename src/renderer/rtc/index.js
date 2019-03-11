@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import ApolloRTC from 'apollortc';
+import ApolloRTC from '../../../lib/apollo-rtc/src/index';
 
 Vue.use(ApolloRTC);
 

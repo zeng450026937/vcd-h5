@@ -5,10 +5,8 @@ export const MODULE_NAME = {
   SETTING  : 'setting',
 };
 export const LOGIN = {
-  LOGIN_CONTENT   : '/login/content',
-  CLOUD_LOGIN     : '/login/content/cloudLogin',
-  MEETING_CONTENT : '/login/content/meetingContent',
-  YMS_LOGIN       : '/login/content/ymsLogin',
+  LOGIN_CONTENT   : '/login/loginContent',
+  MEETING_CONTENT : '/login/meetingContent',
 };
 
 export const MAIN = {

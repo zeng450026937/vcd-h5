@@ -1,15 +1,20 @@
 <template>
   <a-layout id="layout-login" class="h-full bg-transparent">
     <div class="flex flex-col h-full">
-      <router-view name="header"/>
+      <login-header/>
       <router-view/>
     </div>
   </a-layout>
 </template>
 
 <script>
+import LoginHeader from '../components/Login/LoginHeader.vue';
+
 export default {
-  name : 'LayoutLogin',
+  name       : 'LayoutLogin',
+  components : {
+    LoginHeader,
+  },
 };
 </script>
 

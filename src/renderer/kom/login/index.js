@@ -6,12 +6,12 @@ import { LOGIN_STORAGE } from '../../storage/constants';
 export default {
   data() {
     const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE) || 'cloud';
-    const rememberPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD);
+    const rmbPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD);
     const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN);
 
     return {
       serverType,
-      rememberPassword,
+      rmbPassword,
       autoLogin,
       autoLoginDisabled : false,
       loginType         : 'login',
@@ -54,8 +54,7 @@ export default {
         weight : s.weight || s.priority,
       }));
       rtc.account.protocol = protocol;
-
-      return rtc.account.signin().then(() => {
+      rtc.account.signin().then(() => {
         const loginData = Object.assign({}, { account, server }, {
           proxy         : this.proxy,
           proxyPort     : this.proxyPort,
@@ -63,16 +62,16 @@ export default {
           type          : this.serverType,
         });
 
-        if (this.rememberPassword) {
+        if (this.rmbPassword) {
           loginData.pin = pin;
         }
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
         this.storeConfig(); // 登录成功之后保存登录前的状态
-      });
+      }).then((err) => console.warn(err));
     },
     storeConfig() {
       storage.insert(LOGIN_STORAGE.SERVER_TYPE, this.serverType);
-      storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, this.rememberPassword);
+      storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, this.rmbPassword);
       storage.insert(LOGIN_STORAGE.AUTO_LOGIN, this.autoLogin);
     },
   },

@@ -4,14 +4,17 @@ import storage from '../../storage';
 export default {
   data() {
     return {
-      localContacts : [],
+      localContactGroup : { name: '本地联系人', isUser: true, items: [] },
     };
   },
   methods : {
     async initData(ctx, next) {
       await next();
-      this.localContacts = [];
-      this.localContacts.push(...(ctx.payload.result || storage.query(storage.LOCAL_CONTACT)));
+      this.localContactGroup.items = [];
+      const localContact = ctx.payload.result || storage.query(storage.LOCAL_CONTACT);
+
+      localContact.forEach((contact) => contact.parent = this.localContactGroup);
+      this.localContactGroup.items = localContact;
     },
     async insertData(ctx, next) {
       const { payload } = ctx;

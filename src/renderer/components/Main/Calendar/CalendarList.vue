@@ -6,7 +6,7 @@
                     cursor-pointer rounded border hover:border-indigo"
              :class="{
                'border-indigo': event.scheduleId === currentEvent.scheduleId,
-               'bg-grey-lighter': event.status.isEnded,
+               'bg-disabled': event.status.isEnded,
                'bg-white': !event.status.isEnded,
                'border-l-4 border-l-indigo': event.status.isRunning,
              }"
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-if="!eventList || eventList.length <= 0">
-        <common-empty class="mt-20 text-grey" text="暂无日程信息"/>
+        <common-empty class="mt-20 text-grey" image="empty-calendar"/>
       </div>
     </div>
   </a-layout>

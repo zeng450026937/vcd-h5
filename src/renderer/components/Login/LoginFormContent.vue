@@ -2,7 +2,7 @@
   <div id="login-form-content"
        class="flex flex-col bg-white shadow"
        style="width: 480px;height: 538px;">
-    <div class="flex items-center justify-center w-full bg-indigo" style="height: 160px;">
+    <div class="flex items-center justify-center w-full bg-main-theme" style="height: 160px;">
       <span class="text-4xl font-semibold text-white">Yealink</span>
     </div>
     <div class="flex flex-col pt-10 px-24">
@@ -13,16 +13,17 @@
               class="certain-category-search w-full overflow-x-hidden"
               :dropdownMatchSelectWidth="false"
               optionLabelProp="value"
-              @select="onAccountSelect"
-              @search="handleSearch"
+              @select="selectAccount"
+              @search="searchAccount"
           >
-            <template v-if="searchResult.length > 0" slot="dataSource">
+            <template v-if="searchedAccounts.length > 0" slot="dataSource">
               <a-select-opt-group>
                 <div class="flex justify-between px-3 border-b" slot="label">
                   <span>历史记录</span>
                   <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
                 </div>
-                <a-select-option v-for="item in searchResult" :key="item.account" :value="item.account" class="group">
+                <a-select-option v-for="item in searchedAccounts"
+                                 :key="item.account" :value="item.account" class="group">
                   <div class="flex items-center px-2 py-2">
                     <span class="certain-search-item-count">{{item.account}}</span>
                     <div class="flex flex-grow"></div>
@@ -57,14 +58,14 @@
             </a-tooltip>
             <a-iconfont :title="showPassword ? '隐藏密码':'查看密码'"
                         slot="suffix"
-                        :type="showPassword ? 'icon-mimayincang' : 'icon-mimaxianshi'"
+                        :type="showPassword ? 'icon-mimaxianshi' : 'icon-mimayincang'"
                         class="text-base text-grey cursor-pointer"
                         @click="showPassword = !showPassword"/>
           </a-input>
         </a-form-item>
         <a-form-item
             class="mb-2">
-          <!--:read-only="type === 'cloud'"-->
+          <!--:read-only="serverType === 'cloud'"-->
           <a-input v-decorator="['server']"
                    placeholder='服务器地址'>
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
@@ -72,8 +73,8 @@
         </a-form-item>
         <div class="flex justify-between">
           <a-checkbox class="text-xs text-black6"
-                      :checked="rememberPassword"
-                      @change="rememberPassword = !rememberPassword"
+                      :checked="rmbPassword"
+                      @change="rmbPassword = !rmbPassword"
           >记住密码
           </a-checkbox>
           <a-checkbox class="text-xs text-black6"
@@ -85,7 +86,7 @@
         <a-form-item class="mt-9 mb-0">
           <div class="flex">
             <div class="w-1/2 mr-2">
-              <a-button @click="joinMeeting" block>加入会议</a-button>
+              <a-button @click="toMeeting" block>加入会议</a-button>
             </div>
             <div class="w-1/2 ml-2">
               <a-button type="primary" htmlType="submit" block>登录</a-button>
@@ -94,17 +95,17 @@
         </a-form-item>
       </a-form>
       <div class="mt-5 text-xs text-center text-black6">
-        <template v-if="type === 'cloud'">
+        <template v-if="serverType === 'cloud'">
           <span class="cursor-pointer leading-tight"
                 @click="toForget">忘记密码</span>
-          <a-divider type="vertical" class="mx-5 bg-grey"/>
+          <a-divider type="vertical" class="mx-5 bg-divider"/>
           <span class="cursor-pointer leading-tight"
                 @click="toRegister">注册账号</span>
-          <a-divider type="vertical" class="mx-5 bg-grey"/>
+          <a-divider type="vertical" class="mx-5 bg-divider"/>
         </template>
         <a-badge v-if="hasNewVersion">
               <span slot="count"
-                    class="text-white bg-indigo rounded-lg h-4 leading-none"
+                    class="text-white bg-active rounded-lg h-4 leading-none"
                     style="transform: translate(100%, -50%);font-size: 10px;width: 31px;">
                 <span class="leading-tightest">NEW</span>
               </span>
@@ -126,49 +127,51 @@
 
 <script>
 import { cloneDeep, debounce } from 'lodash';
-import { LOGIN } from '../../router/constants';
 import { LOGIN_STORAGE } from '../../storage';
-import { isCapsLockOn } from '../../utils';
+import { isCapsLockOn, IP_REG, DOMAIN_REG } from '../../utils';
 
 const { shell } = require('electron');
 
 export default {
   name : 'YMSLoginFormContent',
   data() {
+    const dSearch = debounce((val = '') => {
+      this.searchedAccounts = this.modifiedAccounts.filter((a) => a.account.indexOf(val) >= 0);
+    }, 200);
+
     return {
-      form                : this.$form.createForm(this),
-      searchResult        : [],
-      accountList         : [],
-      isCapsLockOn        : false,
-      showPassword        : false,
-      preRememberPassword : true,
+      dSearch,
+      form             : this.$form.createForm(this),
+      isCapsLockOn     : false,
+      showPassword     : false,
+      preRmbPassword   : true,
+      rawAccounts      : [],
+      modifiedAccounts : [],
+      searchedAccounts : [],
     };
   },
-  mounted() {
-    this.debounceSearch = debounce((val = '') => {
-      this.searchResult = this.accountList.filter((a) => a.account.indexOf(val) >= 0);
-    }, 200);
-    this.initAccountList();
-    this.$nextTick(() => {
-      if (this.autoLogin && !this.autoLoginDisabled && this.rememberPassword) {
-        this.handleLogin();
-      }
-    });
+  async mounted() {
+    this.initRawAccounts();
+    await this.$nextTick();
+    if (this.isAutoLogin) this.handleLogin();
   },
   computed : {
-    type() {
+    isAutoLogin() {
+      return this.autoLogin && !this.autoLoginDisabled && this.rmbPassword;
+    },
+    serverType() {
       return this.$model.login.serverType;
     },
     hasNewVersion() {
       // TODO check the status of update
       return false;
     },
-    rememberPassword : {
+    rmbPassword : {
       get() {
-        return this.$model.login.rememberPassword;
+        return this.$model.login.rmbPassword;
       },
       set(val) {
-        this.$model.login.rememberPassword = val;
+        this.$model.login.rmbPassword = val;
       },
     },
     autoLogin : {
@@ -189,22 +192,24 @@ export default {
     },
   },
   methods : {
+    validateForm(values) {
+      if (!values.account) this.$message.error('账号不能为空');
+      else if (values.account.length > 128) this.$message.error('无法输入超过128个字符');
+      else if (!values.pin) this.$message.error('密码不能为空');
+      else if (!values.pin.length > 128) this.$message.error('无法输入超过128个字符');
+      else if (!values.server) this.$message.error('服务器地址不能为空');
+      else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) this.$message.error('服务器地址格式错误');
+      else return true;
+      
+      return false;
+    },
     handleLogin(e) {
       if (e) e.preventDefault();
       this.form.validateFields([ 'account', 'pin', 'server' ],
         { force: true },
         (err, values) => {
-          if (!err) {
-            const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
-            const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
-
-            if (!values.account) this.$message.error('账号不能为空');
-            else if (values.account.length > 128) this.$message.error('无法输入超过128个字符');
-            else if (!values.pin) this.$message.error('密码不能为空');
-            else if (!values.pin.length > 128) this.$message.error('无法输入超过128个字符');
-            else if (!values.server) this.$message.error('服务器地址不能为空');
-            else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) this.$message.error('服务器地址格式错误');
-            else this.$dispatch('login.doLogin', values);
+          if (!err && this.validateForm(values)) {
+            this.$dispatch('login.doLogin', values);
             this.autoLoginDisabled = true;
           }
         });
@@ -215,67 +220,74 @@ export default {
     toRegister() { // 跳转到注册页面
       shell.openExternal('https://meeting.ylyun.com/enterprise/register');
     },
-    joinMeeting() {
+    toMeeting() {
       this.$model.login.loginType = 'meeting';
-      this.$router.push(LOGIN.MEETING_CONTENT);
     },
     deleteAccount(val) {
       this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, val.account, 'account');
-      this.initAccountList();
+      this.initRawAccounts();
     },
     clearAccount() {
-      this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, this.accountList.map((account) => account.id));
-      this.initAccountList();
+      this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
+      this.initRawAccounts();
     },
-    openSetting() {
-      this.$emit('openSetting');
+    selectAccount(val) {
+      this.updateForm(this.modifiedAccounts.find((a) => a.account === val));
     },
-    initAccountList() {
-      this.accountList = (this.$storage.query(LOGIN_STORAGE.ACCOUNT_LIST) || [])
-        .filter((account) => account.type === this.type);
-      this.accountList.sort((a1, a2) => a2.lastLoginDate - a1.lastLoginDate);
+    searchAccount(val) {
+      this.dSearch(val.trim());
+    },
 
-      this.searchResult = cloneDeep(this.accountList.slice(0, 10));
-      this.updateForm(cloneDeep(this.accountList[0]));
+    initRawAccounts() {
+      this.rawAccounts = (this.$storage.query(LOGIN_STORAGE.ACCOUNT_LIST) || []); // 得到最初的登陆历史记录
+      this.modifyAccounts();
+    },
+    modifyAccounts() {
+      this.modifiedAccounts = this.rawAccounts
+        .filter((account) => account.type === this.serverType)
+        .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
+      this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
+      this.updateForm(this.modifiedAccounts[0]);
+      this.dSearch();
     },
     updateForm(data) {
       if (!data) data = {};
       this.form.setFieldsValue({
         account : data.account,
         pin     : data.pin,
-        server  : this.type === 'cloud' ? 'yealinkvc.com' : data.server,
+        server  : this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server,
       });
       this.$model.login.proxy = data.proxy;
       this.$model.login.proxyPort = data.proxyPort;
     },
-    onAccountSelect(val) {
-      this.updateForm(this.accountList.find((a) => a.account === val));
-    },
-    handleSearch(val) {
-      this.debounceSearch(val.trim());
-    },
     passwordInputted(event) {
       this.isCapsLockOn = isCapsLockOn(event);
     },
+    openSetting() {
+      this.$emit('openSetting');
+    },
   },
   watch : {
-    type(val) {
-      if (this.accountList.length <= 0) {
-        this.initAccountList();
+    serverType() { // f服务器类型发生变化
+      if (this.modifiedAccounts.length <= 0) { // 没有联系人则从数据库重新获取
+        this.initRawAccounts();
+      }
+      else { // 重新设置 searchResult
+        this.modifyAccounts();
       }
     },
     autoLogin(val) {
       if (val) {
-        this.preRememberPassword = this.rememberPassword;
-        this.rememberPassword = true;
+        this.preRmbPassword = this.rmbPassword;
+        this.rmbPassword = true;
       }
       else {
-        this.rememberPassword = this.preRememberPassword;
+        this.rmbPassword = this.preRmbPassword;
       }
     },
-    rememberPassword(val) {
+    rmbPassword(val) {
       if (!val && this.autoLogin) {
-        this.rememberPassword = true;
+        this.rmbPassword = true;
       }
     },
   },

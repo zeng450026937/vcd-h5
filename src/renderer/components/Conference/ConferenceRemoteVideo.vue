@@ -1,5 +1,5 @@
 <template>
-  <div id="conference-remote-video" class="h-full w-full relative">
+  <div id="conference-remote-video" class="h-full w-full bg-media relative">
     <remote-video
         :class="{[`remote-video-content-${isVideoContentShrink ? 'shrink' : 'normal'}`]: true}"
         :source="source">
@@ -59,10 +59,6 @@ export default {
 
 <style lang="less">
 #conference-remote-video {
-  background-color: #1b1f2d;
-  #video-view {
-    background-color: #1b1f2d;
-  }
   .controls {
     &-normal {
       transform: translateY(-100%);
@@ -91,6 +87,7 @@ export default {
 
   .remote-video-content-normal {
     position: absolute;
+    max-height: 100%;
     height: auto !important;
 
     #video-view {

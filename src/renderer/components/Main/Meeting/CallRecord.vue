@@ -26,8 +26,8 @@
           <!--<span slot="titleLastTime">持续时间 <a-iconfont type="clock-circle" /></span>-->
           <div class="flex items-center" slot="name" slot-scope="text, record">
             <div class="cursor-pointer ml-4">
-              <a-avatar v-if="record.type.startsWith('audio')" class="bg-indigo-dark">{{text.substr(-2,2)}}</a-avatar>
-              <a-avatar v-else class="bg-indigo" icon="team"></a-avatar>
+              <a-avatar v-if="record.type.startsWith('audio')">{{text.substr(-2,2)}}</a-avatar>
+              <a-avatar v-else icon="team"></a-avatar>
             </div>
             <span class="ml-2 text-sm">{{text}}</span>
           </div>

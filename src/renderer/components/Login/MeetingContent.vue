@@ -1,7 +1,7 @@
 <template>
-  <a-layout id="yms-meeting" class="bg-indigo-darker h-full">
+  <a-layout id="yms-meeting" class="bg-media h-full absolute w-full">
     <div class="h-full z-10 flex flex-col">
-      <div class="flex h-full flex-col justify-center absolute w-full">
+      <div class="flex h-full flex-col justify-center absolute pin-t w-full">
         <div v-if="!isInSetting" class="enter-meeting-content mr-5 self-end rounded-sm">
           <div class="flex justify-end">
             <a-iconfont type='icon-kongzhi'
@@ -42,7 +42,7 @@
                     v-model="meetingData.displayName"
                     placeholder='昵称'
                 >
-                  <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
+                  <a-iconfont slot="prefix" type='icon-ren' class="text-base text-black9"/>
                 </a-input>
               </div>
 
@@ -74,7 +74,6 @@
             </div>
             <div class="mt-5 flex flex-col">
               <a-button type="primary"
-                        :disabled="!meetingData.account" block
                         @click="joinMeeting">加入</a-button>
               <a-button block class="mt-4" @click="returnLogin">返回登录</a-button>
             </div>
@@ -110,9 +109,9 @@
         </a-button>
       </div>
     </div>
-    <video-view v-if="!muteVideo" object-fit="cover" class="z-0 bg-indigo-darker"/>
+    <video-view v-if="!muteVideo" object-fit="cover" class="z-0 bg-media"/>
     <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
-      <a-iconfont type="icon-huiyishi" class="display-icon"/>
+      <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
     </div>
   </a-layout>
 </template>
@@ -208,11 +207,16 @@ export default {
   },
   methods : {
     joinMeeting() {
+      if (!this.meetingData.account) {
+        this.$message.error('会议号码不可为空');
+        
+        return;
+      }
       this.$dispatch('meeting.joinMeeting', this.meetingData);
     },
     returnLogin() {
       this.$model.login.loginType = 'login';
-      this.$router.push(LOGIN.YMS_LOGIN);
+      this.$router.push(LOGIN.LOGIN_CONTENT);
     },
     handleMeeting() {
     },

@@ -1,17 +1,8 @@
 export default {
   data() {
     return {
-      account : {
-        username : '8502',
-        password : '123456',
-      },
-      currentContact : {},
+      currentContact : null,
     };
   },
   methods : {},
-  watch   : {
-    'account.password' : function() {
-      console.warn('PASSWORD UPDATED');
-    },
-  },
 };

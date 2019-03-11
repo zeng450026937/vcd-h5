@@ -60,7 +60,7 @@
             <a-divider class="my-0"/>
             <template v-if="!searchResult.length">
               <common-empty class="mt-10 text-grey"
-                            text="暂无搜索结果"/>
+                            image="empty-result"/>
             </template>
             <contact-list v-else
                           hide-popup
@@ -130,15 +130,17 @@ export default {
         return;
       }
       this.$model.contact.findContacts(val).then((r) => {
-        this.searchResult = r;
+        this.searchResult = r || [];
         this.localContactExist = this.localContacts.filter((local) => local.number === val).length > 0;
         this.searchResult.push(...this.localContacts.filter((local) => local.number.indexOf(val) > -1));
+      }).catch((err) => {
+        console.warn(err.message);
       });
     }, 500);
   },
   computed : {
     localContacts() {
-      return this.$model.storage.localContacts;
+      return this.$model.storage.localContactGroup.items;
     },
   },
   methods : {

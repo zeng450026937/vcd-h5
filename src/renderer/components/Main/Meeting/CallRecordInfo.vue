@@ -28,7 +28,7 @@
               </div>
               <div class="flex flex-grow"></div>
               <div class="ml-16">
-                <a-avatar :size="72" class="bg-indigo-dark">
+                <a-avatar :size="72">
                   <span class="text-lg">匿名</span>
                 </a-avatar>
               </div>

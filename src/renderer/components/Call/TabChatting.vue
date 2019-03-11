@@ -17,10 +17,10 @@
             <div class="w-5/6 mr-2">
               <a-textarea v-model="message" placeholder="请输入您将要发送的消息" class="h-full"/>
             </div>
-            <div class="w-1/6 bg-grey-light">
+            <div class="w-1/6 bg-under-painting">
               <a-button type="primary"
                         class="w-full h-full p-0 text-xs"
-                        :class="{'bg-indigo-lighter': isSendingDisabled}"
+                        :class="{'bg-disabled': isSendingDisabled}"
                         :disabled="isSendingDisabled || !message"
                         @click="sendMessage">
                 <span v-if="isSendingDisabled" class="text-base text-white">{{timeout}}</span>

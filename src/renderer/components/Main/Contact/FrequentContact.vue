@@ -20,11 +20,11 @@
           <app-header/>
         </div>
       </div>
-      <div class="flex h-full m-3 bg-white border">
+      <div class="flex h-full m-4 bg-white border">
         <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
-            <span class="text-sm text-grey-dark">暂未添加常用联系人</span>
+            <common-empty image="empty-contact" text="暂未添加常用联系人"/>
             <a-button type="primary" ghost
                       class="mt-8"
                       @click="addGroup">添加分组</a-button>
@@ -32,6 +32,7 @@
           <contact-list
               v-else
               :contact-list="currents"
+              enable-keyboard
               :audio-icon="false"
               @clickItem="clickItem">
             <a-dropdown slot-scope="{item}"
@@ -57,7 +58,7 @@
                                  :key="index"
                                  @click="moveContact(group, item)">{{group.name}}</a-menu-item>
                   </template>
-                  <a-menu-item class="cursor-not-allowed bg-grey-lightest text-black9" v-else>暂无其他分组</a-menu-item>
+                  <a-menu-item class="cursor-not-allowed bg-disabled text-black9" v-else>暂无其他分组</a-menu-item>
                 </a-sub-menu>
 
                 <a-menu-item @click="removeContact(item)">
@@ -83,6 +84,7 @@
 <script>
 /* eslint-disable no-loop-func */
 import AppHeader from '../MainHeader.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactInfo from './ContactInfo.vue';
 import FrequentContactDrawer from './FrequentContactDrawer.vue';
 import ContactList from './ContactList.vue';
@@ -94,6 +96,7 @@ export default {
     ContactInfo,
     FrequentContactDrawer,
     ContactList,
+    CommonEmpty,
   },
   data() {
     return {

@@ -19,14 +19,14 @@
                       <div class="flex flex-col items-center h-full">
                         <span class="text-xs leading-tight">分享会议</span>
                         <img style="width: 120px; height: 120px;"
-                             class="bg-grey-darkest mt-2"
+                             class="mt-2"
                              :src="shareQRCode"/>
                       </div>
                       <div class="flex flex-col items-center select-none h-full mt-3"
                            v-if="currentEvent.isLive" >
                         <span class="text-xs leading-tight">观看直播</span>
                         <img style="width: 120px; height: 120px;"
-                             class="bg-grey-darkest mt-2"
+                             class="mt-2"
                              :src="liveQRCode"/>
                       </div>
                     </div>
@@ -100,7 +100,7 @@
                       <template slot-scope="{item}">
                         <div class="flex items-center mb-2">
                           <a-avatar size="small"
-                                    :class="{'bg-orange': item.role === 'organizer'}">
+                                    :class="{'bg-host': item.role === 'organizer'}">
                             <a-iconfont type="icon-ren"/>
                           </a-avatar>
                           <span class="ml-1 leading-tight">{{item['display-text']}}</span>

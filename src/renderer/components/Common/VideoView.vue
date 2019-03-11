@@ -1,6 +1,6 @@
 <template>
   <a-layout id="video-view"
-            class="overflow-hidden video-content-wrapper"
+            class="overflow-hidden video-content-wrapper bg-media"
             :class="{[`${position} video-content-wrapper-${position}`]: true,
             'w-full h-full': position === 'absolute'}">
     <video
