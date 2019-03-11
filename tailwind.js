@@ -187,9 +187,8 @@ module.exports = {
     lg    : '1.125rem', // 18px
     xl    : '1.25rem', // 20px
     '2xl' : '1.5rem', // 24px
-    '3xl' : '1.875rem', // 30px
+    '3xl' : '2rem', // 32px
     '4xl' : '2.25rem', // 36px
-    '5xl' : '3.25rem', // 52px
   },
 
 
@@ -449,7 +448,7 @@ module.exports = {
     14     : '3.5rem',
     16     : '4rem',
     20     : '5rem',
-    24     : '6rem',
+    24     : '6rem', // 96
     32     : '8rem',
     48     : '12rem',
     60     : '15rem',

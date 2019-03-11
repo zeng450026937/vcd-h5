@@ -9,22 +9,23 @@
     <div class="flex flex-col h-full">
       <div class="text-center mt-3 no-dragable">
 
-        <a-popover placement="leftTop" trigger="click">
+        <a-popover placement="leftTop"
+                   trigger="click"
+                   overlayClassName="main-sidebar-popover">
           <template slot="content">
-            <div class="flex flex-col w-48">
-              <div class="flex flex-col items-center">
-                <div class="text-center">
-                  <a-avatar :size="32" :src="randomAvatar()"></a-avatar>
-                </div>
-                <div class="my-1 font-semibold">{{userInfo.userName}}</div>
-                <div class="mb-1">VCS产品线-软件开发部</div>
+            <div class="flex flex-col items-center">
+
+              <div style="height: 76px" class="bg-card w-full rounded-t"></div>
+              <div class="mt-12 text-base leading-none">{{userInfo.name}}</div>
+              <div class="mt-2 leading-none text-xs text-black9 text-center"
+                    >{{userInfo.parent && userInfo.parent.fullPath | fullName}}</div>
+
+              <div class="mt-10">
+                <a-button class="w-24" @click="clickLogout">退出账号</a-button>
               </div>
-              <a-divider class="my-1"/>
-              <div class="flex flex-col my-1">
-                <div class="my-1 cursor-pointer text-center hover:text-red" @click="clickLogout">
-                  退出账号
-                </div>
-                <a-divider class="my-1"/>
+
+              <div class="text-center absolute mt-10">
+                <a-avatar :size="72" :src="randomAvatar()"></a-avatar>
               </div>
             </div>
           </template>
@@ -95,8 +96,8 @@ export default {
   },
   computed : {
     userInfo() {
-      return {
-        userName : this.$rtc.account.username,
+      return this.$model.account.currentContact || {
+        name : this.$rtc.account.username,
       };
     },
     isInConferenceView : {
@@ -136,7 +137,8 @@ export default {
   methods : {
     randomAvatar() {
       // TODO DELETE
-      return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
+      return avatarList[5];
+      // return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
     },
     clickMenu(sidebar, index) {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {
@@ -158,16 +160,30 @@ export default {
       }
       this.$model.state.sidebarStatus.mainRoute = this.$router.currentRoute.path;
       this.$rtc.account.signout();
-      this.$router.push(LOGIN.LOGIN_CONTENT);
     },
     openFeedback() {
       this.$refs.feedbackModal.visible = true;
+    },
+    genFullPath() {
+      let { parent } = this.userInfo;
+
+      let fullPath = [];
+
+      while (parent.id) {
+        fullPath = [ {
+          id   : parent.id,
+          text : parent.name,
+        } ].concat(fullPath);
+
+        parent = parent.parent;
+      }
+      this.userInfo.parent.fullPath = fullPath;
     },
   },
   watch : {
     $route : {
       handler(val) {
-        const { isInMiniConference, isInMiniCall, sidebarStatus } = this.$model.state;
+        const { sidebarStatus } = this.$model.state;
 
         if (this.$model.state.isNotInCallOrConference()) {
           sidebarStatus.preRoute = val;
@@ -175,10 +191,38 @@ export default {
       },
       immediate : true,
     },
+    userInfo : {
+      handler(val) {
+        if (val && val.parent) {
+          const { fullPath } = this.userInfo.parent;
+
+          if (!fullPath || fullPath.length <= 0) {
+            this.genFullPath();
+          }
+        }
+      },
+      immediate : true,
+    },
+  },
+  filters : {
+    fullName(fullPath = '') {
+      return fullPath.length < 1 ? '' : fullPath.slice(-2).map((b) => b.text).join('-');
+    },
   },
 };
 </script>
 
-<style scoped>
-
+<style lang="less">
+  .main-sidebar-popover {
+    left: 42px !important;
+    .ant-popover-arrow {
+      display: none;
+    }
+    .ant-popover-inner-content {
+      padding: 0;
+      width: 240px;
+      height: 252px;
+      box-shadow: 0 4px 12px 0 rgba(0,0,0,0.20);
+    }
+  }
 </style>

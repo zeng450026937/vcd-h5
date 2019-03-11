@@ -1,7 +1,7 @@
 <template>
   <div id="common-empty" class="flex flex-col items-center select-none">
     <img :src="imageUrl" alt="">
-    <span class="empty-text">{{tip}}</span>
+    <span class="mt-3 text-black9 leading-tighter">{{tip}}</span>
   </div>
 </template>
 
@@ -36,15 +36,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="less">
-#common-empty {
-  .empty-text {
-    margin-top: 13px;
-    font-size: 14px;
-    color: #777777;
-    text-align: center;
-    line-height: 22px;
-  }
-}
-</style>

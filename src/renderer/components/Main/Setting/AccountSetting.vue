@@ -10,48 +10,49 @@
     </div>
   </div>
   <div class="flex flex-col border items-center bg-white h-full m-4">
-    <div class="mt-5" style="width: 440px;">
-      <div class="flex mt-2 mb-4 items-center w-full">
-        <div class="flex flex-col truncate">
-          <div class="font-semibold leading-normal text-base items-center truncate">
+    <div v-if="userInfo" class="mt-5" style="width: 520px;">
+      <div class="flex mt-2 mb-5 items-center w-full">
+        <div class="flex flex-col truncate" style="height: 72px;">
+          <div class="font-bold leading-loose text-base items-center truncate">
             {{userInfo.name}}
           </div>
-          <div class="flex mt-2">
-            <div style="max-width: 300px;">
-              <span
-                  class="text-xs leading-tight text-black9 whitespace-normal"
-              >这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字</span>
-            </div>
-            <a-iconfont type="icon-bianji" class="ml-2 text-indigo cursor-pointer text-base"/>
+          <div class="mt-2 text-xs leading-tight whitespace-normal">
+            这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字
           </div>
         </div>
-        <div class="flex flex-grow"></div>
-        <div class="ml-4">
+        <a-iconfont type="icon-bianji" class="mt-3 ml-3 text-indigo cursor-pointer text-base"/>
+        <div class="ml-10">
           <a-avatar :size="72">
-            <span class="text-lg">{{userInfo.name.substr(-2, 2)}}</span>
+            <span class="text-lg">{{userInfo.nick}}</span>
           </a-avatar>
         </div>
       </div>
       <a-divider class="my-0"/>
       <div class="mt-5 leading-normal">
-        <span class="opacity-75">账号</span>
+        <span class="text-black6">账号</span>
         <span class="ml-3">{{userInfo.number}}</span>
       </div>
       <div class="mt-5 leading-normal">
-        <span class="opacity-75">手机</span>
+        <span class="text-black6">手机</span>
         <span class="ml-3">{{userInfo.phone}}</span>
       </div>
       <div class="mt-5 leading-normal">
-        <span class="opacity-75">邮箱</span>
+        <span class="text-black6">邮箱</span>
         <span class="ml-3">{{userInfo.email || '暂无邮箱'}}</span>
       </div>
       <template v-if="userInfo.parent.fullPath">
-        <div class="mt-5 leading-normal">
-          <span class="opacity-75">部门</span>
-          <span class="ml-3">{{userInfo.parent.fullPath | fullName}}</span>
+        <!--<div class="mt-5 leading-normal">-->
+          <!--<span class="text-black6">部门</span>-->
+          <!--<span class="ml-3">{{userInfo.parent.fullPath | fullName}}</span>-->
+        <!--</div>-->
+
+        <div class="mt-5 flex items-start leading-normal">
+          <span class="whitespace-no-wrap text-black6">部门</span>
+          <span class="text-indigo ml-3">{{userInfo.parent.fullPath | fullName}}</span>
         </div>
+
         <div class="mt-5 leading-normal">
-          <span class="opacity-75">企业</span>
+          <span class="text-black6">企业</span>
           <span class="ml-3">{{userInfo.parent.fullPath[0].text}}</span>
         </div>
       </template>
@@ -60,6 +61,9 @@
         <a-button class="ml-4">编辑</a-button>
         <a-button class="ml-4">注销</a-button>
       </div>
+    </div>
+    <div v-else class="h-full flex items-center justify-center">
+      <common-empty text="暂时无法获取当前用户信息"/>
     </div>
     <div>
       <a-modal
@@ -94,25 +98,20 @@
 
 <script>
 import ComplexAvatar from '../../Shared/CommonAvatar.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import AppHeader from '../MainHeader.vue';
 
 export default {
   name       : 'AccountSetting',
   components : {
     ComplexAvatar,
+    CommonEmpty,
     AppHeader,
   },
   data() {
     return {
       updatePasswordVisible : false,
     };
-  },
-  created() {
-    const { fullPath } = this.userInfo.parent;
-
-    if (!fullPath || fullPath.length <= 0) {
-      this.genFullPath();
-    }
   },
   computed : {
     userInfo() {
@@ -143,8 +142,26 @@ export default {
     },
   },
   filters : {
-    fullName(fullPath) {
+    fullName(fullPath = '') {
       return fullPath.length < 1 ? '' : fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
+    },
+    avatarTrim(val) {
+      // 考虑名称后面有加 () 来备注英文名
+      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
+    },
+  },
+  watch : {
+    userInfo : {
+      handler(val) {
+        if (val && val.parent) {
+          const { fullPath } = this.userInfo.parent;
+
+          if (!fullPath || fullPath.length <= 0) {
+            this.genFullPath();
+          }
+        }
+      },
+      immediate : true,
     },
   },
 };

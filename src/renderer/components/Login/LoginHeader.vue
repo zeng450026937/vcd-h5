@@ -3,7 +3,8 @@
     <div class="px-2 h-9 select-none">
       <div class="flex flex-row h-full">
         <div class="flex items-center">
-          <span class="text-xl text-white font-bold ml-2">Yealink</span>
+          <img class="ml-2" src="../../assets/login-header-logo.png">
+          <span class="text-white ml-2">Yealink VC Desktop</span>
         </div>
         <div class="flex-grow dragable my-1"></div>
         <div class="flex items-center mr-4 text-white text-xs">

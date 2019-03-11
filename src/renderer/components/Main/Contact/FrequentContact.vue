@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="frequent-contact" class="h-full">
+  <a-layout id="frequent-contact" class="h-full w-full">
 
     <div class="flex flex-col h-full">
       <div class="h-14 border-b">
@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="flex h-full m-4 bg-white border">
-        <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
+        <div class="h-full border-r overflow-y-auto px-1 py-1 w-2/5">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
             <common-empty image="empty-contact" text="暂未添加常用联系人"/>
@@ -58,7 +58,7 @@
                                  :key="index"
                                  @click="moveContact(group, item)">{{group.name}}</a-menu-item>
                   </template>
-                  <a-menu-item class="cursor-not-allowed bg-disabled text-black9" v-else>暂无其他分组</a-menu-item>
+                  <a-menu-item class="cursor-not-allowed text-black9" v-else>暂无其他分组</a-menu-item>
                 </a-sub-menu>
 
                 <a-menu-item @click="removeContact(item)">
@@ -68,11 +68,10 @@
             </a-dropdown>
           </contact-list>
         </div>
-        <div class="flex flex-grow bg-white justify-center">
+        <div class="flex flex-grow bg-white justify-center w-3/5">
           <contact-info :user="currentUser"
                         :group="groupInfo"
-                        @toGroup="toGroup"
-                        style="width: 368px"/>
+                        @toGroup="toGroup"/>
         </div>
       </div>
       <frequent-contact-drawer ref="contactDrawer"

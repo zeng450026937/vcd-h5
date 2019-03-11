@@ -138,8 +138,8 @@
         </plain-modal>
       </div>
     </div>
-    <div v-else class="flex justify-center mt-10">
-      <no-found class="mt-10 text-grey" text="暂未选择日程信息"/>
+    <div v-else class="flex h-full items-center justify-center">
+      <common-empty class="text-grey" image="empty-calendar"/>
     </div>
   </a-layout>
 </template>
@@ -148,13 +148,13 @@
 import jrQrcode from 'jr-qrcode';
 import copy from 'clipboard-copy';
 import { RecycleScroller } from 'vue-virtual-scroller';
-import NoFound from '../../Shared/CommonEmpty.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 const { shell } = require('electron');
 export default {
   name       : 'CalendarInfo',
   components : {
-    NoFound,
+    CommonEmpty,
     RecycleScroller,
   },
   computed : {

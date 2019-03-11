@@ -104,7 +104,7 @@ const plainModal = {
 
       if (!this.hideOk) {
         children.push(h('a-button', {
-          staticClass : 'w-1/2 mx-2 border-green-dark text-green-dark rounded-sm',
+          staticClass : 'w-1/2 mx-2 border-red-light text-red-light rounded-sm',
           props       : {
             ghost : true,
           },

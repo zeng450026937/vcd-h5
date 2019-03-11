@@ -2,7 +2,7 @@
   <a-layout id="contact-list" class="h-full bg-white select-none">
     <div class="h-full overflow-y-hidden">
       <recycle-scroller
-          v-if="contactList.length > 0"
+          v-if="gapContactList.length > 0"
           :items="contactListWithHeight"
           :buffer="20"
           :page-mode="false"
@@ -50,13 +50,12 @@
                       <div class="flex items-center w-full px-5 py-4 bg-card rounded-t text-white">
                         <div class="flex flex-col max-w-4/5 flex-grow">
                           <div class="text-base flex leading-loose">
-                          <span class="w-1 flex flex-grow truncate">
-                            <span class="truncate">{{item.name}}</span>
-                          </span>
+                            <span class="w-1 flex flex-grow truncate">
+                              <span class="truncate">{{item | filterCardTitle}}</span>
+                            </span>
                           </div>
-                          <div v-if="item.parent.isUser"
-                               class="truncate text-xs font-thin leading-tight opacity-75 mt-1">
-                            <span>个性签名，只显示一行，如果超出一行则超出的部分省略不显示</span>
+                          <div class="truncate text-xs font-thin leading-tight opacity-75 mt-1">
+                            <span>{{item | filterCardText}}</span>
                           </div>
                         </div>
                         <div class="flex justify-center ml-3">
@@ -64,15 +63,15 @@
                                     :size="48"
                                     :class="{ 'bg-transparent' : item.isGroup,
                                     [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
-                            <a-iconfont :type="item.avatar" class="text-base"/>
+                            <a-iconfont :type="item.avatar" class="text-3xl"/>
                           </a-avatar>
-                          <a-avatar v-else :size="48">{{item.name|avatarTrim}}</a-avatar>
+                          <a-avatar v-else :size="48">{{item.nick}}</a-avatar>
                         </div>
                       </div>
 
                       <div class="flex flex-col px-5 py-3 text-xs">
                         <div class="flex items-center">
-                          <span class="mr-3 truncate">账号</span>
+                          <span class="mr-3 truncate text-black6">{{item.parent.isUser ? '账号' : '号码'}}</span>
                           <span>{{item.number}}</span>
                           <div class="flex flex-grow"></div>
                           <a-iconfont type="icon-shipin"
@@ -84,15 +83,15 @@
                         </div>
                         <template v-if="item.parent.isUser">
                           <div class="flex items-center mt-3 ">
-                            <span class="mr-3">手机</span>
+                            <span class="mr-3 text-black6">手机</span>
                             <span>{{item.phone}}</span>
                           </div>
                           <div class="flex mt-3 items-center">
-                            <span class="mr-3">邮箱</span>
+                            <span class="mr-3 text-black6">邮箱</span>
                             <span>{{item.email || '暂无邮箱'}}</span>
                           </div>
                           <div class="mt-3 flex items-start">
-                            <span class="mr-3 whitespace-no-wrap">部门</span>
+                            <span class="mr-3 whitespace-no-wrap text-black6">部门</span>
                             <span class="text-indigo">{{item | fullName}}</span>
                           </div>
                         </template>
@@ -109,7 +108,7 @@
                   </a-avatar>
                   <a-avatar v-else
                             class="text-sm mx-2">
-                    {{item.name|avatarTrim}}
+                    {{item.nick}}
                   </a-avatar>
                 </a-popover>
               </a-list-item-meta>
@@ -135,7 +134,7 @@
                 <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
                             title="删除"
                             type="icon-guanbi"
-                            class="mr-2 text-black9 cursor-pointer text-base"
+                            class="mr-2 text-black9 cursor-pointer text-base hover:text-red"
                             @click.stop="deleteContact(item)"/>
               </div>
             </a-list-item>
@@ -147,8 +146,8 @@
           </template>
         </template>
       </recycle-scroller>
-      <div v-else>
-        <common-empty class="mt-20 text-grey" image="empty-contact" text="当前分组暂联系人"/>
+      <div v-else class="flex items-center justify-center h-full">
+        <common-empty class="text-grey" image="empty-contact" text="暂无联系人"/>
       </div>
     </div>
   </a-layout>
@@ -208,6 +207,11 @@ export default {
       type    : Boolean,
       default : false,
     },
+    withGap : { // 必须提供 group 属性用于分组
+      type    : Boolean,
+      default : false,
+    },
+
   },
   components : {
     RecycleScroller,
@@ -221,11 +225,33 @@ export default {
   },
   computed : {
     contactListWithHeight() {
-      return this.contactList.map((item) => {
+      return this.gapContactList.map((item) => {
         item.size = item.isGroup ? 48 : item.isGap ? 28 : 56;
 
         return item;
       });
+    },
+    gapContactList() {
+      if (!this.withGap) return this.contactList;
+      const list = [];
+      const tmp = this.contactList;
+
+      tmp.sort((c1, c2) => (c1.group < c2.group ? -1 : 1));
+      let preGapText = '';
+
+      tmp.forEach((contact, index) => {
+        if (preGapText !== contact.group) {
+          preGapText = contact.group;
+          list.push({
+            id      : index,
+            isGap   : true,
+            gapText : preGapText,
+          });
+        }
+        list.push(contact);
+      });
+
+      return list;
     },
   },
   mounted() {
@@ -293,10 +319,6 @@ export default {
   },
   watch   : {},
   filters : {
-    avatarTrim(val) {
-      // 考虑名称后面有加 () 来备注英文名
-      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
-    },
     fullName(item) {
       if (!item.parent.fullPath) {
         const fullPath = [];
@@ -314,6 +336,18 @@ export default {
       }
 
       return item.parent.fullPath.map((b) => b.text).join('/');
+    },
+    filterCardTitle(item) {
+      const { parent } = item;
+
+      if (parent.isUser) return item.name;
+      else if (parent.isDevice) return '设备型号';
+      else if (parent.isExternal) return '其他联系人';
+      else if (parent.isVMR) return '虚拟会议室名字';
+      else if (parent.isService) return '服务号';
+    },
+    filterCardText(item) {
+      return item.parent.isUser ? '个性签名，只显示一行，如果超出一行则超出的部分省略不显示' : item.name;
     },
   },
 };
@@ -356,8 +390,13 @@ export default {
     .ant-popover-inner-content {
       padding: 0;
       .ant-avatar-string {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
         left: 0;
         position: relative;
+        transform: unset !important;
       }
     }
   }

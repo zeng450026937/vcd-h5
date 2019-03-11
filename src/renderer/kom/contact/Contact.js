@@ -83,6 +83,7 @@ class Contact extends ContactBase {
   constructor(data = {}) {
     super(data);
     this.name = data.name || '';
+    this.nick = /^(.*)\(.*\)$/.test(this.name) ? RegExp.$1.substr(-2, 2) : this.name.substr(-2, 2);
     this.number = data.number || '';
     if (data.number === rtc.account.username) {
       this.isSelf = true;
@@ -157,6 +158,7 @@ class ContactGroup extends ContactBase {
 
       // NOTICE the param'seq is fixed
       this.items = unique([ ...this.items, ...contactItems ]);
+      this.children = this.items;
     });
   }
 }

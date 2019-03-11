@@ -7,7 +7,7 @@
     </div>
     <div class="flex flex-col pt-10 px-24">
       <a-form class="login-form" @submit="handleLogin" :form="form">
-        <a-form-item>
+        <a-form-item class="mb-4">
           <a-auto-complete
               v-decorator="['account']"
               class="certain-category-search w-full overflow-x-hidden"
@@ -41,7 +41,7 @@
             </a-input>
           </a-auto-complete>
         </a-form-item>
-        <a-form-item>
+        <a-form-item class="mb-4">
           <a-input v-decorator="['pin']"
                    @keypress="passwordInputted"
                    :type="showPassword ? 'text': 'password'"
@@ -63,8 +63,7 @@
                         @click="showPassword = !showPassword"/>
           </a-input>
         </a-form-item>
-        <a-form-item
-            class="mb-2">
+        <a-form-item class="mb-2">
           <!--:read-only="serverType === 'cloud'"-->
           <a-input v-decorator="['server']"
                    placeholder='服务器地址'>
@@ -113,14 +112,14 @@
         </a-badge>
         <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
       </div>
-      <div>
-        <p class="text-xs flex text-center leading-tight mt-5 text-black9">
-          点击登录则代表您同意
-          <span class="text-indigo-light cursor-pointer">《用户协议》</span>
-          和
-          <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
-        </p>
-      </div>
+      <!--<div>-->
+        <!--<p class="text-xs flex text-center leading-tight mt-5 text-black9">-->
+          <!--点击登录则代表您同意-->
+          <!--<span class="text-indigo-light cursor-pointer">《用户协议》</span>-->
+          <!--和-->
+          <!--<span class="text-indigo-light cursor-pointer">《隐私政策》</span>-->
+        <!--</p>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
@@ -294,6 +293,12 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="less">
+  #login-form-content{
+    .login-form {
+      .ant-form-item-control {
+        line-height: unset;
+      }
+    }
+  }
 </style>

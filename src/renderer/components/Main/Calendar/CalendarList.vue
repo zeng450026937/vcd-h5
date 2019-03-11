@@ -1,6 +1,6 @@
 <template>
   <a-layout id="calendar-list" class="bg-white h-full">
-    <div class="px-2">
+    <div class="px-2 h-full">
       <div v-for="(event, index) in eventList" :key="index" class="mt-2">
         <div class="flex flex-col p-3
                     cursor-pointer rounded border hover:border-indigo"
@@ -24,8 +24,8 @@
           <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.expiryTime}}</div>
         </div>
       </div>
-      <div v-if="!eventList || eventList.length <= 0">
-        <common-empty class="mt-20 text-grey" image="empty-calendar"/>
+      <div v-if="!eventList || eventList.length <= 0" class="h-full flex items-center justify-center">
+        <common-empty class="text-grey" text="暂未选择日程信息"/>
       </div>
     </div>
   </a-layout>
