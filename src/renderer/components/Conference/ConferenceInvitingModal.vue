@@ -41,8 +41,8 @@
                   <div class="flex flex-col">
                     <div class="flex h-10 items-center px-3">
                       <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
-                      <span class="flex text-indigo text-xs cursor-pointer"
-                            :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
+                      <span v-if="selectedContact.length > 0"
+                            class="flex text-indigo text-xs cursor-pointer"
                             @click="clearAll">全部清空</span>
                     </div>
                   </div>

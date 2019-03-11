@@ -98,6 +98,7 @@ export default {
         if (err) return;
         this.newLocalContact = values;
         this.newLocalContact.group = pinyin.convertToPinyin(values.name.slice(0, 1)).slice(0, 1).toUpperCase();
+        this.newLocalContact.nick = /^(.*)\(.*\)$/.test(values.name) ? RegExp.$1.substr(-2, 2) : values.name.substr(-2, 2);
         if (this.type === 'add') {
           await this.$dispatch('storage.insertData', this.newLocalContact);
         }

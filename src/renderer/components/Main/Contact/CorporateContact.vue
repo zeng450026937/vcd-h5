@@ -29,8 +29,8 @@
         </div>
       </div>
       <div class="flex h-full m-4 bg-white border">
-        <div class="border-r">
-          <div class="h-full p-1  overflow-y-hidden" style="width: 280px">
+        <div class="border-r w-2/5">
+          <div class="h-full p-1 overflow-y-hidden">
             <contact-list :contact-list="currents"
                           enable-keyboard
                           @clickItem="onListItemClicked">
@@ -54,7 +54,7 @@
             </contact-list>
           </div>
         </div>
-        <div class="flex flex-grow bg-white justify-center">
+        <div class="flex flex-grow w-3/5 bg-white justify-center">
           <contact-info :user="selectedContact"
                         :group="groupInfo"
                         @toGroup="toGroup"/>
@@ -163,9 +163,6 @@ export default {
     },
   },
   filters : {
-    avatarTrim(val) {
-      return val.substr(-2, 2);
-    },
     nameTrim({ name, amount, isGroup }, isToolTip) {
       if (!isToolTip) name = name.length > 20 ? `${name.slice(0, 20)}...` : name;
       if (isGroup) name = `${name}（${amount}）`;

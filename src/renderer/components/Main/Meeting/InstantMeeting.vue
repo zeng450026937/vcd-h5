@@ -11,7 +11,7 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <div class="flex h-full m-4 mx-16">
+      <div class="flex h-full m-4">
 
         <div class="w-1/2 bg-white overflow-hidden">
           <contact-tree ref="contactTree"
@@ -28,8 +28,8 @@
               <div class="flex flex-col">
                 <div class="flex h-10 items-center px-3">
                   <span class="flex flex-grow text-sm leading-normal">{{selectedContact.length || 0}}/100</span>
-                  <span class="flex text-indigo text-xs cursor-pointer leading-tight"
-                        :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
+                  <span v-if="selectedContact.length > 1"
+                        class="flex text-indigo text-xs cursor-pointer leading-tight"
                         @click="clearAll">全部清空</span>
                 </div>
               </div>

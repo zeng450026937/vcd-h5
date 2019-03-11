@@ -15,20 +15,20 @@
         </div>
       </div>
       <div class="flex h-full m-4 bg-white border">
-        <div class="h-full border-r overflow-y-auto px-1 py-1"
-             style="width: 280px">
-          <div v-if="gapLocalContact.length <= 0"
+        <div class="h-full border-r overflow-y-auto px-1 py-1 w-2/5">
+          <div v-if="localContacts.length <= 0"
                class="flex flex-col h-full justify-center items-center">
             <common-empty image="empty-contact" text="暂未添加本地联系人"/>
             <a-button type="primary" ghost
                       class="mt-8"
-                      @click="addGroup">添加联系人</a-button>
+                      @click="addLocalContact">添加联系人</a-button>
           </div>
 
           <contact-list
               v-else
               enable-keyboard
-              :contact-list="gapLocalContact"
+              with-gap
+              :contact-list="localContacts"
               @clickItem="clickItem">
             <a-dropdown slot-scope="{item}"
                         slot="more"
@@ -50,7 +50,7 @@
             </a-dropdown>
           </contact-list>
         </div>
-        <div class="flex flex-grow bg-white justify-center">
+        <div class="flex flex-grow bg-white justify-center w-2/5">
           <contact-info :user="currentUser" :group="groupInfo"/>
         </div>
       </div>
@@ -90,27 +90,6 @@ export default {
   computed : {
     localContacts() {
       return this.$model.storage.localContactGroup.items;
-    },
-    gapLocalContact() {
-      const list = [];
-      const tmp = this.localContacts;
-
-      tmp.sort((c1, c2) => (c1.group < c2.group ? -1 : 1));
-      let preGapText = '';
-
-      tmp.forEach((contact, index) => {
-        if (preGapText !== contact.group) {
-          preGapText = contact.group;
-          list.push({
-            id      : index,
-            isGap   : true,
-            gapText : preGapText,
-          });
-        }
-        list.push(contact);
-      });
-      
-      return list;
     },
     groupInfo() {
       return {

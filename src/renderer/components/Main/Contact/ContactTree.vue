@@ -40,7 +40,7 @@
               <a-iconfont :type="contact.avatar"/>
             </a-avatar>
             <a-avatar v-if="contact.parent.isUser"
-                      :size="32">{{contact.name.substr(-2, 2)}}
+                      :size="32">{{contact.nick}}
             </a-avatar>
           </div>
 

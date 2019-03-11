@@ -1,11 +1,20 @@
 <template>
-  <a-layout id="yms-login" class="h-full bg-transparent mt-8">
+  <a-layout id="login-content" class="h-full bg-transparent">
     <div class="flex flex-col items-center justify-center h-full">
       <div v-show="!isInSettingContent">
         <login-form-content @openSetting="isInSettingContent = true"/>
       </div>
       <login-setting-content v-if="isInSettingContent"
-                             @closeSetting="isInSettingContent = false"/>
+                                 @closeSetting="isInSettingContent = false"/>
+
+      <div class="flex mt-4 items-center">
+        <p class="text-xs flex text-center leading-tight text-white">
+          点击登录则代表您同意
+          <span class="text-indigo-light cursor-pointer">《用户协议》</span>
+          和
+          <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
+        </p>
+      </div>
     </div>
   </a-layout>
 </template>

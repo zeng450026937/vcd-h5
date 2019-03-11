@@ -23,28 +23,9 @@
         <a-iconfont type="icon-bianji" class="mt-3 ml-3 text-indigo cursor-pointer text-base"/>
         <div class="ml-10">
           <a-avatar :size="72">
-            <span class="text-lg">{{userInfo.name|avatarTrim}}</span>
+            <span class="text-lg">{{userInfo.nick}}</span>
           </a-avatar>
         </div>
-        <!--<div class="flex flex-col truncate">-->
-          <!--<div class="font-semibold leading-normal text-base items-center truncate">-->
-            <!--{{userInfo.name}}-->
-          <!--</div>-->
-          <!--<div class="flex mt-2">-->
-            <!--<div style="max-width: 300px;">-->
-              <!--<span-->
-                  <!--class="text-xs leading-tight whitespace-normal"-->
-              <!--&gt;这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字</span>-->
-            <!--</div>-->
-            <!--<a-iconfont type="icon-bianji" class="ml-2 text-indigo cursor-pointer text-base"/>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<div class="flex flex-grow"></div>-->
-        <!--<div class="ml-4">-->
-          <!--<a-avatar :size="72">-->
-            <!--<span class="text-lg">{{userInfo.name.substr(-2, 2)}}</span>-->
-          <!--</a-avatar>-->
-        <!--</div>-->
       </div>
       <a-divider class="my-0"/>
       <div class="mt-5 leading-normal">

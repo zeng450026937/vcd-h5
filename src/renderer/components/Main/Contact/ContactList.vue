@@ -2,7 +2,7 @@
   <a-layout id="contact-list" class="h-full bg-white select-none">
     <div class="h-full overflow-y-hidden">
       <recycle-scroller
-          v-if="contactList.length > 0"
+          v-if="gapContactList.length > 0"
           :items="contactListWithHeight"
           :buffer="20"
           :page-mode="false"
@@ -65,7 +65,7 @@
                                     [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
                             <a-iconfont :type="item.avatar" class="text-3xl"/>
                           </a-avatar>
-                          <a-avatar v-else :size="48">{{item.name|avatarTrim}}</a-avatar>
+                          <a-avatar v-else :size="48">{{item.nick}}</a-avatar>
                         </div>
                       </div>
 
@@ -108,7 +108,7 @@
                   </a-avatar>
                   <a-avatar v-else
                             class="text-sm mx-2">
-                    {{item.name|avatarTrim}}
+                    {{item.nick}}
                   </a-avatar>
                 </a-popover>
               </a-list-item-meta>
@@ -134,7 +134,7 @@
                 <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
                             title="删除"
                             type="icon-guanbi"
-                            class="mr-2 text-black9 cursor-pointer text-base"
+                            class="mr-2 text-black9 cursor-pointer text-base hover:text-red"
                             @click.stop="deleteContact(item)"/>
               </div>
             </a-list-item>
@@ -146,8 +146,8 @@
           </template>
         </template>
       </recycle-scroller>
-      <div v-else>
-        <common-empty class="mt-20 text-grey" image="empty-contact" text="当前分组暂无联系人"/>
+      <div v-else class="flex items-center justify-center h-full">
+        <common-empty class="text-grey" image="empty-contact" text="暂无联系人"/>
       </div>
     </div>
   </a-layout>
@@ -207,6 +207,11 @@ export default {
       type    : Boolean,
       default : false,
     },
+    withGap : { // 必须提供 group 属性用于分组
+      type    : Boolean,
+      default : false,
+    },
+
   },
   components : {
     RecycleScroller,
@@ -220,11 +225,33 @@ export default {
   },
   computed : {
     contactListWithHeight() {
-      return this.contactList.map((item) => {
+      return this.gapContactList.map((item) => {
         item.size = item.isGroup ? 48 : item.isGap ? 28 : 56;
 
         return item;
       });
+    },
+    gapContactList() {
+      if (!this.withGap) return this.contactList;
+      const list = [];
+      const tmp = this.contactList;
+
+      tmp.sort((c1, c2) => (c1.group < c2.group ? -1 : 1));
+      let preGapText = '';
+
+      tmp.forEach((contact, index) => {
+        if (preGapText !== contact.group) {
+          preGapText = contact.group;
+          list.push({
+            id      : index,
+            isGap   : true,
+            gapText : preGapText,
+          });
+        }
+        list.push(contact);
+      });
+
+      return list;
     },
   },
   mounted() {
@@ -292,10 +319,6 @@ export default {
   },
   watch   : {},
   filters : {
-    avatarTrim(val) {
-      // 考虑名称后面有加 () 来备注英文名
-      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
-    },
     fullName(item) {
       if (!item.parent.fullPath) {
         const fullPath = [];

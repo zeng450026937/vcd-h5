@@ -56,14 +56,13 @@
         <a-divider type="vertical" class="h-full mx-0"/>
         <div class="flex flex-grow h-full">
           <div class="h-full flex flex-col w-full">
-            <div class="mx-2 my-3">拨号搜素结果（{{searchResult.length}}）</div>
-            <a-divider class="my-0"/>
-            <template v-if="!searchResult.length">
-              <common-empty class="mt-10 text-grey"
-                            image="empty-result"/>
-            </template>
+            <div class="px-2 py-3 border-b">拨号搜素结果（{{searchResult.length}}）</div>
+            <div class="h-full flex justify-center items-center" v-if="!searchResult.length">
+              <common-empty image="empty-result"/>
+            </div>
             <contact-list v-else
                           hide-popup
+                          with-gap
                           :contactList="searchResult"
                           :highlightContent="callNumber"
                           highlightSelected

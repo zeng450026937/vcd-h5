@@ -2,7 +2,7 @@
   <div id="contact-info" class="bg-white h-full w-full">
     <div v-if="hasUser" class="flex flex-col h-full">
       <div class="flex py-5 items-center border-b mx-10">
-        <div class="flex flex-col truncate" style="height: 72px;">
+        <div class="flex flex-col flex-grow truncate" style="height: 72px;">
           <div class="font-bold leading-loose text-base items-center truncate">
             {{user | filterCardTitle}}
           </div>
@@ -17,7 +17,7 @@
             <a-iconfont :type="user.avatar" class="text-3xl mt-5"/>
           </a-avatar>
           <a-avatar v-else :size="72">
-            <span class="text-lg">{{user.name|avatarTrim}}</span>
+            <span class="text-lg">{{user.nick}}</span>
           </a-avatar>
         </div>
       </div>
@@ -113,10 +113,6 @@ export default {
   filters : {
     fullName(fullPath) {
       return fullPath.map((b) => b.text).join('/');
-    },
-    avatarTrim(val) {
-      // 考虑名称后面有加 () 来备注英文名
-      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
     },
     filterCardTitle(item) {
       const { parent } = item;

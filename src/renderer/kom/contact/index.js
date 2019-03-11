@@ -1,4 +1,5 @@
 import rtc from '../../rtc';
+import pinyin from '../../utils/pinyin';
 
 import { formatContact as formatPhoneBook } from './Contact';
 import { formatFavorite } from './Favorite';
@@ -29,55 +30,14 @@ export default {
     favorite() {
       return this.formattedFavorite;
     },
-    selectedPhoneBook() {
-      function search(contact) {
-        let result = [];
-
-        if (!contact) return result;
-
-        if (contact.isGroup) {
-          contact.items.forEach((iter) => {
-            result = result.concat(search(iter));
-          });
-        }
-        else if (contact.selected) {
-          result.push(contact);
-        }
-
-        return result;
-      }
-
-      return search(this.contacts);
-    },
   },
   methods : {
-    getGroupByID(id) {
-      let group = null;
-
-      function search(g) {
-        if (g.isGroup && !group) {
-          if (g.id === id) {
-            group = g;
-          }
-          else {
-            g.items.forEach((iter) => {
-              if (g.isGroup && !group) search(iter);
-            });
-          }
-        }
-      }
-      search(this.contacts);
-
-      return group;
-    },
     async findContacts(val) {
-      return rtc.contact.phonebook.search({ key: val }).then((result) => result.data.map((c) => {
-        const { id } = c.node;
-        const index = this.selectedPhoneBook.findIndex((s) => s.id === id);
-
-        if (index < 0) return this.phoneBookFormat(Object.assign({}, c.attributes, c.node));
-        else return this.selectedPhoneBook[index];
-      }));
+      return rtc.contact.phonebook.search({ key: val }).then((result) => result.data.map((c) => Object.assign({
+        group  : c.attributes.searchKey.slice(0, 1).toUpperCase(),
+        parent : { isUser: true },
+        nick   : /^(.*)\(.*\)$/.test(c.attributes.name) ? RegExp.$1.substr(-2, 2) : c.attributes.name.substr(-2, 2),
+      }, c.attributes, c.node)));
     },
     phoneBookFormat(val) {
       return formatPhoneBook(val, this.loadMode);

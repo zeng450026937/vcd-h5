@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="flex h-full m-4 bg-white border">
-        <div class="h-full border-r overflow-y-auto px-1 py-1" style="width: 280px">
+        <div class="h-full border-r overflow-y-auto px-1 py-1 w-2/5">
           <div v-if="selectedGroup.isRoot && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
             <common-empty image="empty-contact" text="暂未添加常用联系人"/>
@@ -68,7 +68,7 @@
             </a-dropdown>
           </contact-list>
         </div>
-        <div class="flex flex-grow bg-white justify-center">
+        <div class="flex flex-grow bg-white justify-center w-3/5">
           <contact-info :user="currentUser"
                         :group="groupInfo"
                         @toGroup="toGroup"/>
