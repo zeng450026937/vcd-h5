@@ -25,8 +25,7 @@
             </a-select>
             <div class="flex items-end ml-2">
               <span class="text-xs opacity-75">看不到任何视频</span>
-              <a-popover placement="bottomLeft" trigger="click"
-                         overlayClassName="calendar-info-popover">
+              <a-popover placement="bottomLeft" trigger="click">
                 <div slot="content" style="width: 250px">
                   <div class="text-xs leading-tight">
                     <div>· 请确认您的摄像头已经接通并开启。</div>

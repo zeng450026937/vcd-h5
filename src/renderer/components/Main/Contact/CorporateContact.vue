@@ -6,7 +6,7 @@
           <div class="flex">
             <div class="h-4 ml-4 mt-4">
               <div v-if="contacts"
-                   class="text-base font-medium pb-2"
+                   class="text-base font-semibold pb-2"
               >{{`${contacts.name}（${contacts.amount}）`}}
               </div>
             </div>

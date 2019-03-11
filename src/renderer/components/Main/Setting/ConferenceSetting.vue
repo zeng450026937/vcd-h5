@@ -12,7 +12,10 @@
     <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-auto">
       <div>
         <div class="flex flex-col">
-          <span class="setting-title">内容共享</span>
+          <div class="flex items-center">
+            <span class="border-l-4 border-black h-4"></span>
+            <span class="setting-title">内容共享</span>
+          </div>
           <div class="mt-3">
             <a-switch size="small" v-model="maxWindowWhenSharing"/>
             <span class="setting-label">发送内容共享时最小化VCD窗口</span>
@@ -29,7 +32,10 @@
       </div>
       <div>
         <div class="flex flex-col mt-5">
-          <span class="setting-title">基本设置</span>
+          <div class="flex items-center">
+            <span class="border-l-4 border-black h-4"></span>
+            <span class="setting-title">基本设置</span>
+          </div>
           <div class="mt-3">
             <a-switch size="small" v-model="autoSilence"/>
             <span class="setting-label">入会自动静音</span>
@@ -166,8 +172,11 @@ export default {
 
 <style lang="less">
 #conference-setting {
+  .setting-title {
+    font-weight: 600;
+  }
   .setting-title, .setting-label {
-    margin-left: 12px;
+    padding-left: 12px;
     font-size: 14px;
     color: #333333;
     line-height: 22px;

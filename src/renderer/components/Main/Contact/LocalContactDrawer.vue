@@ -19,7 +19,10 @@
             <a-input placeholder='请输入姓名'
                      v-decorator="[
                           'name',
-                          {rules: [{ required: true, message: '请输入用户姓名!' }]}
+                          {rules: [
+                              { required: true, message: '请输入用户姓名!' },
+                              { max: 64, message: '用户名不能超过64位!' }
+                           ]}
                          ]"/>
           </a-form-item>
 
@@ -31,7 +34,10 @@
             <a-input placeholder='请输入账号'
                      v-decorator="[
                           'number',
-                          {rules: [{ required: true, message: '请输入账号!' }]}
+                          {rules: [
+                              { required: true, message: '请输入账号!' },
+                              { max: 20, message: '账号不能超过20位!' }
+                           ]}
                          ]"/>
           </a-form-item>
           <a-form-item
@@ -40,7 +46,14 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入手机号'
-                     v-decorator="['phone']"/>
+                     v-number-only
+                     v-decorator="[
+                          'phone',
+                          {rules: [
+                              { max: 11, message: '手机号不能超过11位!' },
+                              { pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: '手机号格式不正确!'}
+                           ]}
+                         ]"/>
           </a-form-item>
           <a-form-item
               label='邮箱'
@@ -48,7 +61,13 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入邮箱'
-                     v-decorator="['email']"/>
+                     v-decorator="[
+                          'email',
+                          {rules: [
+                              { max: 254, message: '邮箱不能超过254位!' },
+                              { pattern: /^.+@((.+)*\.).+$/, message: '邮箱格式不正确!'}
+                           ]}
+                         ]"/>
           </a-form-item>
         </a-form>
       </div>

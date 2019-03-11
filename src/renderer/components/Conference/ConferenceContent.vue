@@ -2,7 +2,7 @@
   <a-layout id="conference-content" class="bg-transparent h-full">
     <div class="relative h-full w-full" @mousemove="contentClicked">
       <div class="flex flex-col h-full">
-        <div class="header no-dragable flex flex-col h-12 z-10"
+        <div class="header no-dragable flex flex-col h-10 z-10"
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"

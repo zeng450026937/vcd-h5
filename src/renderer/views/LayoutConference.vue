@@ -15,7 +15,3 @@ export default {
   name : 'LayoutConference',
 };
 </script>
-
-<style scoped>
-
-</style>

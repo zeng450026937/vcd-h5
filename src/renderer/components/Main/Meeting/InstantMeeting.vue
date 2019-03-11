@@ -4,7 +4,10 @@
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <span>即时会议</span>
+            <div v-if="contacts"
+                 class="text-base font-medium"
+            >{{`${contacts.name}（${contacts.amount}）`}}
+            </div>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
@@ -92,6 +95,9 @@ export default {
   computed : {
     currentContact() {
       return this.$model.account.currentContact;
+    },
+    contacts() {
+      return this.$model.contact.phoneBook;
     },
   },
   mounted() {

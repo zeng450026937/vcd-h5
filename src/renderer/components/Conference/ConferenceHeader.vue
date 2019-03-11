@@ -2,6 +2,10 @@
   <div id="conference-header" class="bg-meeting-top h-9">
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable my-1 mr-12" @dblclick="maxAppContent">
+        <a-iconfont v-if="isLocked"
+                    type="icon-suoding"
+                    title="会议已锁定"
+                    class="text-white text-base no-dragable mr-4"/>
         <a-iconfont type="icon-tonghuabaohu"
                     title="通话保护"
                     class="text-white text-base no-dragable mr-4"/>
@@ -30,8 +34,6 @@
 </template>
 
 <script>
-import screenfull from 'screenfull';
-
 export default {
   name     : 'ConferenceHeader',
   computed : {
@@ -49,6 +51,9 @@ export default {
     },
     signal() {
       return this.$model.confState.signal;
+    },
+    isLocked() {
+      return this.$rtc.conference.information.state.getLock().admissionPolicy !== 'anonymous';
     },
   },
   methods : {
@@ -68,7 +73,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-
-</style>

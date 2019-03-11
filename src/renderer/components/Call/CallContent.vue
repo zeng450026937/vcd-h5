@@ -1,7 +1,7 @@
 <template>
   <a-layout id="call-content" class="h-full">
     <div class="flex flex-col h-full">
-      <div class="call-content-header flex flex-col h-12">
+      <div class="call-content-header flex flex-col h-10">
         <div class="flex items-center h-full text-white self-end px-5 no-dragable">
           <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"
                       @click="maxCallContent"/>

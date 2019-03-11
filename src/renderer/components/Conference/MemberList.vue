@@ -8,7 +8,7 @@
         <a-input v-show="isOpenSearch"
                  ref="memberSearchInput"
                  class="border-none"
-                 placeholder="搜索"
+                 placeholder="搜索联系人"
                  v-model="filterText">
           <a-iconfont v-show="filterText"
                       slot="suffix"

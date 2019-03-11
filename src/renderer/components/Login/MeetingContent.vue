@@ -127,19 +127,6 @@ export default {
     TabSettingMedia,
     VideoView,
   },
-  directives : {
-    numberOnly : {
-      bind(el) {
-        el.handler = function() {
-          el.value = el.value.replace(/\D+/, '');
-        };
-        el.addEventListener('input', el.handler);
-      },
-      unbind(el) {
-        el.removeEventListener('input', el.handler);
-      },
-    },
-  },
   data() {
     return {
       meetingData : {
