@@ -1,13 +1,13 @@
 <template>
   <a-layout id="calendar-nav" class="flex-col bg-white h-full select-none border-r">
-    <div class="flex px-3 items-center h-14 border-b">
-        <a-input
-            v-model="searchText"
-            placeholder='搜索联系人'
-        >
-          <a-iconfont slot="suffix" type='icon-sousuo' class="text-lg text-grey"/>
-        </a-input>
-    </div>
+    <!--<div class="flex px-3 items-center h-14 border-b">-->
+        <!--<a-input-->
+            <!--v-model="searchText"-->
+            <!--placeholder='搜索联系人'-->
+        <!--&gt;-->
+          <!--<a-iconfont slot="suffix" type='icon-sousuo' class="text-lg text-grey"/>-->
+        <!--</a-input>-->
+    <!--</div>-->
     <div>
       <plain-calendar ref="calendar"
                       class="calendar-nav-calendar"
@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      searchText : '',
+      // searchText : '',
     };
   },
   computed : {

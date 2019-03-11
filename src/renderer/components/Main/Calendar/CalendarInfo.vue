@@ -36,13 +36,13 @@
               </div>
               <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">时间</span>
+                  <span class="w-20 text-black9">时间</span>
                   <span>{{currentEvent.startTime}} - {{currentEvent.expiryTime}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">周期</span>
+                  <span class="w-20 text-black9">周期</span>
                   <div class="flex flex-col">
                     <span>{{currentEvent.pattern.title}}</span>
                     <span>{{currentEvent.pattern.time}}</span>
@@ -51,25 +51,25 @@
               </div>
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">会议室</span>
+                  <span class="w-20 text-black9">会议室</span>
                   <span>{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">会议ID</span>
+                  <span class="w-20 text-black9">会议ID</span>
                   <span>{{currentEvent.conferenceNumber}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">会议密码</span>
+                  <span class="w-20 text-black9">会议密码</span>
                   <span>{{currentEvent.attendeePin}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isLive" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">直播链接</span>
+                  <span class="w-20 text-black9">直播链接</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
                     <a class="truncate" @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
@@ -79,7 +79,9 @@
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 opacity-75">备注</span>
+                  <div>
+                    <div class="w-20 text-black9">备注</div>
+                  </div>
                   <span>{{currentEvent.note || '当前会议的备注信息为空'}}</span>
                 </div>
               </div>
@@ -150,7 +152,10 @@ import copy from 'clipboard-copy';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+
 const { shell } = require('electron');
+
+
 export default {
   name       : 'CalendarInfo',
   components : {

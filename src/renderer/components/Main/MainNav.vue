@@ -6,31 +6,49 @@
             v-model="searchText"
             placeholder='搜索联系人'
         >
-          <a-iconfont slot="suffix" type='icon-sousuo' class="text-lg text-grey"/>
+          <a-iconfont v-if="!searchText"
+                      slot="suffix"
+                      type="'icon-sousuo"
+                      class="text-base text-grey cursor-pointer"/>
+          <a-iconfont v-else
+                      slot="suffix"
+                      type="icon-guanbi"
+                      class="text-base text-grey cursor-pointer hover:text-red"
+                      @click="searchText = ''"/>
         </a-input>
       </div>
     </div>
-    <div class="flex items-center h-12 px-4 cursor-pointer"
-         :class="{'mt-0': nav.isTop,
-         'bg-list-select':currentNav === index,
-         'hover:bg-list-hover': currentNav !== index}"
-         v-for="(nav, index) in navs"
-         :key="index" @click="clickNav(nav, index)">
-      <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"/>
-      <span class="ml-3 text-sm">{{nav.text}}</span>
+    <div v-show="!searchText">
+      <calendar-nav v-if="isInCalendar"/>
+      <div v-else>
+        <div class="flex items-center h-12 px-4 cursor-pointer"
+             :class="{'mt-0': nav.isTop,
+             'bg-list-select':currentNav === index,
+             'hover:bg-list-hover': currentNav !== index}"
+             v-for="(nav, index) in navs"
+             :key="index" @click="clickNav(nav, index)">
+          <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"/>
+          <span class="ml-3 text-sm">{{nav.text}}</span>
+        </div>
+      </div>
+    </div>
+    <div  v-if="searchText">
+      <global-search :searchText="searchText"/>
     </div>
     <div class="flex flex-grow"></div>
   </a-layout>
 </template>
 
 <script>
-
-// FIXME the currentNav should be set by route
-import { MAIN } from '../../router/constants';
+import { MAIN, MODULE_NAME } from '../../router/constants';
+import GlobalSearch from './GlobalSearch.vue';
+import CalendarNav from './Calendar/CalendarNav.vue';
 
 export default {
   name       : 'MainNav',
   components : {
+    GlobalSearch,
+    CalendarNav,
   },
   props : {
   },
@@ -40,6 +58,7 @@ export default {
       searchText   : '',
       currentNav   : 0,
       currentRoute : null,
+      isInCalendar : false,
     };
   },
   computed : {
@@ -52,8 +71,11 @@ export default {
   },
   methods : {
     initNav() {
-      this.currentNav = 0;
       this.currentRoute = this.$router.currentRoute;
+      this.isInCalendar = this.currentRoute.meta.owner === MODULE_NAME.CALENDAR;
+      if (this.isInCalendar) return;
+
+      this.currentNav = 0;
       const nav = this.currentRoute.meta.owner;
 
       switch (nav) {
@@ -96,7 +118,7 @@ export default {
   watch : {
     currentNav : {
       handler(val) {
-        if (!this.currentRoute) return;
+        if (!this.currentRoute || val < 0) return;
         this.$router.push(this.navs[val].route);
       },
       immediate : true,

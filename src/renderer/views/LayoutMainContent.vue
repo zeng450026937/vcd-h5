@@ -2,7 +2,7 @@
   <a-layout id="main-contact" class="h-full">
     <div class="flex h-full">
       <div v-if="!hideNav" class="flex flex-col h-full bg-under-painting">
-        <component style="width: 240px;" :is="currentNav"/>
+        <main-nav style="width: 240px;"/>
         <main-nav-mini-video v-if="showMiniVideo" style="width: 240px;"/>
         <main-nav-mini-call v-if="showMiniCall" style="width: 240px;"/>
       </div>
@@ -18,10 +18,9 @@
 
 <script>
 import MainNav from '../components/Main/MainNav.vue';
-import CalendarNav from '../components/Main/Calendar/CalendarNav.vue';
 import MainNavMiniVideo from '../components/Main/MainNavMiniVideo.vue';
 import MainNavMiniCall from '../components/Main/MainNavMiniCall.vue';
-import { MODULE_NAME, MAIN } from '../router/constants';
+import { MAIN } from '../router/constants';
 
 export default {
   name       : 'MainContact',
@@ -32,8 +31,7 @@ export default {
   },
   data() {
     return {
-      currentNav : MainNav,
-      hideNav    : false,
+      hideNav : false,
     };
   },
   computed : {
@@ -53,9 +51,9 @@ export default {
   mounted() {
   },
   watch : {
+
     $route : {
       handler(val) {
-        this.currentNav = val.meta.owner === MODULE_NAME.CALENDAR ? CalendarNav : MainNav;
         this.hideNav = val.path === MAIN.CALENDAR_RESERVE;
       },
       immediate : true,
