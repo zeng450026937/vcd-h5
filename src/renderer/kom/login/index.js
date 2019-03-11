@@ -27,7 +27,7 @@ export default {
       const { account, pin, server } = ctx.payload;
 
       const protocol = ctx.payload.protocol || 'wss';
-      const defaultPort = protocol === 'wss' ? 7443 : 5061;
+      const defaultPort = this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061;
 
       let servers;
 

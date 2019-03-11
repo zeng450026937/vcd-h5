@@ -23,7 +23,7 @@ export function packLog(filename = newPlainUUID(), format = 'tar', gzip = true) 
 
       archive.pipe(output);
 
-      archive.directory(dir, '/', (entry) => (/.log/.test(entry.name) ? entry : false));
+      archive.directory(dir, '/', (entry) => (/\.log/.test(entry.name) ? entry : false));
 
       archive.finalize();
     }));
