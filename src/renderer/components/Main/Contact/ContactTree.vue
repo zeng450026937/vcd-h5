@@ -103,11 +103,12 @@ export default {
     },
   },
   methods : {
-    onLoadData(treeNode) {
+    async onLoadData(treeNode) {
       if (treeNode.dataRef.isGroup) {
-        treeNode.dataRef.addChildNodes();
+        await treeNode.dataRef.addChildNodes();
       }
-      
+      console.warn(treeNode.dataRef);
+
       return Promise.resolve();
     },
     onExpand(expandedKeys, info) {

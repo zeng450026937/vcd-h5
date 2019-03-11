@@ -13,11 +13,13 @@
                    trigger="click"
                    overlayClassName="main-sidebar-popover">
           <template slot="content">
-            <div class="flex flex-col items-center" v-if="userInfo">
+            <div class="flex flex-col items-center">
+
               <div style="height: 76px" class="bg-card w-full rounded-t"></div>
               <div class="mt-12 text-base leading-none">{{userInfo.name}}</div>
               <div class="mt-2 leading-none text-xs text-black9 text-center"
-                    >{{userInfo.parent.fullPath | fullName}}</div>
+                    >{{userInfo.parent && userInfo.parent.fullPath | fullName}}</div>
+
               <div class="mt-10">
                 <a-button class="w-24" @click="clickLogout">退出账号</a-button>
               </div>
@@ -94,7 +96,9 @@ export default {
   },
   computed : {
     userInfo() {
-      return this.$model.account.currentContact;
+      return this.$model.account.currentContact || {
+        name : this.$rtc.account.username,
+      };
     },
     isInConferenceView : {
       get() {
@@ -161,7 +165,7 @@ export default {
       this.$refs.feedbackModal.visible = true;
     },
     genFullPath() {
-      let parent = this.userInfo.parent;
+      let { parent } = this.userInfo;
 
       let fullPath = [];
 

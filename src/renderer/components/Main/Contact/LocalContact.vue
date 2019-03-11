@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="local-contact" class="h-full">
+  <a-layout id="local-contact" class="h-full w-full">
     <div class="flex flex-col h-full">
       <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
@@ -15,44 +15,53 @@
         </div>
       </div>
       <div class="flex h-full m-4 bg-white border">
-        <div class="h-full border-r overflow-y-auto px-1 py-1 w-2/5">
-          <div v-if="localContacts.length <= 0"
-               class="flex flex-col h-full justify-center items-center">
-            <common-empty image="empty-contact" text="暂未添加本地联系人"/>
-            <a-button type="primary" ghost
-                      class="mt-8"
-                      @click="addLocalContact">添加联系人</a-button>
-          </div>
+        <div class="border-r w-2/5">
+          <div class="h-full p-1 overflow-y-hidden">
+            <div v-if="localContacts.length <= 0"
+                 class="flex flex-col h-full justify-center items-center">
+              <common-empty image="empty-contact" text="暂未添加本地联系人"/>
+              <a-button type="primary" ghost
+                        class="mt-8"
+                        @click="addLocalContact">添加联系人
+              </a-button>
+            </div>
 
-          <contact-list
-              v-else
-              enable-keyboard
-              with-gap
-              :contact-list="localContacts"
-              @clickItem="clickItem">
-            <a-dropdown slot-scope="{item}"
-                        slot="more"
-                        @click.stop=""
-                        :trigger="['click']">
-              <a-iconfont type="icon-gengduo1"
-                          title="更多"
-                          class="mr-2 text-indigo cursor-pointer text-base"/>
-              <a-menu slot="overlay">
-                <a-menu-item @click="editContact(item)">
-                  <a-iconfont type="icon-bianji"/>
-                  <span>编辑该联系人</span>
-                </a-menu-item>
-                <a-menu-item @click="deleteContact(item)">
-                  <a-iconfont type="icon-shanchu"/>
-                  <span>删除该联系人</span>
-                </a-menu-item>
-              </a-menu>
-            </a-dropdown>
-          </contact-list>
+            <contact-list
+                v-else
+                enable-keyboard
+                with-gap
+                :contact-list="localContacts"
+                @clickItem="clickItem">
+              <a-dropdown slot-scope="{item}"
+                          slot="more"
+                          @click.stop=""
+                          :trigger="['click']">
+                <a-iconfont type="icon-gengduo1"
+                            title="更多"
+                            class="mr-2 text-indigo cursor-pointer text-base"/>
+                <a-menu slot="overlay">
+                  <a-menu-item @click="editContact(item)">
+                    <a-iconfont type="icon-bianji"/>
+                    <span>编辑该联系人</span>
+                  </a-menu-item>
+                  <a-menu-item @click="deleteContact(item)">
+                    <a-iconfont type="icon-shanchu"/>
+                    <span>删除该联系人</span>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+            </contact-list>
+          </div>
         </div>
-        <div class="flex flex-grow bg-white justify-center w-2/5">
-          <contact-info :user="currentUser" :group="groupInfo"/>
+        <!--<div class="flex flex-grow bg-white justify-center w-2/5">-->
+          <!--<contact-info :user="currentUser" :group="groupInfo"/>-->
+        <!--</div>-->
+
+        <div class="flex flex-grow w-3/5 bg-white justify-center">
+          <contact-info :user="currentUser"
+                        :group="groupInfo"/>
         </div>
+
       </div>
       <local-contact-drawer ref="localContactDrawer" :type="drawerType"/>
     </div>

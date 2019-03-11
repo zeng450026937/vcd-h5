@@ -31,6 +31,14 @@
           <span>软终端管理平台地址</span>
           <a-input v-model="address" class="w-48 ml-4"/>
         </div>
+        <div class="mt-6">
+          <span>升级通道</span>
+          <a-select v-model="updateChannel" class="w-48 ml-4">
+            <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
+                             :value="channel.value"
+            >{{channel.label}}</a-select-option>
+          </a-select>
+        </div>
         <div class="mt-10">
           <a-button type="primary" class="w-32">查看新手引导</a-button>
         </div>
@@ -53,6 +61,12 @@ export default {
         { label: '简体中文', lang: 'zh-CN' },
         { label: 'English', lang: 'en-US' },
       ],
+      updateChannelList : [
+        { label: '快速', value: 'FAST' },
+        { label: '稳定', value: 'STABLE' },
+        { label: '慢速', value: 'LOW' },
+      ],
+      updateChannel : 'STABLE',
     };
   },
   deactivated() {

@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="flex flex-col border items-center bg-white h-full m-4">
-    <div class="mt-5" style="width: 520px;">
+    <div v-if="userInfo" class="mt-5" style="width: 520px;">
       <div class="flex mt-2 mb-5 items-center w-full">
         <div class="flex flex-col truncate" style="height: 72px;">
           <div class="font-bold leading-loose text-base items-center truncate">
@@ -62,6 +62,9 @@
         <a-button class="ml-4">注销</a-button>
       </div>
     </div>
+    <div v-else class="h-full flex items-center justify-center">
+      <common-empty text="暂时无法获取当前用户信息"/>
+    </div>
     <div>
       <a-modal
           title="修改密码"
@@ -95,25 +98,20 @@
 
 <script>
 import ComplexAvatar from '../../Shared/CommonAvatar.vue';
+import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import AppHeader from '../MainHeader.vue';
 
 export default {
   name       : 'AccountSetting',
   components : {
     ComplexAvatar,
+    CommonEmpty,
     AppHeader,
   },
   data() {
     return {
       updatePasswordVisible : false,
     };
-  },
-  created() {
-    const { fullPath } = this.userInfo.parent;
-
-    if (!fullPath || fullPath.length <= 0) {
-      this.genFullPath();
-    }
   },
   computed : {
     userInfo() {
@@ -150,6 +148,20 @@ export default {
     avatarTrim(val) {
       // 考虑名称后面有加 () 来备注英文名
       return /^(.*)\(.*\)$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
+    },
+  },
+  watch : {
+    userInfo : {
+      handler(val) {
+        if (val && val.parent) {
+          const { fullPath } = this.userInfo.parent;
+
+          if (!fullPath || fullPath.length <= 0) {
+            this.genFullPath();
+          }
+        }
+      },
+      immediate : true,
     },
   },
 };

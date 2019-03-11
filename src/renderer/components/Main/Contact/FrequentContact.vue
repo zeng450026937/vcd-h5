@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="frequent-contact" class="h-full">
+  <a-layout id="frequent-contact" class="h-full w-full">
 
     <div class="flex flex-col h-full">
       <div class="h-14 border-b">

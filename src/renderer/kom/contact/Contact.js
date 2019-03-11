@@ -158,6 +158,7 @@ class ContactGroup extends ContactBase {
 
       // NOTICE the param'seq is fixed
       this.items = unique([ ...this.items, ...contactItems ]);
+      this.children = this.items;
     });
   }
 }
