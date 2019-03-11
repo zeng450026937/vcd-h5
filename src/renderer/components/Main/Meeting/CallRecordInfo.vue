@@ -60,12 +60,17 @@
             </div>
           </div>
           <div class="flex flex-col my-1 flex-grow overflow-y-auto">
-            <div v-for="record in recordList" :key="record.date">
-              <div class="text-semibold mt-3 leading-normal">{{record.date}}</div>
-              <a-row class="mt-3 text-xs leading-tight" v-for="(event, index) in record.events" :key="index">
-                <a-col :span="5">{{event.date}}</a-col>
-                <a-col :span="14">{{event.text}}</a-col>
-                <a-col :span="5">{{event.lastTime}}</a-col>
+            <div v-for="(records, key) in recordGroup" :key="key">
+              <div class="text-semibold mt-3 leading-normal">{{key|genDateString}}</div>
+              <a-row class="mt-3 text-xs leading-tight" v-for="(record, index) in records" :key="index">
+                <a-col :span="9">{{record.startTime|getTime}}</a-col>
+                <a-col :span="10">
+                  <div class="flex items-center" :class="{'text-red':!record.connected}">
+                    <a-iconfont :type='record|callIcon' class="text-base" theme="filled"></a-iconfont>
+                    <span class="ml-2 text-xs">{{record|callType}}</span>
+                  </div>
+                </a-col>
+                <a-col :span="5">{{record|duration}}</a-col>
               </a-row>
             </div>
           </div>
@@ -150,75 +155,11 @@
 </template>
 
 <script>
+import { groupBy } from 'lodash/fp';
 import AppHeader from '../MainHeader.vue';
-
-const recordList = [
-  {
-    date   : '今天',
-    events : [
-      {
-        date : '15:30',
-        type : 'video-miss',
-        text : '来自菠萝吹雪的未接通视频通话',
-      },
-      {
-        date     : '15:30',
-        type     : 'video-in',
-        text     : '来自橙留香的视频通话',
-        lastTime : '30分51秒',
-      },
-      {
-        date : '15:30',
-        type : 'video-miss',
-        text : '来自橙留香的未接通视频通话',
-      },
-    ],
-
-  },
-  {
-    date   : '昨天',
-    events : [
-      {
-        date     : '15:30',
-        type     : 'video-in',
-        text     : '来自橙留香的视频通话',
-        lastTime : '30分51秒',
-      },
-      {
-        date : '15:30',
-        type : 'video-miss',
-        text : '来自橙留香的未接通视频通话',
-      },
-      {
-        date : '15:30',
-        type : 'audio-out',
-        text : '与陆小果进行通话',
-      },
-    ],
-
-  },
-  {
-    date   : '2018/12/26 15:30',
-    events : [
-      {
-        date     : '15:30',
-        type     : 'video-in',
-        text     : '来自橙留香的视频通话',
-        lastTime : '30分51秒',
-      },
-      {
-        date : '15:30',
-        type : 'video-miss',
-        text : '来自橙留香的未接通视频通话',
-      },
-      {
-        date : '15:30',
-        type : 'audio-out',
-        text : '与陆小果进行通话',
-      },
-    ],
-  },
-];
+import { CallRecord, genStoreName } from '../../../database/call-record';
+import { getDate, genDateString, genDurationTime, getTime } from '../../../utils/date';
+import { callType, callIcon } from '../../../utils/filters';
 
 export default {
   name       : 'CallRecordInfo',
@@ -227,14 +168,35 @@ export default {
   },
   data() {
     return {
-      recordList,
+      recordGroup    : {},
       showEditDrawer : false,
+      recordInfo     : null,
     };
+  },
+  filters : {
+    getDate,
+    getTime,
+    genDateString,
+    callIcon,
+    callType,
+    duration({ startTime, endTime }) {
+      return genDurationTime(startTime, endTime);
+    },
   },
   methods : {
     goBack() {
       this.$router.back();
     },
+  },
+  async mounted() {
+    this.recordInfo = this.$route.query;
+    const callRecordDb = CallRecord.Create();
+    const storeName = genStoreName();
+    const records = await callRecordDb.getRecordByOtherId(storeName, this.recordInfo.otherId);
+
+    const groupByTime = groupBy((i) => getDate(i.startTime));
+
+    this.recordGroup = groupByTime(records);
   },
 };
 </script>

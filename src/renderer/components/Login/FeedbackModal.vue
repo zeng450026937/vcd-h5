@@ -68,6 +68,7 @@
 <script>
 import { readFile } from 'fs-extra';
 import path from 'path';
+import { getDate } from '../../utils/date';
 
 export default {
   name : 'FeedbackModal',
@@ -116,15 +117,7 @@ export default {
       return input;
     },
     getLogFileName() {
-      return `vc-desktop.${this.getDate()}.log`;
-    },
-    getDate(date = new Date()) {
-      const year = new Date(date).getFullYear();
-      const month = new Date(date).getMonth() + 1;
-      const day = new Date(date).getDate();
-      const toDoubule = (num) => (num < 9 ? `0${num}` : num);
-
-      return `${year}-${toDoubule(month)}-${toDoubule(day)}`;
+      return `vc-desktop.${getDate()}.log`;
     },
     reset() {
       this.fileList = [];

@@ -1,19 +1,44 @@
 import Base from './base';
+import storage from '../storage';
 
-export class CallRecord extends Base {
-  async getRecordByOtherId(val) { // otherId 通话过程中 对方的id
-    return this.find('callRecord', 'otherId', val).toArray();
-  }
+export function genStoreName() {
+  const accountInfo = storage.query('CURRENT_ACCOUNT');
+
+  return `callRecord-${accountInfo.account}-${accountInfo.server}`;
 }
 
-export const callRecord = new CallRecord(
-  'callRecord',
-  {
-    callRecord : '++id, type, callId,  otherId',
-  },
-  1,
-);
+function genStores() {
+  return storage.query('ACCOUNT_LIST').map((item) => `callRecord-${item.account}-${item.server}`);
+}
 
+export class CallRecord extends Base {
+  static Create() {
+    const stores = genStores();
+    const options = {};
+
+    stores.forEach((store) => {
+      options[store] = '++id, type, callId, otherId';
+    });
+
+    return new CallRecord(
+      'callRecord',
+      options,
+      1,
+    );
+  }
+
+  async getRecordByOtherId(storeName, val) { // otherId 通话过程中 对方的id
+    return this.find(storeName, 'otherId', val).toArray();
+  }
+
+  async getRecordByRecent(storeName, num) {
+    return this.db[storeName]
+      .orderBy('id')
+      .reverse()
+      .limit(num)
+      .toArray();
+  }
+}
 
 const getRandomString = (num = 16) => {
   const allowedChars = '0123456789ABCDEF';
