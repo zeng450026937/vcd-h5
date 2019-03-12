@@ -41,10 +41,15 @@ export class PushService extends EventEmitter {
     this.isStop = false;
     this.retryTimes = 0;
     this.maxRetryTimes = 0;
+    this.cancelToken = null;
   }
 
   stop(stop = true) {
     this.isStop = stop;
+    if (this.cancelToken) {
+      this.cancelToken.cancel();
+      this.cancelToken = null;
+    }
   }
 
   async poll(wait) {
@@ -113,6 +118,8 @@ export class PushService extends EventEmitter {
     const contentType = 'application/json';
     
     try {
+      this.cancelToken = axios.CancelToken.source();
+
       res = await axios({
         method  : 'post',
         url,
@@ -123,12 +130,17 @@ export class PushService extends EventEmitter {
           Authorization  : auth,
           subscribe      : sub,
         },
-        timeout : 30000,
+        timeout     : 30000,
+        cancelToken : this.cancelToken.token,
       });
     }
     catch (error) {
+      this.cancelToken = null;
+
       return;
     }
+
+    this.cancelToken = null;
 
     return res.data;
   }
