@@ -4,6 +4,8 @@ import { getLogDirectoryPath } from '../get-log-path';
 
 require('winston-daily-rotate-file');
 
+const __DEV__ = process.env.NODE_ENV === 'development';
+
 const MaxLogFiles = 14;
 
 export const loggers = winston.loggers;
@@ -28,7 +30,7 @@ export function initializeWinston() {
   });
 
   const consoleLogger = new winston.transports.Console({
-    level  : process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+    level  : __DEV__ ? 'debug' : 'error',
     format : prettyPrint(),
   });
 
@@ -38,6 +40,13 @@ export function initializeWinston() {
     level : 'info',
   });
 
+  const transports = [
+    consoleLogger, fileLogger,
+  ];
+
+  if (!__DEV__) {
+    transports.push(httpLogger);
+  }
 
   winston.loggers.add('browser', {
     format : combine(
@@ -45,7 +54,7 @@ export function initializeWinston() {
       timestamp(),
       splat(),
     ),
-    transports : [ consoleLogger, fileLogger, httpLogger ],
+    transports,
   });
 
   winston.loggers.add('renderer', {
@@ -54,7 +63,7 @@ export function initializeWinston() {
       timestamp(),
       splat(),
     ),
-    transports : [ consoleLogger, fileLogger, httpLogger ],
+    transports,
   });
 
   winston.configure({
@@ -63,7 +72,7 @@ export function initializeWinston() {
       timestamp(),
       splat(),
     ),
-    transports : [ consoleLogger, fileLogger, httpLogger ],
+    transports,
   });
 
   return winston.log;
