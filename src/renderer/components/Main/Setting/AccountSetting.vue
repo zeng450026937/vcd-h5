@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="flex flex-col border items-center bg-white h-full m-4">
-    <div v-if="userInfo" class="mt-5" style="width: 520px;">
+    <div v-if="userInfo && userInfo.parent" class="mt-5" style="width: 520px;">
       <div class="flex mt-2 mb-5 items-center w-full">
         <div class="flex flex-col truncate" style="height: 72px;">
           <div class="font-bold leading-loose text-base items-center truncate">
@@ -32,23 +32,18 @@
         <span class="text-black6">账号</span>
         <span class="ml-3">{{userInfo.number}}</span>
       </div>
-      <div class="mt-5 leading-normal">
+      <div v-if="userInfo.phone" class="mt-5 leading-normal">
         <span class="text-black6">手机</span>
         <span class="ml-3">{{userInfo.phone}}</span>
       </div>
-      <div class="mt-5 leading-normal">
+      <div v-if="userInfo.email" class="mt-5 leading-normal">
         <span class="text-black6">邮箱</span>
-        <span class="ml-3">{{userInfo.email || '暂无邮箱'}}</span>
+        <span class="ml-3">{{userInfo.email}}</span>
       </div>
-      <template v-if="userInfo.parent.fullPath">
-        <!--<div class="mt-5 leading-normal">-->
-          <!--<span class="text-black6">部门</span>-->
-          <!--<span class="ml-3">{{userInfo.parent.fullPath | fullName}}</span>-->
-        <!--</div>-->
-
+      <template v-if="userInfo.parent.fullPath && userInfo.parent.fullPath.length > 0">
         <div class="mt-5 flex items-start leading-normal">
-          <span class="whitespace-no-wrap text-black6">部门</span>
-          <span class="text-indigo ml-3">{{userInfo.parent.fullPath | fullName}}</span>
+          <span class="whitespace-no-wrap text-black6">分组</span>
+          <span class="ml-3">{{userInfo.parent.fullPath | fullName}}</span>
         </div>
 
         <div class="mt-5 leading-normal">
@@ -126,8 +121,9 @@ export default {
     clickOk() {
     },
     genFullPath() {
-      let parent = this.userInfo.parent;
+      let { parent } = this.userInfo;
 
+      if (!parent) return;
       let fullPath = [];
 
       while (parent.id) {
@@ -142,7 +138,7 @@ export default {
     },
   },
   filters : {
-    fullName(fullPath = '') {
+    fullName(fullPath = []) {
       return fullPath.length < 1 ? '' : fullPath.slice(1, fullPath.length).map((b) => b.text).join('/');
     },
     avatarTrim(val) {

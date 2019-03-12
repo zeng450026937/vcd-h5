@@ -63,8 +63,8 @@ export default {
       ],
       updateChannelList : [
         { label: '快速', value: 'FAST' },
-        { label: '稳定', value: 'STABLE' },
         { label: '慢速', value: 'LOW' },
+        { label: '稳定', value: 'STABLE' },
       ],
       updateChannel : 'STABLE',
     };

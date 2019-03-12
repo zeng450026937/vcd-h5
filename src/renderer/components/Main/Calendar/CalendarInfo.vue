@@ -51,7 +51,9 @@
               </div>
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">会议室</span>
+                  <div>
+                    <div class="w-20 text-black9">会议室</div>
+                  </div>
                   <span>{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>

@@ -29,7 +29,6 @@
             <contact-list
                 v-else
                 enable-keyboard
-                with-gap
                 :contact-list="localContacts"
                 @clickItem="clickItem">
               <a-dropdown slot-scope="{item}"

@@ -62,7 +62,6 @@
             </div>
             <contact-list v-else
                           hide-popup
-                          with-gap
                           :contactList="searchResult"
                           :highlightContent="callNumber"
                           highlightSelected

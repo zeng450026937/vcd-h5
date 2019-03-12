@@ -2,17 +2,17 @@
   <div id="contact-info" class="bg-white h-full w-full">
     <div v-if="hasUser" class="flex flex-col h-full">
       <div class="flex py-5 items-center border-b mx-10">
-        <div class="flex flex-col flex-grow truncate" style="height: 72px;">
+        <div class="flex flex-col flex-grow truncate" style="height: 80px;">
           <div class="font-bold leading-loose text-base items-center truncate">
-            {{user | filterCardTitle}}
+            {{user.name}}
           </div>
-          <div class="mt-2 text-xs leading-tight text-black6 whitespace-normal">
+          <div class="mt-3 text-xs leading-tight text-black6 whitespace-normal">
             {{user | filterCardText}}
           </div>
         </div>
         <div class="ml-10">
           <a-avatar v-if="!user.parent.isUser"
-                    :size="72"
+                    :size="80"
                     class="text-white">
             <a-iconfont :type="user.avatar" class="text-3xl mt-5"/>
           </a-avatar>
@@ -21,26 +21,28 @@
           </a-avatar>
         </div>
       </div>
-      <div class="flex flex-col flex-grow my-2 text-xs px-10">
-        <div class="mt-3 leading-tight">
-          <span class="mr-3 truncate text-black6">{{user.parent.isUser ? '账号' : '号码'}}</span>
-          <span >{{user.number}}</span>
+      <div class="flex flex-col flex-grow text-sm px-10">
+        <div class="flex leading-normal">
+          <div class="flex flex-col">
+            <span class="mt-5 mr-3 truncate text-black6">{{user.parent.isUser ? '账号' : '号码'}}</span>
+            <span v-if="user.parent.isVMR" class="mt-5 mr-3 text-black6">组织者</span>
+            <template v-if="user.parent.isUser">
+              <span v-if="user.phone" class="mt-5 mr-3 text-black6">手机</span>
+              <span v-if="user.email" class="mt-5 mr-3 text-black6">邮箱</span>
+              <span class="mt-5 mr-3 whitespace-no-wrap text-black6">分组</span>
+            </template>
+          </div>
+          <div class="flex flex-col">
+            <span class="mt-5">{{user.number}}</span>
+            <span v-if="user.parent.isVMR" class="text-black9 mt-5">暂时无法获取当前会议的组织者</span>
+            <template v-if="user.parent.isUser">
+              <span v-if="user.phone" class="mt-5">{{user.phone}}</span>
+              <span v-if="user.email" class="mt-5">{{user.email}}</span>
+              <a class="text-indigo mt-5 hover:underline"
+                 @click="clickDept(user.parent.fullPath)">{{user.parent.fullPath | fullName}}</a>
+            </template>
+          </div>
         </div>
-        <template v-if="user.parent.isUser">
-          <div class="mt-3 leading-tight items-center">
-            <span class="mr-3 text-black6">电话</span>
-            <span>{{user.phone}}</span>
-          </div>
-          <div class="mt-3 leading-tight items-center">
-            <span class="mr-3 text-black6">邮箱</span>
-            <span>{{user.email || '暂无邮箱'}}</span>
-          </div>
-          <div class="mt-3 flex leading-tight items-start">
-            <span class="mr-3 whitespace-no-wrap text-black6">部门</span>
-            <a class="text-indigo hover:underline"
-               @click="clickDept(user.parent.fullPath)">{{user.parent.fullPath | fullName}}</a>
-          </div>
-        </template>
       </div>
       <div class="flex mt-1 h-12 border-t items-center justify-center">
         <a-button type="primary"
@@ -114,17 +116,13 @@ export default {
     fullName(fullPath) {
       return fullPath.map((b) => b.text).join('/');
     },
-    filterCardTitle(item) {
+    filterCardText(item) {
       const { parent } = item;
 
-      if (parent.isUser) return item.name;
-      else if (parent.isDevice) return '设备型号';
-      else if (parent.isExternal) return '其他联系人';
-      else if (parent.isVMR) return '虚拟会议室名字';
+      if (parent.isUser || parent.isExternal) return '暂时无法获取当前联系人的个性签名信息。';
+      else if (parent.isDevice) return '暂时无法获取当前设备绑定的会议室';
+      else if (parent.isVMR) return '暂时无法获取当前虚拟会议模式';
       else if (parent.isService) return '服务号';
-    },
-    filterCardText(item) {
-      return item.parent.isUser ? '这里是个性签名,字太多可以显示两行。这里是个性签名,字太多可以显示两行。' : item.name;
     },
   },
 };

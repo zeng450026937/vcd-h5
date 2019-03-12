@@ -51,7 +51,7 @@
                         <div class="flex flex-col max-w-4/5 flex-grow">
                           <div class="text-base flex leading-loose">
                             <span class="w-1 flex flex-grow truncate">
-                              <span class="truncate">{{item | filterCardTitle}}</span>
+                              <span class="truncate">{{item.name}}</span>
                             </span>
                           </div>
                           <div class="truncate text-xs font-thin leading-tight opacity-75 mt-1">
@@ -75,7 +75,7 @@
                           <span>{{item.number}}</span>
                           <div class="flex flex-grow"></div>
                           <a-iconfont type="icon-shipin"
-                                      @click.stop="doVideo(item)"
+                                      @click.stop="doAudio(item)"
                                       class="mr-4 text-indigo cursor-pointer text-base"/>
                           <a-iconfont type="icon-yuyin"
                                       @click.stop="doAudio(item)"
@@ -91,7 +91,7 @@
                             <span>{{item.email || '暂无邮箱'}}</span>
                           </div>
                           <div class="mt-3 flex items-start">
-                            <span class="mr-3 whitespace-no-wrap text-black6">部门</span>
+                            <span class="mr-3 whitespace-no-wrap text-black6">分组</span>
                             <span class="text-indigo">{{item | fullName}}</span>
                           </div>
                         </template>
@@ -118,7 +118,7 @@
                             title="视频呼叫"
                             type="icon-shipin"
                             class="mr-3 text-indigo cursor-pointer text-base"
-                            @click.stop="doVideo(item)"/>
+                            @click.stop="doAudio(item)"/>
                 <a-iconfont v-if="audioIcon && !item.isGroup"
                             title="音频呼叫"
                             type="icon-yuyin"
@@ -292,7 +292,11 @@ export default {
       this.$rtc.conference.meetnow(list);
     },
     doAudio(item) {
-      if (item.isGroup) return;
+      if (item.isGroup) {
+        this.doVideo(item);
+        
+        return;
+      }
       this.$dispatch('call.doAudioCall', item.number);
     },
     moreOption(item) {
@@ -337,17 +341,13 @@ export default {
 
       return item.parent.fullPath.map((b) => b.text).join('/');
     },
-    filterCardTitle(item) {
+    filterCardText(item) {
       const { parent } = item;
 
-      if (parent.isUser) return item.name;
-      else if (parent.isDevice) return '设备型号';
-      else if (parent.isExternal) return '其他联系人';
-      else if (parent.isVMR) return '虚拟会议室名字';
+      if (parent.isUser || parent.isExternal) return '暂时无法获取当前联系人的个性签名信息。';
+      else if (parent.isDevice) return '暂时无法获取当前设备绑定的会议室';
+      else if (parent.isVMR) return '暂时无法获取当前虚拟会议模式';
       else if (parent.isService) return '服务号';
-    },
-    filterCardText(item) {
-      return item.parent.isUser ? '个性签名，只显示一行，如果超出一行则超出的部分省略不显示' : item.name;
     },
   },
 };
