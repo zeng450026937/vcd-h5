@@ -3,7 +3,7 @@ import { YTMSClient } from './ytms-client';
 import { PushService } from './push-service';
 import { handlePushMessage } from './handle-push-message';
 
-const default_url = process.env.VUE_APP_YTMS_URL;
+const default_url = process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
 
 export class YTMSService {
   constructor(url = default_url) {
@@ -52,10 +52,10 @@ export class YTMSService {
   }
 
   async connect(url = default_url) {
-    this.url = url;
-
     // disconnect first
     this.disconnect();
+    
+    this.url = url;
     
     // prepare client
     const clientId = await getClientId();

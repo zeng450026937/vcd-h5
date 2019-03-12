@@ -25,7 +25,7 @@ export const AppWindowProxy = {
     window.apis = apis;
     this.$apis = apis;
 
-    let url = process.env.VUE_APP_YTMS_URL;
+    let url = process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
 
     apis.yealink = createApi(url, clientId);
     

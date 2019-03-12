@@ -15,7 +15,7 @@ if (inspectRequest) {
       return config;
     },
     (error) => {
-      logger.error('YTMS API request error', error);
+      logger.error('YTMS API request error: %s', error);
 
       return Promise.reject(error);
     }
@@ -35,7 +35,7 @@ if (inspectResponse) {
       return response;
     },
     (error) => {
-      logger.error('YTMS API respone error', error);
+      logger.error('YTMS API respone error: %s', error);
 
       return Promise.reject(error);
     }

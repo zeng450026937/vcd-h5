@@ -27,7 +27,7 @@ export class DigestTransform extends Transform {
 
     const valid = this.validate();
 
-    console.log(this.actual, this.expected);
+    logger.debug(`${this.algorithm} checksum, actual: ${this.actual} expected: ${this.expected}`);
 
     if (!valid) return callback(new Error(`${this.algorithm} checksum mismatch`));
 

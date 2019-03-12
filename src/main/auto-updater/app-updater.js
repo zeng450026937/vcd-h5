@@ -54,6 +54,7 @@ export class AppUpdater extends EventEmitter {
 
   async checkForUpdates() {
     const info = await this.provider.getLatestVersion().catch((e) => {
+      logger.error(e);
       this.emit('error', e);
     });
 
@@ -65,7 +66,7 @@ export class AppUpdater extends EventEmitter {
 
     const avariable = this.provider.isVersionAvariable(info);
 
-    console.log(`update-available: ${avariable} \n`, info);
+    logger.info(`update-available: ${avariable}, info: %o`, info);
 
     if (!avariable) return this.emit('update-not-available', info);
 
@@ -73,7 +74,7 @@ export class AppUpdater extends EventEmitter {
 
     if (this.autoDownload) {
       // async download
-      this.provider.download(info).catch((e) => console.log(e));
+      this.provider.download(info).catch((e) => logger.error(e));
     }
 
     return info;
@@ -103,7 +104,7 @@ export class AppUpdater extends EventEmitter {
     }
     catch (error) {
       this.installError = error;
-      console.error('Install app error', error);
+      logger.error('Install app error', error);
     }
 
     this.installing = false;
@@ -138,6 +139,7 @@ export class AppUpdater extends EventEmitter {
   }
 
   handlerQuit(event, exitCode) {
+    console.log('quit', exitCode);
     if (exitCode !== 0) return;
     if (!this.autoInstallOnAppQuit) return;
     if (!this.provider.latestVersionDownloaded) return;

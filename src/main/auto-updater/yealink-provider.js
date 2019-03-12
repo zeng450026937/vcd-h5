@@ -50,7 +50,7 @@ export class YealinkProvider extends Provider {
     } = info;
 
     if (updateChannel !== this.channel) {
-      console.warn(`Received update from other update channel. received: ${updateChannel} current: ${this.channel}`);
+      logger.warn(`Received update from other update channel. received: ${updateChannel} current: ${this.channel}`);
       
       return false;
     }
@@ -58,7 +58,7 @@ export class YealinkProvider extends Provider {
     if (clientModel !== process.env.VUE_APP_MODEL
       || clientPlatform !== process.platform
       || customId !== process.env.VUE_APP_CUSTOMID) {
-      console.warn('Received wrong update info.', JSON.stringify(info));
+      logger.warn('Received wrong update info');
 
       return false;
     }
