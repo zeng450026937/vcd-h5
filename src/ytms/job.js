@@ -16,6 +16,7 @@ export class Job extends EventEmitter {
     this.startTime = 0;
     this.endTime = 0;
     this.lifetime = MAX_SESSION_LIFETIME * 1000;
+    this.lifetimeTimer = null;
   }
 
   get duration() {
@@ -39,6 +40,8 @@ export class Job extends EventEmitter {
     this.startTime = Date.now();
 
     this.timer = setInterval(() => this.progress(), this.interval);
+    this.lifetimeTimer = setTimeout(() => this.stop(), this.lifetime);
+    
     this.report('start');
   }
 
@@ -55,6 +58,11 @@ export class Job extends EventEmitter {
       clearInterval(this.timer);
       this.timer = null;
     }
+    if (this.lifetimeTimer) {
+      clearTimeout(this.lifetimeTimer);
+      this.lifetimeTimer = null;
+    }
+
     this.report('stop');
   }
 
