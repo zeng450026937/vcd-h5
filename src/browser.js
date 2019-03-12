@@ -42,8 +42,6 @@ process.on('uncaughtException', (error) => {
   handleUncaughtException(error);
 });
 
-logger.info('-- App start-up --');
-
 const __DEV__ = process.env.NODE_ENV === 'development';
 
 // On Windows 10, a shortcut to your app with an Application User Model ID
@@ -134,6 +132,8 @@ if (!handlingSquirrelEvent) {
     app.quit();
   }
   else {
+    logger.info('-- App start-up --');
+
     app.on('second-instance', (event, commandLine, workingDirectory) => {
       if (mainWindow) {
         mainWindow.restoreWindow();
@@ -151,7 +151,7 @@ if (!handlingSquirrelEvent) {
 
       ytms.yealink.connect()
         .then((service) => {
-          logger.info(`yealink ytms connected, url: ${service.url}`);
+          logger.info(`yealink ytms connected, url: ${service.url} push: ${service.baseURL} ${service.tenantId}`);
         });
     });
     
@@ -161,6 +161,11 @@ if (!handlingSquirrelEvent) {
       }
       reportGpuCrash();
     });
+
+    // app.once('quit', () => {
+    //   ytms.yealink.disconnect();
+    //   ytms.enterprise.disconnect();
+    // });
     
     app.on('activate', () => {
       onDidLoad((window) => {
