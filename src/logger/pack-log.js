@@ -4,7 +4,7 @@ import { resolve as resolvePath } from 'path';
 import { getLogDirectoryPath, getNetLogDirectoryPath } from './get-log-path';
 import { newPlainUUID } from '../utils/uuid';
 
-export function packLog(filename = newPlainUUID(), format = 'tar', gzip = true) {
+export function packLog(filename = newPlainUUID(), format = 'zip', gzip = false) {
   const dir = getLogDirectoryPath();
 
   return ensureDir(dir)
@@ -29,7 +29,7 @@ export function packLog(filename = newPlainUUID(), format = 'tar', gzip = true) 
     }));
 }
 
-export function packNetlog(filename = newPlainUUID(), format = 'tar', gzip = true) {
+export function packNetlog(filename = newPlainUUID(), format = 'zip', gzip = false) {
   const dir = getNetLogDirectoryPath();
 
   return ensureDir(dir)
@@ -48,7 +48,7 @@ export function packNetlog(filename = newPlainUUID(), format = 'tar', gzip = tru
 
       archive.pipe(output);
 
-      archive.directory(dir, '/', (entry) => (/.json/.test(entry.name) ? entry : false));
+      archive.directory(dir, '/', (entry) => (/\.json/.test(entry.name) ? entry : false));
 
       archive.finalize();
     }));
