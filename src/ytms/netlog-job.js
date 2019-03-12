@@ -34,8 +34,6 @@ export class NetLogJob extends Job {
 
   stop() {
     if (this.isStop) return;
-
-    super.stop();
     
     if (!netLog.currentlyLogging) {
       logger.warn('netLog has been stopped');
@@ -50,6 +48,8 @@ export class NetLogJob extends Job {
       log.addLog(logfile, this.id);
 
       await log.upload().catch((e) => logger.error(e));
+      
+      super.stop();
     });
   }
 }
