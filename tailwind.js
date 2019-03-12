@@ -319,6 +319,7 @@ module.exports = {
 
     'red-light' : '#FF5050',
     disabled    : '#CCCCCC',
+    expired     : '#EEEEEE',
     active      : '#4A5FC4',
   },
 
