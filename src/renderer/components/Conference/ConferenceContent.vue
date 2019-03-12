@@ -5,7 +5,7 @@
         <div class="header no-dragable flex flex-col h-10 z-10"
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
-            <a-iconfont v-if="hasScreenStream" type="icon-danchufuliu"
+            <a-iconfont v-if="hasScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
                         title="弹出辅流"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
@@ -127,6 +127,8 @@ export default {
   },
   methods : {
     openShareWindow() {
+      if (this.isShareWindowOpen) return;
+
       const option = 'width=528,height=297,minWidth=528,minHeight=297,directories=no,resizable,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
 
       this.shareWindow = window.open('shareScreen.html', 'screen-share', option);
@@ -135,7 +137,7 @@ export default {
         // FIXME TMP SOLUTION
         setTimeout(() => {
           this.isShareWindowOpen = !this.shareWindow.closed;
-        }, 100);
+        }, 1000);
       };
     },
     showInviteModal() {
