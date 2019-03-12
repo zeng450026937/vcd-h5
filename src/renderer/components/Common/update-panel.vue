@@ -80,7 +80,11 @@ export default {
   },
   watch : {
     isAutoUpdate(val) {
-      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: val });
+      const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
+
+      updateConfig.isAutoUpdate = val;
+
+      this.$storage.insert('AUTO_UPDATE', updateConfig);
     },
   },
   computed : {
@@ -112,9 +116,13 @@ export default {
     },
   },
   mounted() {
-    if (!this.$storage.query('AUTO_UPDATE')) {
-      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: true });
+    const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
+
+    if (updateConfig.isAutoUpdate == null) {
+      updateConfig.isAutoUpdate = true;
+      this.$storage.insert('AUTO_UPDATE', updateConfig);
     }
+
     updater.autoInstallOnAppQuit = this.isAutoUpdate = this.$storage.query('AUTO_UPDATE').isAutoUpdate;
     updater.on('error', this.onError);
     updater.on('did-change', this.onDidChange);

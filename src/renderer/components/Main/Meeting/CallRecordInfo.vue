@@ -52,7 +52,7 @@
                       <a-col :span="8">13110987623</a-col>
                       <a-col :span="2">部门</a-col>
                       <a-col :span="8" class="text-indigo cursor-pointer"
-                             @click="showEditDrawer = true">解决方案部(设为本地联系人)
+                             @click="addLocalContact">解决方案部(设为本地联系人)
                       </a-col>
                     </a-row>
                   </a-col>
@@ -93,51 +93,7 @@
     </div>
 
     <div>
-      <a-drawer
-          title="添加为本地联系人"
-          :closable="false"
-          width=360
-          placement="right"
-          @close="showEditDrawer = false"
-          :visible="showEditDrawer"
-          wrapClassName="add-local-contact-drawer"
-      >
-        <div class="flex h-full flex-col flex-grow mx-5">
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">姓名</a-col>
-            <a-col :span="20">
-              <a-input placeholder='姓名'></a-input>
-            </a-col>
-          </a-row>
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">账号</a-col>
-            <a-col :span="20">
-              <a-input placeholder='账号'></a-input>
-            </a-col>
-          </a-row>
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">手机</a-col>
-            <a-col :span="20">
-              <a-input placeholder='手机'></a-input>
-            </a-col>
-          </a-row>
-          <a-row class="mt-5 flex items-center">
-            <a-col :span="4">邮箱</a-col>
-            <a-col :span="20">
-              <a-input placeholder='邮箱'></a-input>
-            </a-col>
-          </a-row>
-
-        </div>
-        <div class="flex h-12 border-t justify-center items-center">
-          <a-button @click="showEditDrawer = false" type="primary">
-            确定
-          </a-button>
-          <a-button @click="showEditDrawer = false" class="ml-4">
-            取消
-          </a-button>
-        </div>
-      </a-drawer>
+      <local-contact-drawer ref="localContactDrawer" :type="drawerType"/>
     </div>
 
   </a-layout>
@@ -149,11 +105,13 @@ import AppHeader from '../MainHeader.vue';
 import { CallRecord, genStoreName } from '../../../database/call-record';
 import { getDate, genDateString, genDurationTime, getTime } from '../../../utils/date';
 import { callType, callIcon } from '../../../utils/filters';
+import LocalContactDrawer from '../../../components/Main/Contact/LocalContactDrawer'
 
 export default {
   name       : 'CallRecordInfo',
   components : {
     AppHeader,
+    LocalContactDrawer,
   },
   data() {
     return {
@@ -161,6 +119,7 @@ export default {
       showEditDrawer : false,
       recordInfo     : null,
       storeName      : null,
+      drawerType     : '',
     };
   },
   filters : {
@@ -176,6 +135,12 @@ export default {
   methods : {
     goBack() {
       this.$router.back();
+    },
+    addLocalContact() {
+      this.$refs.localContactDrawer.visible = true;
+      this.$refs.localContactDrawer.form.$nextTick(() => {
+        this.drawerType = 'add';
+      });
     },
     async setCallRecord() {
       const callRecordDb = CallRecord.Create();

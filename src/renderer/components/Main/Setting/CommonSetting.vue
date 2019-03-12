@@ -49,11 +49,20 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
+import updater from '../../../updater';
 
 export default {
   name       : 'CommonSetting',
   components : {
     AppHeader,
+  },
+  watch : {
+    updateChannel(val) {
+      const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
+
+      this.updateChannel = updater.channel = updateConfig.channel = val;
+      this.$storage.insert('AUTO_UPDATE', updateConfig);
+    },
   },
   data() {
     return {
@@ -62,11 +71,11 @@ export default {
         { label: 'English', lang: 'en-US' },
       ],
       updateChannelList : [
-        { label: '快速', value: 'FAST' },
-        { label: '稳定', value: 'STABLE' },
-        { label: '慢速', value: 'LOW' },
+        { label: '快速', value: 'fast' },
+        { label: '稳定', value: 'stable' },
+        { label: '慢速', value: 'insiders' },
       ],
-      updateChannel : 'STABLE',
+      updateChannel : 'stable',
     };
   },
   deactivated() {
@@ -108,6 +117,15 @@ export default {
         this.$model.setting.normal.address = val;
       },
     },
+  },
+  created() {
+    const updateConig = this.$storage.query('AUTO_UPDATE') || {};
+
+    if (!updateConig.channel) {
+      updateConig.channel = 'stable';
+      this.$storage.insert('AUTO_UPDATE', updateConig);
+    }
+    this.updateChannel = updater.channel = this.$storage.query('AUTO_UPDATE').channel;
   },
 };
 </script>
