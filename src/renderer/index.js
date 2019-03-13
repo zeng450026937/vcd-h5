@@ -8,6 +8,7 @@ import rtc from './rtc';
 import storage from './storage';
 import popup from './popup';
 import kom from './kom';
+import sketch from './sketch';
 import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
@@ -36,6 +37,7 @@ new Vue({
   kom,
   i18n,
   rtc,
+  sketch,
   storage,
   popup,
   render : (h) => h(App),

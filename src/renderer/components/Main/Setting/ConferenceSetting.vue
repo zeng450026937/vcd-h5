@@ -17,7 +17,7 @@
             <span class="setting-title">内容共享</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="maxWindowWhenSharing"/>
+            <a-switch size="small" v-model="minWindowWhenSharing"/>
             <span class="setting-label">发送内容共享时最小化VCD窗口</span>
           </div>
           <div class="mt-3">
@@ -132,9 +132,9 @@ export default {
     AppHeader,
   },
   computed : {
-    maxWindowWhenSharing : {
-      get() { return this.$model.setting.conference.maxWindowWhenSharing; },
-      set(val) { this.$model.setting.conference.maxWindowWhenSharing = val; },
+    minWindowWhenSharing : {
+      get() { return this.$model.setting.conference.minWindowWhenSharing; },
+      set(val) { this.$model.setting.conference.minWindowWhenSharing = val; },
     },
     maxWindowWhenWatchingSharing : {
       get() { return this.$model.setting.conference.maxWindowWhenWatchingSharing; },

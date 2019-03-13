@@ -4,9 +4,9 @@ const conference = {
   data() {
     return {
       enableHDVideo   : false,
-      enableHWSpeed   : false,
-      disableVideo    : false,
-      enableMirroring : false,
+      enableHWSpeed   : true,
+      disableVideo    : true,
+      enableMirroring : true,
     };
   },
   created() {
