@@ -47,7 +47,7 @@
       <div class="flex mt-1 h-12 border-t items-center justify-center">
         <a-button type="primary"
                   style="width: 120px;"
-                  @click="clickVideo">
+                  @click="clickAudio">
           <a-iconfont type="icon-shipin" class="text-base"/>视频通话
         </a-button>
         <a-button type="primary"
@@ -102,11 +102,6 @@ export default {
   methods : {
     clickDept(path) {
       this.$emit('toGroup', path);
-    },
-    clickVideo() {
-      this.$rtc.conference.meetnow([ {
-        requestUri : this.user.number,
-      } ]);
     },
     clickAudio() {
       this.$dispatch('call.doAudioCall', this.user.number);

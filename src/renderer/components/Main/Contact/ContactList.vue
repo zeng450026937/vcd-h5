@@ -289,7 +289,7 @@ export default {
           return list.length < 100;
         });
       }
-      this.$rtc.conference.meetnow(list);
+      this.$rtc.conference.meetnow(list, { subject: `${this.$rtc.account.username} 的视频会议` });
     },
     doAudio(item) {
       if (item.isGroup) {
