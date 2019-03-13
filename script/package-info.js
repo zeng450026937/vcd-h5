@@ -27,7 +27,7 @@ module.exports = async function(context) {
   packageInfo.clientOs = normalizePlatform(process.platform);
   packageInfo.clientPlatform = normalizePlatform(process.platform);
   packageInfo.customId = pkg.customId;
-  packageInfo.releaseDate = new Date().toISOString();
+  packageInfo.releaseDate = Date.now();
   packageInfo.semver = version;
 
   const stream = await fs.readFile(artifact);

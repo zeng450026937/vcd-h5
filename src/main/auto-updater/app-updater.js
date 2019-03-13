@@ -41,7 +41,10 @@ export class AppUpdater extends EventEmitter {
   }
 
   set channel(channel) {
-    this.provider.channel = channel;
+    if (channel !== this.provider.channel) {
+      this.provider.channel = channel;
+      this.clear();
+    }
   }
 
   setFeedURL(url) {
@@ -140,11 +143,12 @@ export class AppUpdater extends EventEmitter {
 
   handlerQuit(event, exitCode) {
     if (exitCode !== 0) return;
-    if (!this.autoInstallOnAppQuit) return;
     if (!this.provider.latestVersionDownloaded) return;
     if (!this.isAutoInstall) return;
 
-    const { latestFile } = this.provider;
+    const { latestFile, forceUpdate } = this.provider;
+
+    if (!this.autoInstallOnAppQuit && !forceUpdate) return;
 
     this.install({
       installer     : latestFile.path,

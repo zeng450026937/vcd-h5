@@ -230,6 +230,10 @@ export class Provider extends Downloader {
     return this.appUpdater.appVersion;
   }
 
+  get forceUpdate() {
+    return false;
+  }
+
   async getLatestVersion() {
     return this.latestVersion;
   }
@@ -281,6 +285,10 @@ export class Provider extends Downloader {
     return file;
   }
   
+  clear() {
+    this.latestVersion = null;
+    this.latestFile = null;
+  }
 
   isVersionAvariable(info) {
     return !!info;

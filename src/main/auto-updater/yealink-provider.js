@@ -15,6 +15,10 @@ export class YealinkProvider extends Provider {
     this.service = service;
   }
 
+  get forceUpdate() {
+    return this.latestVersion && this.latestVersion.forceUpdate;
+  }
+
   setService(service) {
     this.service = service;
   }
@@ -65,24 +69,28 @@ export class YealinkProvider extends Provider {
     }
 
     if (clientModel !== process.env.VUE_APP_MODEL
-      || clientPlatform !== process.platform
+      || clientPlatform !== normalizePlatform(process.platform)
       || customId !== process.env.VUE_APP_CUSTOMID) {
       logger.warn('received wrong update info');
 
       return false;
     }
 
+    const { allowDowngrade } = this.appUpdater;
+
     const version = semver.parse(clientVersion);
     const currentVersion = semver.parse(this.currentVersion);
 
     const gt = semver.gt(version, currentVersion);
+    const eq = semver.eq(version, currentVersion);
+    const lt = semver.lt(version, currentVersion);
 
     if (gt) return true;
 
-    const eq = semver.eq(version, currentVersion);
-    
     // TODO: check releaseDate
-    if (forceUpdate && !eq) return true;
+    // if (eq && forceUpdate) return true;
+
+    if (lt && allowDowngrade) return true;
 
     return false;
   }
