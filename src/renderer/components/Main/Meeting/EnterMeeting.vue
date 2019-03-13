@@ -17,7 +17,7 @@
         <div style="height: 270px;"
              class="relative flex bg-media">
           <video-view v-if="!muteVideo" class="w-full h-full"
-                      style="background-color: #1F2437;"
+                      muted
                       object-fit="cover"/>
           <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
             <a-iconfont type="icon-shipinjinyong" class="display-icon"/>

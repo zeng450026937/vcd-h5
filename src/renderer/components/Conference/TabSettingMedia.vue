@@ -15,6 +15,7 @@
              class="video-content mt-2 relative"
              style="height: 140px;">
           <video-view class="w-full h-full bg-white"
+                      muted
                       position="absolute"
                       object-fit="cover"/>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center z-20">
     <a-iconfont type="icon-zuixiaohua"
                 title="最小化"
                 class="text-base mr-3 hover:text-indigo no-dragable cursor-pointer"
