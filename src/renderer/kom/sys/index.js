@@ -29,5 +29,8 @@ export default {
     async close() {
       current.close();
     },
+    async hide() {
+      current.hide();
+    },
   },
 };

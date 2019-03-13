@@ -24,12 +24,9 @@ export default {
       this.$dispatch('sys.maximize');
     },
     clickClose() {
-      if (this.$model.setting.normal.forceMinimize) {
-        this.clickMinimize();
-      }
-      else {
-        this.$dispatch('sys.close');
-      }
+      const { forceMinimize } = this.$model.setting.normal;
+
+      this.$dispatch(forceMinimize ? 'sys.hide' : 'sys.close');
     },
   },
 };

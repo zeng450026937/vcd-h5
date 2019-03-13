@@ -180,7 +180,7 @@ export default {
         this.$emit('onPop', contact);
       }
     },
-    unCheckSearchResult(contact) {
+    unCheckSearchResult(contact) { // 不传递参数则表示全部取消选择
       if (!this.searchText) return;
       const { remoteContacts } = this.$refs.contactSearch;
 

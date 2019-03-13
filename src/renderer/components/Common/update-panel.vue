@@ -80,11 +80,7 @@ export default {
   },
   watch : {
     isAutoUpdate(val) {
-      const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
-
-      updateConfig.isAutoUpdate = val;
-
-      this.$storage.insert('AUTO_UPDATE', updateConfig);
+      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: val });
     },
   },
   computed : {
@@ -116,19 +112,15 @@ export default {
     },
   },
   mounted() {
-    const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
-
-    if (updateConfig.isAutoUpdate == null) {
-      updateConfig.isAutoUpdate = true;
-      this.$storage.insert('AUTO_UPDATE', updateConfig);
+    if (!this.$storage.query('AUTO_UPDATE')) {
+      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: true });
     }
-
-    updater.autoInstallOnAppQuit = this.isAutoUpdate = this.$storage.query('AUTO_UPDATE').isAutoUpdate;
-    updater.on('error', this.onError);
-    updater.on('did-change', this.onDidChange);
-    updater.on('progress', this.onProgress);
-    if (updater.status === 4) return; // 如果 更新下载中 则不检查更新
-    this.checkUpdate();
+    // updater.autoInstallOnAppQuit = this.isAutoUpdate = this.$storage.query('AUTO_UPDATE').isAutoUpdate;
+    // updater.on('error', this.onError);
+    // updater.on('did-change', this.onDidChange);
+    // updater.on('progress', this.onProgress);
+    // if (updater.status === 4) return; // 如果 更新下载中 则不检查更新
+    // this.checkUpdate();
   },
   beforeDestroy() {
     updater.off('error', this.onError);
