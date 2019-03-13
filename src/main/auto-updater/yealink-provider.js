@@ -1,6 +1,13 @@
 import semver from 'semver';
 import { Provider } from './provider';
 
+function normalizePlatform(platform) {
+  return platform === 'win32' 
+    ? 'windows' 
+    : platform === 'darwin'
+      ? 'mac' : platform;
+}
+
 export class YealinkProvider extends Provider {
   constructor(appUpdater, service) {
     super(appUpdater);
@@ -20,7 +27,7 @@ export class YealinkProvider extends Provider {
       clientType     : process.env.VUE_APP_TYPE,
       clientVersion  : this.appUpdater.appVersion,
       clientArch     : process.arch,
-      clientPlatform : process.platform,
+      clientPlatform : normalizePlatform(process.platform),
       customId       : process.env.VUE_APP_CUSTOMID,
       updateChannel  : this.channel,
     };
@@ -48,6 +55,8 @@ export class YealinkProvider extends Provider {
       clientVersion,
       forceUpdate,
     } = info;
+
+    if (!clientVersion) return false;
 
     if (updateChannel !== this.channel) {
       logger.warn(`received update from other update channel. received: ${updateChannel} current: ${this.channel}`);

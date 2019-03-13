@@ -74,7 +74,7 @@ export class AppUpdater extends EventEmitter {
 
     if (this.autoDownload) {
       // async download
-      this.provider.download(info).catch((e) => logger.error(e));
+      this.provider.download(info).catch((e) => logger.error('download update failed, error: %s', e));
     }
 
     return info;

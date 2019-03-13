@@ -16,7 +16,7 @@ export function showNotification(title, body) {
 }
 
 export function handlePushMessage(pushService, hook) {
-  pushService.on('notify', async(type, body) => {
+  pushService.on('notify', (type, body) => {
     logger.info('receive push message: %s (%s)', type, MESSAGE_TYPE[type], body);
     
     showNotification(MESSAGE_TYPE[type], body);
@@ -63,12 +63,11 @@ export function handlePushMessage(pushService, hook) {
         break;
 
       case MESSAGE_TYPE.PUT_CONFIG:
-        {
-          const { downloadUrl } = body;
-          const res = await axios(downloadUrl);
-
-          global.mainWindow.sendSystemConfig(res.data);
-        }
+        axios(body.downloadUrl)
+          .then((res) => {
+            global.mainWindow.sendSystemConfig(res.data);
+          })
+          .catch((e) => logger.warn('download config file failed, error: %s', e));
         break;
 
       default:
