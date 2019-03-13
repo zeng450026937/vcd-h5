@@ -28,6 +28,14 @@
             <a-switch size="small" v-model="enableGpu"/>
             <span class="setting-label">屏幕共享时启用GPU加速</span>
           </div>
+          <div class="mt-3">
+            <a-switch size="small" v-model="preferredPictureFluency"/>
+            <span class="setting-label">画面流畅度优先</span>
+          </div>
+          <div class="mt-3">
+            <a-switch size="small" v-model="shareComputerSound"/>
+            <span class="setting-label">共享电脑声音</span>
+          </div>
         </div>
       </div>
       <div>
@@ -159,6 +167,14 @@ export default {
     dndWhenCalling : {
       get() { return this.$model.setting.conference.dndWhenCalling; },
       set(val) { this.$model.setting.conference.dndWhenCalling = val; },
+    },
+    shareComputerSound : {
+      get() { return this.$model.setting.conference.shareComputerSound; },
+      set(val) { this.$model.setting.conference.shareComputerSound = val; },
+    },
+    preferredPictureFluency : {
+      get() { return this.$model.setting.conference.preferredPictureFluency; },
+      set(val) { this.$model.setting.conference.preferredPictureFluency = val; },
     },
   },
   deactivated() {

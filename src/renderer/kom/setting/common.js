@@ -20,6 +20,7 @@ const itemMap = { // 对应不同模块需要导出的设置项
     'enableGpu', 'autoSilence',
     'noticeWhenLeaving', 'advanceEntryTime',
     'instanceMeetingPassword', 'reserveMeetingPassword', 'dndWhenCalling',
+    'shareComputerSound', 'preferredPictureFluency',
   ],
   video : [ 'enableHDVideo',
     'enableHWSpeed',

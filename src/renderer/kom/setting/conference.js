@@ -12,6 +12,8 @@ const conference = {
       instanceMeetingPassword      : false,
       reserveMeetingPassword       : false,
       dndWhenCalling               : false,
+      shareComputerSound           : false,
+      preferredPictureFluency      : false,
     };
   },
   created() {

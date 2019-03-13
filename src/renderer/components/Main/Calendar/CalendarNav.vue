@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="calendar-nav" class="flex-col bg-white h-full select-none border-r">
+  <a-layout id="calendar-nav" class="flex-col bg-white h-full select-none">
     <div>
       <plain-calendar ref="calendar"
                       :disabledDate="disabledStartDate"
