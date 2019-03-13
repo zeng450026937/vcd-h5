@@ -20,6 +20,12 @@
     "artifactName": "vc-desktop-${version}.${ext}",
     "differentialPackage": false
   },
+  "protocols": [{
+    "name": "x-yealink-client",
+    "schemes": [
+      "test"
+    ]
+  }],
   "mac": {
     "target": [
       "zip",

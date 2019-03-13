@@ -85,6 +85,59 @@ if (__WIN32__ && process.argv.length > 1) {
   }
 }
 
+function handleAppURL(url) {
+  logger.info('Processing protocol url');
+  const action = 'todo';// parseAppURL(url);
+
+  onDidLoad((window) => {
+    // This manual focus call _shouldn't_ be necessary, but is for Chrome on
+    // macOS. See https://github.com/desktop/desktop/issues/973.
+    window.focus();
+    window.sendURLAction(action);
+  });
+}
+
+/**
+ * Attempt to detect and handle any protocol handler arguments passed
+ * either via the command line directly to the current process or through
+ * IPC from a duplicate instance (see makeSingleInstance)
+ *
+ * @param args Essentially process.argv, i.e. the first element is the exec
+ *             path
+ */
+function handlePossibleProtocolLauncherArgs(args) {
+  logger.info(`Received possible protocol arguments: ${args.length}`);
+
+  if (__WIN32__) {
+    // Desktop registers it's protocol handler callback on Windows as
+    // `[executable path] --protocol-launcher "%1"`. At launch it checks
+    // for that exact scenario here before doing any processing, and only
+    // processing the first argument. If there's more than 3 args because of a
+    // malformed or untrusted url then we bail out.
+    if (args.length === 3 && args[1] === '--protocol-launcher') {
+      handleAppURL(args[2]);
+    }
+  }
+  else if (args.length > 1) {
+    handleAppURL(args[1]);
+  }
+}
+
+/**
+ * Wrapper around app.setAsDefaultProtocolClient that adds our
+ * custom prefix command line switches on Windows.
+ */
+function setAsDefaultProtocolClient(protocol) {
+  if (__WIN32__) {
+    app.setAsDefaultProtocolClient(protocol, process.execPath, [
+      '--protocol-launcher',
+    ]);
+  }
+  else {
+    app.setAsDefaultProtocolClient(protocol);
+  }
+}
+
 function createWindow() {
   const window = new AppWindow();
 
@@ -120,7 +173,7 @@ function createWindow() {
 
   window.load();
 
-  mainWindow = window;
+  mainWindow = global.mainWindow = window;
 }
 
 let hasInstanceLock = false;
@@ -147,6 +200,8 @@ if (!handlingSquirrelEvent) {
 
       readyTime = now() - launchTime;
       
+      // setAsDefaultProtocolClient('x-yealink-client');
+  
       createWindow();
 
       ytms.yealink.connect()
@@ -162,10 +217,12 @@ if (!handlingSquirrelEvent) {
       reportGpuCrash();
     });
 
-    // app.once('quit', () => {
-    //   ytms.yealink.disconnect();
-    //   ytms.enterprise.disconnect();
-    // });
+    app.once('quit', () => {
+      global.ytms.yealink.disconnect();
+      global.ytms.enterprise.disconnect();
+      global.ytms = null;
+      global.logger = null;
+    });
     
     app.on('activate', () => {
       onDidLoad((window) => {
