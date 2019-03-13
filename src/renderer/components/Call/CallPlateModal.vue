@@ -10,8 +10,12 @@
       @cancel="visible = false"
   >
     <div class="flex flex-col">
-      <a-input v-model="callNumber"/>
-      <plate-content @inputNumber="clickNumber" style="margin-top: 10px"/>
+      <div style="padding: 0 50px; margin-top: 30px">
+        <a-input ref="numberInput" v-model="callNumber"/>
+      </div>
+      <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
+                     style="padding: 0 50px 18px 50px;"/>
+      <!--<plate-content @inputNumber="clickNumber" style="margin-top: 10px"/>-->
     </div>
   </a-modal>
 </template>

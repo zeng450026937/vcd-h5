@@ -30,7 +30,7 @@ export default {
     ContactList,
   },
   sketch : {
-    module : 'GlobalSearch',
+    module : 'globalSearch',
     props  : [ 'searchText', 'hasLoadMore', 'remoteContacts' ],
   },
   computed : {

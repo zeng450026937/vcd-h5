@@ -1,15 +1,8 @@
 <template>
   <a-layout id="calendar-nav" class="flex-col bg-white h-full select-none border-r">
-    <!--<div class="flex px-3 items-center h-14 border-b">-->
-        <!--<a-input-->
-            <!--v-model="searchText"-->
-            <!--placeholder='搜索联系人'-->
-        <!--&gt;-->
-          <!--<a-iconfont slot="suffix" type='icon-sousuo' class="text-lg text-grey"/>-->
-        <!--</a-input>-->
-    <!--</div>-->
     <div>
       <plain-calendar ref="calendar"
+                      :disabledDate="disabledStartDate"
                       class="calendar-nav-calendar"
                       :showToday="false"
                       @select="selectDate"
@@ -68,6 +61,12 @@ export default {
     },
   },
   methods : {
+    disabledStartDate(startValue) {
+      const preWeek = new Date().setHours(-7 * 24);
+      const afterWeek = new Date().setHours(7 * 24);
+
+      return !startValue.isBetween(preWeek, afterWeek);
+    },
     onToday() {
       this.$refs.calendar.onToday();
     },
@@ -118,6 +117,12 @@ export default {
         box-shadow: none;
         width: auto;
         font-size: 12px;
+
+        .ant-calendar-disabled-cell {
+          .ant-calendar-date {
+            background: transparent !important;
+          }
+        }
         .ant-calendar-input-wrap{
           display: none;
         }

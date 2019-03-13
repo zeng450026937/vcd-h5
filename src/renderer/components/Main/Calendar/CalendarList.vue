@@ -1,6 +1,6 @@
 <template>
   <a-layout id="calendar-list" class="bg-white h-full">
-    <div class="px-2 h-full">
+    <div class="px-2 h-full bg-white">
       <div v-for="(event, index) in eventList" :key="index" class="mt-2">
         <div class="flex flex-col p-3
                     cursor-pointer rounded border hover:border-indigo"
