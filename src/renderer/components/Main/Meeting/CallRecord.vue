@@ -4,12 +4,12 @@
       <div class="h-14">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <span>通话记录（5）</span>
+            <span>通话记录（{{callRecord.length}}）</span>
           </div>
           <div class="no-dragable flex items-center">
-            <a-radio-group size="small" defaultValue="all" buttonStyle="solid">
+            <a-radio-group v-model="recordType" size="small" defaultValue="all" buttonStyle="solid">
               <a-radio-button value="all" class="text-xs">所有通话</a-radio-button>
-              <a-radio-button value="un-receive" class="text-xs">未接来电</a-radio-button>
+              <a-radio-button value="missed" class="text-xs">未接来电</a-radio-button>
             </a-radio-group>
           </div>
           <div class="flex flex-grow"></div>
@@ -22,7 +22,7 @@
             :pagination="false"
             :rowKey="record => record.callId"
             :columns="recordColumns"
-            :dataSource="callRecord"
+            :dataSource="currentRecords"
             class="bg-white w-full"
         >
           <div class="flex items-center" slot="callTitle" slot-scope="text, record">
@@ -55,7 +55,7 @@
             </div>
           </div>
 
-          <div class="flex justify-center text-sm" slot="operation" slot-scope="text, record">
+          <div class="flex justify-center text-sm operate-btns" slot="operation" slot-scope="text, record">
 
             <a-iconfont type='icon-shipin'
                         class="text-indigo text-base cursor-pointer hover:text-blue">
@@ -120,9 +120,16 @@ export default {
   data() {
     return {
       recordColumns,
-      callRecord  : [],
-      tableHeight : 500,
+      callRecord : [],
+      recordType : 'all',
     };
+  },
+  computed : {
+    currentRecords() {
+      if (this.recordType === 'all') return this.callRecord;
+
+      if (this.recordType === 'missed') return this.callRecord.filter((record) => !record.connected);
+    },
   },
   methods : {
     clickMore(record) {
@@ -180,7 +187,14 @@ export default {
       .ant-table-tbody {
         color: #333333;
         line-height: 20px;
+        .operate-btns{
+          max-height: 0;
+          overflow: hidden;
+        }
         tr:hover {
+          .operate-btns{
+            max-height: initial;
+          }
           & td {
             background: #E1E5F2;
           }

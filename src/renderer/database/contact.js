@@ -5,12 +5,9 @@ class Contact extends Base {
     const contactCollection = this.find(storeName, key, val);
     const contactList = await contactCollection.toArray();
 
-    if (contactList.length > 0) {
-      contactCollection.modify(data);
-    }
-    else {
-      this.add(storeName, data);
-    }
+    return contactList.length > 0
+      ? contactCollection.modify(data)
+      : this.add(storeName, data);
   }
 
   async fullUpdate(storeName, data) {
@@ -54,6 +51,10 @@ class Contact extends Base {
   getChild(storeName, id) {
     return this.find(storeName, 'parentId', id).toArray();
   }
+
+  getLocalContact(val) {
+    return this.find('localContact', '[account+server]', val).toArray();
+  }
 }
 
 export default new Contact(
@@ -61,6 +62,7 @@ export default new Contact(
   {
     contacts         : '++sn, parentId, id, type, dataVersion',
     phoneBook        : '++sn, parentId, id, type, dataVersion',
+    localContact     : '++sn, number, name, phone, [account+server], [account+server+id]',
     contactsVersion  : '++sn, dataVersion, permissionVersion',
     phoneBookVersion : '++sn, dataVersion, permissionVersion',
   },
