@@ -168,11 +168,20 @@ export class AppWindow extends BaseWindow {
   /** Send the app launch timing stats to the renderer. */
   sendLaunchTimingStats(stats) {
     logger.info(
-      'loadTime: %s, mainReadyTime: %s, rendererReadyTime: %s',
+      'launch-timing-stat loadTime: %s, mainReadyTime: %s, rendererReadyTime: %s',
       stats.loadTime,
       stats.mainReadyTime,
       stats.rendererReadyTime,
     );
     this.window.webContents.send('launch-timing-stats', { stats });
+  }
+
+  sendSystemConfig(config) {
+    logger.info(
+      'system-config updateChannel: %s, ytmsHostAddress: %s',
+      config.updateChannel,
+      config.ytmsHostAddress,
+    );
+    this.window.webContents.send('system-config', { config });
   }
 }

@@ -62,11 +62,10 @@ export default {
         { label: 'English', lang: 'en-US' },
       ],
       updateChannelList : [
-        { label: '快速', value: 'FAST' },
-        { label: '稳定', value: 'STABLE' },
-        { label: '慢速', value: 'LOW' },
+        { label: '快速', value: 'insiders' },
+        { label: '慢速', value: 'faster' },
+        { label: '稳定', value: 'stable' },
       ],
-      updateChannel : 'STABLE',
     };
   },
   deactivated() {
@@ -106,6 +105,14 @@ export default {
       },
       set(val) {
         this.$model.setting.normal.address = val;
+      },
+    },
+    updateChannel : {
+      get() {
+        return this.$model.setting.normal.updateChannel;
+      },
+      set(val) {
+        this.$model.setting.normal.updateChannel = val;
       },
     },
   },

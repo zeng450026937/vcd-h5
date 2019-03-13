@@ -1,4 +1,5 @@
 import { load, save, exp, gen } from './common';
+import updater from '../../updater';
 
 export default {
   data() {
@@ -7,12 +8,16 @@ export default {
       forceMinimize : false,
       language      : 'zh-CN',
       address       : '', // 软终端管理平台地址
+      updateChannel : updater.channel,
     };
   },
   created() {
     this.init();
   },
-  computed : {
+  watch : {
+    updateChannel(val) {
+      updater.channel = val;
+    },
   },
   methods : {
     init(config) { // 加载设置信息到系统中

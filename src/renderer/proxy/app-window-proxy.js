@@ -12,17 +12,14 @@ export const AppWindowProxy = {
 
     ipcRenderer.on(
       'menu-event',
-      (event) => {
-        // test code
-        new Notification(event.name).body = 'this is a menu-event';
+      (event, { name }) => {
+        console.warn('menu-event', name);
       }
     );
 
     const clientId = await ipcProxy.getClientId();
+    const apis = window.apis = {};
 
-    const apis = {};
-
-    window.apis = apis;
     this.$apis = apis;
 
     let url = process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
@@ -36,5 +33,33 @@ export const AppWindowProxy = {
 
       apis.enterprise = createApi(url, clientId);
     }
+
+    ipcRenderer.on(
+      'system-config',
+      async(event, { config }) => {
+        console.warn(config);
+
+        const { 
+          pushUpdateChannelFlag,
+          pushYtmsHostFlag,
+          updateChannel,
+          ytmsHostAddress,
+        } = config;
+
+        if (pushUpdateChannelFlag && updateChannel) {
+          this.$model.setting.normal.updateChannel = updateChannel;
+        }
+
+        if (pushYtmsHostFlag && ytmsHostAddress) {
+          this.$model.setting.normal.address = ytmsHostAddress;
+
+          await ipcProxy.startYTMSService(ytmsHostAddress);
+    
+          apis.enterprise = createApi(ytmsHostAddress, clientId);
+        }
+        
+        this.$model.setting.normal.save();
+      }
+    );
   },
 };

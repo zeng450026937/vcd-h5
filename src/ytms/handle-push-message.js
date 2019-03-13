@@ -16,8 +16,8 @@ export function showNotification(title, body) {
 }
 
 export function handlePushMessage(pushService, hook) {
-  pushService.on('notify', (type, body) => {
-    logger.info('receive push message: %s', type, body);
+  pushService.on('notify', async(type, body) => {
+    logger.info('receive push message: %s (%s)', type, MESSAGE_TYPE[type], body);
     
     showNotification(MESSAGE_TYPE[type], body);
 
@@ -63,6 +63,12 @@ export function handlePushMessage(pushService, hook) {
         break;
 
       case MESSAGE_TYPE.PUT_CONFIG:
+        {
+          const { downloadUrl } = body;
+          const res = await axios(downloadUrl);
+
+          global.mainWindow.sendSystemConfig(res.data);
+        }
         break;
 
       default:

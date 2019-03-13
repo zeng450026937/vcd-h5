@@ -51,16 +51,16 @@ export class YTMSService {
     }
   }
 
-  async connect(url = default_url) {
+  async connect(url) {
     // disconnect first
     this.disconnect();
     
-    this.url = url;
+    this.url = url || this.url;
     
     // prepare client
     const clientId = await getClientId();
     
-    const client = this.client = new YTMSClient(url, clientId);
+    const client = this.client = new YTMSClient(this.url, clientId);
     
     client.start();
     
