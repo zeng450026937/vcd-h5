@@ -3,8 +3,7 @@
 
     <a-input v-model="searchText"
              placeholder="搜索"
-             class="h-10 rounded-none border-none"
-             @change="onChange">
+             class="h-10 rounded-none border-none">
       <div slot="suffix">
         <a-iconfont
             v-show="searchText"
@@ -17,10 +16,11 @@
       </div>
 
     </a-input>
-    <div class="overflow-y-auto h-full px-2 border-t">
+    <div class="overflow-y-auto h-full border-t">
       <a-tree
+          v-show="!searchText"
           checkable
-          class="contact-tree"
+          class="contact-tree mx-2"
           v-model="checkedKeys"
           :autoExpandParent="autoExpandParent"
           :expandedKeys="expandedKeys"
@@ -50,14 +50,25 @@
           </div>
         </div>
       </a-tree>
+      <contact-search
+          ref="contactSearch"
+          v-if="searchText"
+          :checked-keys="checkedKeys"
+          :search-text="searchText"
+          @onCheck="onSearchResultChecked"/>
     </div>
 
   </a-layout>
 </template>
 
 <script>
+import ContactSearch from './ContactSearch.vue';
+
 export default {
-  name  : 'ContactTree',
+  name       : 'ContactTree',
+  components : {
+    ContactSearch,
+  },
   props : {
     checked : {
       type : Array,
@@ -152,8 +163,45 @@ export default {
       }
       this.$emit('onCheck', checkedContact);
     },
+    onSearchResultChecked(contact) {
+      if (contact.checked) {
+        this.$emit('onPush', contact);
+        this.checkedKeys.push(contact.id);
+      }
+      else {
+        if (contact.isSelf) {
+          contact.checked = true;
+          
+          return;
+        }
+        const index = this.checkedKeys.findIndex((key) => key === contact.id);
 
-    onChange(e) {
+        if (index > -1) this.checkedKeys.splice(index, 1);
+        this.$emit('onPop', contact);
+      }
+    },
+    unCheckSearchResult(contact) {
+      if (!this.searchText) return;
+      const { remoteContacts } = this.$refs.contactSearch;
+
+      if (!contact) {
+        remoteContacts.forEach((c) => c.checked = false);
+        if (this.selfChecked) {
+          const selfId = this.checkedKeys[0];
+          const result = remoteContacts.find((c) => c.id === selfId);
+
+          if (result) {
+            result.checked = true;
+          }
+        }
+      }
+      else {
+        const result = remoteContacts.find((c) => c.id === contact.id);
+
+        if (result) {
+          result.checked = false;
+        }
+      }
     },
   },
 };

@@ -99,6 +99,9 @@
 
                     </div>
                   </template>
+                  <a-checkbox v-if="checkable"
+                              :checked="item.checked"
+                              class="contact-checkbox"/>
                   <a-avatar v-if="item.isGroup || !item.parent.isUser"
                             class="text-sm"
                             :class="{'bg-transparent' : item.isGroup,
@@ -211,7 +214,10 @@ export default {
       type    : Boolean,
       default : false,
     },
-
+    checkable : {
+      type    : Boolean,
+      default : false,
+    },
   },
   components : {
     RecycleScroller,
@@ -265,11 +271,18 @@ export default {
     });
   },
   methods : {
+    contactChecked(contact) {
+      if (this.selfUnDeleted && contact.isSelf) return;
+      contact.checked = !contact.checked;
+      this.$emit('onCheck', contact);
+    },
     clickItem(item) {
+      if (this.checkable) this.contactChecked(item);
       if (this.highlightSelected) this.selectedContact = item;
       this.$emit('clickItem', item);
     },
     deleteContact(item) {
+      if (this.selfUnDeleted && item.isSelf) return;
       this.$emit('deleteContact', item);
     },
     doVideo(item) {
@@ -362,6 +375,10 @@ export default {
       overflow: hidden;
       &-avatar {
         margin-right: 6px;
+        .contact-checkbox {
+          margin-left: 10px;
+          transform: translateY(5px);
+        }
       }
 
       &-title {
