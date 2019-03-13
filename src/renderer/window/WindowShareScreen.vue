@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import screenfull from 'screenfull';
+
 export default {
   name : 'Window',
   data() {
@@ -24,6 +26,11 @@ export default {
   },
   mounted() {
     this.onShareStreamChanged(this.shareStream);
+    setInterval(() => {
+      if (!(this.shareStream && this.shareStream.active)) {
+        this.closeWindow();
+      }
+    }, 1000);
   },
   computed : {
     rtc() {
@@ -48,7 +55,7 @@ export default {
       window.close();
     },
     maxWindow() {
-
+      screenfull.toggle(document.getElementById('window'));
     },
   },
   watch : {

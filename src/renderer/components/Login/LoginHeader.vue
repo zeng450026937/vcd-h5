@@ -29,21 +29,10 @@
             </a-menu>
             <a-iconfont type="icon-fankui"
                         title="反馈"
-                    class="ant-dropdown-link mr-6 text-base h-full flex items-center"/>
+                    class="ant-dropdown-link mr-8 text-base h-full flex items-center"/>
           </a-dropdown>
 
-          <a-iconfont type="icon-zuixiaohua"
-                      title="最小化"
-                      class="mx-2 text-base hover:text-indigo no-dragable"
-                  @click="clickMinimize"/>
-          <a-iconfont type="icon-zuidahua"
-                      title="最大化"
-                      class="mx-2 text-base hover:text-indigo no-dragable"
-                  @click="clickMaximize"/>
-          <a-iconfont type="icon-guanbi"
-                      title="关闭"
-                      class="mx-2 text-base hover:text-red no-dragable"
-                  @click="clickClose"/>
+          <common-header class="mr-2"/>
         </div>
       </div>
     </div>
@@ -52,6 +41,7 @@
 </template>
 
 <script>
+import CommonHeader from '../Shared/CommonHeader.vue';
 import FeedbackModal from './FeedbackModal.vue';
 import { LOGIN } from '../../router/constants';
 
@@ -59,6 +49,7 @@ export default {
   name       : 'LoginHeader',
   components : {
     FeedbackModal,
+    CommonHeader,
   },
   data() {
     return {

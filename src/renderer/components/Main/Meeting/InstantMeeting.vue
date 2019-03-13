@@ -126,7 +126,7 @@ export default {
           requestUri : item.number,
         });
       });
-      this.$rtc.conference.meetnow(list);
+      this.$rtc.conference.meetnow(list, { subject: `${this.$rtc.account.username} 的视频会议` });
     },
     onCheck(selectedContact) {
       this.selectedContact = selectedContact;

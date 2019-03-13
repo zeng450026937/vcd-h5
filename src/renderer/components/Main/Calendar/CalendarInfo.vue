@@ -51,7 +51,9 @@
               </div>
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">会议室</span>
+                  <div>
+                    <div class="w-20 text-black9">会议室</div>
+                  </div>
                   <span>{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>
@@ -120,13 +122,15 @@
       <a-divider class="m-0"/>
       <div class="my-2 flex justify-center items-center">
         <a-button class="w-1/3 mx-2" type="primary"
-                  :disabled="currentEvent.status.isEnded"
+                  :disabled="!status.isRunning"
+                  :title="status.isRunning ? '视频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
                   @click="enterMeeting">
           <a-iconfont type="icon-shipin"/>
           视频加入
         </a-button>
         <a-button class="w-1/3 mx-2" type="primary"
-                  :disabled="currentEvent.status.isEnded"
+                  :disabled="!status.isRunning"
+                  :title="status.isRunning ? '音频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
                   @click="audioEnter">
           <a-iconfont type="icon-yuyin"/>
           音频加入
@@ -165,6 +169,9 @@ export default {
   computed : {
     currentEvent() {
       return this.$model.calendar.currentEvent || {};
+    },
+    status() {
+      return this.currentEvent.status || {}
     },
     hasEvent() {
       return Object.keys(this.currentEvent).length > 0;

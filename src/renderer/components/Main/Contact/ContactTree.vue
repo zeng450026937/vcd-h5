@@ -107,7 +107,6 @@ export default {
       if (treeNode.dataRef.isGroup) {
         await treeNode.dataRef.addChildNodes();
       }
-      console.warn(treeNode.dataRef);
 
       return Promise.resolve();
     },

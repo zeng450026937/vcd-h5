@@ -1,6 +1,5 @@
 import rtc from '../../rtc';
-import pinyin from '../../utils/pinyin';
-
+import kom from '..';
 import { formatContact as formatPhoneBook } from './Contact';
 import { formatFavorite } from './Favorite';
 
@@ -12,6 +11,10 @@ export default {
     };
   },
   computed : {
+    username() {
+      return rtc.account.username;
+    },
+    loginStatus : () => rtc.account.status,
     loadMode() {
       return rtc.contact.loadMode;
     },
@@ -33,11 +36,11 @@ export default {
   },
   methods : {
     async findContacts(val) {
-      return rtc.contact.phonebook.search({ key: val }).then((result) => result.data.map((c) => Object.assign({
-        group  : c.attributes.searchKey.slice(0, 1).toUpperCase(),
-        parent : { isUser: true },
-        nick   : /^(.*)\(.*\)$/.test(c.attributes.name) ? RegExp.$1.substr(-2, 2) : c.attributes.name.substr(-2, 2),
-      }, c.attributes, c.node)));
+      return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
+        .map((c) => Object.assign({
+          parent : { isUser: true },
+          nick   : /^(.*)\(.*\)$/.test(c.attributes.name) ? RegExp.$1.substr(-2, 2) : c.attributes.name.substr(-2, 2),
+        }, c.attributes, c.node)));
     },
     phoneBookFormat(val) {
       return formatPhoneBook(val, this.loadMode);
@@ -50,6 +53,27 @@ export default {
     },
     rawFavorite(val) {
       this.formattedFavorite = formatFavorite(val);
+    },
+    loginStatus(val) {
+      if (val === 'disconnected') {
+        this.formattedPhoneBook = null;
+        this.formattedFavorite = null;
+      }
+    },
+
+    loadMode(val) {
+      if (val === 'SPLIT') {
+        this.findContacts(this.username).then((result) => {
+          result.every((contact) => {
+            if (contact.number === this.username) {
+              console.warn(contact)
+              kom.vm.account.currentContact = contact;
+            }
+            
+            return contact.number !== this.username;
+          });
+        });
+      }
     },
   },
 };

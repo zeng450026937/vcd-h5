@@ -5,12 +5,12 @@ const groupMap = {
 class FavoriteBase {
   constructor(data) {
     this.id = data.id;
-    this.name = data.name;
+    this.name = data.name || '';
     this.parent = data.parent;
     this.parentId = data.parentId || (data.parent && data.parent.id);
     this.isGroup = false;
-    this.namePinyin = data.namePinyin || '';
-    this.namePinyinAlia = data.namePinyinAlia || '';
+    // this.namePinyin = data.namePinyin || '';
+    // this.namePinyinAlia = data.namePinyinAlia || '';
   }
 }
 class FavoriteContact extends FavoriteBase {
@@ -20,6 +20,7 @@ class FavoriteContact extends FavoriteBase {
     this.phone = data.extension || '';
     this.email = data.email || '';
     this.avatar = 'indigo-dark';
+    this.nick = /^(.*)\(.*\)$/.test(this.name) ? RegExp.$1.substr(-2, 2) : this.name.substr(-2, 2);
   }
 }
 

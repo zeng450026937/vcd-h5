@@ -30,6 +30,9 @@ import confState from './conference/state';
 import call from './call';
 import callState from './call/state';
 import callChat from './call/chat';
+// sketch 速写 用于快速恢复现场
+import globalSearch from './sketch/globalSearch';
+import sketch from './sketch';
 
 Vue.use(Vuem);
 
@@ -78,6 +81,10 @@ const data = {
     normal,
     device,
     about,
+  },
+  sketch : {
+    $selfValue : sketch,
+    globalSearch,
   },
 };
 

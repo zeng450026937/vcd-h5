@@ -9,24 +9,20 @@
         </template>
         <span class="text-white text-xs leading-tight truncate">{{title}}</span>
       </div>
-      <div class="flex items-center">
-        <a-iconfont type="icon-zuixiaohua"
-                    class="text-base mr-3 text-white hover:text-indigo no-dragable cursor-pointer"
-                    @click="clickMinimize"/>
-        <a-iconfont type="icon-zuidahua" class="text-base mx-1 text-white hover:text-indigo no-dragable cursor-pointer"
-                    @click="clickMaximize"/>
-        <a-iconfont type="icon-guanbi" class="text-base ml-3 text-white hover:text-red no-dragable cursor-pointer"
-                    @click="clickClose"/>
-      </div>
+      <common-header class="text-white"/>
     </div>
   </div>
 </template>
 
 <script>
 import screenfull from 'screenfull';
+import CommonHeader from '../Shared/CommonHeader.vue';
 
 export default {
-  name : 'CallHeader',
+  name       : 'CallHeader',
+  components : {
+    CommonHeader,
+  },
   data() {
     return {
       targetUser : '',

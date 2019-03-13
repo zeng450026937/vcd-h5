@@ -1,12 +1,12 @@
 <template>
   <a-layout id="calendar-list" class="bg-white h-full">
-    <div class="px-2 h-full">
+    <div class="px-2 h-full bg-white">
       <div v-for="(event, index) in eventList" :key="index" class="mt-2">
         <div class="flex flex-col p-3
                     cursor-pointer rounded border hover:border-indigo"
              :class="{
                'border-indigo': event.scheduleId === currentEvent.scheduleId,
-               'bg-disabled': event.status.isEnded,
+               'bg-expired': event.status.isEnded,
                'bg-white': !event.status.isEnded,
                'border-l-4 border-l-indigo': event.status.isRunning,
              }"

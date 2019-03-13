@@ -42,7 +42,7 @@
           <plate-content :class="{'mt-10': localContactExist}" @inputNumber="clickNumber"/>
           <div class="flex mt-8 w-full">
             <a-button type="primary" class="w-1/2" :disabled="!callNumber"
-                      @click="videoCall">
+                      @click="audioCall">
               <a-iconfont type="icon-shipin" class="text-base"/>
               视频呼叫
             </a-button>
@@ -62,7 +62,6 @@
             </div>
             <contact-list v-else
                           hide-popup
-                          with-gap
                           :contactList="searchResult"
                           :highlightContent="callNumber"
                           highlightSelected
@@ -184,12 +183,6 @@ export default {
     audioCall() {
       if (!this.callNumber) return;
       this.$dispatch('call.doAudioCall', this.callNumber);
-    },
-    videoCall() {
-      if (!this.callNumber) return;
-      this.$rtc.conference.meetnow([ {
-        requestUri : this.callNumber,
-      } ]);
     },
     showAddLocalContact() {
       if (this.localContactExist) return;

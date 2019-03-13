@@ -7,6 +7,7 @@
         :id="videoId"
         class="video-content"
         autoplay loop
+        :muted="muted"
         v-once
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
@@ -36,6 +37,10 @@ export default {
     position : {
       type    : String,
       default : 'absolute',
+    },
+    muted : {
+      type    : Boolean,
+      default : false,
     },
   },
   data() {

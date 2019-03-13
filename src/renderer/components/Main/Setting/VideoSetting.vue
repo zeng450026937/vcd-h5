@@ -45,6 +45,7 @@
         </div>
         <div class="mt-3 relative bg-media" style="height: 180px;width: 320px;">
           <video-view v-if="!muteVideo"
+                      muted
                       class="w-full h-full bg-white"
                       position="absolute"
                       object-fit="cover"/>

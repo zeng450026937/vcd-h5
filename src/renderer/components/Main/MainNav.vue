@@ -1,15 +1,15 @@
 <template>
   <a-layout id="meeting-nav" class="flex-col h-full select-none bg-white border-r">
-    <div class="flex px-3 items-center h-14 border-b">
-      <div class="w-full">
+    <div class="h-14">
+      <div class="flex px-3 h-full items-center border-b">
         <a-input
             v-model="searchText"
             placeholder='搜索联系人'
         >
           <a-iconfont v-if="!searchText"
                       slot="suffix"
-                      type="'icon-sousuo"
-                      class="text-base text-grey cursor-pointer"/>
+                      type="icon-sousuo"
+                      class="text-base text-grey"/>
           <a-iconfont v-else
                       slot="suffix"
                       type="icon-guanbi"
@@ -18,6 +18,7 @@
         </a-input>
       </div>
     </div>
+
     <div v-show="!searchText">
       <calendar-nav v-if="isInCalendar"/>
       <div v-else>
@@ -32,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div  v-if="searchText">
+    <div class="flex h-full" v-if="searchText">
       <global-search :searchText="searchText"/>
     </div>
     <div class="flex flex-grow"></div>
@@ -55,7 +56,6 @@ export default {
   data() {
     return {
       navs         : [],
-      searchText   : '',
       currentNav   : 0,
       currentRoute : null,
       isInCalendar : false,
@@ -64,6 +64,14 @@ export default {
   computed : {
     isCloud() {
       return this.$model.login.serverType === 'cloud';
+    },
+    searchText : {
+      get() {
+        return this.$model.sketch.globalSearch.searchText;
+      },
+      set(val) {
+        this.$model.sketch.globalSearch.searchText = val;
+      },
     },
   },
   created() {

@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="call-content" class="h-full">
+  <a-layout id="call-content" class="h-full bg-media">
     <div class="flex flex-col h-full">
       <div class="call-content-header flex flex-col h-10">
         <div class="flex items-center h-full text-white self-end px-5 no-dragable">
@@ -112,7 +112,6 @@ export default {
 
 <style lang="less">
   #call-content{
-    background-color: rgb(31, 36, 55);
     .call-content-header {
       background-image: linear-gradient(-180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.00) 98%);
     }
