@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { CallRecord, genStoreName, createRecord } from '../../../database/call-record';
+import { CallRecord, createRecord } from '../../../database/call-record';
 import { genDurationTime, genStartTime } from '../../../utils/date';
 import { callIcon, callType } from '../../../utils/filters';
 import AppHeader from '../MainHeader.vue';
@@ -135,11 +135,6 @@ export default {
     clickMore(record) {
       this.$router.push({ path: MAIN.CALL_RECORD_INFO, query: record });
     },
-    genStoreName() {
-      const accountInfo = this.$storage.query('CURRENT_ACCOUNT');
-
-      return `callRecord-${accountInfo.account}-${accountInfo.server}`;
-    },
   },
   filters : {
     callType,
@@ -150,15 +145,19 @@ export default {
     },
   },
   async beforeCreate() {
-    const storeName = genStoreName();
     const callRecordDb = CallRecord.Create();
+    const { account, server } = this.$storage.query('CURRENT_ACCOUNT');
 
-    this.callRecord = await callRecordDb.getRecordByRecent(storeName, 100);
+    this.callRecord = await callRecordDb.getRecordByRecent('records', [ account, server ], 100);
 
     if (this.callRecord.length > 100) return;
+
     const newRecord = createRecord();
 
-    await callRecordDb.add(storeName, newRecord);
+    newRecord.account = account;
+    newRecord.server = server;
+
+    await callRecordDb.add('records', newRecord);
   },
   mounted() {
   },

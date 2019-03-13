@@ -102,7 +102,7 @@
 <script>
 import { groupBy } from 'lodash/fp';
 import AppHeader from '../MainHeader.vue';
-import { CallRecord, genStoreName } from '../../../database/call-record';
+import { CallRecord } from '../../../database/call-record';
 import { getDate, genDateString, genDurationTime, getTime } from '../../../utils/date';
 import { callType, callIcon } from '../../../utils/filters';
 import LocalContactDrawer from '../../../components/Main/Contact/LocalContactDrawer'
@@ -144,8 +144,7 @@ export default {
     },
     async setCallRecord() {
       const callRecordDb = CallRecord.Create();
-      const storeName = genStoreName();
-      const records = await callRecordDb.getRecordByOtherId(storeName, this.recordInfo.otherId);
+      const records = await callRecordDb.getRecordByOtherId('records', this.recordInfo.otherId);
       const groupByTime = groupBy((i) => getDate(i.startTime));
 
       this.recordGroup = groupByTime(records);
