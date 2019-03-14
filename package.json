@@ -26,6 +26,7 @@
     "serve:electron": "vue-cli-service serve:electron",
     "pack:electron": "vue-cli-service pack:electron",
     "build:electron": "vue-cli-service build:electron",
+    "build:prod": "node script/build.js",
     "dev": "yarn serve:electron",
     "sync": "node script/sync.js"
   },
@@ -70,6 +71,7 @@
     "crocket": "^0.9.11",
     "date-format": "^2.0.0",
     "electron": "^4.0.8",
+    "execa": "^1.0.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "source-map-support": "^0.5.10",
