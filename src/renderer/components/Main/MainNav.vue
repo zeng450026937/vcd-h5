@@ -65,7 +65,7 @@ export default {
   },
   computed : {
     isCloud() {
-      return this.$model.login.serverType === 'cloud';
+      return this.$model.account.serverType === 'cloud';
     },
   },
   created() {

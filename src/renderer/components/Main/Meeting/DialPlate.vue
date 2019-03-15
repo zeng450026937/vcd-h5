@@ -117,7 +117,7 @@ export default {
   },
   created() {
     // 初始化本地联系人
-    this.$dispatch('storage.initData');
+    this.$dispatch('contact.local.initData');
   },
   mounted() {
     this.debounceSearch = debounce((val = '') => {

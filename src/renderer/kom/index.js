@@ -7,16 +7,8 @@ import config from './config';
 import account from './account';
 import calendar from './calendar';
 import contact from './contact';
-import meeting from './meeting';
 import sys from './sys';
 import storage from './storage';
-//
-import setting from './setting';
-import settingConference from './setting/conference';
-import video from './setting/video';
-import normal from './setting/normal';
-import device from './setting/device';
-import about from './setting/about';
 import state from './state';
 //
 import middles from './middle';
@@ -62,7 +54,6 @@ const data = {
   account,
   calendar,
   contact,
-  meeting,
   sys,
   state,
   storage,
@@ -74,14 +65,6 @@ const data = {
   call,
   callChat,
   callState,
-  setting : {
-    $selfValue : setting,
-    conference : settingConference,
-    video,
-    normal,
-    device,
-    about,
-  },
   sketch : {
     $selfValue : sketch,
     globalSearch,

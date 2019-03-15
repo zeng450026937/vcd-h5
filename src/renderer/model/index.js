@@ -6,6 +6,7 @@ import setting from './setting';
 import account from './account';
 import state from './state';
 import contact from './contact';
+import meeting from './meeting';
 
 Vue.use(Vuem);
 
@@ -16,6 +17,7 @@ root.mount('setting', setting);
 root.mount('account', account);
 root.mount('contact', contact);
 root.mount('state', state);
+root.mount('meeting', meeting);
 
 root.provide({
   methods : {

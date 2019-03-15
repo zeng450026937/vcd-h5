@@ -1,8 +1,6 @@
 import rtc from '../../rtc';
 import kom from '..';
 
-const avatarColor = () => 'indigo-dark';
-
 const groupMap = {
   root : {
     name   : '亿联网络技术股份有限公司',
@@ -34,7 +32,7 @@ function unique(arr) {
   const result = {};
 
   for (let i = 0; i < arr.length; i++) {
-    result[arr[i].id] = result[arr[i].id] ? result[arr[i].id] : arr[i];
+    result[arr[i].id] = result[arr[i].id] || arr[i];
   }
 
   return Object.values(result);
@@ -45,37 +43,10 @@ class ContactBase {
     this.id = data.id;
     this.parent = data.parent || { isUser: true };
     this.parentId = data.parentId || (data.parent && data.parent.id);
-    this.selected = data.selected || false;
     this.isGroup = false;
     this.key = this.id;
     this.title = data.name || '';
     this.type = data.type || '';
-  }
-
-  toggleSelect(selected) {
-    if (this.selected === selected) return;
-
-    this.selected = selected;
-
-    if (this.isGroup) {
-      this.items.forEach((c) => {
-        c.toggleSelect(selected);
-      });
-    }
-
-    let parent = this.parent;
-
-    while (parent) {
-      if (!selected) {
-        parent.selected = selected;
-      }
-      else {
-        parent.selected = !parent.items.some((c) => !c.selected);
-        if (!parent.selected) break;
-      }
-
-      parent = parent.parent;
-    }
   }
 }
 
@@ -87,12 +58,12 @@ class Contact extends ContactBase {
     this.number = data.number || '';
     if (data.number === rtc.account.username) {
       this.isSelf = true;
-      kom.vm.account.currentContact = this;
+      kom.vm.contact.currentContact = this;
     }
     this.phone = data.extension || '';
     this.email = data.email || '';
-    this.avatar = this.parent.isUser ? avatarColor() : this.parent.avatar;
-    this.scopedSlots = { title: 'title' }; // just for tree
+    this.avatar = this.parent.isUser ? '' : this.parent.avatar;
+    this.scopedSlots = { title: 'title' }; // just for tree/
     this.isLeaf = true; // just for tree
   }
 }
@@ -150,10 +121,9 @@ class ContactGroup extends ContactBase {
     this.hasLoad = true;
 
     return this.childNodes().then((val) => {
-      const selected = this.selected;
       const res = val.data.data;
       const contactItems = res ? res.map((c) => new Contact(
-        Object.assign({}, c.attributes, c.node, { parent: this, selected })
+        Object.assign({}, c.attributes, c.node, { parent: this })
       )) || [] : [];
 
       // NOTICE the param'seq is fixed
@@ -182,7 +152,7 @@ export function formatContact(data, loadMode) {
 
       return formatContact(c, loadMode);
     });
-    contact.children = contact.items; // for select
+    contact.children = contact.items; // for tree
     if (!contact.isRoot) {
       contact.amount = contact.amount || 0;
       contact.parent.amount += contact.amount || 0;

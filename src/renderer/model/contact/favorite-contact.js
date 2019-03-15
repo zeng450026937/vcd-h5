@@ -9,8 +9,6 @@ class FavoriteBase {
     this.parent = data.parent;
     this.parentId = data.parentId || (data.parent && data.parent.id);
     this.isGroup = false;
-    // this.namePinyin = data.namePinyin || '';
-    // this.namePinyinAlia = data.namePinyinAlia || '';
   }
 }
 class FavoriteContact extends FavoriteBase {
