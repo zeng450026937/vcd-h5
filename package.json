@@ -36,6 +36,7 @@
     "axios": "^0.18.0",
     "bowser": "1.9.4",
     "clipboard-copy": "^3.0.0",
+    "clusterize.js": "^0.18.1",
     "delegates": "^1.0.0",
     "dexie": "^2.0.4",
     "form-data": "^2.3.3",
