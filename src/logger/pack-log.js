@@ -2,7 +2,7 @@ import archiver from 'archiver';
 import { createWriteStream, ensureDir } from 'fs-extra';
 import { resolve as resolvePath } from 'path';
 import { getLogDirectoryPath, getNetLogDirectoryPath } from './get-log-path';
-import { newPlainUUID } from '../utils/uuid';
+import { newPlainUUID } from '../shared/uuid';
 
 export function packLog(filename = newPlainUUID(), format = 'zip', gzip = false) {
   const dir = getLogDirectoryPath();

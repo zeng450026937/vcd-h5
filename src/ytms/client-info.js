@@ -8,7 +8,7 @@ import {
   getMemInfo,
   getOsInfo,
 } from './system-info';
-import { newPlainUUID } from '../utils/uuid';
+import { newPlainUUID } from '../shared/uuid';
 
 function normalizePlatform(platform) {
   return platform === 'win32' 

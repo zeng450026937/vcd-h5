@@ -8,7 +8,7 @@ export const AppWindowProxy = {
     startTime = performance.now();
   },
   async mounted() {
-    // ipcRenderer.send('renderer-ready', performance.now() - startTime);
+    ipcRenderer.send('renderer-ready', performance.now() - startTime);
     //
     // ipcRenderer.on(
     //   'menu-event',

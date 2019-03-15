@@ -3,7 +3,7 @@ import { cpu } from 'systeminformation/lib/cpu';
 import { networkInterfaces } from 'systeminformation/lib/network';
 import { mem } from 'systeminformation/lib/memory';
 import { osInfo as os } from 'systeminformation/lib/osinfo';
-import { newPlainUUID } from '../utils/uuid';
+import { newPlainUUID } from '../shared/uuid';
 
 let systemInfo = null;
 
