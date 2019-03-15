@@ -32,9 +32,11 @@ export default {
         { label: '主持人', permission: 'closedAuthenticated' },
         { label: '组织内所有人', permission: 'openAuthenticated' },
       ],
-      selectedOptions     : 'closedAuthenticated',
-      attendeeLobbyBypass : true,
     };
+  },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'selectedOptions', 'attendeeLobbyBypass' ],
   },
   computed : {
     currentIsPresenter() { // current => the current login user
@@ -61,9 +63,6 @@ export default {
         autopromote         : this.lockState.autopromote,
         attendeeLobbyBypass : this.attendeeLobbyBypass,
       });
-      // if (!this.isLocked) {
-      //   this.$emit('close');
-      // }
     },
   },
 };

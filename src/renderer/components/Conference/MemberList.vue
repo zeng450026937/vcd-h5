@@ -86,36 +86,22 @@ export default {
     MemberListInner,
     MemberListItem,
   },
-  data() {
-    return {
-      selectedGroup  : '',
-      selectedMember : '',
-      isOpenSearch   : false,
-    };
-  },
-  destroyed() {
-    this.filterText = '';
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'filterText', 'selectedGroup', 'selectedMember', 'isOpenSearch' ],
   },
   computed : {
-    filterText : {
-      get() {
-        return this.$model.conference.filterText;
-      },
-      set(val) {
-        this.$model.conference.filterText = val;
-      },
-    },
     memberList() {
-      return this.$model.conference.memberList;
+      return this.$model.conference.member.memberList;
     },
     memberNum() {
       return this.memberList.reduce((sum, val) => val.list.length + sum, 0);
     },
     waitingList() {
-      return this.$model.conference.waitingList;
+      return this.$model.conference.member.waitingList;
     },
     speakApplyList() {
-      return this.$model.conference.speakApplyList;
+      return this.$model.conference.member.speakApplyList;
     },
     isPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
@@ -148,11 +134,6 @@ export default {
     },
     openSearch() {
       this.isOpenSearch = !this.isOpenSearch;
-      if (this.isOpenSearch) { // 搜索框展示之后立即focus
-        this.$refs.memberSearchInput.$nextTick().then(() => {
-          this.$refs.memberSearchInput.focus();
-        });
-      }
     },
     muteAll() {
       this.$rtc.conference.conference.view.setDefaultFilter({
@@ -171,6 +152,18 @@ export default {
         })
         .catch(() => {
         });
+    },
+  },
+  watch : {
+    isOpenSearch : {
+      async handler(val) {
+        if (val) {
+          await this.$nextTick();
+          await this.$refs.memberSearchInput.$nextTick();
+          this.$refs.memberSearchInput.focus();
+        }
+      },
+      immediate : true,
     },
   },
 };

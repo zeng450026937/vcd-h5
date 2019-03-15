@@ -1,9 +1,9 @@
 <template>
   <div id="conference-remote-video" class="h-full w-full bg-media relative">
     <remote-video
-        :class="{[`remote-video-content-${isVideoContentShrink ? 'shrink' : 'normal'}`]: true}"
+        :class="{[`remote-video-content-${isInConferenceMain ? 'normal' : 'shrink'}`]: true}"
         :source="source">
-      <conference-controls ref="conferenceControls" slot="controls" class="controls" :class="controlsClasses"/>
+      <conference-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
   </div>
 </template>
@@ -11,7 +11,6 @@
 <script>
 import RemoteVideo from '../Common/VideoView.vue';
 import ConferenceControls from './ConferenceControls.vue';
-import { CONFERENCE } from '../../router/constants';
 
 export default {
   name       : 'ConferenceRemoteVideo',
@@ -25,32 +24,22 @@ export default {
       default : 'remote',
     },
   },
-  data() {
-    return {
-      isVideoContentShrink : false,
-    };
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'hideControls', 'showMorePanel', 'isInConferenceMain' ],
   },
   computed : {
     controlsClasses() {
       return {
-        [this.isVideoContentShrink ? 'controls-normal' : 'controls-bottom'] : true,
-        'hide-controls'                                                     : this.hideControls,
+        [this.isInConferenceMain ? 'controls-bottom' : 'controls-normal'] : true,
+        'hide-controls'                                                   : this.hideControls,
       };
-    },
-    hideControls() {
-      return this.$model.conference.hideControls;
     },
   },
   watch : {
-    $route : {
-      handler(val) {
-        this.isVideoContentShrink = val.path === CONFERENCE.CONFERENCE_DRAWER;
-      },
-      immediate : true,
-    },
     hideControls(val) {
       if (val) {
-        this.$refs.conferenceControls.showMorePanel = false;
+        this.showMorePanel = false;
       }
     },
   },

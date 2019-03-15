@@ -8,7 +8,7 @@
           <div class="flex flex-grow h-full items-center">
             <a-iconfont type="icon-guanbi" class="cursor-pointer hover:text-red text-base"
                         title="关闭"
-                        @click="closeDrawer"/>
+                        @click="isInConferenceMain = true"/>
           </div>
           <div class="flex h-full items-center">
             <a-iconfont type="icon-tianjialianxiren"
@@ -27,9 +27,7 @@
         </div>
       </div>
       <div class="flex h-full">
-        <keep-alive>
-          <component :is="currentTab" @close="closeDrawer"></component>
-        </keep-alive>
+        <component :is="currentTab" @close="isInConferenceMain = true"></component>
       </div>
     </div>
   </div>
@@ -40,8 +38,6 @@ import TabLockConference from './TabLockConference.vue';
 import TabMemberView from './TabMemberView.vue';
 import TabChatting from './TabChatting.vue';
 import TabSetting from './TabSetting.vue';
-
-import { CONFERENCE } from '../../router/constants';
 
 export default {
   name       : 'ConferenceDrawer',
@@ -60,28 +56,21 @@ export default {
     ];
 
     return {
-      currentTab : '',
       tabList,
     };
   },
-  created() {
-    const { tab } = this.$router.currentRoute.query;
-
-    this.currentTab = tab || this.tabList[0].is;
-  },
-  mounted() {
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'isInConferenceMain', 'currentTab' ],
   },
   methods : {
     showInviteModal() {
       // FIXME ugly way
       this.$parent.$children[0].showInviteModal();
     },
-    closeDrawer() {
-      this.$router.push(CONFERENCE.CONFERENCE_MAIN);
-    },
     switchTab(tab) {
       if (this.currentTab === tab) {
-        this.closeDrawer();
+        this.isInConferenceMain = true;
         
         return;
       }

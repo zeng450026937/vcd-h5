@@ -35,9 +35,13 @@ export default {
       activeKey : [],
     };
   },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'filterText' ],
+  },
   computed : {
     isCollapseOpen() {
-      return !!this.$model.conference.filterText;
+      return !!this.filterText;
     },
   },
   mounted() {

@@ -1,15 +1,10 @@
+import Vuem from 'vuem';
+import { secondsToHms } from '../../utils';
 import rtc from '../../rtc';
 
-export const secondsToHms = (d) => {
-  d = Number(d);
-  const h = Math.floor(d / 3600);
-  const m = Math.floor((d % 3600) / 60);
-  const s = Math.floor(d % 3600 % 60);
+const state = new Vuem();
 
-  return `${(h < 10 ? '0' : '') + h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-};
-
-export default {
+state.provide({
   data() {
     return {
       duration      : '00:00:00',
@@ -59,4 +54,6 @@ export default {
       }
     },
   },
-};
+});
+
+export default state;

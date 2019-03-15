@@ -7,6 +7,7 @@ import account from './account';
 import state from './state';
 import contact from './contact';
 import meeting from './meeting';
+import conference from './conference';
 
 Vue.use(Vuem);
 
@@ -18,6 +19,7 @@ root.mount('account', account);
 root.mount('contact', contact);
 root.mount('state', state);
 root.mount('meeting', meeting);
+root.mount('conference', conference);
 
 root.provide({
   methods : {

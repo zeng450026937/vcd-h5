@@ -89,7 +89,7 @@ model.provide({
     init(module, config) { // 加载设置信息到系统中
       loadConfig(this, config, 'SYS', module);
     },
-    save(module, config = {}) { // 保存设置的数据
+    save(module = 'device', config = {}) { // 保存设置的数据
       saveConfig(this, config, 'SYS', module);
     },
     findDevice(id, list = rtc.media.deviceList) {

@@ -58,7 +58,7 @@ export default {
   },
   computed : {
     userList() {
-      return this.$model.conference.userList.filter((user) => !user.isCurrentUser());
+      return this.$model.conference.member.userList.filter((user) => !user.isCurrentUser());
     },
     targetList() {
       return [
@@ -72,7 +72,7 @@ export default {
   },
   methods : {
     sendMessage() {
-      this.$model.chat.sendMessage('我', this.target, this.message, 'send');
+      this.$model.conference.chat.sendMessage('我', this.target, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {

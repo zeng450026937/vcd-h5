@@ -1,27 +1,27 @@
 <template>
   <div id="conference-share-video" class="relative group"
-       :class="{[`conference-local-video-${videoLayouts[videoCursor]}`]: true}">
+       :class="{[`conference-local-video-${videoLayouts[current]}`]: true}">
     <video-view :source="source"
                 object-fit="cover"
                 class="cursor-pointer"
-                :class="{'opacity-0':videoCursor === 0}"
+                :class="{'opacity-0':current === 0}"
                 @video-clicked="videoClicked"/>
-    <template v-if="videoCursor !== 2">
+    <template v-if="current !== 2">
       <div class="video-controls group-hover:opacity-100 h-8"
-           :class="{'opacity-0': videoCursor !== 0}">
+           :class="{'opacity-0': current !== 0}">
         <div class="flex px-4 justify-end pt-2">
-          <a-iconfont v-if="videoCursor !== 0"
-                      :type="videoCursor === 1 ? 'icon-fangda' : 'icon-suoxiao'"
-                      :title="videoCursor === 1 ? '放大' : '缩小'"
+          <a-iconfont v-if="current !== 0"
+                      :type="current === 1 ? 'icon-fangda' : 'icon-suoxiao'"
+                      :title="current === 1 ? '放大' : '缩小'"
                       class="text-base text-white"
                       @click="switchShrinkOrExpand"/>
-          <a-iconfont :type="videoCursor === 0 ? 'icon-zhankai' : 'icon-yincang'"
-                      :title="videoCursor === 0 ? '展开' : '隐藏'"
+          <a-iconfont :type="current === 0 ? 'icon-zhankai' : 'icon-yincang'"
+                      :title="current === 0 ? '展开' : '隐藏'"
                       class="text-base text-white ml-4"
                       @click="switchMaxOrMin"/>
         </div>
       </div>
-      <div v-if="videoCursor === 0"
+      <div v-if="current === 0"
            class="video-title h-full flex items-center text-white mx-4">
         <span class="z-10 text-xs">辅流分享</span>
       </div>
@@ -50,35 +50,39 @@ export default {
 
     return {
       videoLayouts,
-      videoCursor    : 1, // min shrink mini normal expand
-      videoCursorPre : 1, // 右侧菜单拉出的时候记住当前本地视频的窗口状态
     };
+  },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'shareWindowState', 'isInConferenceMain' ],
+  },
+  computed : {
+    current() {
+      return this.shareWindowState.current;
+    },
   },
   methods : {
     // 变大或者变小
     switchShrinkOrExpand() {
-      this.videoCursor = this.videoCursor === 1 ? 3 : 1;
+      this.shareWindowState.current = this.current === 1 ? 3 : 1;
     },
     // 最大或者最小
     switchMaxOrMin() {
-      this.videoCursor = this.videoCursor === 0 ? 1 : 0;
+      this.shareWindowState.current = this.current === 0 ? 1 : 0;
     },
     videoClicked() {
       this.$emit('video-clicked');
     },
   },
   watch : {
-    $route : {
-      handler(val) {
-        if (val.path === CONFERENCE.CONFERENCE_DRAWER) {
-          this.videoCursorPre = this.videoCursor;
-          this.videoCursor = 2;
-        }
-        else {
-          this.videoCursor = this.videoCursorPre;
-        }
-      },
-      immediate : true,
+    isInConferenceMain(val) {
+      if (val) {
+        this.shareWindowState.current = this.shareWindowState.pre;
+      }
+      else {
+        this.shareWindowState.pre = this.current;
+        this.shareWindowState.current = 2;
+      }
     },
   },
 };

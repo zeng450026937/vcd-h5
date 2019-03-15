@@ -179,10 +179,11 @@ export default {
       },
     };
   },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'filterText' ],
+  },
   computed : {
-    filterText() {
-      return this.$model.conference.filterText;
-    },
     displayName() {
       return this.item.displayText + (this.item.isCurrentUser() ? ' ( 我 )' : '');
     },
