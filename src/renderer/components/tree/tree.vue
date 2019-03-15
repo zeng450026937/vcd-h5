@@ -214,8 +214,8 @@ export default {
 }
 .tree-checkbox {
   &[type="checkbox"] {
-    position:absolute;;
-    clip:rect(0,0,0,0)
+    clip:rect(0,0,0,0);
+    display: none;
   }
   &[type="checkbox"]:checked+.tree-checkbox-label::before {
     content: '\2713';
