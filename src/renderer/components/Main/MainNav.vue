@@ -85,7 +85,7 @@ export default {
           this.navs = [
             { icon: 'icon-jishihuiyi', route: MAIN.MEETING_INSTANCE, text: '即时会议', isTop: true },
             { icon: 'icon-jiaruhuiyi', route: MAIN.MEETING_ENTER, text: '加入会议' },
-            // { icon: 'icon-tonghuajilu', route: MAIN.CALL_RECORD, text: '通话记录' },
+            { icon: 'icon-tonghuajilu', route: MAIN.CALL_RECORD, text: '通话记录' },
             { icon: 'icon-bohao', route: MAIN.DIAL_PLATE, text: '拨号' },
           ];
           break;
@@ -93,6 +93,7 @@ export default {
           this.navs = [
             { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', isTop: true },
             { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人' },
+            { icon: 'icon-bendilianxiren', route: '/main/content/contactTest', text: '联系人测试' },
           ];
           if (!this.isCloud) {
             this.navs.splice(1, 0, { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人' });

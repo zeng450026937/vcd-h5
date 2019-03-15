@@ -105,7 +105,7 @@ import AppHeader from '../MainHeader.vue';
 import { CallRecord } from '../../../database/call-record';
 import { getDate, genDateString, genDurationTime, getTime } from '../../../utils/date';
 import { callType, callIcon } from '../../../utils/filters';
-import LocalContactDrawer from '../../../components/Main/Contact/LocalContactDrawer'
+import LocalContactDrawer from '../Contact/LocalContactDrawer.vue';
 
 export default {
   name       : 'CallRecordInfo',
