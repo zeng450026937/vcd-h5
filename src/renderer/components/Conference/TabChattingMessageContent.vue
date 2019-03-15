@@ -11,7 +11,7 @@
               <div class="flex flex-grow"></div>
               <span class="text-black6">{{message.date}}</span>
             </div>
-            <div style="margin-top: 6px;"
+            <div style="margin-top: 6px;word-break: break-all;"
                  class="rounded-sm px-2 py-1"
                  :class="{[`bg-chat-${message.type === 'receive' ? 'others': 'mine'}`] : true}">
               <div class="leading-normal">{{message.content}}</div>

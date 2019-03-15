@@ -17,7 +17,10 @@
           <div class="w-1/2">
             <contact-tree ref="contactTree"
                           :checked="checkedKeys"
-                          @onCheck="onCheck"></contact-tree>
+                          @onCheck="onCheck"
+                          @onPush="onPush"
+                          @onPop="onPop"
+            ></contact-tree>
           </div>
           <div class="flex justify-center items-center"
                style="width: 48px;">
@@ -64,6 +67,8 @@
 </template>
 
 <script>
+/* eslint-disable no-loop-func */
+
 import ContactList from './ContactList.vue';
 import ContactTree from './ContactTree.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
@@ -100,8 +105,16 @@ export default {
     onCheck(selectedContact) {
       this.selectedContact = selectedContact;
     },
+    onPush(contact) {
+      this.selectedContact.push(contact);
+    },
+    onPop(contact) {
+      const index = this.selectedContact.findIndex((c) => c.id === contact.id);
+
+      if (index > -1) this.selectedContact.splice(index, 1);
+    },
     deleteContact(contact) {
-      const { checkedKeys } = this.$refs.contactTree;
+      const { checkedKeys, unCheckSearchResult } = this.$refs.contactTree;
 
       let parent = contact;
       const i = this.selectedContact.findIndex((c) => c.id === contact.id);
@@ -114,11 +127,14 @@ export default {
         if (index >= 0) checkedKeys.splice(index, 1);
         parent = parent.parent;
       }
+      // 取消勾选搜索结果
+      unCheckSearchResult(contact);
     },
     clearAll() {
       if (this.selectedContact.length <= 0) return;
       this.selectedContact = [];
       this.$refs.contactTree.checkedKeys = [];
+      this.$refs.contactTree.unCheckSearchResult();
     },
     async ensure() {
       if (!this.groupName || this.groupName.length > 30) return;

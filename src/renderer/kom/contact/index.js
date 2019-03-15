@@ -37,10 +37,16 @@ export default {
   methods : {
     async findContacts(val) {
       return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
-        .map((c) => Object.assign({
-          parent : { isUser: true },
-          nick   : /^(.*)\(.*\)$/.test(c.attributes.name) ? RegExp.$1.substr(-2, 2) : c.attributes.name.substr(-2, 2),
-        }, c.attributes, c.node)));
+        .map((c) => {
+          if (c.attributes.number === this.username) {
+            c.attributes.isSelf = true;
+          }
+          
+          return Object.assign({
+            parent : { isUser: true },
+            nick   : /^(.*)\(.*\)$/.test(c.attributes.name) ? RegExp.$1.substr(-2, 2) : c.attributes.name.substr(-2, 2),
+          }, c.attributes, c.node);
+        }));
     },
     phoneBookFormat(val) {
       return formatPhoneBook(val, this.loadMode);
@@ -66,7 +72,6 @@ export default {
         this.findContacts(this.username).then((result) => {
           result.every((contact) => {
             if (contact.number === this.username) {
-              console.warn(contact)
               kom.vm.account.currentContact = contact;
             }
             

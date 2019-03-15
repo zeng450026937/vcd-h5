@@ -112,14 +112,6 @@
         </a-badge>
         <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
       </div>
-      <!--<div>-->
-        <!--<p class="text-xs flex text-center leading-tight mt-5 text-black9">-->
-          <!--点击登录则代表您同意-->
-          <!--<span class="text-indigo-light cursor-pointer">《用户协议》</span>-->
-          <!--和-->
-          <!--<span class="text-indigo-light cursor-pointer">《隐私政策》</span>-->
-        <!--</p>-->
-      <!--</div>-->
     </div>
   </div>
 </template>
@@ -154,40 +146,17 @@ export default {
     await this.$nextTick();
     if (this.isAutoLogin) this.handleLogin();
   },
+  sketch : {
+    ns    : 'account',
+    props : [ 'serverType', 'rmbPassword', 'autoLogin', 'autoLoginDisabled' ],
+  },
   computed : {
     isAutoLogin() {
       return this.autoLogin && !this.autoLoginDisabled && this.rmbPassword;
     },
-    serverType() {
-      return this.$model.login.serverType;
-    },
     hasNewVersion() {
       // TODO check the status of update
       return false;
-    },
-    rmbPassword : {
-      get() {
-        return this.$model.login.rmbPassword;
-      },
-      set(val) {
-        this.$model.login.rmbPassword = val;
-      },
-    },
-    autoLogin : {
-      get() {
-        return this.$model.login.autoLogin;
-      },
-      set(val) {
-        this.$model.login.autoLogin = val;
-      },
-    },
-    autoLoginDisabled : {
-      get() {
-        return this.$model.login.autoLoginDisabled;
-      },
-      set(val) {
-        this.$model.login.autoLoginDisabled = val;
-      },
     },
   },
   methods : {
@@ -208,7 +177,7 @@ export default {
         { force: true },
         (err, values) => {
           if (!err && this.validateForm(values)) {
-            this.$dispatch('login.doLogin', values);
+            this.$dispatch('account.login', values);
             this.autoLoginDisabled = true;
           }
         });
@@ -256,8 +225,8 @@ export default {
         pin     : data.pin,
         server  : this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server,
       });
-      this.$model.login.proxy = data.proxy;
-      this.$model.login.proxyPort = data.proxyPort;
+      this.$model.account.proxy = data.proxy;
+      this.$model.account.proxyPort = data.proxyPort;
     },
     passwordInputted(event) {
       this.isCapsLockOn = isCapsLockOn(event);

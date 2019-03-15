@@ -50,7 +50,8 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
-import VolumeProgress from '../../Common/VolumeProgress.vue'
+import VolumeProgress from '../../Common/VolumeProgress.vue';
+
 export default {
   name       : 'AudioSetting',
   components : {
@@ -66,33 +67,22 @@ export default {
     this.$rtc.media.localMedia.acquireStream();
   },
   destroyed() {
+    this.$model.setting.device.save('device'); // 页面不显示的时候保存设置
     this.$rtc.media.localMedia.releaseStream();
+  },
+  sketch : {
+    ns    : 'setting.device',
+    props : [ 'audioInput', 'audioOutput' ],
   },
   computed : {
     volume() {
       return this.$rtc.media.localMedia.volume;
     },
-    audioInput : {
-      get() {
-        return this.$model.setting.device.audioInput;
-      },
-      set(val) {
-        this.$model.setting.device.audioInput = val;
-      },
-    },
-    audioOutput : {
-      get() {
-        return this.$model.setting.device.audioOutput;
-      },
-      set(val) {
-        this.$model.setting.device.audioOutput = val;
-      },
-    },
     audioInputList() { // 麦克风
-      return this.$model.setting.device.audioInputList;
+      return this.$rtc.media.audioInputs;
     },
     audioOutputList() { // 扬声器
-      return this.$model.setting.device.audioOutputList;
+      return this.$rtc.media.audioOutputs;
     },
   },
   methods : {

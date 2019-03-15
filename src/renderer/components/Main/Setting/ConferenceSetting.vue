@@ -17,7 +17,7 @@
             <span class="setting-title">内容共享</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="maxWindowWhenSharing"/>
+            <a-switch size="small" v-model="minWindowWhenSharing"/>
             <span class="setting-label">发送内容共享时最小化VCD窗口</span>
           </div>
           <div class="mt-3">
@@ -27,6 +27,14 @@
           <div class="mt-3">
             <a-switch size="small" v-model="enableGpu"/>
             <span class="setting-label">屏幕共享时启用GPU加速</span>
+          </div>
+          <div class="mt-3">
+            <a-switch size="small" v-model="preferredPictureFluency"/>
+            <span class="setting-label">画面流畅度优先</span>
+          </div>
+          <div class="mt-3">
+            <a-switch size="small" v-model="shareComputerSound"/>
+            <span class="setting-label">共享电脑声音</span>
           </div>
         </div>
       </div>
@@ -123,49 +131,18 @@ export default {
   components : {
     AppHeader,
   },
-  computed : {
-    maxWindowWhenSharing : {
-      get() { return this.$model.setting.conference.maxWindowWhenSharing; },
-      set(val) { this.$model.setting.conference.maxWindowWhenSharing = val; },
-    },
-    maxWindowWhenWatchingSharing : {
-      get() { return this.$model.setting.conference.maxWindowWhenWatchingSharing; },
-      set(val) { this.$model.setting.conference.maxWindowWhenWatchingSharing = val; },
-    },
-    enableGpu : {
-      get() { return this.$model.setting.conference.enableGpu; },
-      set(val) { this.$model.setting.conference.enableGpu = val; },
-    },
-    autoSilence : {
-      get() { return this.$model.setting.conference.autoSilence; },
-      set(val) { this.$model.setting.conference.autoSilence = val; },
-    },
-    noticeWhenLeaving : {
-      get() { return this.$model.setting.conference.noticeWhenLeaving; },
-      set(val) { this.$model.setting.conference.noticeWhenLeaving = val; },
-    },
-    advanceEntryTime : {
-      get() { return this.$model.setting.conference.advanceEntryTime; },
-      set(val) { this.$model.setting.conference.advanceEntryTime = val; },
-    },
-    instanceMeetingPassword : {
-      get() { return this.$model.setting.conference.instanceMeetingPassword; },
-      set(val) { this.$model.setting.conference.instanceMeetingPassword = val; },
-    },
-    reserveMeetingPassword : {
-      get() { return this.$model.setting.conference.reserveMeetingPassword; },
-      set(val) { this.$model.setting.conference.reserveMeetingPassword = val; },
-    },
-    dndWhenCalling : {
-      get() { return this.$model.setting.conference.dndWhenCalling; },
-      set(val) { this.$model.setting.conference.dndWhenCalling = val; },
-    },
+  sketch : {
+    ns    : 'setting.conference',
+    props : [ 'minWindowWhenSharing', 'maxWindowWhenWatchingSharing',
+      'enableGpu', 'autoSilence',
+      'noticeWhenLeaving', 'advanceEntryTime', 'instanceMeetingPassword', 'reserveMeetingPassword',
+      'dndWhenCalling', 'shareComputerSound', 'preferredPictureFluency' ],
   },
   deactivated() {
-    this.$model.setting.conference.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.conference.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
   },
 };
 </script>

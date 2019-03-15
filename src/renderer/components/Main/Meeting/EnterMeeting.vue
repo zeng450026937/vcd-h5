@@ -54,18 +54,20 @@
         <div class="flex flex-col items-center px-24 bg-white">
           <div class="mt-5 w-full">
             <a-input
-                v-model="meetingInfo.number"
                 placeholder='Meeting ID'
+                :value="meetingInfo.number"
+                @change="onNumberChange"
             >
-              <a-iconfont slot="prefix" type='icon-ID' class="text-base text-black9"/>
+              <a-iconfont v-number-only slot="prefix" type='icon-ID' class="text-base text-black9"/>
             </a-input>
           </div>
 
           <div class="mt-5 w-full">
             <a-input
-                v-model="meetingInfo.pin"
+                :value="meetingInfo.pin"
                 placeholder='Password(Optional)'
                 type="password"
+                @change="onPasswordChange"
             >
               <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
             </a-input>
@@ -79,7 +81,7 @@
             </a-input>
           </div>
           <a-button type="primary" class="mt-10" block
-                    :disabled="isConnected || !meetingInfo.number"
+                    :disabled="isConnected"
                     @click="enterMeeting">立即加入</a-button>
         </div>
       </div>
@@ -163,8 +165,37 @@ export default {
     };
   },
   methods : {
+    checkNumber() {
+      let errorNotice = '';
+
+      if (!this.meetingInfo.number) errorNotice = '会议ID不能为空';
+      else if (this.meetingInfo.number.length > 64) errorNotice = '会议ID最多为64位';
+      this.$message.error(errorNotice);
+      
+      return !errorNotice;
+    },
+    onNumberChange(e) {
+      const { value } = e.target;
+      const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+
+      if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
+        if (value.length <= 64) {
+          this.meetingInfo.number = value;
+        }
+      }
+    },
+    onPasswordChange(e) {
+      const { value } = e.target;
+      const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+
+      if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
+        this.meetingInfo.pin = value;
+      }
+    },
     enterMeeting() {
-      this.$dispatch('meeting.joinMeeting', this.meetingInfo);
+      if (this.checkNumber()) {
+        this.$dispatch('meeting.joinMeeting', this.meetingInfo);
+      }
     },
     cancelEnter() {
       this.$rtc.conference.leave();

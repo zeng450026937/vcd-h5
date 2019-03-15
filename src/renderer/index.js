@@ -7,7 +7,7 @@ import router from './router';
 import rtc from './rtc';
 import storage from './storage';
 import popup from './popup';
-import kom from './kom';
+import kom from './model';
 import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';

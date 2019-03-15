@@ -69,52 +69,14 @@ export default {
     };
   },
   deactivated() {
-    this.$model.setting.normal.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('common'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.normal.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('common'); // 页面不显示的时候保存设置
   },
-  computed : {
-    autoStart : {
-      get() {
-        return this.$model.setting.normal.autoStart;
-      },
-      set(val) {
-        this.$model.setting.normal.autoStart = val;
-      },
-    },
-    forceMinimize : {
-      get() {
-        return this.$model.setting.normal.forceMinimize;
-      },
-      set(val) {
-        this.$model.setting.normal.forceMinimize = val;
-      },
-    },
-    language : {
-      get() {
-        return this.$model.setting.normal.language;
-      },
-      set(val) {
-        this.$model.setting.normal.language = val;
-      },
-    },
-    address : {
-      get() {
-        return this.$model.setting.normal.address;
-      },
-      set(val) {
-        this.$model.setting.normal.address = val;
-      },
-    },
-    updateChannel : {
-      get() {
-        return this.$model.setting.normal.updateChannel;
-      },
-      set(val) {
-        this.$model.setting.normal.updateChannel = val;
-      },
-    },
+  sketch : {
+    ns    : 'setting.common',
+    props : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
   },
 };
 </script>

@@ -18,17 +18,19 @@ export default {
   name    : 'CommonHeader',
   methods : {
     clickMinimize() {
-      this.$dispatch('sys.minimize');
+      this.$model.minimize();
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
+      this.$model.maximize();
     },
     clickClose() {
-      if (this.$model.setting.normal.forceMinimize) {
-        this.clickMinimize();
+      const { forceMinimize } = this.$model.setting.common;
+
+      if (forceMinimize) {
+        this.$model.hide();
       }
       else {
-        this.$dispatch('sys.close');
+        this.$model.close();
       }
     },
   },

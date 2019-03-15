@@ -14,17 +14,20 @@
             <div class="mt-10 flex flex-col">
               <div class="input-with-icon">
                 <a-input
-                    v-model="meetingData.account"
+                    v-number-only
                     placeholder='会议ID'
+                    :value="meetingData.account"
+                    @change="onAccountChange"
                 >
                   <a-iconfont slot="prefix" type='icon-ID' class="text-base text-black9"/>
                 </a-input>
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    v-model="meetingData.pin"
-                    placeholder='会议密码(选填)'
+                    placeholder='会议密码(选)'
                     type='password'
+                    :value="meetingData.pin"
+                    @change="onPasswordChange"
                 >
                   <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
                 </a-input>
@@ -193,6 +196,24 @@ export default {
     },
   },
   methods : {
+    onAccountChange(e) {
+      const { value } = e.target;
+      const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+
+      if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
+        if (value.length <= 64) {
+          this.meetingData.account = value;
+        }
+      }
+    },
+    onPasswordChange(e) {
+      const { value } = e.target;
+      const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+
+      if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
+        this.meetingData.pin = value;
+      }
+    },
     joinMeeting() {
       if (!this.meetingData.account) {
         this.$message.error('会议号码不可为空');

@@ -4,42 +4,35 @@ import storage from '../../storage';
 // const version = 'V1';
 // normal 通用模块
 // conference 会议模块
-export const moduleList = [ 'normal', 'conference', 'video', 'device', 'about' ];
+export const moduleList = [ 'common', 'conference', 'video', 'audio', 'about', 'device' ];
 
 const keyMap = {
-  normal     : 'SETTING_NORMAL',
+  common     : 'SETTING_COMMON',
   conference : 'SETTING_CONFERENCE',
   video      : 'SETTING_VIDEO',
-  device     : 'SETTING_DEVICE',
+  audio      : 'SETTING_DEVICE',
   about      : 'SETTING_ABOUT',
+  device     : 'SETTING_DEVICE',
 };
 
 const itemMap = { // 对应不同模块需要导出的设置项
-  normal     : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
+  common     : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
   conference : [ 'maxWindowWhenSharing', 'maxWindowWhenWatchingSharing',
     'enableGpu', 'autoSilence',
     'noticeWhenLeaving', 'advanceEntryTime',
     'instanceMeetingPassword', 'reserveMeetingPassword', 'dndWhenCalling',
+    'shareComputerSound', 'preferredPictureFluency',
   ],
   video : [ 'enableHDVideo',
     'enableHWSpeed',
     'disableVideo',
     'enableMirroring' ],
-  about  : [ 'autoUpdate' ],
-  device : [
+  about : [ 'autoUpdate' ],
+  audio : [
     'videoInput',
-    'forceLocalStream',
     'audioInput',
-    'audioOutput',
-    'muteVideo',
-    'notification',
-    'videoQuality',
-    'shareQuality',
-    'sampleRate',
-    'sampleSize',
-    'autoGainControl',
-    'noiseSuppression',
-    'channelCount' ],
+    'audioOutput' ],
+  device : [ 'videoInputId', 'audioInputId', 'audioOutputId' ],
 };
 
 const configKey = (type, name) => `${keyMap[type]}_USER_${name || rtc.account.username}`;
@@ -52,10 +45,10 @@ export const checkType = (t) => moduleList.some((item) => item === t);
  * 加载模块
  * @param context 调用当前方法的上下文环境
  * @param config
- * @param type 类型： normal,conference,device,internet
+ * @param type 类型： common,conference,device,internet
  * @param userName
  */
-export const load = (context, config, type, userName) => { // 加载设置信息到系统中
+export const loadConfig = (context, config, userName, type) => { // 加载设置信息到系统中
   if (!context || !checkType(type)) return;
   config = config
     || storage.query(String(configKey(type, userName)))
@@ -70,7 +63,7 @@ export const load = (context, config, type, userName) => { // 加载设置信息
  * @param context
  * @param type
  */
-export const exp = (context, type) => {
+export const exportConfig = (context, type) => {
   if (!context || !checkType(type)) return;
   const data = {};
 
@@ -88,12 +81,12 @@ export const exp = (context, type) => {
  * @param userName 时候指定保存的用户名（默认为当前登录的用户）
  * @param type
  */
-export const save = (context, data = {}, userName, type) => { // 保存设置的数据
+export const saveConfig = (context, data = {}, userName, type) => { // 保存设置的数据
   if (!context || !checkType(type)) return;
-  const config = exp(context, type);
+  const config = exportConfig(context, type);
 
   storage.insert(configKey(type, userName), Object.assign(config, data));
-  load(context, Object.assign(config, data), type);
+  loadConfig(context, Object.assign(config, data), userName || rtc.account.username, type);
 };
 
 /**
@@ -102,4 +95,4 @@ export const save = (context, data = {}, userName, type) => { // 保存设置的
  * @param type
  * @returns {any}
  */
-export const gen = (userName, type) => storage.query(configKey(type, userName));
+export const genConfig = (userName, type) => storage.query(configKey(type, userName));

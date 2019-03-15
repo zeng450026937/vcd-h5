@@ -57,20 +57,13 @@ export default {
       helpStatus : false,
     };
   },
+  sketch : {
+    ns    : 'account',
+    props : [ 'serverType', 'loginType' ],
+  },
   computed : {
-    serverType : {
-      get() {
-        return this.$model.login.serverType;
-      },
-      set(val) {
-        this.$model.login.serverType = val;
-      },
-    },
     serverText() {
       return this.serverType === 'cloud' ? '云服务版' : '企业版';
-    },
-    loginType() {
-      return this.$model.login.loginType;
     },
   },
   methods : {

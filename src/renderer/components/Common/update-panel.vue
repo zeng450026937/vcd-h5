@@ -40,7 +40,7 @@
 
     </div>
     <div class="mt-5">
-      <a-switch v-model="isAutoUpdate" size="small"/>
+      <a-switch v-model="autoUpdate" size="small"/>
       <span class="ml-2">自动更新</span>
     </div>
     <div class="flex text-indigo mt-5 items-center text-xs">
@@ -72,20 +72,17 @@ export default {
     return {
       updateStatus,
       status              : updater.status,
-      isAutoUpdate        : true,
       currentVersion      : window.autoUpdater.appVersion,
       lastSuccessfulCheck : null,
       progress            : null,
     };
   },
-  watch : {
-    isAutoUpdate(val) {
-      const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
-
-      updateConfig.isAutoUpdate = val;
-
-      this.$storage.insert('AUTO_UPDATE', updateConfig);
-    },
+  destroyed() {
+    this.$model.setting.save('about'); // 页面不显示的时候保存设置
+  },
+  sketch : {
+    ns    : 'setting.about',
+    props : [ 'autoUpdate' ],
   },
   computed : {
     statusDesc() {
@@ -116,14 +113,7 @@ export default {
     },
   },
   mounted() {
-    const updateConfig = this.$storage.query('AUTO_UPDATE') || {};
-
-    if (updateConfig.isAutoUpdate == null) {
-      updateConfig.isAutoUpdate = true;
-      this.$storage.insert('AUTO_UPDATE', updateConfig);
-    }
-
-    updater.autoInstallOnAppQuit = this.isAutoUpdate = this.$storage.query('AUTO_UPDATE').isAutoUpdate;
+    updater.autoInstallOnAppQuit = this.autoUpdate;
     updater.on('error', this.onError);
     updater.on('did-change', this.onDidChange);
     updater.on('progress', this.onProgress);

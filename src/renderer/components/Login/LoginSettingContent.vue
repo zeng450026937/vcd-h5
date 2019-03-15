@@ -47,24 +47,9 @@ export default {
     this.tmpProxy = this.proxy;
     this.tmpProxyPort = this.proxyPort;
   },
-  computed : {
-    proxy : {
-      get() {
-        return this.$model.login.proxy;
-      },
-      set(val) {
-        this.$model.login.proxy = val;
-      },
-    },
-
-    proxyPort : {
-      get() {
-        return this.$model.login.proxyPort;
-      },
-      set(val) {
-        this.$model.login.proxyPort = val;
-      },
-    },
+  sketch : {
+    ns    : 'account',
+    props : [ 'proxy', 'proxyPort' ],
   },
   methods : {
     validateProxy() {
