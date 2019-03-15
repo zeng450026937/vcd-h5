@@ -19,17 +19,17 @@ export default {
     };
   },
   computed : {
-    isOnLine() {
-      return this.$model.state.isOnLine;
-    },
+    // isOnLine() {
+    //   return this.$model.state.isOnLine;
+    // },
   },
   methods : {},
   watch   : {
-    isOnLine(val) {
-      if (!val) {
-        this.$message.error('网络不可用，请检查你的网络设置');
-      }
-    },
+    // isOnLine(val) {
+    //   if (!val) {
+    //     this.$message.error('网络不可用，请检查你的网络设置');
+    //   }
+    // },
   },
 };
 </script>

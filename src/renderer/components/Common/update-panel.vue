@@ -40,7 +40,7 @@
 
     </div>
     <div class="mt-5">
-      <a-switch v-model="isAutoUpdate" size="small"/>
+      <a-switch v-model="autoUpdate" size="small"/>
       <span class="ml-2">自动更新</span>
     </div>
     <div class="flex text-indigo mt-5 items-center text-xs">
@@ -72,16 +72,17 @@ export default {
     return {
       updateStatus,
       status              : updater.status,
-      isAutoUpdate        : true,
       currentVersion      : window.autoUpdater.appVersion,
       lastSuccessfulCheck : null,
       progress            : null,
     };
   },
-  watch : {
-    isAutoUpdate(val) {
-      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: val });
-    },
+  destroyed() {
+    this.$model.setting.save('about'); // 页面不显示的时候保存设置
+  },
+  sketch : {
+    ns    : 'setting.about',
+    props : [ 'autoUpdate' ],
   },
   computed : {
     statusDesc() {
@@ -112,15 +113,12 @@ export default {
     },
   },
   mounted() {
-    if (!this.$storage.query('AUTO_UPDATE')) {
-      this.$storage.insert('AUTO_UPDATE', { isAutoUpdate: true });
-    }
-    // updater.autoInstallOnAppQuit = this.isAutoUpdate = this.$storage.query('AUTO_UPDATE').isAutoUpdate;
-    // updater.on('error', this.onError);
-    // updater.on('did-change', this.onDidChange);
-    // updater.on('progress', this.onProgress);
-    // if (updater.status === 4) return; // 如果 更新下载中 则不检查更新
-    // this.checkUpdate();
+    updater.autoInstallOnAppQuit = this.autoUpdate;
+    updater.on('error', this.onError);
+    updater.on('did-change', this.onDidChange);
+    updater.on('progress', this.onProgress);
+    if (updater.status === 4) return; // 如果 更新下载中 则不检查更新
+    this.checkUpdate();
   },
   beforeDestroy() {
     updater.off('error', this.onError);

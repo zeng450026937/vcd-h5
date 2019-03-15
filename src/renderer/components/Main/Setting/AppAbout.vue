@@ -25,26 +25,17 @@ export default {
     AppHeader,
     updatePanel,
   },
-  data() {
-    return {};
-  },
-  computed : {
-    autoUpdate : {
-      get() {
-        return this.$model.setting.about.autoUpdate;
-      },
-      set(val) {
-        this.$model.setting.about.autoUpdate = val;
-      },
-    },
+  sketch : {
+    ns    : 'setting.about',
+    props : [ 'autoUpdate' ],
   },
   mounted() {
   },
   deactivated() {
-    this.$model.setting.about.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('about'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.about.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('about'); // 页面不显示的时候保存设置
   },
   methods : {},
 };

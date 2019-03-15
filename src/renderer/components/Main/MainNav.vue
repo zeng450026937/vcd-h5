@@ -3,10 +3,10 @@
     <div class="h-14">
       <div class="flex px-3 h-full items-center border-b">
         <a-input
-            v-model="searchText"
+            v-model="globalSearchText"
             placeholder='搜索联系人'
         >
-          <a-iconfont v-if="!searchText"
+          <a-iconfont v-if="!globalSearchText"
                       slot="suffix"
                       type="icon-sousuo"
                       class="text-base text-grey"/>
@@ -14,12 +14,12 @@
                       slot="suffix"
                       type="icon-guanbi"
                       class="text-base text-grey cursor-pointer hover:text-red"
-                      @click="searchText = ''"/>
+                      @click="globalSearchText = ''"/>
         </a-input>
       </div>
     </div>
 
-    <div v-show="!searchText">
+    <div v-show="!globalSearchText">
       <calendar-nav v-if="isInCalendar"/>
       <div v-else>
         <div class="flex items-center h-12 px-4 cursor-pointer"
@@ -33,8 +33,8 @@
         </div>
       </div>
     </div>
-    <div class="flex h-full" v-if="searchText">
-      <global-search :searchText="searchText"/>
+    <div class="flex h-full" v-if="globalSearchText">
+      <global-search :searchText="globalSearchText"/>
     </div>
     <div class="flex flex-grow"></div>
   </a-layout>
@@ -51,7 +51,9 @@ export default {
     GlobalSearch,
     CalendarNav,
   },
-  props : {
+  sketch : {
+    ns    : 'contact',
+    props : [ 'globalSearchText' ],
   },
   data() {
     return {
@@ -64,14 +66,6 @@ export default {
   computed : {
     isCloud() {
       return this.$model.login.serverType === 'cloud';
-    },
-    searchText : {
-      get() {
-        return this.$model.sketch.globalSearch.searchText;
-      },
-      set(val) {
-        this.$model.sketch.globalSearch.searchText = val;
-      },
     },
   },
   created() {

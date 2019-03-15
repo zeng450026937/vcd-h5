@@ -90,39 +90,26 @@ export default {
     return {
     };
   },
+  sketch : {
+    ns    : 'setting.video',
+    props : [ 'enableHDVideo', 'enableHWSpeed',
+      'disableVideo', 'enableMirroring' ],
+  },
   computed : {
     muteVideo() {
       return this.$rtc.media.localMedia.muteVideo;
+    },
+    videoInputList() { // 摄像头
+      return this.$model.setting.device.videoInputList;
     },
     videoInput : {
       get() { return this.$model.setting.device.videoInput; },
       set(val) { this.$model.setting.device.videoInput = val; },
     },
-    videoInputList() { // 摄像头
-      return this.$model.setting.device.videoInputList;
-    },
-    enableHDVideo : {
-      get() { return this.$model.setting.video.enableHDVideo; },
-      set(val) { this.$model.setting.video.enableHDVideo = val; },
-    },
-    enableHWSpeed : {
-      get() { return this.$model.setting.video.enableHWSpeed; },
-      set(val) { this.$model.setting.video.enableHWSpeed = val; },
-    },
-    disableVideo : {
-      get() { return this.$model.setting.video.disableVideo; },
-      set(val) { this.$model.setting.video.disableVideo = val; },
-    },
-    enableMirroring : {
-      get() { return this.$model.setting.video.enableMirroring; },
-      set(val) { this.$model.setting.video.enableMirroring = val; },
-    },
-  },
-  deactivated() {
-    this.$model.setting.video.save(); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.video.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('video'); // 页面不显示的时候保存设置
+    this.$model.setting.device.save('device'); // 页面不显示的时候保存设置
   },
 };
 </script>

@@ -131,57 +131,18 @@ export default {
   components : {
     AppHeader,
   },
-  computed : {
-    minWindowWhenSharing : {
-      get() { return this.$model.setting.conference.minWindowWhenSharing; },
-      set(val) { this.$model.setting.conference.minWindowWhenSharing = val; },
-    },
-    maxWindowWhenWatchingSharing : {
-      get() { return this.$model.setting.conference.maxWindowWhenWatchingSharing; },
-      set(val) { this.$model.setting.conference.maxWindowWhenWatchingSharing = val; },
-    },
-    enableGpu : {
-      get() { return this.$model.setting.conference.enableGpu; },
-      set(val) { this.$model.setting.conference.enableGpu = val; },
-    },
-    autoSilence : {
-      get() { return this.$model.setting.conference.autoSilence; },
-      set(val) { this.$model.setting.conference.autoSilence = val; },
-    },
-    noticeWhenLeaving : {
-      get() { return this.$model.setting.conference.noticeWhenLeaving; },
-      set(val) { this.$model.setting.conference.noticeWhenLeaving = val; },
-    },
-    advanceEntryTime : {
-      get() { return this.$model.setting.conference.advanceEntryTime; },
-      set(val) { this.$model.setting.conference.advanceEntryTime = val; },
-    },
-    instanceMeetingPassword : {
-      get() { return this.$model.setting.conference.instanceMeetingPassword; },
-      set(val) { this.$model.setting.conference.instanceMeetingPassword = val; },
-    },
-    reserveMeetingPassword : {
-      get() { return this.$model.setting.conference.reserveMeetingPassword; },
-      set(val) { this.$model.setting.conference.reserveMeetingPassword = val; },
-    },
-    dndWhenCalling : {
-      get() { return this.$model.setting.conference.dndWhenCalling; },
-      set(val) { this.$model.setting.conference.dndWhenCalling = val; },
-    },
-    shareComputerSound : {
-      get() { return this.$model.setting.conference.shareComputerSound; },
-      set(val) { this.$model.setting.conference.shareComputerSound = val; },
-    },
-    preferredPictureFluency : {
-      get() { return this.$model.setting.conference.preferredPictureFluency; },
-      set(val) { this.$model.setting.conference.preferredPictureFluency = val; },
-    },
+  sketch : {
+    ns    : 'setting.conference',
+    props : [ 'minWindowWhenSharing', 'maxWindowWhenWatchingSharing',
+      'enableGpu', 'autoSilence',
+      'noticeWhenLeaving', 'advanceEntryTime', 'instanceMeetingPassword', 'reserveMeetingPassword',
+      'dndWhenCalling', 'shareComputerSound', 'preferredPictureFluency' ],
   },
   deactivated() {
-    this.$model.setting.conference.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.conference.save(); // 页面不显示的时候保存设置
+    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
   },
 };
 </script>

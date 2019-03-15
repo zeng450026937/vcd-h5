@@ -30,8 +30,8 @@ export default {
     ContactList,
   },
   sketch : {
-    module : 'sketch.globalSearch',
-    props  : [ 'hasLoadMore', 'searchResults' ],
+    ns    : 'sketch.globalSearch',
+    props : [ 'hasLoadMore', 'searchResults' ],
   },
   computed : {
     hasContacts() {

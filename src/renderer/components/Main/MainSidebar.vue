@@ -94,27 +94,15 @@ export default {
       headMenuVisible : false,
     };
   },
+  sketch: {
+    ns: 'state',
+    props: ['isInConferenceView', 'isInCallView', 'sidebarStatus'],
+  },
   computed : {
     userInfo() {
       return this.$model.account.currentContact || {
         name : this.$rtc.account.username,
       };
-    },
-    isInConferenceView : {
-      get() {
-        return this.$model.state.isInConferenceView;
-      },
-      set(val) {
-        this.$model.state.isInConferenceView = val;
-      },
-    },
-    isInCallView : {
-      get() {
-        return this.$model.state.isInCallView;
-      },
-      set(val) {
-        this.$model.state.isInCallView = val;
-      },
     },
     confStatus() {
       return this.$rtc.conference.status;
@@ -136,9 +124,7 @@ export default {
   },
   methods : {
     randomAvatar() {
-      // TODO DELETE
-      return avatarList[5];
-      // return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
+      return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
     },
     clickMenu(sidebar, index) {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {
@@ -158,7 +144,7 @@ export default {
         // 如果当前在会议中，则先退出会议
         await this.$rtc.conference.leave();
       }
-      this.$model.state.sidebarStatus.mainRoute = this.$router.currentRoute.path;
+      this.sidebarStatus.mainRoute = this.$router.currentRoute.path;
       this.$rtc.account.signout();
     },
     openFeedback() {
@@ -183,10 +169,8 @@ export default {
   watch : {
     $route : {
       handler(val) {
-        const { sidebarStatus } = this.$model.state;
-
         if (this.$model.state.isNotInCallOrConference()) {
-          sidebarStatus.preRoute = val;
+          this.sidebarStatus.preRoute = val;
         }
       },
       immediate : true,
