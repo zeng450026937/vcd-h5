@@ -14,6 +14,14 @@ module.exports = {
       },
     ],
     [
+      '@babel/plugin-proposal-decorators',
+      { legacy: true },
+    ],
+    [
+      '@babel/proposal-class-properties',
+      { loose: true },
+    ],
+    [
       '@babel/proposal-export-default-from',
     ],
     [

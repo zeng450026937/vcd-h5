@@ -1,7 +1,7 @@
 import Vuem from 'vuem';
 import storage, { LOGIN_STORAGE } from '../storage';
 import rtc from '../rtc';
-import SRV from '../../utils/srv';
+import SRV from '../../shared/srv';
 
 const model = new Vuem();
 
