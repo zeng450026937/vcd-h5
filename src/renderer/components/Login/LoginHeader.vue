@@ -68,13 +68,13 @@ export default {
   },
   methods : {
     clickMinimize() {
-      this.$dispatch('sys.minimize');
+      this.$dispatch('application.minimize');
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
+      this.$dispatch('application.maximize');
     },
     clickClose() {
-      this.$dispatch('sys.close');
+      this.$dispatch('application.close');
     },
     handleHelpClick() {},
     handleMenuClick({ key }) {

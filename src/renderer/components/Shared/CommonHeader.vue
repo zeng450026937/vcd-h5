@@ -18,20 +18,13 @@ export default {
   name    : 'CommonHeader',
   methods : {
     clickMinimize() {
-      this.$model.minimize();
+      this.$dispatch('application.minimize');
     },
     clickMaximize() {
-      this.$model.maximize();
+      this.$dispatch('application.maximize');
     },
     clickClose() {
-      const { forceMinimize } = this.$model.setting.common;
-
-      if (forceMinimize) {
-        this.$model.hide();
-      }
-      else {
-        this.$model.close();
-      }
+      this.$dispatch('application.close');
     },
   },
 };

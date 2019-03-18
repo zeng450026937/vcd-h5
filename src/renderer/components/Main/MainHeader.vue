@@ -26,14 +26,13 @@ export default {
   },
   methods : {
     clickMinimize() {
-      this.$dispatch('sys.minimize');
+      this.$dispatch('application.minimize');
     },
     clickMaximize() {
-      this.$dispatch('sys.maximize');
-      // screenfull.toggle(document.getElementById('app'));
+      this.$dispatch('application.maximize');
     },
     clickClose() {
-      this.$dispatch('sys.close');
+      this.$dispatch('application.close');
     },
   },
 };

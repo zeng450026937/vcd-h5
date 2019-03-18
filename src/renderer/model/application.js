@@ -4,15 +4,17 @@ import { remote } from 'electron';
 const model = new Vuem();
 
 model.provide({
-  computed : {
-    setting() {
-      return this.$parent.setting;
-    },
+  data() {
+    return {
+      title    : process.env.VUE_APP_TITLE,
+      model    : process.env.VUE_APP_MODEL,
+      category : process.env.VUE_APP_CATEGORY,
+      customId : process.env.VUE_APP_CUSTOMID,
+    };
   },
+
   middleware : {
     async maximize(ctx, next) {
-      console.warn(ctx);
-
       const current = remote.getCurrentWindow();
 
       if (current.isMaximized()) {
@@ -24,33 +26,18 @@ model.provide({
       current.maximize();
     },
     async minimize(ctx, next) {
-      console.warn(ctx);
-
       remote.getCurrentWindow().minimize();
     },
     async close(ctx, next) {
-      console.warn(ctx);
-
-      // remote.getCurrentWindow().hide();
+      remote.getCurrentWindow().close();
     },
   },
+  
   methods : {
     isMaximized() {
       return remote.getCurrentWindow().isMaximized();
     },
   },
-});
-
-model.use(async(ctx, next) => {
-  const { method, ns } = ctx;
-
-  console.log(ctx.isMatch());
-
-  if (method === 'close') {
-    ctx.hideWhenClose = true;
-  }
-
-  await next();
 });
 
 export default model;

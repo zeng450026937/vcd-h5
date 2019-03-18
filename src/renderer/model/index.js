@@ -3,6 +3,7 @@ import { remote } from 'electron';
 import Vue from 'vue';
 import Vuem from 'vuem';
 import setting from './setting';
+import application from './application';
 import account from './account';
 import state from './state';
 import contact from './contact';
@@ -11,40 +12,23 @@ import conference from './conference';
 
 Vue.use(Vuem);
 
-const root = new Vuem();
+const model = new Vuem();
 
-// ...
-root.mount('setting', setting);
-root.mount('account', account);
-root.mount('contact', contact);
-root.mount('state', state);
-root.mount('meeting', meeting);
-root.mount('conference', conference);
+model.mount('setting', setting);
+model.mount('application', application);
+model.mount('account', account);
+model.mount('contact', contact);
+model.mount('state', state);
+model.mount('meeting', meeting);
+model.mount('conference', conference);
 
-root.provide({
-  methods : {
-    maximize() {
-      const current = remote.getCurrentWindow();
+model.use(async(ctx, next) => {
+  // inject setting
+  ctx.setting = ctx.getVM('setting');
 
-      if (current.isMaximized()) {
-        current.unmaximize();
-      }
-      else {
-        current.maximize();
-      }
-    },
-    minimize() {
-      remote.getCurrentWindow().minimize();
-    },
-    close() {
-      remote.getCurrentWindow().close();
-    },
-    hide() {
-      remote.getCurrentWindow().hide();
-    },
-  },
+  await next();
 });
 
-window.kom = root;
+window.kom = model;
 
-export default root;
+export default model;
