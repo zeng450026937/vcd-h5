@@ -33,7 +33,7 @@
                          @selected="selectGroup">
       <template slot="items">
         <template v-for="item in waitingList">
-          <member-list-item :item="item" :key="item.entity"/>
+          <member-list-item group="waiting" :item="item" :key="item.entity"/>
         </template>
       </template>
       <template slot="operation">
@@ -55,7 +55,7 @@
                          @selected="selectGroup">
       <template slot="items">
         <template v-for="item in speakApplyList">
-          <member-list-item :item="item" :key="item.entity"/>
+          <member-list-item group="audioApply" :item="item" :key="item.entity"/>
         </template>
       </template>
       <template slot="operation">
@@ -88,7 +88,7 @@ export default {
   },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'filterText', 'selectedGroup', 'selectedMember', 'isOpenSearch' ],
+    props : [ 'filterText', 'selectedGroup', 'isOpenSearch' ],
   },
   computed : {
     memberList() {

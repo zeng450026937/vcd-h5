@@ -94,9 +94,9 @@ export default {
       headMenuVisible : false,
     };
   },
-  sketch: {
-    ns: 'state',
-    props: ['isInConferenceView', 'isInCallView', 'sidebarStatus'],
+  sketch : {
+    ns    : 'state',
+    props : [ 'isInConferenceView', 'isInCallView', 'sidebarStatus' ],
   },
   computed : {
     userInfo() {

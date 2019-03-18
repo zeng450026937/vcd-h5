@@ -4,11 +4,10 @@ import rtc from '../../rtc';
 const member = new Vuem();
 
 member.provide({
-  data() {
-    return {
-    };
-  },
   computed : {
+    filterText() {
+      return this.$parent.sketch.filterText;
+    },
     userList() {
       const { userList } = rtc.conference.information.users;
 
@@ -29,10 +28,12 @@ member.provide({
       return [
         {
           title : `主持人 (${presenterList.length})`,
+          group : 'presenter',
           list  : presenterList,
         },
         {
           title : `访客 (${visitorList.length})`,
+          group : 'visitor',
           list  : visitorList,
         },
       ];

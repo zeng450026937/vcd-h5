@@ -79,6 +79,7 @@ import AppHeader from '../MainHeader.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactTree from '../Contact/ContactTree.vue';
 import ContactList from '../Contact/ContactList.vue';
+import PlainTree from '../../Common/CommonTree/index.vue';
 
 export default {
   name       : 'InstantMeeting',
@@ -87,6 +88,7 @@ export default {
     ContactTree,
     ContactList,
     CommonEmpty,
+    PlainTree,
   },
   data() {
     return {
@@ -97,7 +99,7 @@ export default {
   },
   computed : {
     currentContact() {
-      return this.$model.account.currentContact;
+      return this.$model.contact.currentContact;
     },
     contacts() {
       return this.$model.contact.phoneBook;

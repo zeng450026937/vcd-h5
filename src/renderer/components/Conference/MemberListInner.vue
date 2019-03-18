@@ -8,7 +8,7 @@
       </div>
 
       <template v-for="item in l.list">
-        <member-list-item :item="item" :key="item.entity"/>
+        <member-list-item :group="l.group" :item="item" :key="item.entity"/>
       </template>
     </a-collapse-panel>
   </a-collapse>

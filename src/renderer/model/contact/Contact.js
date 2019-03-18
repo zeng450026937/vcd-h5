@@ -156,13 +156,16 @@ export function formatContact(data, loadMode) {
     if (!contact.isRoot) {
       contact.amount = contact.amount || 0;
       contact.parent.amount += contact.amount || 0;
+      contact.level = () => contact.parent.level() + 1;
     }
     else {
       contact.loadMode = loadMode;
+      contact.level = () => 1;
     }
   }
   else if (loadMode !== 'SPLIT' && contact.parent) {
     contact.parent.amount += 1;
+    contact.level = () => contact.parent.level() + 1;
   }
 
   return contact;

@@ -30,7 +30,7 @@
           <span v-else>{{displayPhone}}</span>
         </span>
       </div>
-      <div v-if="!isOnHold && !isAudioApplicant">
+      <div v-if="!isApplyGroup">
         <a-iconfont :type="videoIcon.icon"
                     :title="videoIcon.title"
                     class="ml-4 text-base"
@@ -57,21 +57,11 @@
                 <span class="text-xs">{{setAsPresenterText}}</span>
               </div>
             </a-menu-item>
-            <a-menu-item v-if="currentIsPresenter" key="1" @click="setFocus">
-              <div class="h-8 px-3 w-full popover-content-item flex items-center">
-                <span class="text-xs">设为焦点视频</span>
-              </div>
-            </a-menu-item>
             <a-menu-item v-if="showSetWaitItem" key="2" @click="setWaiting">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设为等待</span>
               </div>
             </a-menu-item>
-            <!--<a-menu-item key="3" @click="setMute">-->
-              <!--<div class="h-8 px-3 w-full popover-content-item flex items-center">-->
-                <!--<span class="text-xs">{{setMuteText}}</span>-->
-              <!--</div>-->
-            <!--</a-menu-item>-->
             <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="4" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设备详情</span>
@@ -158,6 +148,10 @@ export default {
         return {};
       },
     },
+    group : { // presenter visitor waiting audioApply
+      type     : String,
+      required : true,
+    },
   },
   data() {
     return {
@@ -181,9 +175,12 @@ export default {
   },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'filterText' ],
+    props : [ 'filterText', 'selectedMember' ],
   },
   computed : {
+    isApplyGroup() {
+      return this.group === 'waiting' || this.group === 'audioApply';
+    },
     displayName() {
       return this.item.displayText + (this.item.isCurrentUser() ? ' ( 我 )' : '');
     },
@@ -191,7 +188,7 @@ export default {
       return this.item.phone === 'unauth-web-client' ? 'WebRTC' : this.item.phone;
     },
     isSelected() {
-      return this.$model.conference.selectedMember === this.item.entity;
+      return this.selectedMember === this.item.entity;
     },
     currentIsPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
@@ -212,6 +209,10 @@ export default {
         unblocking : { icon: 'icon-quxiaojushou', color: 'blue', title: '取消举手' },
         hand       : { icon: 'icon-jushou', color: 'indigo', title: '举手' },
       };
+
+      if (this.currentIsPresenter) {
+        iconMap.unblocking = { icon: 'icon-jushou', color: 'green', title: '同意/拒绝' };
+      }
       const iconStatus = iconMap[this.$model.conference.getUserAudioStatus(this.item)];
 
       if (!this.hasPermission) iconStatus.color = 'grey';
@@ -237,30 +238,18 @@ export default {
 
       return '设为主持人';
     },
-    setAsSpeakerText() {
-      if (this.item.isDemonstrator()) {
-        return '取消演讲';
-      }
-
-      return '设为演讲者';
-    },
     showSetPresenterItem() {
       return this.currentIsPresenter && !this.item.isOrganizer();
     },
     showSetWaitItem() {
       return this.currentIsPresenter && !this.item.isPresenter();
     },
-    setMuteText() {
-      const status = this.item.getAudioFilter().egress['#text'] || 'unblock';
-
-      return status === 'unblock' ? '闭音' : '取消闭音';
-    },
   },
   methods : {
     onAudioOperation() {
       if (!this.hasPermission) return;
       if (this.item.isCurrentUser()) {
-        this.$model.conference.toggleAudio();
+        this.$dispatch('conference.toggleAudio');
 
         return;
       }
@@ -273,18 +262,18 @@ export default {
       }
       const ingress = status !== 'unblock';
 
-      this.$model.conference.updateAudioStatus(this.item, ingress);
+      this.$dispatch('conference.updateAudioStatus', { user: this.item, ingress });
     },
     onVideoOperation() {
       if (!this.hasPermission) return;
       if (this.item.isCurrentUser()) {
-        this.$model.conference.toggleVideo();
+        this.$dispatch('conference.toggleVideo');
 
         return;
       }
       const ingress = this.$model.conference.getUserVideoStatus(this.item) !== 'unblock';
 
-      this.$model.conference.updateVideoStatus(this.item, ingress);
+      this.$dispatch('conference.updateVideoStatus', { user: this.item, ingress });
     },
     setPresenter() {
       if (this.item.isPresenter() && !this.item.isOrganizer()) {
@@ -294,25 +283,12 @@ export default {
         this.item.setPermission('presenter');
       }
     },
-    setFocus() {
-      // 设为焦点视频
-    },
     setWaiting() {
       this.item.hold();
     },
     kickFromMeeting() { // 移出会议
-      this.item.kick()
-        .then(() => {})
-        .catch(() => {});
+      this.item.kick().then(() => {}).catch(() => {});
     },
-    // setMute() {
-    //   const status = this.item.getAudioFilter().egress['#text'] || 'unblock';
-    //   const egress = !(status === 'unblock');
-    //
-    //   this.item.setAudioFilter({
-    //     egress,
-    //   });
-    // },
     handleApply(status) {
       if (this.isAudioApplicant) { // 处理发言申请
         this.$model.conference.updateAudioStatus(this.item, status);
@@ -349,7 +325,7 @@ export default {
       });
     },
     selectMember() {
-      this.$model.conference.selectedMember = this.item.entity;
+      this.selectedMember = this.item.entity;
     },
   },
 };

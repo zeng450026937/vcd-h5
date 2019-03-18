@@ -20,6 +20,8 @@ state.provide({
       let checkInterval = 1; // 1 2 4 8 循环时长
 
       let checkTimes = 0;
+
+      let ignalWarning = null;
       // 设置会议进行时间
       const meetTime = new Date();
 
@@ -34,6 +36,15 @@ state.provide({
               checkTimes = 0;
             }
             const { quality } = val.media;
+
+            if (quality >= 2 && !ignalWarning) {
+              window.ignalWarning = ignalWarning;
+              ignalWarning = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+            }
+            else {
+              ignalWarning.destroy();
+              ignalWarning = null;
+            }
 
             this.signal = quality >= 1 ? quality : '1';
           });
