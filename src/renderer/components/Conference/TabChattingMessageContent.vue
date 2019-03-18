@@ -40,7 +40,7 @@ export default {
   },
   computed : {
     messageRecordList() {
-      return cloneDeep(this.$model.chat.messageRecordList).reverse();
+      return cloneDeep(this.$model.conference.chat.messageRecordList).reverse();
     },
   },
 };

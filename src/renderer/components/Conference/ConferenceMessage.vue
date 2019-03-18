@@ -31,7 +31,7 @@ export default {
       return messageTextList.length > 3 ? messageTextList.slice(messageTextList.length - 3) : messageTextList;
     },
     showMessage() {
-      return this.$model.conference.showMessage;
+      return this.$model.conference.sketch.showMessage;
     },
   },
   watch : {

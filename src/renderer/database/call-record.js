@@ -1,28 +1,14 @@
 import Base from './base';
-import storage from '../storage';
 
-export function genStoreName() {
-  const accountInfo = storage.query('CURRENT_ACCOUNT');
-
-  return `callRecord-${accountInfo.account}-${accountInfo.server}`;
-}
-
-function genStores() {
-  return storage.query('ACCOUNT_LIST').map((item) => `callRecord-${item.account}-${item.server}`);
-}
+let db;
 
 export class CallRecord extends Base {
   static Create() {
-    const stores = genStores();
-    const options = {};
+    if (db) return db;
 
-    stores.forEach((store) => {
-      options[store] = '++id, type, callId, otherId';
-    });
-
-    return new CallRecord(
+    return db = new CallRecord(
       'callRecord',
-      options,
+      { records: '++sn, type, callId, otherId, [account+server]' },
       1,
     );
   }
@@ -31,9 +17,8 @@ export class CallRecord extends Base {
     return this.find(storeName, 'otherId', val).toArray();
   }
 
-  async getRecordByRecent(storeName, num) {
-    return this.db[storeName]
-      .orderBy('id')
+  async getRecordByRecent(storeName, val, num) {
+    return this.find(storeName, '[account+server]', val)
       .reverse()
       .limit(num)
       .toArray();

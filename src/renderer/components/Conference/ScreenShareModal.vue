@@ -81,7 +81,7 @@ export default {
   },
   computed : {
     share() {
-      return this.$model.share;
+      return this.$model.conference.share;
     },
     windowList() {
       return this.share.windowList;

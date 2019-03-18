@@ -18,7 +18,7 @@
                     @click="visible = false"/>
       </div>
       <div style="padding: 0 50px; margin-top: 30px">
-        <a-input ref="numberInput" v-model="callNumber"/>
+        <a-input ref="numberInput" v-model="plateContent"/>
       </div>
       <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
                      style="padding: 0 50px 18px 50px;"/>
@@ -36,25 +36,26 @@ export default {
   },
   data() {
     return {
-      visible    : false,
-      callNumber : '',
+      visible : false,
     };
+  },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'plateContent' ],
   },
   methods : {
     clickNumber(num) {
-      this.callNumber = this.callNumber === null ? num : this.callNumber += num;
+      this.plateContent = this.plateContent === null ? num : this.plateContent += num;
       this.$rtc.call.sendDTMF(num);
       this.$refs.numberInput.focus();
     },
   },
   watch : {
-    visible(val) {
+    async visible(val) {
       if (val) {
-        this.$nextTick().then(() => {
-          this.$refs.numberInput.$nextTick().then(() => {
-            this.$refs.numberInput.focus();
-          });
-        });
+        await this.$nextTick();
+        await this.$refs.numberInput.$nextTick();
+        this.$refs.numberInput.focus();
       }
     },
   },

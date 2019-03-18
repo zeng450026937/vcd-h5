@@ -1,7 +1,7 @@
 <template>
   <a-layout id="tab-setting-conference" class="bg-white">
     <div class="flex flex-col px-4">
-      <div v-if="isDemonstrator && isPresenter" class="flex flex-col mb-5">
+      <div v-if="isDefault && isPresenter" class="flex flex-col mb-5">
         <span class="text-sm leading-tight">画面布局</span>
         <div class="flex mt-3 justify-between px-1">
           <div v-for="layout in layoutList" :key="layout.value"
@@ -39,27 +39,22 @@ export default {
           icon  : 'icon-danfangquanping',
         },
       ],
-      currentLayout : '',
     };
   },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'currentLayout', 'showMessage' ],
+  },
   computed : {
-    isDemonstrator() {
-      return this.$model.conference.profile === 'demonstrator';
+    isDefault() {
+      return this.$model.conference.profile === 'default';
     },
     isPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
     },
-    showMessage : {
-      get() {
-        return this.$model.conference.showMessage;
-      },
-      set(val) {
-        this.$model.conference.showMessage = val;
-      },
-    },
   },
   created() {
-    if (this.isDemonstrator) this.currentLayout = this.$rtc.conference.information.view.getLayout()['video-layout'] || 'SpeechExcitation';
+    if (this.isDefault) this.currentLayout = this.$rtc.conference.information.view.getLayout()['video-layout'] || 'SpeechExcitation';
   },
   methods : {
     selectLayout(layout) {

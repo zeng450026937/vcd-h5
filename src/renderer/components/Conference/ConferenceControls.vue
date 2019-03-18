@@ -80,12 +80,9 @@ export default {
     ConferencePlateModal,
     ConferenceMessage,
   },
-  data() {
-    return {
-      // isInConferenceMain : true,
-      showMorePanel      : false,
-      isInConferenceMain : false,
-    };
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'isInConferenceMain', 'showMorePanel' ],
   },
   computed : {
     shareAvailable() {
@@ -152,14 +149,6 @@ export default {
     openPlateModal() {
       this.showMorePanel = false;
       this.$refs.plateModal.visible = true;
-    },
-  },
-  watch : {
-    $route : {
-      handler(val) {
-        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
-      },
-      immediate : true,
     },
   },
 };

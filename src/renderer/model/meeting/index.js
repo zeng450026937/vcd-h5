@@ -1,13 +1,14 @@
+import Vuem from 'vuem';
 import rtc from '../../rtc';
 import storage from '../../storage';
 
-export default {
+export default new Vuem().provide({
   data() {
     return {
       meetingRecord : storage.query('MEETING_INFO_RECORD') || {},
     };
   },
-  methods : {
+  middleware : {
     async joinMeeting(ctx, next) {
       await next();
       const { number, pin } = ctx.payload;
@@ -25,4 +26,4 @@ export default {
       });
     },
   },
-};
+});

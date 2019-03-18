@@ -1,7 +1,8 @@
 <template>
   <a-collapse :bordered="false" :showArrow=false
               :class="{'selected-group': isSelected}"
-              id="member-list-wrapper">
+              id="member-list-wrapper"
+              v-model="activeGroupKey">
     <a-collapse-panel :showArrow="false"  :key="mkey">
       <div class="panel-item-content flex items-center w-full"
            slot="header" @click="collapseChanged">
@@ -30,6 +31,10 @@ export default {
       type    : Boolean,
       default : false,
     },
+  },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'activeGroupKey' ],
   },
   methods : {
     collapseChanged() {

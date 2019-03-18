@@ -32,23 +32,21 @@ export default {
     },
   },
   methods : {
-    closeMeeting() {
-
-    },
     leaveConference() {
-      this.visible = false;
-      this.$rtc.conference.leave();
+      this.$rtc.conference.leave().then(() => {
+        this.visible = false;
+      });
     },
     cancel() {
       this.visible = false;
     },
     endedConference() { // 结束会议 - 主持人
       this.$rtc.conference.conference.deleteConference().then((result) => {
+        this.visible = false;
         // 成功
       }).catch((e) => {
         // 失败
       });
-      this.visible = false;
     },
   },
 };

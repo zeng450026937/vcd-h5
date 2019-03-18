@@ -1,13 +1,19 @@
+import Vuem from 'vuem';
 import rtc from '../../rtc';
-import kom from '..';
+import localContact from './local-contact';
 import { formatContact as formatPhoneBook } from './Contact';
-import { formatFavorite } from './Favorite';
+import { formatFavorite } from './favorite-contact';
 
-export default {
+const model = new Vuem();
+
+model.mount('local', localContact);
+model.provide({
   data() {
     return {
+      globalSearchText   : '',
       formattedPhoneBook : null,
       formattedFavorite  : null,
+      currentContact     : null,
     };
   },
   computed : {
@@ -41,17 +47,18 @@ export default {
           if (c.attributes.number === this.username) {
             c.attributes.isSelf = true;
           }
-          
+
           return Object.assign({
             parent : { isUser: true },
-            nick   : /^(.*)\(.*\)$/.test(c.attributes.name) ? RegExp.$1.substr(-2, 2) : c.attributes.name.substr(-2, 2),
+            nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
+              ? RegExp.$1.substr(-2, 2)
+              : c.attributes.name.substr(-2, 2),
           }, c.attributes, c.node);
         }));
     },
     phoneBookFormat(val) {
       return formatPhoneBook(val, this.loadMode);
     },
-    formatFavorite,
   },
   watch : {
     rawPhoneBook(val) {
@@ -72,13 +79,17 @@ export default {
         this.findContacts(this.username).then((result) => {
           result.every((contact) => {
             if (contact.number === this.username) {
-              kom.vm.account.currentContact = contact;
+              this.currentContact = contact;
             }
-            
+
             return contact.number !== this.username;
           });
         });
       }
     },
   },
-};
+});
+
+// model.use(() => {});
+
+export default model;

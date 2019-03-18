@@ -72,12 +72,13 @@ export default {
 
     return {
       tabList,
-      isInConferenceMain : true,
-      shareWindow        : null,
-      isShareWindowOpen  : false,
-      hideControlsTimer  : null,
-      isShareInCenter    : false, // 辅流页面是否显示在主页面
+      shareWindow       : null,
+      hideControlsTimer : null,
     };
+  },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab' ],
   },
   computed : {
     centerSource() {
@@ -110,14 +111,6 @@ export default {
       return this.$rtc.conference.shareChannel.remoteStream
         || this.$rtc.conference.shareChannel.localStream;
     },
-    hideControls : {
-      get() {
-        return this.$model.conference.hideControls;
-      },
-      set(val) {
-        this.$model.conference.hideControls = val;
-      },
-    },
     noticeTextList() {
       return this.$model.conference.noticeTextList;
     },
@@ -144,7 +137,8 @@ export default {
       this.$refs.invitingModal.visible = true;
     },
     openDrawer(tab) {
-      this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER, query: { tab: tab.comp } });
+      this.currentTab = tab.comp;
+      this.isInConferenceMain = false;
     },
     maxConferenceContent() {
       // FIXME DBLCLICK 双击是如果间隔时间过短，则不会响应事件
@@ -165,9 +159,14 @@ export default {
     },
   },
   watch : {
-    $route : {
+    isInConferenceMain : {
       handler(val) {
-        this.isInConferenceMain = val.path === CONFERENCE.CONFERENCE_MAIN;
+        if (val) {
+          this.$router.push({ path: CONFERENCE.CONFERENCE_MAIN });
+        }
+        else {
+          this.$router.push({ path: CONFERENCE.CONFERENCE_DRAWER });
+        }
       },
       immediate : true,
     },

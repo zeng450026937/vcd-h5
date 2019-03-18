@@ -83,37 +83,14 @@ export default {
       default : true,
     },
   },
-  deactivated() {
-
+  destroyed() {
+    this.$model.setting.device.save('device'); // 页面不显示的时候保存设置
+  },
+  sketch : {
+    ns    : 'setting.device',
+    props : [ 'videoInput', 'audioInput', 'audioOutput' ],
   },
   computed : {
-    volume() {
-      return this.$rtc.media.localMedia.volume;
-    },
-    videoInput : {
-      get() {
-        return this.$model.setting.device.videoInput;
-      },
-      set(val) {
-        this.$model.setting.device.videoInput = val;
-      },
-    },
-    audioInput : {
-      get() {
-        return this.$model.setting.device.audioInput;
-      },
-      set(val) {
-        this.$model.setting.device.audioInput = val;
-      },
-    },
-    audioOutput : {
-      get() {
-        return this.$model.setting.device.audioOutput;
-      },
-      set(val) {
-        this.$model.setting.device.audioOutput = val;
-      },
-    },
     videoInputList() { // 摄像头
       return this.$model.setting.device.videoInputList;
     },

@@ -61,6 +61,11 @@ const router = new Router({
               meta      : { owner: MODULE_NAME.CONTACT },
               component : () => import(/* webpackChunkName: "frequentContact" */ '@/renderer/components/Main/Contact/LocalContact.vue'),
             },
+            {
+              name      : 'contactTest',
+              path      : 'contactTest',
+              component : () => import('@/renderer/components/Main/Contact/contactTest.vue'),
+            },
             // meeting
             {
               name      : 'instanceMeeting',

@@ -1,7 +1,7 @@
 <template>
   <div id="conference-header" class="bg-meeting-top h-9">
     <div class="px-4 flex h-full select-none">
-      <div class="flex items-center flex-grow dragable my-1 mr-12" @dblclick="maxAppContent">
+      <div class="flex items-center flex-grow dragable my-1 mr-12">
         <a-iconfont v-if="isLocked"
                     type="icon-suoding"
                     title="会议已锁定"
@@ -41,19 +41,16 @@ export default {
       return this.description.subject;
     },
     duration() {
-      return this.$model.confState.duration;
+      return this.$model.conference.state.duration;
     },
     signal() {
-      return this.$model.confState.signal;
+      return this.$model.conference.state.signal;
     },
     isLocked() {
       return this.$rtc.conference.information.state.getLock().admissionPolicy !== 'anonymous';
     },
   },
   methods : {
-    maxAppContent() {
-      console.warn('MAX');
-    },
   },
 };
 </script>
