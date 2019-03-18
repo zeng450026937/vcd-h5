@@ -38,15 +38,30 @@ export class BaseWindow extends EventEmitter {
       //
       // can be tidied up once https://github.com/electron/electron/issues/12971
       // has been confirmed as resolved
+      const lastContentSize = {
+        width  : this.windowOptions.width,
+        height : this.windowOptions.height,
+      };
+
       this.window.once('ready-to-show', () => {
         this.window.on('unmaximize', () => {
           setTimeout(() => {
+            this.window.setContentSize(lastContentSize.width, lastContentSize.height);
+
             const bounds = this.window.getBounds();
 
             bounds.width += 1;
             this.window.setBounds(bounds);
             bounds.width -= 1;
             this.window.setBounds(bounds);
+          }, 5);
+        });
+        this.window.on('maximize', () => {
+          setTimeout(() => {
+            const bounds = this.window.getNormalBounds();
+            
+            lastContentSize.width = bounds.width;
+            lastContentSize.height = bounds.height;
           }, 5);
         });
       });
