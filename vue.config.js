@@ -46,7 +46,7 @@ module.exports = {
 
     config.resolve.alias
       .set('apollosip', path.resolve(__dirname, 'lib/apollo-sip'))
-      .set('apollortc', path.resolve(__dirname, 'src/renderer/rtc'))
+      .set('apollortc', path.resolve(__dirname, 'lib/apollo-rtc'))
       .set('vuem', path.resolve(__dirname, 'lib/vuem'))
       .set('electron-updater', path.resolve(__dirname, 'lib/electron-updater'))
       .set('package', path.resolve(__dirname, 'package.json'));

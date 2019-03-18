@@ -7,6 +7,9 @@ url=http://gitcode.yealink.com/server/client/web_app/third_party/vuem.git
 [submodule "lib/apollo-sip"]
 	path = lib/apollo-sip
 url=http://gitcode.yealink.com/server/client/web_app/third_party/apollo-sip.git
+[submodule "lib/apollo-rtc"]
+	path = lib/apollo-rtc
+url=http://gitcode.yealink.com/server/client/web_app/third_party/apollo-rtc.git
 [submodule "plugins/vue-cli-plugin-vuem"]
 	path = plugins/vue-cli-plugin-vuem
 url=http://gitcode.yealink.com/server/client/web_app/third_party/vue-cli-plugin-vuem.git

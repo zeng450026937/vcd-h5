@@ -16,6 +16,9 @@ async function main() {
     await execa('git checkout master', [], { cwd: path.resolve(process.cwd(), dir), stdio: 'inherit' });
     await execa('git pull', [], { cwd: path.resolve(process.cwd(), dir), stdio: 'inherit' });
   }));
+
+  await execa('yarn install', [], { stdio: 'inherit' });
+  await execa('yarn install', [], { cwd: path.resolve(process.cwd(), 'plugins/vue-cli-plugin-electron'), stdio: 'inherit' });
 }
 
 main();
