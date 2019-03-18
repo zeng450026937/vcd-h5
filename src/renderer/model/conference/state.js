@@ -21,7 +21,7 @@ state.provide({
 
       let checkTimes = 0;
 
-      let ignalWarning = null;
+      let isShowSignalWarning = false;
       // 设置会议进行时间
       const meetTime = new Date();
 
@@ -37,13 +37,13 @@ state.provide({
             }
             const { quality } = val.media;
 
-            if (quality >= 2 && !ignalWarning) {
-              window.ignalWarning = ignalWarning;
-              ignalWarning = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+            if (quality <= 0 && !isShowSignalWarning) { // 丢包率 > 12% (10%)
+              isShowSignalWarning = true;
+              this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
             }
             else {
-              ignalWarning.destroy();
-              ignalWarning = null;
+              isShowSignalWarning = false;
+              this.$message.destroy();
             }
 
             this.signal = quality >= 1 ? quality : '1';

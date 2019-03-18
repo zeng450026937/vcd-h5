@@ -133,6 +133,16 @@
       </div>
 
     </div>
+    <div v-if="isShowApplyOperation"
+         class="flex w-full bg-under-painting justify-center items-center"
+         style="height: 44px;">
+      <a-button type="primary" class="h-7 w-12 p-0 text-xs" @click="applyAudioApply(true)">
+        <span style="letter-spacing: 0;margin-right: 0;">同意</span>
+      </a-button>
+      <a-button class="h-7 w-12 ml-3 p-0 text-xs" @click="applyAudioApply(false)">
+        <span style="letter-spacing: 0;margin-right: 0;">拒绝</span>
+      </a-button>
+    </div>
   </div>
 </template>
 
@@ -155,9 +165,10 @@ export default {
   },
   data() {
     return {
-      isShowDeviceInfo : false,
-      isUpdating       : false,
-      deviceInfo       : {
+      isShowDeviceInfo     : false,
+      isShowApplyOperation : false,
+      isUpdating           : false,
+      deviceInfo           : {
         recv : {
           bitrate   : '-',
           ratio     : '-',
@@ -256,13 +267,21 @@ export default {
       const status = this.$model.conference.getUserAudioStatus(this.item);
 
       if (status === 'unblocking') {
-        this.$model.conference.updateAudioStatus(this.item, true);
+        if (this.currentIsPresenter) {
+          // 显示同意或者拒绝的提示
+          this.isShowApplyOperation = true;
+        }
+        else this.$dispatch('conference.updateAudioStatus', { user: this.item, ingress: true });
 
         return;
       }
       const ingress = status !== 'unblock';
 
       this.$dispatch('conference.updateAudioStatus', { user: this.item, ingress });
+    },
+    applyAudioApply(ingress) {
+      this.handleApply(ingress);
+      this.isShowApplyOperation = false;
     },
     onVideoOperation() {
       if (!this.hasPermission) return;
@@ -290,8 +309,9 @@ export default {
       this.item.kick().then(() => {}).catch(() => {});
     },
     handleApply(status) {
+      console.warn(this.isAudioApplicant)
       if (this.isAudioApplicant) { // 处理发言申请
-        this.$model.conference.updateAudioStatus(this.item, status);
+        this.$dispatch('conference.updateAudioStatus', { user: this.item, ingress: status });
       }
       else { //  处理入会申请
         const { lobby } = this.$rtc.conference.conference;

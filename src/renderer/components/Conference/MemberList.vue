@@ -124,12 +124,12 @@ export default {
     },
     allowAllSpeak() { // 允许全部发言
       this.speakApplyList.forEach((user) => {
-        this.$model.conference.updateAudioStatus(user, true);
+        this.$dispatch('conference.updateAudioStatus', { user, ingress: true });
       });
     },
     removeAllSpeak() { // 拒绝全部发言
       this.speakApplyList.forEach((user) => {
-        this.$model.conference.updateAudioStatus(user, false);
+        this.$dispatch('conference.updateAudioStatus', { user, ingress: false });
       });
     },
     openSearch() {

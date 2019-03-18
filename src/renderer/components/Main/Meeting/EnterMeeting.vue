@@ -170,7 +170,7 @@ export default {
 
       if (!this.meetingInfo.number) errorNotice = '会议ID不能为空';
       else if (this.meetingInfo.number.length > 64) errorNotice = '会议ID最多为64位';
-      this.$message.error(errorNotice);
+      if(errorNotice) this.$message.error(errorNotice);
       
       return !errorNotice;
     },
