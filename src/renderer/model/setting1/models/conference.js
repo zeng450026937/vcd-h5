@@ -12,39 +12,18 @@ model.provide({
       preferredPictureFluency      : false, // 画面流畅度优先
       autoSilence                  : false, //
       noticeWhenLeaving            : false,
-      noticeOnlyJoiner             : false,
-      noticeBoth                   : false,
-      noticeAll                    : false,
+      selectedNotice               : 1, // 1:仅入会方  2：入会方+主持人  3：all
       advanceEntryTime             : 5,
       instanceMeetingPassword      : false,
       reserveMeetingPassword       : false,
-      isRandomPassword             : false,
-      isCustomPassword             : false,
+      isRandomOrCustom             : 1,
       customPassword               : '',
       dndWhenCalling               : false,
       loginSelector                : false,
     };
   },
   watch : {
-    noticeWhenLeaving(val) {
-      if (!val) {
-        this.noticeOnlyJoiner = false;
-        this.noticeBoth = false;
-        this.noticeAll = false;
-      }
-    },
-    reserveMeetingPassword(val) {
-      if (!val) {
-        this.isRandomPassword = false;
-        this.isCustomPassword = false;
-      }
-    },
-    isCustomPassword(val) {
-      if (val) { this.isRandomPassword = false; }
-    },
-    isRandomPassword(val) {
-      if (val) { this.isCustomPassword = false; }
-    },
+    
   },
 });
 model._storageList = [ 'localstorage' ];

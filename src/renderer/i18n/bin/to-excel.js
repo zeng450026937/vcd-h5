@@ -6,6 +6,16 @@ const { langList:langNameObj, ouputExcelName } = require('../config');
 const langNameList = Object.keys(langNameObj);
 const langModuleList = require('../modules');
 
+function strinifySentence(sentence) {
+  if (sentence instanceof Array) {
+    sentence = JSON.stringify(sentence);
+  }
+  if (sentence instanceof Object) {
+    sentence = JSON.stringify(sentence);
+  }
+  
+  return sentence;
+}
 
 try {
   // 输出表格行首信息，以及字段名和当前config当中的语言
@@ -32,7 +42,7 @@ try {
           if (!moduleObj[sentenceName]) {
             moduleObj[sentenceName] = {};
           }
-          moduleObj[sentenceName][langName] = sentenceText;
+          moduleObj[sentenceName][langName] = strinifySentence(sentenceText);
         });
       }
     });

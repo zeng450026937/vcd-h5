@@ -3,7 +3,7 @@
     <div class="h-14 border-b">
       <div class="flex bg-white dragable h-full">
         <div class="flex items-center h-full px-4 text-base">
-          <span>关于</span>
+          <span>{{$t('setting.about.title')}}</span>
         </div>
         <div class="flex flex-grow"></div>
         <app-header/>

@@ -6,6 +6,16 @@ const { ouputExcelName } = require('../config');
 const configFilePath = './config/index.js';
 const modulesDirPath = './modules/';
 
+function transData(str) {
+  if (/^\{/.test(str) && /\}$/.test(str)) { return JSON.parse(str); }
+  else if (/^\[/.test(str) && /\]$/.test(str)) {
+    return JSON.parse(str);
+  }
+  else {
+    return str;
+  }
+}
+
 try {
   const array = [ ...xlsx.parse(path.resolve(__dirname, '../', ouputExcelName))[0].data, [] ];
   
@@ -51,17 +61,17 @@ try {
           if (!langModule.lang[langName]) {
             langModule.lang[langName] = {};
           }
-          langModule.lang[langName][row[1]] = row[langIndex + 2];
+          langModule.lang[langName][row[1]] = transData(row[langIndex + 2]);
         }
       });
     }
   });
   // 输出lang config的内容
-  writeFile(path.resolve(getI18nDirPath(), configFilePath), `// 最后导出excel时间为 ${exportDate}\n// 最后导入excel时间为 ${getDateString()}\nmodule.exports=${JSON.stringify(langConfig,null,'\t')}`);
+  writeFile(path.resolve(getI18nDirPath(), configFilePath), `// 最后导出excel时间为 ${exportDate}\n// 最后导入excel时间为 ${getDateString()}\nmodule.exports=${JSON.stringify(langConfig, null, '\t')}`);
 
   // 输出各个模块的文件
   langModuleList.forEach((item) => {
-    writeFile(path.resolve(getI18nDirPath(), modulesDirPath, `${item.name}.js`), `// 最新导入时间为 ${getDateString()} \nmodule.exports = ${JSON.stringify(item,null,'\t')}`);
+    writeFile(path.resolve(getI18nDirPath(), modulesDirPath, `${item.name}.js`), `// 最新导入时间为 ${getDateString()} \nmodule.exports = ${JSON.stringify(item, null, '\t')}`);
   });
   
   // 输出模块的集成文件 /modules/index.js
