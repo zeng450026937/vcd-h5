@@ -34,8 +34,8 @@ function handleUncaughtException(error) {
 
   const isLaunchError = !mainWindow;
 
-  reportUncaughtException(isLaunchError, error);
-  showUncaughtException(isLaunchError, error);
+  reportUncaughtException(isLaunchError, error).then(() => app.quit());
+  // showUncaughtException(isLaunchError, error);
 }
 
 process.on('uncaughtException', (error) => {

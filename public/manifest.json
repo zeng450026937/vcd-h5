@@ -1,6 +1,6 @@
 {
-  "name": "apollo-vc",
-  "short_name": "apollo-vc",
+  "name": "vc-desktop",
+  "short_name": "vc-desktop",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",

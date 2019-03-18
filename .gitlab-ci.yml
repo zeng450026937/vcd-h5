@@ -4,7 +4,7 @@ variables:
 stages:
   - build
 
-build:
+build_windows:
   stage: build
   script:
     - chcp 65001
@@ -20,3 +20,27 @@ build:
     - node_modules/
   tags:
     - win10_233
+
+build_linux:
+  stage: build
+  script:
+    - yarn build:prod
+  only:
+    - tags
+  cache:
+    paths:
+    - node_modules/
+  tags:
+    - centos7.5_231
+
+build_macos:
+  stage: build
+  script:
+    - yarn build:prod
+  only:
+    - tags
+  cache:
+    paths:
+    - node_modules/
+  tags:
+    - macos_232
