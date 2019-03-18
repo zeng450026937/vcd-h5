@@ -16,7 +16,7 @@ getClientInfo()
       ytms.yealink.updateInfo(clientInfo);
     }
     if (ytms.enterprise.isReady) {
-      ytms.yealink.updateInfo(clientInfo);
+      ytms.enterprise.updateInfo(clientInfo);
     }
   });
 

@@ -20,6 +20,7 @@ function normalizePlatform(platform) {
 export const clientInfo = {
   clientId       : newPlainUUID(),
   clientName     : app.getName(),
+  clientVendor   : process.env.VUE_APP_VENDOR,
   clientCategory : process.env.VUE_APP_CATEGORY,
   clientModel    : process.env.VUE_APP_MODEL,
   clientType     : process.env.VUE_APP_TYPE,
@@ -70,7 +71,7 @@ export async function getClientInfo() {
     getOsInfo(),
   ]);
 
-  clientInfo.clientName = osInfo.hostname;
+  clientInfo.clientName = `${process.env.VUE_APP_VENDOR} ${process.env.VUE_APP_TITLE}`;
   clientInfo.device.ip = netInfo[0] && netInfo[0].ip4;
   clientInfo.device.mac = netInfo[0] && netInfo[0].mac;
   clientInfo.device.hostname = osInfo.hostname;
