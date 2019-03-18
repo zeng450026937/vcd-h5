@@ -8,7 +8,7 @@ const signal = new EventEmitter();
 export const ipcHost = {
   clientInfo,
 
-  // renderern -> main
+  // renderer -> main
   emit(event) {
     signal.emit(event);
   },
@@ -19,6 +19,12 @@ export const ipcHost = {
 
   once(event, fn) {
     signal.once(event, fn);
+  },
+
+  boomdown() {
+    setImmediate(() => {
+      throw new Error('Boomtown!');
+    });
   },
 
   getClientId() {

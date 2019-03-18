@@ -6,7 +6,11 @@ let hasReportedUncaughtException = false;
 
 /** Show the uncaught exception UI. */
 export function showUncaughtException(isLaunchError, error) {
-  logger.error(formatError(error));
+  try {
+    logger.error(formatError(error));
+  }
+  catch (e) {
+  }
 
   if (hasReportedUncaughtException) {
     return;

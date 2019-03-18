@@ -217,6 +217,10 @@ if (!handlingSquirrelEvent) {
       reportGpuCrash();
     });
 
+    app.once('window-all-closed', () => {
+      // prevent default behavior to quit the app
+    });
+
     app.once('quit', () => {
       global.ytms.yealink.disconnect();
       global.ytms.enterprise.disconnect();

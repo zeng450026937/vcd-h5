@@ -11,10 +11,10 @@ build:
     - yarn build:prod
   only:
     - tags
-  artifacts:
-    name: $CI_JOB_NAME
-    paths:
-      - out/setup/
+#  artifacts:
+#    name: $CI_JOB_NAME
+#    paths:
+#      - out/setup/
   cache:
     paths:
     - node_modules/
