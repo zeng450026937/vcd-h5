@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import moment from 'moment';
 import rtc from '../../rtc';
 

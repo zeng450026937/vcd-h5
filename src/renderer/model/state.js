@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from './vuem';
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';

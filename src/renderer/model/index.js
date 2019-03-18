@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { remote } from 'electron';
 import Vue from 'vue';
-import Vuem from 'vuem';
+import Vuem from './vuem';
 import setting from './setting';
 import application from './application';
 import account from './account';

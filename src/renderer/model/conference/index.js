@@ -1,9 +1,10 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import sketch from './sketch';
 import state from './state';
 import share from './share';
 import member from './member';
 import chat from './chat';
+import invite from './invite';
 import rtc from '../../rtc';
 
 const model = new Vuem();
@@ -13,6 +14,7 @@ model.mount('state', state);
 model.mount('share', share);
 model.mount('member', member);
 model.mount('chat', chat);
+model.mount('invite', invite);
 
 model.provide({
   data() {
@@ -75,6 +77,26 @@ model.provide({
     },
   },
   middleware : {
+    inviteOther(ctx, payload) {
+      console.warn('inviteOther');
+      // const prefix = protocol === 'H.323' ? 'h323:' : 'sip:';
+      //
+      // const _address = address.startsWith(prefix)
+      // && protocol !== 'rtmp'
+      //   ? address : prefix + address;
+      //
+      // const user = protocol === 'rtmp'
+      //   ? {
+      //     session : [
+      //       {
+      //         '@session-type'     : 'audio-video',
+      //         'rtmp-url'          : _address,
+      //         'video-data-layout' : 'VideoBig',
+      //         'max-video-fs'      : '720P',
+      //       },
+      //     ],
+      //   } : { requestUri: _address };
+    },
     async toggleAudio(ctx, next) {
       if (!this.currentUser) return;
       let ingress = true;

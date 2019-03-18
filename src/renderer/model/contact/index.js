@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
 import localContact from './local-contact';
 import { formatContact as formatPhoneBook } from './Contact';

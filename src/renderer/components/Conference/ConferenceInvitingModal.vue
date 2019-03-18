@@ -17,7 +17,12 @@
           <span class="text-xs ml-1">复制成功!</span>
         </span>
       </div>
-      <a-button key="submit" type="primary" :loading="confirmLoading" @click="handleOk">
+      <a-button
+          :disabled="isInviteDisabled"
+          key="submit"
+                type="primary"
+                :loading="confirmLoading"
+                @click="handleOk">
         确定
       </a-button>
       <a-button key="back" @click="handleCancel" class="ml-4">取消</a-button>
@@ -115,6 +120,14 @@ export default {
     };
   },
   computed : {
+    isInviteDisabled() {
+      if (this.currentTab === 'inviteUser') {
+        return this.selectedContact.length <= 0;
+      }
+      else {
+        return !this.address || !this.protocol;
+      }
+    },
     numberTitle() {
       return this.protocol === 'rtmp' ? '地址' : '号码';
     },
@@ -166,34 +179,13 @@ export default {
         });
     },
     inviteOther() {
-      const { address, protocol } = this;
-
-      if (!address) return;
-      const prefix = protocol === 'H.323' ? 'h323:' : 'sip:';
-
-      const _address = address.startsWith(prefix)
-      && protocol !== 'rtmp'
-        ? address : prefix + address;
-
-      const user = protocol === 'rtmp'
-        ? {
-          session : [
-            {
-              '@session-type'     : 'audio-video',
-              'rtmp-url'          : _address,
-              'video-data-layout' : 'VideoBig',
-              'max-video-fs'      : '720P',
-            },
-          ],
-        } : { requestUri: _address };
-
-      this.$rtc.conference.invite(user).then(() => {
+      this.$dispatch('conference.invite.invite', { protocol: this.protocol, address: this.address }).then(() => {
         this.$message.info('邀请成功');
         this.confirmLoading = false;
         this.visible = false;
-      }).catch(() => {
+      }).catch((err) => {
+        this.$message.info('邀请失败,请重试!');
         this.confirmLoading = false;
-        this.visible = false;
       });
     },
     handleCancel() {

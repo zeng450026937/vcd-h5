@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { desktopCapturer } from 'electron';
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 
 export default new Vuem().provide({
   data() {

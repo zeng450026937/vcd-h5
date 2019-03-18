@@ -68,7 +68,7 @@
               </div>
             </a-menu-item>
 
-            <a-menu-item v-if="currentIsPresenter" key="5" @click="kickFromMeeting">
+            <a-menu-item v-if="currentIsPresenter" key="5" @click="isShowKickOperation = true">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">移出会议</span>
               </div>
@@ -143,6 +143,18 @@
         <span style="letter-spacing: 0;margin-right: 0;">拒绝</span>
       </a-button>
     </div>
+
+    <div v-if="isShowKickOperation"
+         class="flex w-full bg-under-painting justify-center items-center"
+         style="height: 44px;">
+      <a-button type="primary" class="h-7 w-12 p-0 text-xs" @click="kickFromMeeting">
+        <span style="letter-spacing: 0;margin-right: 0;">确定</span>
+      </a-button>
+      <a-button class="h-7 w-12 ml-3 p-0 text-xs" @click="isShowKickOperation = false">
+        <span style="letter-spacing: 0;margin-right: 0;">取消</span>
+      </a-button>
+    </div>
+
   </div>
 </template>
 
@@ -167,6 +179,7 @@ export default {
     return {
       isShowDeviceInfo     : false,
       isShowApplyOperation : false,
+      isShowKickOperation  : false,
       isUpdating           : false,
       deviceInfo           : {
         recv : {
@@ -306,10 +319,11 @@ export default {
       this.item.hold();
     },
     kickFromMeeting() { // 移出会议
-      this.item.kick().then(() => {}).catch(() => {});
+      this.item.kick().then(() => {
+        this.isShowKickOperation = false;
+      }).catch(() => {});
     },
     handleApply(status) {
-      console.warn(this.isAudioApplicant)
       if (this.isAudioApplicant) { // 处理发言申请
         this.$dispatch('conference.updateAudioStatus', { user: this.item, ingress: status });
       }

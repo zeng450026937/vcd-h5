@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import updater from '../../updater';
 import { moduleList, loadConfig, saveConfig } from './utils';
 import device from './device';

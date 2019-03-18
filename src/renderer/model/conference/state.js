@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import { secondsToHms } from '../../utils';
 import rtc from '../../rtc';
 

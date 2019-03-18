@@ -44,7 +44,7 @@
         <a-form-item class="mb-4">
           <a-input v-decorator="['pin']"
                    @keypress="passwordInputted"
-                   :type="showPassword ? 'text': 'password'"
+                   type="password"
                    placeholder='密码'>
             <a-tooltip
                 slot="prefix"
@@ -56,11 +56,6 @@
               </template>
               <a-iconfont type='icon-mima' class="text-base text-black9"/>
             </a-tooltip>
-            <a-iconfont :title="showPassword ? '隐藏密码':'查看密码'"
-                        slot="suffix"
-                        :type="showPassword ? 'icon-mimaxianshi' : 'icon-mimayincang'"
-                        class="text-base text-grey cursor-pointer"
-                        @click="showPassword = !showPassword"/>
           </a-input>
         </a-form-item>
         <a-form-item class="mb-2">
@@ -134,7 +129,6 @@ export default {
       dSearch,
       form             : this.$form.createForm(this),
       isCapsLockOn     : false,
-      showPassword     : false,
       preRmbPassword   : true,
       rawAccounts      : [],
       modifiedAccounts : [],

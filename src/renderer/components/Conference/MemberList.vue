@@ -30,6 +30,7 @@
 
     <member-list-wrapper :title="`会议大厅（${waitingList.length}）`" mkey="2"
                          :is-selected="selectedGroup === '2'"
+                         :show-dot="hasNewMeetingApply"
                          @selected="selectGroup">
       <template slot="items">
         <template v-for="item in waitingList">
@@ -52,6 +53,7 @@
 
     <member-list-wrapper :title="`举手发言（${speakApplyList.length}）`" mkey="3"
                          :is-selected="selectedGroup === '3'"
+                         :show-dot="hasNewSpeakApply"
                          @selected="selectGroup">
       <template slot="items">
         <template v-for="item in speakApplyList">
@@ -71,6 +73,31 @@
         </div>
       </template>
     </member-list-wrapper>
+
+    <member-list-wrapper :title="`第三方邀请（${inviteRecordList.length}）`" mkey="4"
+                         :is-selected="selectedGroup === '4'"
+                         @selected="selectGroup">
+      <template slot="items">
+        <template v-for="item in inviteRecordList">
+          <div :key="item.entity" class="h-10 flex px-4 items-center flex-between">
+            <span class="flex flex-grow w-1">
+              <span class="truncate">{{item.address}}</span>
+            </span>
+            <span class="ml-2 text-xs"
+                  :class="{[`text-${item.status === 'failed' ? 'red-light' : 'green'}`]: true}"
+            >{{item.status | filterRecordStatus}}
+
+            <a-iconfont  v-if="item.status === 'failed'"
+                         type="icon-shuaxin"
+                        title="重新邀请"
+                        class="text-sm cursor-pointer text-black9 ml-2"
+                        @click="reInvite(item)"></a-iconfont>
+            </span>
+          </div>
+        </template>
+      </template>
+    </member-list-wrapper>
+
   </a-layout>
 </template>
 
@@ -86,10 +113,16 @@ export default {
     MemberListInner,
     MemberListItem,
   },
-  sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'filterText', 'selectedGroup', 'isOpenSearch' ],
-  },
+  sketch : [
+    {
+      ns    : 'conference.sketch',
+      props : [ 'filterText', 'selectedGroup', 'isOpenSearch' ],
+    },
+    {
+      ns    : 'conference.member',
+      props : [ 'hasNewMeetingApply', 'hasNewSpeakApply' ],
+    },
+  ],
   computed : {
     memberList() {
       return this.$model.conference.member.memberList;
@@ -103,12 +136,21 @@ export default {
     speakApplyList() {
       return this.$model.conference.member.speakApplyList;
     },
+    inviteRecordList() {
+      return this.$model.conference.invite.inviteRecordList;
+    },
     isPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
     },
   },
   methods : {
     selectGroup(key) {
+      if (key === '2') { // 会议大厅
+        this.hasNewMeetingApply = false;
+      }
+      else if (key === '3') { // jushoudayan1
+        this.hasNewSpeakApply = false;
+      }
       this.selectedGroup = key;
     },
     allowAllAttend() { // 允许入会
@@ -153,6 +195,9 @@ export default {
         .catch(() => {
         });
     },
+    reInvite(record) {
+      this.$dispatch('conference.invite.invite', record);
+    },
   },
   watch : {
     isOpenSearch : {
@@ -164,6 +209,15 @@ export default {
         }
       },
       immediate : true,
+    },
+  },
+  filters : {
+    filterRecordStatus(status) {
+      return {
+        inviting : '呼叫中...',
+        failed   : '邀请失败',
+        success  : '邀请成功',
+      }[status];
     },
   },
 };

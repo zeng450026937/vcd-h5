@@ -17,11 +17,12 @@
                           title="邀请成员"
                           @click="showInviteModal"/>
               <template v-for="(tab, index) in tabList">
+                <a-badge class="leading-tight" :dot="hasNewApply && index === 1">
                 <a-iconfont :key="index" :type="tab.icon"
                             :title="tab.title"
                             class="ml-4 cursor-pointer hover:text-indigo-light text-base"
-
                             @click="openDrawer(tab)"/>
+                </a-badge>
               </template>
             </template>
           </div>
@@ -76,11 +77,20 @@ export default {
       hideControlsTimer : null,
     };
   },
-  sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab' ],
-  },
+  sketch : [
+    {
+      ns    : 'conference.sketch',
+      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab' ],
+    },
+    {
+      ns    : 'conference.member',
+      props : [ 'hasNewMeetingApply', 'hasNewSpeakApply' ],
+    }
+  ],
   computed : {
+    hasNewApply() {
+      return this.hasNewMeetingApply || this.hasNewSpeakApply
+    },
     centerSource() {
       return this.isShareInCenter ? 'screen' : 'remote';
     },

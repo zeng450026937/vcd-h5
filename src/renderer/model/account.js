@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from './vuem';
 import storage, { LOGIN_STORAGE } from '../storage';
 import rtc from '../rtc';
 import SRV from '../../shared/srv';

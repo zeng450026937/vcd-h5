@@ -1,9 +1,15 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
 
 const member = new Vuem();
 
 member.provide({
+  data() {
+    return {
+      hasNewMeetingApply : false,
+      hasNewSpeakApply   : false,
+    };
+  },
   computed : {
     filterText() {
       return this.$parent.sketch.filterText;
@@ -49,6 +55,14 @@ member.provide({
       // 申请发言
 
       return userList.filter((user) => user.isAudioApplicant()) || [];
+    },
+  },
+  watch : {
+    waitingList(val) {
+      this.hasNewMeetingApply = val && val.length > 0;
+    },
+    speakApplyList(val) {
+      this.hasNewSpeakApply = val && val.length > 0;
     },
   },
 });
