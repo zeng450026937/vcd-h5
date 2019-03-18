@@ -14,7 +14,7 @@
         <div class="flex flex-col">
           <span class="leading-normal">摄像头</span>
           <div class="flex items-center mt-2">
-            <a-select defaultValue="请选择摄像头"
+            <a-select placeholder="请选择摄像头"
                       v-model="videoInput"
                       style="width: 320px;">
               <a-select-option v-for="videoInput in videoInputList"
@@ -33,7 +33,8 @@
                     <div>· 请确认其他程序没有占用您的摄像头。</div>
                     <div>· 重启您的电脑</div>
                   </div>
-                  <div class="text-xs mt-6 leading-tight">
+                  <a-divider></a-divider>
+                  <div class="text-xs mt-1 leading-tight">
                     如仍有问题，请访问我们的
                     <span class="text-indigo cursor-pointer">支持中心</span>。
                   </div>
@@ -91,25 +92,29 @@ export default {
     };
   },
   sketch : {
-    ns    : 'setting.video',
+    ns    : 'setting1.video',
     props : [ 'enableHDVideo', 'enableHWSpeed',
       'disableVideo', 'enableMirroring' ],
+  },
+  created() {
   },
   computed : {
     muteVideo() {
       return this.$rtc.media.localMedia.muteVideo;
     },
     videoInputList() { // 摄像头
-      return this.$model.setting.device.videoInputList;
+      return this.$model.setting1.device.videoInputList;
     },
     videoInput : {
-      get() { return this.$model.setting.device.videoInput; },
-      set(val) { this.$model.setting.device.videoInput = val; },
+      get() { return this.$model.setting1.device.videoInput; },
+      set(val) { this.$model.setting1.device.videoInput = val; },
     },
   },
   destroyed() {
-    this.$model.setting.save('video'); // 页面不显示的时候保存设置
-    this.$model.setting.device.save('device'); // 页面不显示的时候保存设置
+    this.$model.setting1.save('video'); // 页面不显示的时候保存设置
+
+    // TODO:现在没有摄像头输入，后面需要接入摄像头后再进行测试
+    // this.$model.setting1.save('device'); // 页面不显示的时候保存设置
   },
 };
 </script>

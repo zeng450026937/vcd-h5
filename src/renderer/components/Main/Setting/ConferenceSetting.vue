@@ -50,30 +50,33 @@
           </div>
           <div class="mt-3">
             <a-switch size="small" v-model="noticeWhenLeaving"/>
-            <span class="setting-label">入会及离会提示音</span>
-            <a-iconfont type="icon-tishi" class="ml-3 text-indigo-dark cursor-pointer text-base"/>
+            <span class="setting-label">入会及离会提示音</span> 
+            <a-tooltip>
+              <template slot='title'>
+                是否在会议开始和结束时会有提示音提醒？
+              </template>
+              <a-iconfont type="icon-tishi" class="ml-3 text-indigo-dark cursor-pointer text-base"/>
+            </a-tooltip>
+            
           </div>
           <!--入会及离会提示音-->
           <div class="flex flex-col ml-10">
             <div class="mt-2">
-              <a-checkbox>
-                <span class="setting-label ml-1">仅入会方接收提示音</span>
-              </a-checkbox>
+              <a-switch :disabled="!noticeWhenLeaving" size="small" v-model="noticeOnlyJoiner"/>
+              <span class="setting-label ml-1">仅入会方接收提示音</span>
             </div>
             <div class="mt-2">
-              <a-checkbox>
-                <span class="setting-label ml-1">仅入会方和主持人接收提示音</span>
-              </a-checkbox>
+              <a-switch :disabled="!noticeWhenLeaving" size="small" v-model="noticeBoth"/>
+              <span class="setting-label ml-1">仅入会方和主持人接收提示音</span>
             </div>
             <div class="mt-2">
-              <a-checkbox>
-                <span class="setting-label ml-1">所有参会方接收提示音</span>
-              </a-checkbox>
+              <a-switch :disabled="!noticeWhenLeaving" size="small" v-model="noticeAll"/>
+              <span class="setting-label ml-1">所有参会方接收提示音</span>
             </div>
           </div>
           <div class="mt-3">
             <span class="setting-label ml-0">提前入会时间</span>
-            <a-input class="w-16 mx-4" v-model="advanceEntryTime"/>
+            <a-input class="w-16 mx-4" v-model.number="advanceEntryTime" @blur="checkAdvanceTime"/>
             <span class="setting-label ml-0">分钟</span>
             <span class="text-black9 setting-label ml-0">（请设置5~180分钟）</span>
           </div>
@@ -88,21 +91,22 @@
           </div>
 
           <div class="mt-3 ml-10">
-            <a-radio-group class="flex flex-col">
-              <a-radio :value="1">
-                <span class="setting-label ml-1">随机密码</span>
-              </a-radio>
-              <a-radio :value="2" class="mt-3">
-                <span class="setting-label ml-1">自定义密码</span>
-                <a-input class="mx-3" style="width: 140px;"/>
-                <span class="text-black9 setting-label ml-0">（请输入6位纯数字）</span>
-                <a-button>保存</a-button>
-              </a-radio>
-            </a-radio-group>
+              <div>
+                <a-switch  size="small" v-model="isRandomPassword"></a-switch>
+                <span class="setting-label ml-1" >随机密码</span>
+              </div>
+              <div>
+                <a-switch  size="small" v-model="isCustomPassword" class="mt-3"></a-switch>
+                <div class="relative inline-block" style="top:5px">
+                  <span class="setting-label ml-1">自定义密码</span>
+                    <a-input class="mx-1" style="width: 140px;" v-model="customPassword"/>
+                  <span class="text-black9 setting-label ml-0">（请输入6位纯数字）</span>
+                </div>
+             </div>
           </div>
 
           <div class="mt-3">
-            <a-switch size="small"/>
+            <a-switch size="small" v-model="loginSelector"/>
             <span class="setting-label">登录选项框</span>
           </div>
           <div class="mt-3">
@@ -127,22 +131,43 @@
 import AppHeader from '../MainHeader.vue';
 
 export default {
-  name       : 'ConferenceSetting',
+  name : 'ConferenceSetting',
+  data() {
+    return {
+      advanceEntryTimeRange : [ 5, 180 ],
+    };
+  },
   components : {
     AppHeader,
   },
   sketch : {
-    ns    : 'setting.conference',
-    props : [ 'minWindowWhenSharing', 'maxWindowWhenWatchingSharing',
-      'enableGpu', 'autoSilence',
-      'noticeWhenLeaving', 'advanceEntryTime', 'instanceMeetingPassword', 'reserveMeetingPassword',
-      'dndWhenCalling', 'shareComputerSound', 'preferredPictureFluency' ],
+    ns    : 'setting1.conference',
+    props : [ 'minWindowWhenSharing', 'maxWindowWhenWatchingSharing', 'enableGpu', 'shareComputerSound', 'preferredPictureFluency', 'autoSilence',
+      'noticeWhenLeaving', 'noticeOnlyJoiner', 'noticeBoth', 'noticeAll', 'advanceEntryTime', 'instanceMeetingPassword', 'reserveMeetingPassword',
+      'isRandomPassword', 'isCustomPassword', 'customPassword', 'dndWhenCalling', 'loginSelector' ],
   },
   deactivated() {
-    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
+    this.$model.setting1.save('conference'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
+    this.$model.setting1.save('conference'); // 页面不显示的时候保存设置
+  },
+  
+  methods : {
+    checkAdvanceTime() {
+      if (typeof this.advanceEntryTime !== 'number') {
+        this.$message.error('您输入的提前入会时间有误！');
+        this.advanceEntryTime = 5;
+      }
+      else if (this.advanceEntryTime < this.advanceEntryTimeRange[0]) {
+        this.$message.warning('您输入的提前入会时间太短！');
+        this.advanceEntryTime = this.advanceEntryTimeRange[0];
+      }
+      else if (this.advanceEntryTime > this.advanceEntryTimeRange[1]) {
+        this.$message.warning('您输入的提前入会时间太长！');
+        this.advanceEntryTime = this.advanceEntryTimeRange[1];
+      }
+    },
   },
 };
 </script>

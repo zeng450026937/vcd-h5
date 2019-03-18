@@ -67,22 +67,20 @@ export default {
     this.$rtc.media.localMedia.acquireStream();
   },
   destroyed() {
-    this.$model.setting.device.save('device'); // 页面不显示的时候保存设置
     this.$rtc.media.localMedia.releaseStream();
+    // TODO:device初始化失败
+    // this.$model.setting1.save('device'); // 页面不显示的时候保存设置
   },
   sketch : {
-    ns    : 'setting.device',
-    props : [ 'audioInput', 'audioOutput' ],
+    ns    : 'setting1.device',
+    props : [ 'audioInput', 'audioOutput', 'audioInputList', 'audioOutputList' ],
   },
-  computed : {
-    volume() {
-      return this.$rtc.media.localMedia.volume;
+  watch : {
+    audioInput(value) {
+      console.log(value);
     },
-    audioInputList() { // 麦克风
-      return this.$rtc.media.audioInputs;
-    },
-    audioOutputList() { // 扬声器
-      return this.$rtc.media.audioOutputs;
+    audioOutput(value) {
+      console.log(value);
     },
   },
   methods : {

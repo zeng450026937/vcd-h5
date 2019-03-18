@@ -49,6 +49,7 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
+import { langList } from '../../../i18n/config';
 
 export default {
   name       : 'CommonSetting',
@@ -57,26 +58,29 @@ export default {
   },
   data() {
     return {
-      langList : [
-        { label: '简体中文', lang: 'zh-CN' },
-        { label: 'English', lang: 'en-US' },
-      ],
       updateChannelList : [
         { label: '快速', value: 'insiders' },
         { label: '慢速', value: 'faster' },
         { label: '稳定', value: 'stable' },
       ],
+      langList : Object.keys(langList).map((key) => (
+        { 
+          label : langList[key].remark,
+          lang  : langList[key].locale, 
+        }
+      )),
     };
   },
-  deactivated() {
-    this.$model.setting.save('common'); // 页面不显示的时候保存设置
-  },
-  destroyed() {
-    this.$model.setting.save('common'); // 页面不显示的时候保存设置
-  },
   sketch : {
-    ns    : 'setting.common',
+    ns    : 'setting1.common',
     props : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
   },
+  deactivated() {
+    this.$model.setting1.save('common'); // 页面不显示的时候保存设置
+  },
+  destroyed() {
+    this.$model.setting1.save('common'); // 页面不显示的时候保存设置
+  },
+  
 };
 </script>

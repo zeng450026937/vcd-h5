@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="app-about" class="h-full">
+  <a-layout id="app-about" class="h-full ">
     <div class="h-14 border-b">
       <div class="flex bg-white dragable h-full">
         <div class="flex items-center h-full px-4 text-base">
@@ -9,7 +9,7 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5 text-center">
+    <div class="flex flex-col border h-full m-4 bg-white p-5 text-center overflow-y-auto">
       <update-panel></update-panel>
     </div>
   </a-layout>
@@ -25,17 +25,13 @@ export default {
     AppHeader,
     updatePanel,
   },
-  sketch : {
-    ns    : 'setting.about',
-    props : [ 'autoUpdate' ],
-  },
   mounted() {
   },
   deactivated() {
-    this.$model.setting.save('about'); // 页面不显示的时候保存设置
+    this.$model.setting1.save('about'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting.save('about'); // 页面不显示的时候保存设置
+    this.$model.setting1.save('about'); // 页面不显示的时候保存设置
   },
   methods : {},
 };
