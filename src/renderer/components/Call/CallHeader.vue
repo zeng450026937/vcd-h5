@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import screenfull from 'screenfull';
 import CommonHeader from '../Shared/CommonHeader.vue';
 
 export default {
@@ -54,21 +53,10 @@ export default {
       return this.displayName || this.targetUser || '未知用户';
     },
     duration() {
-      return this.$model.callState.duration;
+      return this.$model.call.state.duration;
     },
     signal() {
-      return this.$model.callState.signal;
-    },
-  },
-  methods : {
-    clickMinimize() {
-      this.$dispatch('sys.minimize');
-    },
-    clickMaximize() {
-      screenfull.toggle(document.getElementById('app'));
-    },
-    clickClose() {
-      this.$dispatch('sys.close');
+      return this.$model.call.state.signal;
     },
   },
   watch : {

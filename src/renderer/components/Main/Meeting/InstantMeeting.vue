@@ -91,7 +91,7 @@ export default {
       return this.$model.contact.currentContact;
     },
     contacts() {
-      return this.$model.contact.phoneBook;
+      return this.$model.contact.phoneBook || {};
     },
   },
   mounted() {

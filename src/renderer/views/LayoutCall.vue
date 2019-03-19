@@ -15,4 +15,3 @@ export default {
   name : 'LayoutCall',
 };
 </script>
-

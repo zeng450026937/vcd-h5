@@ -1,8 +1,16 @@
 import net from 'net';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
+import chat from './chat';
+import state from './state';
 
-export default {
-  date() {
+const model = new Vuem();
+
+model.mount('chat', chat);
+model.mount('state', state);
+
+model.provide({
+  data() {
     return {
 
     };
@@ -22,4 +30,6 @@ export default {
       return call.connect();
     },
   },
-};
+});
+
+export default model;

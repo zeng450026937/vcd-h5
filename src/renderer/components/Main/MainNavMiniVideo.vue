@@ -65,7 +65,7 @@
       </div>
       <video-view class="nav-mini-video bg-white cursor-pointer"
                   title="双击回到视频会议界面"
-                  source="remote"
+                  :source="isShareInCenter ? 'screen': 'remote'"
                   object-fit="cover"
                   position="relative"
                   @dblclick.native="expandVideoContent"/>
@@ -90,15 +90,17 @@ export default {
       showMorePanel : false,
     };
   },
-  computed : {
-    isInConferenceView : {
-      get() {
-        return this.$model.state.isInConferenceView;
-      },
-      set(val) {
-        this.$model.state.isInConferenceView = val;
-      },
+  sketch : [
+    {
+      ns    : 'state',
+      props : [ 'isInMiniConference' ],
     },
+    {
+      ns: 'conference.sketch',
+      props: ['isShareInCenter']
+    }
+  ],
+  computed : {
     confStatus() {
       return this.$rtc.conference.status;
     },
@@ -140,7 +142,7 @@ export default {
     },
     expandVideoContent() {
       this.$model.state.isInMiniConference = false;
-      this.isInConferenceView = true;
+      this.isInMiniConference = false;
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
     },
     onAudioBtnClick() {

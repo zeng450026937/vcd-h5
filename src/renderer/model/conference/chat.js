@@ -18,6 +18,9 @@ chat.provide({
     isConnected() {
       return rtc.conference.connected;
     },
+    isRegistered() {
+      return rtc.account.registered;
+    },
   },
   methods : {
     sendMessage(from, target, content, type) {
@@ -65,6 +68,9 @@ chat.provide({
       if (val && !conference.isChatAvariable()) {
         await conference.connectChat();
       }
+    },
+    isRegistered() {
+      this.messageRecordList = [];
     },
     messageRecordList(val) {
       if (val.length > 2100) {
