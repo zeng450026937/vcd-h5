@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import uuid from 'uuid/v1';
 import storage from '../../storage';
 import contactDB from '../../database/contact';

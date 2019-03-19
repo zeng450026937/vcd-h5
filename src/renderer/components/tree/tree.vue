@@ -1,11 +1,12 @@
 <template>
   <div id="tree-scroll-area" class="overflow-auto">
+    <div>
+      <a-button @click="printData"/>
+    </div>
     <div ref="tree-content" id="tree-content-area" @click="handleClick">
       <loading></loading>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -21,13 +22,17 @@ export default {
   name : 'tree',
   data() {
     return {
-      tree : [],
+      tree     : [],
+      treeDate : [],
     };
   },
   components : {
     Loading,
   },
   methods : {
+    printData() {
+      console.warn(this.treeStore);
+    },
     async genAsyncGroup() {
       const rootGroup = await contactDB.getChild('phoneBook', 'rootNode');
 
@@ -129,6 +134,7 @@ export default {
     },
     createTreeViews(tree) {
       treeStore = new TreeStore(tree);
+      this.treeStore = treeStore;
 
       this.cluster = new Clusterize({
         rows      : this.createRow(treeStore.tree),
@@ -151,9 +157,11 @@ export default {
     },
   },
   async mounted() {
-    const originTree = await this.getData();
+    const originTree = this.$rtc.contact.phonebook.list; // await this.getData();
 
-    this.createTreeViews(originTree.data.data.dataList);
+    this.treeDate = originTree;
+
+    this.createTreeViews(originTree);
   },
 };
 </script>

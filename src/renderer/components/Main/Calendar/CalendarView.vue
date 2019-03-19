@@ -1,16 +1,8 @@
 <template>
   <a-layout id="calendar-view" class="h-full w-full">
     <div class="flex flex-col h-full w-full">
-      <div class="h-14">
-        <div class="flex bg-white dragable h-full">
-          <div class="flex items-center h-full px-4 text-base">
-            <span>会议日程</span>
-          </div>
-          <div class="flex flex-grow"></div>
-          <app-header/>
-        </div>
-      </div>
-      <a-divider class="my-0"/>
+      <!--<app-header title="会议日程"/>-->
+      <main-header title="会议日程"/>
       <a-row class="flex h-full m-4 border bg-white">
         <a-col :span="9" class="h-full overflow-y-auto border-r">
           <calendar-list/>
@@ -24,7 +16,7 @@
 </template>
 
 <script>
-import AppHeader from '../MainHeader.vue';
+import MainHeader from '../MainHeader.vue';
 import CalendarInfo from './CalendarInfo.vue';
 import CalendarList from './CalendarList.vue';
 import CalendarNav from './CalendarNav.vue';
@@ -32,7 +24,7 @@ import CalendarNav from './CalendarNav.vue';
 export default {
   name       : 'CalendarView',
   components : {
-    AppHeader,
+    MainHeader,
     CalendarInfo,
     CalendarList,
     CalendarNav,

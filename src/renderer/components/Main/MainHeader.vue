@@ -1,9 +1,16 @@
 <template>
-  <a-layout id="app-header" class="select-none" :class="{[`bg-${bgColor}`]: true}">
-    <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2">
-      <common-header class="text-grey-dark mr-4"/>
+  <div id="app-header" class="h-14 bg-white border-b">
+    <div class="flex dragable h-full">
+      <span v-if="title" class="font-semibold text-base flex self-center ml-4">{{title}}</span>
+      <slot name="content"></slot>
+      <div class="flex flex-grow"></div>
+      <div class="select-none">
+        <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2">
+          <common-header class="text-grey-dark mr-4"/>
+        </div>
+      </div>
     </div>
-  </a-layout>
+  </div>
 </template>
 
 <script>
@@ -18,10 +25,6 @@ export default {
     title : {
       type    : String,
       default : '',
-    },
-    bgColor : {
-      type    : String,
-      default : 'white',
     },
   },
   methods : {

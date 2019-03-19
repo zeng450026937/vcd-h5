@@ -1,11 +1,13 @@
-import Vuem from 'vuem';
+import Vuem from './vuem';
 
 const model = new Vuem();
 
 model.provide({
   data() {
     return {
-      searchText : '',
+      searchText    : '',
+      hasLoadMore   : false,
+      searchResults : [],
     };
   },
 });

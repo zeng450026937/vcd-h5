@@ -30,8 +30,8 @@ export default {
     ContactList,
   },
   sketch : {
-    ns    : 'sketch.globalSearch',
-    props : [ 'hasLoadMore', 'searchResults' ],
+    ns    : 'main',
+    props : [ 'hasLoadMore', 'searchText', 'searchResults' ],
   },
   computed : {
     hasContacts() {
@@ -39,14 +39,6 @@ export default {
     },
     showLoadMore() {
       return this.searchResults.length > 5;
-    },
-    searchText : {
-      get() {
-        return this.$model.sketch.globalSearch.searchText;
-      },
-      set(val) {
-        this.$model.sketch.globalSearch.searchText = val;
-      },
     },
   },
   created() {

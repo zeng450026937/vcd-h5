@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
 
 const sketch = new Vuem();

@@ -63,11 +63,13 @@
 
 <script>
 import ContactSearch from './ContactSearch.vue';
+import PlainTree from '../../Common/CommonTree/tree';
 
 export default {
   name       : 'ContactTree',
   components : {
     ContactSearch,
+    PlainTree,
   },
   props : {
     checked : {
@@ -92,7 +94,6 @@ export default {
       autoExpandParent : true,
       selectedKeys     : [],
       checkedKeys      : [],
-      dataList         : [],
     };
   },
   computed : {
@@ -154,7 +155,7 @@ export default {
         return checkedContact.length < this.maxChecked;
       });
 
-      if (this.selfChecked && !hasSelf) {
+      if (this.currentContact && this.selfChecked && !hasSelf) {
         checkedContact.splice(this.maxChecked - 1); // 能选中的最大值为 100
         checkedContact.unshift(this.currentContact); // 插入自己
       }

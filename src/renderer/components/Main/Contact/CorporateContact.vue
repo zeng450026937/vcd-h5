@@ -11,7 +11,9 @@
               </div>
             </div>
             <div class="flex flex-grow"></div>
-            <app-header/>
+            <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2">
+              <app-header class="text-grey-dark mr-4"/>
+            </div>
           </div>
           <div>
             <div class="ml-4 mt-2 mb-2">
@@ -67,7 +69,7 @@
 
 <script>
 import { cloneDeep } from 'lodash';
-import AppHeader from '../MainHeader.vue';
+import AppHeader from '../../Shared/CommonHeader.vue';
 import ContactList from './ContactList.vue';
 import ContactInfo from './ContactInfo.vue';
 

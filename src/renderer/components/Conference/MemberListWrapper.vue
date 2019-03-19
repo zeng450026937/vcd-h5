@@ -7,7 +7,11 @@
       <div class="panel-item-content flex items-center w-full"
            slot="header" @click="collapseChanged">
         <a-iconfont type="icon-right2" class="wrapper-direction anticon anticon-right"/>
-        <span class="flex ml-2 flex-grow">{{title}}</span>
+          <span class="flex ml-2 flex-grow">
+            <a-badge class="leading-tight" :dot="showDot">
+              <span>{{title}}</span>
+            </a-badge>
+          </span>
         <slot name="operation"/>
       </div>
       <slot name="items"/>
@@ -28,6 +32,10 @@ export default {
       default : Date.now(),
     },
     isSelected : {
+      type    : Boolean,
+      default : false,
+    },
+    showDot : {
       type    : Boolean,
       default : false,
     },

@@ -1,9 +1,10 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import sketch from './sketch';
 import state from './state';
 import share from './share';
 import member from './member';
 import chat from './chat';
+import invite from './invite';
 import rtc from '../../rtc';
 
 const model = new Vuem();
@@ -13,11 +14,11 @@ model.mount('state', state);
 model.mount('share', share);
 model.mount('member', member);
 model.mount('chat', chat);
+model.mount('invite', invite);
 
 model.provide({
   data() {
     return {
-      noticeTextList     : [],
       messageTextList    : [],
       isLocalUnmuteAudio : false,
     };
@@ -57,6 +58,16 @@ model.provide({
     profile() {
       return rtc.conference.information.description.profile;
     },
+    permission() { // organizer：组织者， presenter：主持人，attendee：与会者
+      if (!this.currentUser) return null;
+
+      return this.currentUser.rolesEntry.permission;
+    },
+    demostate() {
+      if (!this.currentUser) return null;
+
+      return this.currentUser.rolesEntry.demostate;
+    },
     addedUser() {
       return rtc.conference.addedUser;
     },
@@ -73,17 +84,42 @@ model.provide({
       this.isLocalUnmuteAudio = true;
 
       return this.currentUser.setAudioFilter({ ingress }).catch((error) => {
-        this.noticeTextList.push(error.reason['@text']);
+        this.$message.error(error.reason['@text']);
         throw error;
       });
     },
-    async toggleVideo() {
+    async toggleVideo(ctx, next) {
       if (!this.currentUser) return;
       const ingress = this.videoStatus !== 'unblock';
 
       this.currentUser.setVideoFilter({ ingress }).catch((error) => {
-        this.noticeTextList.push(error.reason['@text']);
+        this.$message.error(error.reason['@text']);
+        throw error;
       });
+    },
+
+    /**
+     * 更新成员的麦克风状态
+     * @param user 成员
+     * @param ingress 更新为的状态 true 开启声音 false 关闭声音
+     */
+    async updateAudioStatus(ctx, next) {
+      const { user, ingress } = ctx.payload;
+
+      if (user.isCurrentUser()) this.isLocalUnmuteAudio = true;
+
+      user.setAudioFilter({ ingress }).then(() => {}).catch(() => {});
+    },
+
+    /**
+     * 更新成员的摄像头状态
+     * @param user 成员
+     * @param ingress 更新为的状态 true 开启视频 false 关闭视频
+     */
+    async updateVideoStatus(ctx, next) {
+      const { user, ingress } = ctx.payload;
+
+      user.setVideoFilter({ ingress });
     },
   },
   methods : {
@@ -94,28 +130,77 @@ model.provide({
         case 'block':
         case 'hand':
           if (this.muteBlockBy !== 'client' && oldStatus !== 'unblocking') {
-            this.noticeTextList.push('您被主持人禁言');
+            this.$message.warning('您被主持人禁言');
           }
           else if (this.profile === 'demonstrator' && oldStatus === 'unblocking') {
-            this.noticeTextList.push(this.isLocalUnmuteAudio ? '您取消了发言申请' : '您的发言申请被拒绝');
+            if (this.isLocalUnmuteAudio) {
+              this.$message.info('您取消了发言申请');
+            }
+            else {
+              this.$message.error('您的发言申请被拒绝');
+            }
           }
           break;
         case 'unblock':
           if (this.muteBlockBy !== 'client' && !this.isLocalUnmuteAudio) {
-            this.noticeTextList.push(oldStatus === 'unblocking' ? '您的发言申请被允许' : '您被主持人解除禁言');
+            if (oldStatus === 'unblocking') {
+              this.$message.success('您的发言申请被允许');
+            }
+            else {
+              this.$message.info('您被主持人解除禁言');
+            }
           }
           break;
         case 'unblocking':
-          this.noticeTextList.push('您正在申请发言');
+          this.$message.info('您正在申请发言');
           break;
         default:
           break;
       }
       this.isLocalUnmuteAudio = false;
     },
+    onPermissionChanged(permission, oldPri) {
+      // 参会者状态 organizer：组织者， presenter：主持人，attendee：访客 castviewer: 广播方
+      if (!oldPri || this.muteBlockBy === 'client') return;
+
+      if (permission === 'presenter') {
+        this.$message.info('您被设置为主持人');
+      }
+      else if (permission === 'attendee' || permission === 'castviewer') {
+        this.$message.info('您被设置为访客');
+      }
+    },
+    onDemostateChanged(role, oldRole) {
+      if (this.muteBlockBy === 'client') return;
+      // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
+      if (role === 'demonstrator' && oldRole === 'audience') {
+        this.$message.info('您被设置为演讲者');
+      }
+      else if (role === 'audience' && oldRole === 'demonstrator') {
+        this.$message.info('您被取消演讲权限');
+      }
+    },
+    getUserAudioStatus(user) {
+      if (user.isCurrentUser()) {
+        return this.audioStatus;
+      }
+      if (!user.getAudioFilter().ingress) return 'unblock';
+
+      return user.getAudioFilter().ingress['#text'] || 'unblock';
+    },
+    getUserVideoStatus(user) {
+      if (user.isCurrentUser()) {
+        return this.videoStatus;
+      }
+      if (!user.getVideoFilter().ingress) return 'unblock';
+
+      return user.getVideoFilter().ingress['#text'] || 'unblock';
+    },
   },
   watch : {
     audioStatus : 'onAudioStatusChanged',
+    permission  : 'onPermissionChanged',
+    demostate   : 'onDemostateChanged',
     addedUser(val) {
       this.messageTextList.push(`${val.displayText} 加入会议`);
     },

@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import { secondsToHms } from '../../utils';
 import rtc from '../../rtc';
 
@@ -20,6 +20,8 @@ state.provide({
       let checkInterval = 1; // 1 2 4 8 循环时长
 
       let checkTimes = 0;
+
+      let isShowSignalWarning = false;
       // 设置会议进行时间
       const meetTime = new Date();
 
@@ -34,6 +36,15 @@ state.provide({
               checkTimes = 0;
             }
             const { quality } = val.media;
+
+            if (quality <= 0 && !isShowSignalWarning) { // 丢包率 > 12% (10%)
+              isShowSignalWarning = true;
+              this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+            }
+            else {
+              isShowSignalWarning = false;
+              this.$message.destroy();
+            }
 
             this.signal = quality >= 1 ? quality : '1';
           });

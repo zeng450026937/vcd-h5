@@ -16,13 +16,16 @@
               <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
                           title="邀请成员"
                           @click="showInviteModal"/>
-              <template v-for="(tab, index) in tabList">
-                <a-iconfont :key="index" :type="tab.icon"
+              <div v-for="(tab, index) in tabList" :key="index">
+                <a-badge :numberStyle= "{backgroundColor: 'white', boxShadow : 'none'}"
+                         class="shadow-none"
+                         :dot="(hasNewApply && index === 1) || (hasNewMessage && index === 2)">
+                <a-iconfont :type="tab.icon"
                             :title="tab.title"
                             class="ml-4 cursor-pointer hover:text-indigo-light text-base"
-
-                            @click="openDrawer(tab)"/>
-              </template>
+                            @click="openDrawer(tab.comp)"/>
+                </a-badge>
+              </div>
             </template>
           </div>
         </div>
@@ -76,11 +79,24 @@ export default {
       hideControlsTimer : null,
     };
   },
-  sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab' ],
-  },
+  sketch : [
+    {
+      ns    : 'conference.sketch',
+      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab' ],
+    },
+    {
+      ns    : 'conference.member',
+      props : [ 'hasNewMeetingApply', 'hasNewSpeakApply' ],
+    },
+    {
+      ns    : 'conference.chat',
+      props : [ 'hasNewMessage' ],
+    },
+  ],
   computed : {
+    hasNewApply() {
+      return this.hasNewMeetingApply || this.hasNewSpeakApply;
+    },
     centerSource() {
       return this.isShareInCenter ? 'screen' : 'remote';
     },
@@ -111,9 +127,6 @@ export default {
       return this.$rtc.conference.shareChannel.remoteStream
         || this.$rtc.conference.shareChannel.localStream;
     },
-    noticeTextList() {
-      return this.$model.conference.noticeTextList;
-    },
   },
   mounted() {
     this.contentClicked();
@@ -137,7 +150,10 @@ export default {
       this.$refs.invitingModal.visible = true;
     },
     openDrawer(tab) {
-      this.currentTab = tab.comp;
+      if (this.hasNewMessage && tab === 'TabChatting') {
+        this.hasNewMessage = false;
+      }
+      this.currentTab = tab;
       this.isInConferenceMain = false;
     },
     maxConferenceContent() {
@@ -176,9 +192,6 @@ export default {
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
-    },
-    noticeTextList(val) {
-      if (val && val.length) this.$message.info(val[val.length - 1]);
     },
   },
 };

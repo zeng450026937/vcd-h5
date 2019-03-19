@@ -3,10 +3,10 @@
     <div class="h-14">
       <div class="flex px-3 h-full items-center border-b">
         <a-input
-            v-model="globalSearchText"
+            v-model="searchText"
             placeholder='搜索联系人'
         >
-          <a-iconfont v-if="!globalSearchText"
+          <a-iconfont v-if="!searchText"
                       slot="suffix"
                       type="icon-sousuo"
                       class="text-base text-grey"/>
@@ -14,12 +14,12 @@
                       slot="suffix"
                       type="icon-guanbi"
                       class="text-base text-grey cursor-pointer hover:text-red"
-                      @click="globalSearchText = ''"/>
+                      @click="searchText = ''"/>
         </a-input>
       </div>
     </div>
 
-    <div v-show="!globalSearchText">
+    <div v-show="!searchText">
       <calendar-nav v-if="isInCalendar"/>
       <div v-else>
         <div class="flex items-center h-12 px-4 cursor-pointer"
@@ -33,8 +33,8 @@
         </div>
       </div>
     </div>
-    <div class="flex h-full" v-if="globalSearchText">
-      <global-search :searchText="globalSearchText"/>
+    <div class="flex h-full" v-if="searchText">
+      <global-search/>
     </div>
     <div class="flex flex-grow"></div>
   </a-layout>
@@ -52,8 +52,8 @@ export default {
     CalendarNav,
   },
   sketch : {
-    ns    : 'contact',
-    props : [ 'globalSearchText' ],
+    ns    : 'main',
+    props : [ 'searchText' ],
   },
   data() {
     return {

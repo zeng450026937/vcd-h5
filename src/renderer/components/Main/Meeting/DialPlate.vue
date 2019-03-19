@@ -1,16 +1,7 @@
 <template>
   <a-layout id="dial-plate" class="h-full select-none">
     <div class="flex flex-col h-full">
-      <div class="h-14">
-        <div class="flex bg-white dragable h-full">
-          <div class="flex items-center h-full px-4 text-base">
-            <span>拨号</span>
-          </div>
-          <div class="flex flex-grow"></div>
-          <app-header/>
-        </div>
-      </div>
-      <a-divider class="my-0"/>
+      <app-header title="拨号"/>
       <div class="h-full m-4 bg-white flex border">
         <div class="flex flex-col p-10 mt-6"
              style="width: 328px;">

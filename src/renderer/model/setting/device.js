@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
 import { loadConfig, saveConfig } from './utils';
 

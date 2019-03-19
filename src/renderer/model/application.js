@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from './vuem';
 import { remote } from 'electron';
 
 const model = new Vuem();

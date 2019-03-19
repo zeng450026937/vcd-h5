@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from './vuem';
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
@@ -58,6 +58,7 @@ model.provide({
           }
         }
         else { // 未登录状态
+		  await wait(500);
           router.push(LOGIN.LOGIN_CONTENT);
         }
         if (this.loginPopup) popup.destroy(this.loginPopup);

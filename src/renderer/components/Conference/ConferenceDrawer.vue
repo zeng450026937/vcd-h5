@@ -15,14 +15,18 @@
                         title="邀请成员"
                         class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                         @click="showInviteModal"/>
-            <template v-for="(tab, index) in tabList">
-              <a-iconfont :key="index" :type="tab.icon"
-                          :title="tab.title"
-                          class="ml-4 cursor-pointer text-black9 text-base"
-                          :class="{'text-indigo': currentTab === tab.is,
+            <div v-for="(tab, index) in tabList" :key="index">
+              <a-badge :numberStyle="{backgroundColor: 'red', boxShadow : 'none'}"
+                       class="shadow-none"
+                       :dot="(hasNewApply && index === 1) || (hasNewMessage && index === 2)">
+                <a-iconfont :type="tab.icon"
+                            :title="tab.title"
+                            class="ml-4 cursor-pointer text-black9 text-base"
+                            :class="{'text-indigo': currentTab === tab.is,
                           'hover:text-indigo-light': currentTab !== tab.is}"
-                          @click="switchTab(tab.is)"/>
-            </template>
+                            @click="switchTab(tab.is)"/>
+              </a-badge>
+            </div>
           </div>
         </div>
       </div>
@@ -59,9 +63,25 @@ export default {
       tabList,
     };
   },
-  sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'isInConferenceMain', 'currentTab' ],
+
+  sketch : [
+    {
+      ns    : 'conference.sketch',
+      props : [ 'isInConferenceMain', 'currentTab' ],
+    },
+    {
+      ns    : 'conference.member',
+      props : [ 'hasNewMeetingApply', 'hasNewSpeakApply' ],
+    },
+    {
+      ns    : 'conference.chat',
+      props : [ 'hasNewMessage' ],
+    },
+  ],
+  computed : {
+    hasNewApply() {
+      return this.hasNewMeetingApply || this.hasNewSpeakApply;
+    },
   },
   methods : {
     showInviteModal() {
@@ -69,6 +89,9 @@ export default {
       this.$parent.$children[0].showInviteModal();
     },
     switchTab(tab) {
+      if (this.hasNewMessage && tab === 'TabChatting') {
+        this.hasNewMessage = false;
+      }
       if (this.currentTab === tab) {
         this.isInConferenceMain = true;
         

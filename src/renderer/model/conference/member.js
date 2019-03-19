@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
 
 const member = new Vuem();
@@ -6,9 +6,14 @@ const member = new Vuem();
 member.provide({
   data() {
     return {
+      hasNewMeetingApply : false,
+      hasNewSpeakApply   : false,
     };
   },
   computed : {
+    filterText() {
+      return this.$parent.sketch.filterText;
+    },
     userList() {
       const { userList } = rtc.conference.information.users;
 
@@ -29,10 +34,12 @@ member.provide({
       return [
         {
           title : `主持人 (${presenterList.length})`,
+          group : 'presenter',
           list  : presenterList,
         },
         {
           title : `访客 (${visitorList.length})`,
+          group : 'visitor',
           list  : visitorList,
         },
       ];
@@ -48,6 +55,14 @@ member.provide({
       // 申请发言
 
       return userList.filter((user) => user.isAudioApplicant()) || [];
+    },
+  },
+  watch : {
+    waitingList(val) {
+      this.hasNewMeetingApply = val && val.length > 0;
+    },
+    speakApplyList(val) {
+      this.hasNewSpeakApply = val && val.length > 0;
     },
   },
 });

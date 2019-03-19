@@ -406,15 +406,6 @@ export default {
 
     .ant-popover-inner-content {
       padding: 0;
-      .ant-avatar-string {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        left: 0;
-        position: relative;
-        transform: unset !important;
-      }
     }
   }
 </style>
