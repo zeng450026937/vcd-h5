@@ -28,15 +28,20 @@
   }],
   "mac": {
     "target": [
-      "zip",
       "dmg"
     ],
     "category": "public.app-category.video"
+  },
+  "dmg": {
+    "artifactName": "vc-desktop-${version}.${ext}",
   },
   "linux": {
     "target": [
       "AppImage"
     ],
     "category": "Video"
+  },
+  "AppImage": {
+    "artifactName": "vc-desktop-${version}.${ext}",
   }
 }

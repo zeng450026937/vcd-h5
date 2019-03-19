@@ -21,7 +21,7 @@ export async function doAlarm(name, desc, api) {
   alarm.addParam(param);
   alarm.addLog(logfile, basename(path));
 
-  await alarm.upload().catch((e) => logger.log('upload alarm to yealink failed, error: %s', e));
+  await alarm.upload().catch((e) => logger.error('upload alarm to yealink failed, error: %s', e));
   // ignore anyway
   await unlink(path).catch(() => {});
 }
