@@ -1,5 +1,7 @@
 import { ipcRenderer } from 'electron';
 
+const __DEV__ = process.env.NODE_ENV === 'development';
+
 const g = global;
 
 /**
@@ -13,6 +15,10 @@ function log(level, ...args) {
     level,
     ...args,
   );
+
+  if (__DEV__) {
+    console[level](...args);
+  }
 }
 
 g.logger = {
@@ -27,5 +33,9 @@ g.logger = {
   },
   debug(...args) {
     log('debug', ...args);
+  },
+
+  profile(name) {
+    ipcRenderer.send('profile', name);
   },
 };

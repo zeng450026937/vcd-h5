@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import { remote } from 'electron';
 import Vue from 'vue';
 import Vuem from './vuem';
 import setting from './setting';
@@ -28,7 +26,13 @@ model.use(async(ctx, next) => {
   // inject setting
   ctx.setting = ctx.getVM('setting');
 
+  const tick = Date.now();
+
   await next();
+
+  const duration = Date.now() - tick;
+
+  logger.debug(`model method: ${ctx.method}, duration: ${duration} ms`);
 });
 
 window.kom = model;

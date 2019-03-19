@@ -19,3 +19,10 @@ ipcMain.on(
     }
   }
 );
+
+ipcMain.on(
+  'profile',
+  (event, name) => {
+    loggerHost.profile(name);
+  }
+);
