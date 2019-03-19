@@ -28,8 +28,14 @@
           </a-select>
         </div>
         <div class="mt-6">
-          <span>{{$t('setting.common.address')}}</span>
-          <a-input v-model="address" class="w-48 ml-4" :placeholder="$t('setting.common.addressPlaceHolder')"/>
+          
+          <a-form>
+            <a-form-item :validateStatus="showAddressError?'error':''" :help="showAddressError?addressErrorText:''">
+              <span>{{$t('setting.common.address')}}</span>
+              <a-input v-model="addressInput" class="w-48 ml-4" :placeholder="$t('setting.common.addressPlaceHolder')" @blur="handleCheckAddress"/>
+            </a-form-item>
+          </a-form>
+          
         </div>
         <div class="mt-6">
           <span>{{$t('setting.common.updateChannel')}}</span>
@@ -69,13 +75,21 @@ export default {
           lang  : langList[key].locale, 
         }
       )),
+      addressInput     : '',
+      showAddressError : false,
+      addressErrorText : '您输入的地址不合法！',
+      defaultProtocol  : 'https://',
+      defaultPort      : ':9301',
     };
+  },
+  created() {
+    this.addressInput = this.address;
   },
   computed : {
     updateChannelList() {
       return [ 'insiders', 'faster', 'stable' ].map((key) => ({
         value : key,
-        label : this.$t(`setting.common.updateChannelList[${key}]`),
+        label : this.$t(`setting.common.updateChannelList.${key}`),
       }));
     },
   },
@@ -89,6 +103,36 @@ export default {
   destroyed() {
     this.$model.setting1.save('common'); // 页面不显示的时候保存设置
   },
-  
+  methods : {
+    handleCheckAddress() {
+      if (/^((\w*:)?\/\/)?(\d{1,3}\.){3}(\d{1,3})((:(\d{1,4})?)?)$/.test(this.addressInput)) {
+        let newAddress = /(\d{1,3}\.){3}(\d{1,3})/.exec(this.addressInput)[0];
+
+        const protocolTest = /^\w+:\/\//.exec(this.addressInput);
+
+        if (protocolTest) {
+          newAddress = protocolTest[0] + newAddress;
+        }
+        else {
+          newAddress = this.defaultProtocol + newAddress;
+        }
+
+        const portTest = /:\d{1,4}$/.exec(this.addressInput);
+
+        if (portTest) {
+          newAddress += portTest[0];
+        }
+        else {
+          newAddress += this.defaultPort;
+        }
+        this.addressInput = this.address = newAddress;
+        this.showAddressError = false;
+      }
+      else {
+        this.showAddressError = true;
+        this.addressErrorText = '您输入的地址不合法！';
+      }
+    },
+  },
 };
 </script>

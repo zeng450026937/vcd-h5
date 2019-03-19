@@ -1,4 +1,4 @@
-import Vuem from 'vuem';
+import Vuem from '../vuem';
 import { loadConfig, saveConfig, nextTick } from './utils';
 import modelList from './models';
 
