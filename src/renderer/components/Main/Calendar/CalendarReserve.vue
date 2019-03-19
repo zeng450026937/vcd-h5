@@ -1,16 +1,7 @@
 <template>
   <a-layout id="reserve-meeting" class="h-full">
     <div class="flex flex-col h-full">
-      <div class="h-14">
-        <div class="flex bg-white dragable h-full">
-          <div class="flex items-center h-full px-4 text-base">
-            <span>预约会议</span>
-            <span class="text-indigo text-xs ml-3 cursor-pointer">更改模式</span>
-          </div>
-          <div class="flex flex-grow"></div>
-          <app-header/>
-        </div>
-      </div>
+      <app-header title="预约会议"/>
       <a-divider class="my-0"/>
       <a-row class="flex h-full m-4">
         <a-col class="h-full flex flex-col border-r mr-3 bg-white flex-grow border rounded">

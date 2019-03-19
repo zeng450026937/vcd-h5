@@ -10,7 +10,6 @@ model.mount('local', localContact);
 model.provide({
   data() {
     return {
-      globalSearchText   : '',
       formattedPhoneBook : null,
       formattedFavorite  : null,
       currentContact     : null,

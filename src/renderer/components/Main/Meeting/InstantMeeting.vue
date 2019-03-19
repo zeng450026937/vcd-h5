@@ -1,18 +1,7 @@
 <template>
   <a-layout id="instant-meeting" class="h-full w-full">
     <div class="flex flex-col h-full">
-      <div class="h-14">
-        <div class="flex bg-white dragable h-full">
-          <div class="flex items-center h-full px-4 text-base">
-            <div v-if="contacts"
-                 class="text-base font-medium"
-            >{{`${contacts.name}（${contacts.amount}）`}}
-            </div>
-          </div>
-          <div class="flex flex-grow"></div>
-          <app-header/>
-        </div>
-      </div>
+      <app-header :title="`${contacts.name}（${contacts.amount}）`"/>
       <a-divider class="my-0"/>
       <div class="flex h-full m-4">
 

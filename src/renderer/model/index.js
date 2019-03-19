@@ -9,6 +9,7 @@ import state from './state';
 import contact from './contact';
 import meeting from './meeting';
 import conference from './conference';
+import main from './main';
 
 Vue.use(Vuem);
 
@@ -21,6 +22,7 @@ model.mount('contact', contact);
 model.mount('state', state);
 model.mount('meeting', meeting);
 model.mount('conference', conference);
+model.mount('main', main);
 
 model.use(async(ctx, next) => {
   // inject setting

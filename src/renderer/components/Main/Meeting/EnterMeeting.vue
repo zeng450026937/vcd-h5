@@ -1,14 +1,6 @@
 <template>
   <a-layout id="enter-meeting" class="h-full">
-    <div class="h-14 border-b">
-      <div class="flex bg-white dragable h-full">
-        <div class="flex items-center h-full px-4 text-base">
-          <span>加入会议</span>
-        </div>
-        <div class="flex flex-grow"></div>
-        <app-header/>
-      </div>
-    </div>
+    <app-header title="加入会议"/>
     <div class="flex justify-center items-center h-full">
       <div  v-if="!showSetting"
             style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"

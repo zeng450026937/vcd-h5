@@ -5,7 +5,9 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      searchText : '',
+      searchText    : '',
+      hasLoadMore   : false,
+      searchResults : [],
     };
   },
 });
