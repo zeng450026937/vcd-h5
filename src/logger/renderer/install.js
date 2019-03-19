@@ -34,8 +34,7 @@ g.logger = {
   debug(...args) {
     log('debug', ...args);
   },
-
-  profile(name) {
-    ipcRenderer.send('profile', name);
+  profile(...args) {
+    log('profile', ...args);
   },
 };

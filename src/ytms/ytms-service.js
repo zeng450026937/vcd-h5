@@ -1,4 +1,4 @@
-import { getClientId, clientInfo } from './client-info';
+import { getClientId, getClientInfo, clientInfo } from './client-info';
 import { YTMSClient } from './ytms-client';
 import { PushService } from './push-service';
 import { handlePushMessage } from './handle-push-message';
@@ -15,6 +15,10 @@ export class YTMSService {
   // use in yealink-provider
   getClientId() {
     return getClientId();
+  }
+
+  getClientInfo() {
+    return getClientInfo();
   }
 
   get api() {

@@ -1,28 +1,39 @@
 import { ipcMain } from 'electron';
-import { initializeWinston, loggers } from '../winston';
+import { log } from '../winston';
 
-initializeWinston();
+function createLogger(label = 'browser') {
+  return {
+    error(...args) {
+      log(label, 'error', ...args);
+    },
+    warn(...args) {
+      log(label, 'warn', ...args);
+    },
+    info(...args) {
+      log(label, 'info', ...args);
+    },
+    debug(...args) {
+      log(label, 'debug', ...args);
+    },
+    profile(...args) {
+      log(label, 'profile', ...args);
+    },
+  };
+}
 
 const g = global;
 
-g.logger = loggers.get('browser');
+g.logger = createLogger();
 
-const loggerHost = loggers.get('renderer');
+const loggerHost = createLogger('renderer');
 
 ipcMain.on(
   'log',
   (event, level, ...args) => {
-    const log = loggerHost[level];
+    const method = loggerHost[level];
 
-    if (log) {
-      log(...args);
+    if (method) {
+      loggerHost[level](...args);
     }
-  }
-);
-
-ipcMain.on(
-  'profile',
-  (event, name) => {
-    loggerHost.profile(name);
   }
 );

@@ -36,8 +36,9 @@ export class YealinkProvider extends Provider {
       updateChannel  : this.channel,
     };
 
-    // is it all right to use default api?
     const api = this.service.api;
+
+    if (!api) return;
 
     const res = await api.getUpdatePackage(clientInfo);
 

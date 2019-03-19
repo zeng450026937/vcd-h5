@@ -151,7 +151,11 @@ export default {
         // feedbackTitle,
       }));
 
-      const res = await this.$root.$apis.yealink.doFeedback(formData);
+      const api = window.api;
+
+      if (!api) return;
+
+      const res = await api.doFeedback(formData);
 
       if (res == null) return this.$message.info('上报反馈信息失败！');
 

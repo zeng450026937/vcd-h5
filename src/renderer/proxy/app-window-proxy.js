@@ -7,9 +7,7 @@ export const AppWindowProxy = {
   beforeCreate() {
     startTime = performance.now();
   },
-  async mounted() {
-    ipcRenderer.send('renderer-ready', performance.now() - startTime);
-    
+  async created() {
     ipcRenderer.on(
       'menu-event',
       (event, { name }) => {
@@ -17,28 +15,21 @@ export const AppWindowProxy = {
       }
     );
     
-    const clientId = await ipcProxy.getClientId();
-    const apis = window.apis = {};
-    
-    this.$apis = apis;
-    
-    let url = process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
-    
-    apis.yealink = createApi(url, clientId);
-    
-    url = 'http://10.200.112.147:9302';
+    let url;
+
+    // get url from setting
+    url = 'http://10.5.200.199:8083';
+    url = url || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
     
     if (url) {
-      await ipcProxy.startYTMSService(url);
-    
-      apis.enterprise = createApi(url, clientId);
+      const clientId = await ipcProxy.startYTMSService(url).catch((e) => console.warn(e));    
+
+      this.$api = window.api = createApi(url, clientId);
     }
-    
+
     ipcRenderer.on(
       'system-config',
-      async(event, { config }) => {
-        console.warn(config);
-    
+      async(event, { config }) => {    
         const {
           pushUpdateChannelFlag,
           pushYtmsHostFlag,
@@ -51,15 +42,16 @@ export const AppWindowProxy = {
         }
     
         if (pushYtmsHostFlag && ytmsHostAddress) {
-          this.$model.setting.common.address = ytmsHostAddress;
+          // TODO: update ytms address to model
     
-          await ipcProxy.startYTMSService(ytmsHostAddress);
+          const clientId = await ipcProxy.startYTMSService(ytmsHostAddress);
     
-          apis.enterprise = createApi(ytmsHostAddress, clientId);
+          this.$api = window.api = createApi(ytmsHostAddress, clientId);
         }
-    
-        this.$model.setting.common.save();
       }
     );
+  },
+  async mounted() {
+    ipcRenderer.send('renderer-ready', performance.now() - startTime);
   },
 };

@@ -14,3 +14,15 @@ Object.keys(apis).forEach((api) => {
 export function createApi(baseURL, clientId) {
   return new YTMSAPI(baseURL, clientId);
 }
+
+export function MockAPI() {}
+
+Object.keys(apis).forEach((api) => {
+  MockAPI.prototype[api] = function() {
+    return Promise.resolve();
+  };
+});
+
+export function mockApi() {
+  return new MockAPI();
+}

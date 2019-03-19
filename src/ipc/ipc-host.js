@@ -44,17 +44,16 @@ export const ipcHost = {
   },
 
   async startYTMSService(url) {
-    const service = await ytms.enterprise.connect(url);
+    const service = await ytms.connect(url);
 
-    logger.info(`enterprise ytms connected, url: ${service.url} push: ${service.baseURL} ${service.tenantId}`);
+    logger.info(`ytms connected, url: ${service.url} push-service: ${service.baseURL} ${service.tenantId}`);
 
     // update client info
     ytms.clientInfo.enterprise = service.enterpriseInfo.enterprise;
     
-    // update enterprise info to yealink
-    ytms.yealink.updateInfo(ytms.clientInfo);
+    // update enterprise info to server
+    ytms.updateInfo();
 
-    // replace default service to yealink provider
-    autoUpdater.provider.service = ytms.enterprise;
+    return ytms.clientId;
   },
 };

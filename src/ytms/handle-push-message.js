@@ -21,7 +21,7 @@ export function handlePushMessage(pushService, hook) {
     
     showNotification(MESSAGE_TYPE[type], body);
 
-    const api = ytms.yealink.api;
+    const api = ytms.api;
 
     let sessionId = null;
 

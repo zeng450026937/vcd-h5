@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuem from './vuem';
 import setting from './setting';
 import application from './application';
+import updater from './updater';
 import account from './account';
 import state from './state';
 import contact from './contact';
@@ -15,6 +16,7 @@ const model = new Vuem();
 
 model.mount('setting', setting);
 model.mount('application', application);
+model.mount('updater', updater);
 model.mount('account', account);
 model.mount('contact', contact);
 model.mount('state', state);
@@ -36,5 +38,7 @@ model.use(async(ctx, next) => {
 });
 
 window.kom = model;
+
+window.addEventListener('beforeunload', () => model.destroy());
 
 export default model;

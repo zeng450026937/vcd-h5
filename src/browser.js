@@ -203,11 +203,6 @@ if (!handlingSquirrelEvent) {
       // setAsDefaultProtocolClient('x-yealink-client');
   
       createWindow();
-
-      ytms.yealink.connect()
-        .then((service) => {
-          logger.info(`yealink ytms connected, url: ${service.url} push: ${service.baseURL} ${service.tenantId}`);
-        });
     });
     
     app.on('gpu-process-crashed', (event, killed) => { 
@@ -222,8 +217,7 @@ if (!handlingSquirrelEvent) {
     });
 
     app.once('quit', () => {
-      global.ytms.yealink.disconnect();
-      global.ytms.enterprise.disconnect();
+      global.ytms.disconnect();
       global.ytms = null;
       global.logger = null;
     });

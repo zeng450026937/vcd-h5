@@ -43,7 +43,8 @@ export class AppUpdater extends EventEmitter {
   set channel(channel) {
     if (channel !== this.provider.channel) {
       this.provider.channel = channel;
-      this.clear();
+      // clear latest update info
+      this.provider.clear();
     }
   }
 
@@ -57,12 +58,12 @@ export class AppUpdater extends EventEmitter {
 
   async checkForUpdates() {
     const info = await this.provider.getLatestVersion().catch((e) => {
-      logger.error(e);
+      logger.error('get latest version failed, error: %s', e);
       this.emit('error', e);
     });
 
     if (!info) {
-      this.emit('error', new Error('Recevied empty info'));
+      this.emit('error', new Error('recevied empty info'));
 
       return;
     }
