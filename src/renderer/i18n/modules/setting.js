@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-3-18 15:41:56 
+// 最新导入时间为 2019-3-19 15:53:06 
 module.exports = {
   name : 'setting',
   lang : {
@@ -26,18 +26,18 @@ module.exports = {
         camera            : '摄像头',
         cameraPlaceHolder : '请选择摄像头',
         noneCamera        : '看不到任何视频',
+        questionNotice    : '如仍有问题，请访问我们的',
+        techniqueCenter   : '支持中心',
+        enableHDVideo     : '启用高清视频',
+        enableHWSpeed     : '启用硬件加速',
+        enableMirroring   : '启用视频镜像效果',
+        disableVideo      : '加入会议时不开启摄像头',
         cameraNotice      : {
           open    : '请确认您的摄像头已经接通并开启。',
           correct : '检查视频选项以使用正确的网络摄像头。',
           single  : '请确认其他程序没有占用您的摄像头。',
           restart : '重启您的电脑',
         },
-        questionNotice  : '如仍有问题，请访问我们的',
-        techniqueCenter : '支持中心',
-        enableHDVideo   : '启用高清视频',
-        enableHWSpeed   : '启用硬件加速',
-        enableMirroring : '启用视频镜像效果',
-        disableVideo    : '加入会议时不开启摄像头',
       },
       audio : {
         title             : '音频',

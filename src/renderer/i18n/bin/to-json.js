@@ -61,7 +61,8 @@ try {
           if (!langModule.lang[langName]) {
             langModule.lang[langName] = {};
           }
-          langModule.lang[langName][row[1]] = transData(row[langIndex + 2]);
+          console.log(row[1], langName, transData(row[langIndex + 2]));
+          langModule = setSentenceData(langModule, row[1], langName, transData(row[langIndex + 2]));
         }
       });
     }
@@ -133,4 +134,24 @@ function getDateString() {
  */
 function getI18nDirPath() {
   return path.resolve(__dirname, '../');
+}
+
+function setSentenceData(langModule, sentence, langName, data) {
+  let pathObj = langModule.lang[langName];
+
+  const sentArray = sentence.split('.');
+
+  sentArray.forEach((key, index) => {
+    if (index === sentArray.length - 1) {
+      pathObj[key] = data;
+    }
+    else {
+      if (!pathObj[key]) {
+        pathObj[key] = {};
+      }
+      pathObj = pathObj[key];
+    }
+  });
+  
+  return langModule;
 }

@@ -6,16 +6,6 @@ const { langList:langNameObj, ouputExcelName } = require('../config');
 const langNameList = Object.keys(langNameObj);
 const langModuleList = require('../modules');
 
-function strinifySentence(sentence) {
-  if (sentence instanceof Array) {
-    sentence = JSON.stringify(sentence);
-  }
-  if (sentence instanceof Object) {
-    sentence = JSON.stringify(sentence);
-  }
-  
-  return sentence;
-}
 
 try {
   // 输出表格行首信息，以及字段名和当前config当中的语言
@@ -37,12 +27,12 @@ try {
 
       // 只在当前模块针对当前遍历的语言有翻译时，也有可能出现当前模块还没有该种语言的翻译
       if (sentences) {
-        sentences = Object.entries(sentences);
-        sentences.forEach(([ sentenceName, sentenceText ]) => {
-          if (!moduleObj[sentenceName]) {
-            moduleObj[sentenceName] = {};
+        sentences = stringify(sentences);
+        Object.entries(sentences).forEach(([ key, value ]) => {
+          if (!moduleObj[key]) {
+            moduleObj[key] = {};
           }
-          moduleObj[sentenceName][langName] = strinifySentence(sentenceText);
+          moduleObj[key][langName] = value;
         });
       }
     });
@@ -69,4 +59,35 @@ try {
 }
 catch (e) {
   console.log(e);
+}
+
+
+function stringify(json) {
+  let isAllString = false;
+
+  while (!isAllString) {
+    isAllString = true;
+    
+    // eslint-disable-next-line no-loop-func
+    Object.entries(json).forEach(([ key, value ], index) => {
+      if (typeof value !== 'string') {
+        Object.assign(json, addPreHead(value, key));      
+        delete json[key];
+        isAllString = false;
+      }
+    });
+  }
+  
+  return json;
+}
+
+function addPreHead(obj, preHead = '') {
+  if (!preHead) { return obj; }
+  const newObj = {};
+
+  Object.entries(obj).forEach(([ key, value ]) => {
+    newObj[`${preHead}.${key}`] = value;
+  });
+  
+  return newObj;
 }
