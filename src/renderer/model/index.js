@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuem from './vuem';
-import setting from './setting';
+import setting1 from './setting1';
 import application from './application';
 import updater from './updater';
 import account from './account';
@@ -15,7 +15,7 @@ Vue.use(Vuem);
 
 const model = new Vuem();
 
-model.mount('setting', setting);
+
 model.mount('application', application);
 model.mount('updater', updater);
 model.mount('account', account);
@@ -25,6 +25,7 @@ model.mount('meeting', meeting);
 model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
+model.mount('setting1', setting1);
 
 model.use(async(ctx, next) => {
   // inject setting

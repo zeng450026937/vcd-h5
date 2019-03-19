@@ -3,36 +3,42 @@
     <div class="h-14 border-b">
       <div class="flex bg-white dragable h-full">
         <div class="flex items-center h-full px-4 text-base">
-          <span>通用</span>
+          <span>{{$t('setting.common.title')}}</span>
         </div>
         <div class="flex flex-grow"></div>
         <app-header/>
       </div>
     </div>
     <div class="flex flex-col border h-full m-4 bg-white p-5">
-      <div>
+      <div class="overflow-y-scroll">
         <div>
           <a-switch size="small" v-model="autoStart"/>
-          <span class="ml-5">开机自动启动</span>
+          <span class="ml-5">{{$t('setting.common.autoStart')}}</span>
         </div>
         <div class="mt-4">
           <a-switch size="small" v-model="forceMinimize"/>
-          <span class="ml-5">关闭时最小化</span>
+          <span class="ml-5">{{$t('setting.common.forceMinimize')}}</span>
         </div>
         <div class="mt-6">
-          <span>切换语言</span>
-          <a-select v-model="language" class="w-48 ml-4">
+          <span>{{$t('setting.common.language')}}</span>
+          <a-select v-model="language" class="w-48 ml-4" @change="handleLanguageChange">
             <a-select-option v-for="(lang, index) in langList" :key="index"
                              :value="lang.lang"
             >{{lang.label}}</a-select-option>
           </a-select>
         </div>
         <div class="mt-6">
-          <span>软终端管理平台地址</span>
-          <a-input v-model="address" class="w-48 ml-4"/>
+          
+          <a-form>
+            <a-form-item :validateStatus="showAddressError?'error':''" :help="showAddressError?addressErrorText:''">
+              <span>{{$t('setting.common.address')}}</span>
+              <a-input v-model="addressInput" class="w-48 ml-4" :placeholder="$t('setting.common.addressPlaceHolder')" @blur="handleCheckAddress"/>
+            </a-form-item>
+          </a-form>
+          
         </div>
         <div class="mt-6">
-          <span>升级通道</span>
+          <span>{{$t('setting.common.updateChannel')}}</span>
           <a-select v-model="updateChannel" class="w-48 ml-4">
             <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
                              :value="channel.value"
@@ -40,7 +46,7 @@
           </a-select>
         </div>
         <div class="mt-10">
-          <a-button type="primary" class="w-32">查看新手引导</a-button>
+          <a-button type="primary" class="w-32" @click="handleNoodGuide">{{$t('setting.common.noobGuide')}}</a-button>
         </div>
       </div>
     </div>
@@ -49,6 +55,7 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
+import { langList } from '../../../i18n/config';
 
 export default {
   name       : 'CommonSetting',
@@ -57,26 +64,82 @@ export default {
   },
   data() {
     return {
-      langList : [
-        { label: '简体中文', lang: 'zh-CN' },
-        { label: 'English', lang: 'en-US' },
-      ],
-      updateChannelList : [
-        { label: '快速', value: 'insiders' },
-        { label: '慢速', value: 'faster' },
-        { label: '稳定', value: 'stable' },
-      ],
+      // updateChannelList : [
+      //   { label: '快速', value: 'insiders' },
+      //   { label: '慢速', value: 'faster' },
+      //   { label: '稳定', value: 'stable' },
+      // ],
+      langList : Object.keys(langList).map((key) => (
+        { 
+          label : langList[key].remark,
+          lang  : langList[key].locale, 
+        }
+      )),
+      addressInput     : '',
+      showAddressError : false,
+      addressErrorText : '您输入的地址不合法！',
+      defaultProtocol  : 'https://',
+      defaultPort      : ':9301',
     };
   },
-  deactivated() {
-    this.$model.setting.save('common'); // 页面不显示的时候保存设置
+  created() {
+    this.addressInput = this.address;
   },
-  destroyed() {
-    this.$model.setting.save('common'); // 页面不显示的时候保存设置
+  computed : {
+    updateChannelList() {
+      return [ 'insiders', 'faster', 'stable' ].map((key) => ({
+        value : key,
+        label : this.$t(`setting.common.updateChannelList.${key}`),
+      }));
+    },
   },
   sketch : {
-    ns    : 'setting.common',
+    ns    : 'setting1.common',
     props : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
+  },
+  deactivated() {
+    this.$model.setting1.save('common'); // 页面不显示的时候保存设置
+  },
+  destroyed() {
+    this.$model.setting1.save('common'); // 页面不显示的时候保存设置
+  },
+  methods : {
+    handleCheckAddress() {
+      if (/^((\w*:)?\/\/)?(\d{1,3}\.){3}(\d{1,3})((:(\d{1,4})?)?)$/.test(this.addressInput)) {
+        let newAddress = /(\d{1,3}\.){3}(\d{1,3})/.exec(this.addressInput)[0];
+
+        const protocolTest = /^\w+:\/\//.exec(this.addressInput);
+
+        if (protocolTest) {
+          newAddress = protocolTest[0] + newAddress;
+        }
+        else {
+          newAddress = this.defaultProtocol + newAddress;
+        }
+
+        const portTest = /:\d{1,4}$/.exec(this.addressInput);
+
+        if (portTest) {
+          newAddress += portTest[0];
+        }
+        else {
+          newAddress += this.defaultPort;
+        }
+        this.addressInput = this.address = newAddress;
+        this.showAddressError = false;
+      }
+      else {
+        this.showAddressError = true;
+        this.addressErrorText = '您输入的地址不合法！';
+      }
+    },
+    handleNoodGuide() {
+      this.$message.warning('新手引导还没做完哦');
+    },
+    handleLanguageChange() {
+      this.$i18n.locale = this.language;
+      this.$message.success(`已切换至 ${Object.values(langList).find((item) => item.locale === this.language).remark} !`);
+    },
   },
 };
 </script>

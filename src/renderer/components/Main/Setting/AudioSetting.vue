@@ -3,7 +3,7 @@
     <div class="h-14 border-b">
       <div class="flex bg-white dragable h-full">
         <div class="flex items-center h-full px-4 text-base">
-          <span>音频</span>
+          <span>{{$t('setting.audio.title')}}</span>
         </div>
         <div class="flex flex-grow"></div>
         <app-header/>
@@ -12,8 +12,8 @@
     <div class="flex flex-col border h-full m-4 bg-white p-5">
       <div class="" style="width: 320px;">
         <div class="flex flex-col">
-          <span class="leading-normal">音频输入</span>
-          <a-select defaultValue="请选择麦克风"
+          <span class="leading-normal">{{$t('setting.audio.audioInput')}}</span>
+          <a-select :defaultValue="$t('setting.audio.inputPlaceHolder')"
                     v-model="audioInput" class="mt-2">
             <a-select-option v-for="audioInput in audioInputList"
                              :key="audioInput.id"
@@ -22,13 +22,13 @@
             </a-select-option>
           </a-select>
           <volume-progress />
-          <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
+          <span class="test-mic-text leading-tight text-xs text-black6">{{$t('setting.audio.microphoneTest')}}</span>
         </div>
 
         <div class="flex flex-col mt-5">
-          <span class="leading-normal">音频输出</span>
+          <span class="leading-normal">{{$t('setting.audio.audioOutput')}}</span>
 
-          <a-select defaultValue="请选择扬声器"
+          <a-select :defaultValue="$t('setting.audio.outputPlaceHolder')"
                     v-model="audioOutput" class="mt-2">
             <a-select-option v-for="audioOutput in audioOutputList"
                              :key="audioOutput.id"
@@ -40,7 +40,7 @@
             <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
                         class="test-audio-text text-base cursor-pointer"
                         @click="playTestMusic"/>
-            <span class="test-audio-text ml-1 text-xs leading-tight">播放测试音频</span>
+            <span class="test-audio-text ml-1 text-xs leading-tight">{{$t('setting.audio.play')}}</span>
           </div>
         </div>
       </div>
@@ -67,22 +67,20 @@ export default {
     this.$rtc.media.localMedia.acquireStream();
   },
   destroyed() {
-    this.$model.setting.device.save('device'); // 页面不显示的时候保存设置
     this.$rtc.media.localMedia.releaseStream();
+    // TODO:device初始化失败
+    // this.$model.setting1.save('device'); // 页面不显示的时候保存设置
   },
   sketch : {
-    ns    : 'setting.device',
-    props : [ 'audioInput', 'audioOutput' ],
+    ns    : 'setting1.device',
+    props : [ 'audioInput', 'audioOutput', 'audioInputList', 'audioOutputList' ],
   },
-  computed : {
-    volume() {
-      return this.$rtc.media.localMedia.volume;
+  watch : {
+    audioInput(value) {
+      console.log(value);
     },
-    audioInputList() { // 麦克风
-      return this.$rtc.media.audioInputs;
-    },
-    audioOutputList() { // 扬声器
-      return this.$rtc.media.audioOutputs;
+    audioOutput(value) {
+      console.log(value);
     },
   },
   methods : {

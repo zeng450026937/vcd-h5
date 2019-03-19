@@ -23,10 +23,12 @@ const itemMap = { // 对应不同模块需要导出的设置项
     'instanceMeetingPassword', 'reserveMeetingPassword', 'dndWhenCalling',
     'shareComputerSound', 'preferredPictureFluency',
   ],
-  video : [ 'enableHDVideo',
+  video : [
+    'enableHDVideo',
     'enableHWSpeed',
     'disableVideo',
-    'enableMirroring' ],
+    'enableMirroring', 
+  ],
   about : [ 'autoUpdate' ],
   audio : [
     'videoInput',
@@ -53,8 +55,11 @@ export const loadConfig = (context, config, userName, type) => { // 加载设置
   config = config
     || storage.query(String(configKey(type, userName)))
     || {};
+
   Object.keys(config).forEach((key) => {
-    context[key] = parseBoolean(config[key]);
+    // console.log(context[type]);
+    context[type][key] = parseBoolean(config[key]);
+    // console.log(context[type]);
   });
 };
 
@@ -68,7 +73,7 @@ export const exportConfig = (context, type) => {
   const data = {};
 
   itemMap[type].forEach((key) => {
-    data[key] = context[key];
+    data[key] = context[type][key];
   });
 
   return data;
@@ -86,6 +91,7 @@ export const saveConfig = (context, data = {}, userName, type) => { // 保存设
   const config = exportConfig(context, type);
 
   storage.insert(configKey(type, userName), Object.assign(config, data));
+
   loadConfig(context, Object.assign(config, data), userName || rtc.account.username, type);
 };
 
