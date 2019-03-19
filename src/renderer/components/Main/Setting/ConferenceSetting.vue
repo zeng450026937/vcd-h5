@@ -68,10 +68,15 @@
             </a-radio-group>
           </div>
           <div class="mt-3">
-            <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTime')}}</span>
-            <a-input class="w-16 mx-4" v-model.number="advanceEntryTime" @blur="checkAdvanceTime"/>
-            <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTimeUnite')}}</span>
-            <span class="text-black9 setting-label ml-0">{{$t('setting.conference.advanceEntryTimeNotice')}}</span>
+            <a-form>
+              <a-form-item :validateStatus="showAdvanceTimeError?'error':''" :help="showAdvanceTimeError?advanceTimeErrorText:''">
+                <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTime')}}</span>
+                <a-input class="w-16 mx-4" v-model.number="advanceEntryTime" @blur="checkAdvanceTime" :disabled="!noticeWhenLeaving"/>
+                <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTimeUnite')}}</span>
+                <span class="text-black9 setting-label ml-0">{{$t('setting.conference.advanceEntryTimeNotice')}}</span>
+              </a-form-item>
+            </a-form>
+           
           </div>
           <div class="mt-3">
             <a-switch size="small" v-model="instanceMeetingPassword"/>
@@ -88,9 +93,13 @@
               <a-radio  :value="1">{{$t('setting.conference.randomPassword')}}</a-radio>
               <a-radio  :value="2">{{$t('setting.conference.customPassword')}}</a-radio>
             </a-radio-group>
-            <div class="relative inline-block">
-              <a-input class="mx-1" style="width: 140px;" v-model="customPassword" :disabled="!reserveMeetingPassword"/>
-              <span class="text-black9 setting-label ml-0">{{$t('setting.conference.customPasswordNotice')}}</span>
+            <div class="mt-2">
+              <a-form>
+                <a-form-item :validateStatus="showCustomPsdError?'error':''" :help="showCustomPsdError?customPsdErrorText:''">
+                  <a-input class="mx-1" style="width: 140px;" v-model="customPassword" @blur="checkCustomPsd" :disabled="!reserveMeetingPassword||isRandomOrCustom===1"/>
+                  <span class="text-black9 setting-label ml-0">{{$t('setting.conference.customPasswordNotice')}}</span>
+                </a-form-item>
+              </a-form>
             </div>
               <!-- <div>
                 <a-switch  size="small" v-model="isRandomPassword"></a-switch>
@@ -115,7 +124,7 @@
       <div>
         <div class="mt-10">
           <a-button type="primary">
-            <span class="leading-tight px-1">{{$t('setting.conference.advancedSetting')}}</span>
+            <span class="leading-tight px-1" @click="handleAdvancedSetting">{{$t('setting.conference.advancedSetting')}}</span>
           </a-button>
         </div>
       </div>
@@ -132,6 +141,10 @@ export default {
   data() {
     return {
       advanceEntryTimeRange : [ 5, 180 ],
+      showAdvanceTimeError  : false,
+      advanceTimeErrorText  : '',
+      showCustomPsdError    : false,
+      customPsdErrorText    : '',
     };
   },
   components : {
@@ -152,18 +165,34 @@ export default {
   
   methods : {
     checkAdvanceTime() {
-      if (typeof this.advanceEntryTime !== 'number') {
-        this.$message.error('您输入的提前入会时间有误！');
-        this.advanceEntryTime = 5;
+      // eslint-disable-next-line radix
+      if (!/^\d{1,3}$/.test(this.advanceEntryTime) || this.advanceEntryTime < this.advanceEntryTimeRange[0] || this.advanceEntryTime > this.advanceEntryTimeRange[1]) {
+        this.showAdvanceTimeError = true;
+        this.advanceTimeErrorText = '您输入的入会时间不合法！';
+        
+        return false;
       }
-      else if (this.advanceEntryTime < this.advanceEntryTimeRange[0]) {
-        this.$message.warning('您输入的提前入会时间太短！');
-        this.advanceEntryTime = this.advanceEntryTimeRange[0];
+      else {
+        this.showAdvanceTimeError = false;
+        
+        return true;
       }
-      else if (this.advanceEntryTime > this.advanceEntryTimeRange[1]) {
-        this.$message.warning('您输入的提前入会时间太长！');
-        this.advanceEntryTime = this.advanceEntryTimeRange[1];
+    },
+    checkCustomPsd() {
+      if (!/^\d{6}$/.test(this.customPassword)) {
+        this.showCustomPsdError = true;
+        this.customPsdErrorText = '您输入的自定义密码不合法！';
+        
+        return false;
       }
+      else {
+        this.showCustomPsdError = false;
+        
+        return true;
+      }
+    },
+    handleAdvancedSetting() {
+      this.$message.warning('高级设置还没做好哦');
     },
   },
 };

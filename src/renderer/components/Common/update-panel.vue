@@ -43,9 +43,9 @@
       <span class="ml-2">{{$t('setting.about.autoUpdate')}}</span>
     </div>
     <div class="flex text-indigo mt-5 items-center text-xs">
-      <span class="cursor-pointer">{{$t('setting.about.userProtocol')}}</span>
+      <span class="cursor-pointer" @click="handleUserProtocol">{{$t('setting.about.userProtocol')}}</span>
       <a-divider class="mx-4" type="vertical"></a-divider>
-      <span class="cursor-pointer">{{$t('setting.about.privacy')}}</span>
+      <span class="cursor-pointer" @click="handlePrivacy">{{$t('setting.about.privacy')}}</span>
     </div>
     <p class="mt-5 text-xs leading-tight text-black9 mb-3">
       Copyright © 2018 Yealink Inc. All rights reserved.
@@ -99,6 +99,12 @@ export default {
     },
     quitAndInstall() {
       updater.quitAndInstallUpdate();
+    },
+    handleUserProtocol() {
+      this.$message.warning('用户协议还没做好哦');
+    },
+    handlePrivacy() {
+      this.$message.warning('隐私政策还没做好哦');
     },
   },
   mounted() {

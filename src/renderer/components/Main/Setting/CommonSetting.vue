@@ -21,7 +21,7 @@
         </div>
         <div class="mt-6">
           <span>{{$t('setting.common.language')}}</span>
-          <a-select v-model="language" class="w-48 ml-4">
+          <a-select v-model="language" class="w-48 ml-4" @change="handleLanguageChange">
             <a-select-option v-for="(lang, index) in langList" :key="index"
                              :value="lang.lang"
             >{{lang.label}}</a-select-option>
@@ -46,7 +46,7 @@
           </a-select>
         </div>
         <div class="mt-10">
-          <a-button type="primary" class="w-32">{{$t('setting.common.noobGuide')}}</a-button>
+          <a-button type="primary" class="w-32" @click="handleNoodGuide">{{$t('setting.common.noobGuide')}}</a-button>
         </div>
       </div>
     </div>
@@ -132,6 +132,13 @@ export default {
         this.showAddressError = true;
         this.addressErrorText = '您输入的地址不合法！';
       }
+    },
+    handleNoodGuide() {
+      this.$message.warning('新手引导还没做完哦');
+    },
+    handleLanguageChange() {
+      this.$i18n.locale = this.language;
+      this.$message.success(`已切换至 ${Object.values(langList).find((item) => item.locale === this.language).remark} !`);
     },
   },
 };
