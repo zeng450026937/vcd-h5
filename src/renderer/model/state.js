@@ -58,6 +58,7 @@ model.provide({
           }
         }
         else { // 未登录状态
+		  await wait(500);
           router.push(LOGIN.LOGIN_CONTENT);
         }
         if (this.loginPopup) popup.destroy(this.loginPopup);

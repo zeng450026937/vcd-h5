@@ -78,7 +78,7 @@ export default {
     },
     handleHelpClick() {},
     handleMenuClick({ key }) {
-      this.$model.login.serverType = key;
+      this.serverType = key;
       this.menuStatus = false;
     },
     reportIssues() {

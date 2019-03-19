@@ -142,7 +142,7 @@ export default {
   },
   sketch : {
     ns    : 'account',
-    props : [ 'serverType', 'rmbPassword', 'autoLogin', 'autoLoginDisabled' ],
+    props : [ 'serverType', 'rmbPassword', 'autoLogin', 'autoLoginDisabled', 'loginType' ],
   },
   computed : {
     isAutoLogin() {
@@ -183,7 +183,7 @@ export default {
       shell.openExternal('https://meeting.ylyun.com/enterprise/register');
     },
     toMeeting() {
-      this.$model.login.loginType = 'meeting';
+      this.loginType = 'meeting';
     },
     deleteAccount(val) {
       this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, val.account, 'account');

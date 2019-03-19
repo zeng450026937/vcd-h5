@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="yms-meeting" class="bg-media h-full absolute w-full">
+  <a-layout id="meeting-content" class="bg-media h-full absolute w-full">
     <div class="h-full z-10 flex flex-col">
       <div class="flex h-full flex-col justify-center absolute pin-t w-full">
         <div v-if="!isInSetting" class="enter-meeting-content mr-5 self-end rounded-sm">
@@ -144,6 +144,10 @@ export default {
       isProxyPanelVisible : false,
     };
   },
+  sketch : {
+    ns    : 'account',
+    props : [ 'loginType' ],
+  },
   computed : {
     muteAudio : {
       get() {
@@ -223,14 +227,9 @@ export default {
       this.$dispatch('meeting.joinMeeting', this.meetingData);
     },
     returnLogin() {
-      this.$model.login.loginType = 'login';
-      this.$router.push(LOGIN.LOGIN_CONTENT);
+      this.loginType = 'login';
     },
     handleMeeting() {
-    },
-    goBack() {
-      this.$model.login.loginType = 'login';
-      this.$router.push('/login/yms');
     },
     triggerAudio() {
       this.muteAudio = !this.muteAudio;
@@ -243,7 +242,8 @@ export default {
 </script>
 
 <style lang="less">
-  #yms-meeting {
+  #meeting-content {
+    z-index: 1;
     .controls-content {
       button{
         box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

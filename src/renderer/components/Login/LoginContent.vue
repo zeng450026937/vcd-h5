@@ -37,15 +37,6 @@ export default {
       isInSettingContent : false,
     };
   },
-  computed : {
-  },
-  mounted() {
-
-  },
-  methods : {
-
-
-  },
 };
 </script>
 
