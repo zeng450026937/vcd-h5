@@ -94,18 +94,16 @@ model.provide({
       immediate : true,
     },
     isConferenceDisConnected(val) {
-      if (val) {
+      if (val && this.isCallDisConnected) {
         router.push(this.currentNav.route);
       }
     },
     isCallDisConnected(val) {
-      if (val) {
+      if (val && this.isConferenceDisConnected) {
         router.push(this.currentNav.route);
       }
     },
   },
 });
-
-// model.use(() => {});
 
 export default model;

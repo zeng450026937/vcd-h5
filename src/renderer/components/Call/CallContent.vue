@@ -9,8 +9,12 @@
             <template v-if="isConnected">
               <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo text-base"
                           @click="showInviteModal"/>
-              <a-iconfont type="icon-liaotian" class="ml-5 cursor-pointer hover:text-indigo text-base"
-                          @click="openDrawer('TabChatting')"/>
+              <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
+                       class="shadow-none"
+                       :dot="hasNewMessage">
+                <a-iconfont type="icon-liaotian" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                            @click="openDrawer('TabChatting')"/>
+              </a-badge>
             </template>
             <a-iconfont type="icon-kongzhi" class="ml-5 cursor-pointer hover:text-indigo text-base"
                         @click="openDrawer('TabSetting')"/>
@@ -47,11 +51,16 @@ export default {
     CallControls,
     CallInvitingModal,
   },
-  data() {
-    return {
-      isInCallMain : true,
-    };
-  },
+  sketch : [
+    {
+      ns    : 'call.sketch',
+      props : [ 'isInCallMain', 'currentTab' ],
+    },
+    {
+      ns    : 'call.chat',
+      props : [ 'hasNewMessage' ],
+    },
+  ],
   computed : {
     isConnecting() {
       return this.$rtc.call.connecting;
@@ -89,8 +98,12 @@ export default {
     showInviteModal() {
       this.$refs.invitingModal.visible = true;
     },
-    openDrawer(comp) {
-      this.$router.push({ path: CALL.CALL_DRAWER, query: { tab: comp } });
+    openDrawer(tab) {
+      if (this.hasNewMessage && tab === 'TabChatting') {
+        this.hasNewMessage = false;
+      }
+      this.currentTab = tab;
+      this.isInCallMain = false;
     },
     maxCallContent() {
       screenfull.toggle(document.getElementById('layout-call-content'));
@@ -100,9 +113,14 @@ export default {
     displayName(cur, once) {
       this.targetUser = cur || once;
     },
-    $route : {
+    isInCallMain : {
       handler(val) {
-        this.isInCallMain = val.path === CALL.CALL_MAIN;
+        if (val) {
+          this.$router.push({ path: CALL.CALL_MAIN });
+        }
+        else {
+          this.$router.push({ path: CALL.CALL_DRAWER });
+        }
       },
       immediate : true,
     },

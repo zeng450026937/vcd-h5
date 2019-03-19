@@ -1,5 +1,5 @@
-import Vuem from '../vuem';
 import moment from 'moment';
+import Vuem from '../vuem';
 import rtc from '../../rtc';
 
 const chat = new Vuem();

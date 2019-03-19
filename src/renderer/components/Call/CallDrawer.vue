@@ -14,11 +14,16 @@
                         class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                         @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
-              <a-iconfont :key="index" :type="tab.icon"
-                          class="ml-4 cursor-pointer text-black9 text-base"
-                          :class="{'text-indigo': currentTab === tab.is,
-                    'hover:text-indigo-light': currentTab !== tab.is}"
-                          @click="currentTab = tab.is"/>
+              <a-badge :key="index"
+                       :numberStyle="{backgroundColor: 'red', boxShadow : 'none'}"
+                       class="shadow-none"
+                       :dot="hasNewMessage && index === 0">
+                <a-iconfont :key="index" :type="tab.icon"
+                            class="ml-4 cursor-pointer text-black9 text-base"
+                            :class="{'text-indigo': currentTab === tab.is,
+                            'hover:text-indigo-light': currentTab !== tab.is}"
+                            @click="switchTab(tab.is)"/>
+              </a-badge>
             </template>
           </div>
         </div>
@@ -33,7 +38,6 @@
 <script>
 import TabSetting from './TabSetting.vue';
 import TabChatting from './TabChatting.vue';
-import { CALL } from '../../router/constants';
 
 export default {
   name       : 'CallDrawer',
@@ -41,6 +45,16 @@ export default {
     TabSetting,
     TabChatting,
   },
+  sketch : [
+    {
+      ns    : 'call.sketch',
+      props : [ 'isInCallMain', 'currentTab' ],
+    },
+    {
+      ns    : 'call.chat',
+      props : [ 'hasNewMessage' ],
+    },
+  ],
 
   data() {
     const tabList = [
@@ -49,24 +63,29 @@ export default {
     ];
 
     return {
-      currentTab : '',
       tabList,
     };
-  },
-  created() {
-    const { tab } = this.$router.currentRoute.query;
-
-    this.currentTab = tab || this.tabList[0].is;
   },
   mounted() {
   },
   methods : {
     showInviteModal() {
-      // FIXME ugly way
-      console.warn(this.$parent.$children[0].showInviteModal());
+      // FIXME modify
+      this.$parent.$children[0].showInviteModal();
     },
     closeDrawer() {
-      this.$router.push(CALL.CALL_MAIN);
+      this.isInCallMain = true;
+    },
+    switchTab(tab) {
+      if (this.hasNewMessage && tab === 'TabChatting') {
+        this.hasNewMessage = false;
+      }
+      if (this.currentTab === tab) {
+        this.isInCallMain = true;
+
+        return;
+      }
+      this.currentTab = tab;
     },
   },
 };

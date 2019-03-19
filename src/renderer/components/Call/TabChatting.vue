@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 import 'moment/locale/zh-cn';
 import TabChattingMessageContent from './TabChattingMessageContent.vue';
 
@@ -64,7 +63,7 @@ export default {
   },
   methods : {
     sendMessage() {
-      this.$model.callChat.sendMessage('我', this.displayName, this.message, 'send');
+      this.$model.call.chat.sendMessage('我', this.displayName, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {
