@@ -69,10 +69,10 @@ export default {
   destroyed() {
     this.$rtc.media.localMedia.releaseStream();
     // TODO:device初始化失败
-    // this.$model.setting1.save('device'); // 页面不显示的时候保存设置
+    // this.$model.setting.save('device'); // 页面不显示的时候保存设置
   },
   sketch : {
-    ns    : 'setting1.device',
+    ns    : 'setting.device',
     props : [ 'audioInput', 'audioOutput', 'audioInputList', 'audioOutputList' ],
   },
   watch : {

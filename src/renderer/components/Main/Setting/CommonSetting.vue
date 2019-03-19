@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="flex flex-col border h-full m-4 bg-white p-5">
-      <div class="overflow-y-scroll">
+      <div class="overflow-y-auto">
         <div>
           <a-switch size="small" v-model="autoStart"/>
           <span class="ml-5">{{$t('setting.common.autoStart')}}</span>
@@ -78,7 +78,7 @@ export default {
       addressInput     : '',
       showAddressError : false,
       addressErrorText : '您输入的地址不合法！',
-      defaultProtocol  : 'https://',
+      defaultProtocol  : 'http://',
       defaultPort      : ':9301',
     };
   },
@@ -94,14 +94,14 @@ export default {
     },
   },
   sketch : {
-    ns    : 'setting1.common',
+    ns    : 'setting.common',
     props : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
   },
   deactivated() {
-    this.$model.setting1.save('common'); // 页面不显示的时候保存设置
+    this.$model.setting.save('common'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting1.save('common'); // 页面不显示的时候保存设置
+    this.$model.setting.save('common'); // 页面不显示的时候保存设置
   },
   methods : {
     handleCheckAddress() {

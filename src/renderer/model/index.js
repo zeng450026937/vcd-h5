@@ -25,7 +25,7 @@ model.mount('meeting', meeting);
 model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
-model.mount('setting1', setting1);
+model.mount('setting', setting1);
 
 model.use(async(ctx, next) => {
   // inject setting

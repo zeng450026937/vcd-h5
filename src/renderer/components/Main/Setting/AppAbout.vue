@@ -28,10 +28,10 @@ export default {
   mounted() {
   },
   deactivated() {
-    this.$model.setting1.save('about'); // 页面不显示的时候保存设置
+    this.$model.setting.save('about'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting1.save('about'); // 页面不显示的时候保存设置
+    this.$model.setting.save('about'); // 页面不显示的时候保存设置
   },
   methods : {},
 };

@@ -151,16 +151,16 @@ export default {
     AppHeader,
   },
   sketch : {
-    ns    : 'setting1.conference',
+    ns    : 'setting.conference',
     props : [ 'minWindowWhenSharing', 'maxWindowWhenWatchingSharing', 'enableGpu', 'shareComputerSound', 'preferredPictureFluency', 'autoSilence',
       'noticeWhenLeaving', 'selectedNotice', 'advanceEntryTime', 'instanceMeetingPassword', 'reserveMeetingPassword',
       'isRandomOrCustom', 'customPassword', 'dndWhenCalling', 'loginSelector' ],
   },
   deactivated() {
-    this.$model.setting1.save('conference'); // 页面不显示的时候保存设置
+    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
   },
   destroyed() {
-    this.$model.setting1.save('conference'); // 页面不显示的时候保存设置
+    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
   },
   
   methods : {

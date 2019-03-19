@@ -6,7 +6,7 @@ module.exports = {
       about : {
         title           : '关于',
         logoText        : 'Yealink',
-        aboutName       : 'Yealink VC Desktop ',
+        aboutName       : 'Yealink VC Desktop',
         versionName     : '版本号',
         userProtocol    : '用户协议',
         privacy         : '隐私政策',
@@ -85,8 +85,8 @@ module.exports = {
         updateChannel      : '升级通道',
         noobGuide          : '查看新手引导',
         updateChannelList  : {
-          insiders : '快速',
-          faster   : '慢速',
+          insiders : '内测',
+          faster   : '快速',
           stable   : '稳定',
         },
       },

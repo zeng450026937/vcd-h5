@@ -1,5 +1,4 @@
 import Vuem from '../../vuem';
-import updater from '../../../updater';
 
 const model = new Vuem();
 
@@ -10,7 +9,7 @@ model.provide({
       forceMinimize : false,
       language      : 'zh-CN',
       address       : '', // 软终端管理平台地址
-      updateChannel : updater.channel,
+      updateChannel : 'stable',
     };
   },
   watch : {

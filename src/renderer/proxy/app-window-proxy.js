@@ -7,6 +7,7 @@ export const AppWindowProxy = {
   beforeCreate() {
     startTime = performance.now();
   },
+
   async created() {
     ipcRenderer.on(
       'menu-event',
@@ -15,10 +16,12 @@ export const AppWindowProxy = {
       }
     );
     
+    await this.$nextTick();
+    
     let url;
 
     // get url from setting
-    url = 'http://10.5.200.199:8083';
+    url = this.$model.setting.common.address;
     url = url || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
     
     if (url) {
@@ -42,7 +45,8 @@ export const AppWindowProxy = {
         }
     
         if (pushYtmsHostFlag && ytmsHostAddress) {
-          // TODO: update ytms address to model
+          this.$model.setting.common.address = ytmsHostAddress;
+          this.$model.setting.save('common');
     
           const clientId = await ipcProxy.startYTMSService(ytmsHostAddress);
     
@@ -51,6 +55,7 @@ export const AppWindowProxy = {
       }
     );
   },
+
   async mounted() {
     ipcRenderer.send('renderer-ready', performance.now() - startTime);
   },

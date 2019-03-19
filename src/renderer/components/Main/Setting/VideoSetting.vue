@@ -92,7 +92,7 @@ export default {
     };
   },
   sketch : {
-    ns    : 'setting1.video',
+    ns    : 'setting.video',
     props : [ 'enableHDVideo', 'enableHWSpeed',
       'disableVideo', 'enableMirroring' ],
   },
@@ -103,18 +103,18 @@ export default {
       return this.$rtc.media.localMedia.muteVideo;
     },
     videoInputList() { // 摄像头
-      return this.$model.setting1.device.videoInputList;
+      return this.$model.setting.device.videoInputList;
     },
     videoInput : {
-      get() { return this.$model.setting1.device.videoInput; },
-      set(val) { this.$model.setting1.device.videoInput = val; },
+      get() { return this.$model.setting.device.videoInput; },
+      set(val) { this.$model.setting.device.videoInput = val; },
     },
   },
   destroyed() {
-    this.$model.setting1.save('video'); // 页面不显示的时候保存设置
+    this.$model.setting.save('video'); // 页面不显示的时候保存设置
 
     // TODO:现在没有摄像头输入，后面需要接入摄像头后再进行测试
-    // this.$model.setting1.save('device'); // 页面不显示的时候保存设置
+    // this.$model.setting.save('device'); // 页面不显示的时候保存设置
   },
 };
 </script>

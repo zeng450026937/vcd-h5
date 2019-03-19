@@ -31,6 +31,16 @@ model.provide({
     };
   },
 
+  computed : {
+    appName() {
+      return autoUpdater.appName;
+    },
+
+    appVersion() {
+      return autoUpdater.appVersion;
+    },
+  },
+
   watch : {
     channel(val) {
       autoUpdater.channel = val;
@@ -66,6 +76,15 @@ model.provide({
       await next();
 
       this.quitAndInstallUpdate();
+    },
+  },
+
+  subscribe : {
+    setting(val) {
+      const { common, about } = val;
+
+      this.channel = common.updateChannel;
+      this.autoInstallOnAppQuit = about.autoUpdate;
     },
   },
   

@@ -47,7 +47,7 @@
           ></a-input>
         </div>
         <div class="mt-5 mb-12">
-          <a-checkbox v-model="isUploadLog">上传错误日志，帮助我们更好的定位错误</a-checkbox>
+          <a-checkbox :checked="isUploadLog" @change="isUploadLog = !isUploadLog">上传错误日志，帮助我们更好的定位错误</a-checkbox>
         </div>
         <div class="feedback-contact mt-8">
           <div class="tel">

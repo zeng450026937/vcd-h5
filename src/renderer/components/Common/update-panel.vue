@@ -54,51 +54,49 @@
 </template>
 
 <script>
-import updater from '../../updater';
-
 export default {
   name : 'update-panel',
+
   data() {
     return {
-      status              : updater.status,
-      currentVersion      : window.autoUpdater.appVersion,
-      lastSuccessfulCheck : null,
-      progress            : null,
-      statusNameList      : [ 'checking', 'finded', 'none', 'downloaded', 'downloading' ],
+      statusNameList : [ 
+        'checking', 'finded', 'none', 'downloaded', 'downloading',
+      ],
     };
   },
-  destroyed() {
-  },
+
   sketch : {
-    ns    : 'setting1.about',
+    ns    : 'setting.about',
     props : [ 'autoUpdate' ],
   },
+
   computed : {
-    percent() {
-      if (this.status === 3) return 100;
-      
-      return this.progress ? Number(this.progress.percent.toFixed(2)) : 0;
+    currentVersion() {
+      return this.$model.application.version;
+    },
+    status() {
+      return this.$model.updater.status;
+    },
+    progress() {
+      return this.$model.updater.progress;
+    },
+    lastSuccessfulCheck() {
+      return this.$model.updater.lastSuccessfulCheck;
+    },
+    percent() {      
+      return this.progress ? Math.ceil(this.progress.percent) : 0;
     },
     statusName() {
       return this.statusNameList[this.status];
     },
   },
+
   methods : {
     checkUpdate() {
-      updater.checkForUpdates();
-    },
-    onDidChange({ status, lastSuccessfulCheck }) {
-      this.lastSuccessfulCheck = lastSuccessfulCheck;
-      this.status = status;
-    },
-    onProgress(progress) {
-      this.progress = progress;
-    },
-    onError() {
-      this.status = updater.status;
+      this.$dispatch('updater.checkForUpdates');
     },
     quitAndInstall() {
-      updater.quitAndInstallUpdate();
+      this.$dispatch('updater.quitAndInstallUpdate');
     },
     handleUserProtocol() {
       this.$message.warning('用户协议还没做好哦');
@@ -107,21 +105,11 @@ export default {
       this.$message.warning('隐私政策还没做好哦');
     },
   },
-  mounted() {
-    updater.autoInstallOnAppQuit = this.autoUpdate;
-    updater.on('error', this.onError);
-    updater.on('did-change', this.onDidChange);
-    updater.on('progress', this.onProgress);
-    if (updater.status === 4) return; // 如果 更新下载中 则不检查更新
-    this.checkUpdate();
-  },
-  watch : {
 
-  },
-  beforeDestroy() {
-    updater.off('error', this.onError);
-    updater.off('did-change', this.onDidChange);
-    updater.off('progress', this.onProgress);
+  mounted() {
+    if (this.status === 4) return; // 如果 更新下载中 则不检查更新
+
+    this.checkUpdate();
   },
 };
 </script>

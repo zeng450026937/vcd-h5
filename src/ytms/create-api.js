@@ -15,14 +15,16 @@ export function createApi(baseURL, clientId) {
   return new YTMSAPI(baseURL, clientId);
 }
 
-export function MockAPI() {}
+export function MockAPI(reject = false) {
+  this.reject = reject;
+}
 
 Object.keys(apis).forEach((api) => {
   MockAPI.prototype[api] = function() {
-    return Promise.resolve();
+    return this.reject ? Promise.reject() : Promise.resolve();
   };
 });
 
-export function mockApi() {
-  return new MockAPI();
+export function mockApi(reject) {
+  return new MockAPI(reject);
 }

@@ -11,7 +11,6 @@ import kom from './model';
 import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
-import './updater';
 import { AppWindowProxy } from './proxy/app-window-proxy';
 
 Vue.config.productionTip = false;

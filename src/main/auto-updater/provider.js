@@ -241,8 +241,6 @@ export class Provider extends Downloader {
   async download(info) {
     if (this.isDownloading) {
       this.cancel();
-
-      return;
     }
 
     if (!info) {

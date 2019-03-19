@@ -9,19 +9,16 @@ modelList.forEach((item) => {
 });
 
 root.provide({
-  data() {
-    return {
-        
-    };
-  },
   created() {
     nextTick(() => {
       loadConfig(this);
+      this.$broadcast('setting', this);
     });
   },
   methods : {
     save(modelName) {
       saveConfig(this, modelName);
+      this.$broadcast('setting', this);
     },
   },
 });
