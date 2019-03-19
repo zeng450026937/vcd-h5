@@ -1,17 +1,22 @@
 import moment from 'moment';
 import rtc from '../../rtc';
+import Vuem from '../vuem';
 
-const messageRecordList = []; // max 2000 加载更多
+const chat = new Vuem();
 
-export default {
+chat.provide({
   data() {
     return {
-      messageRecordList,
+      messageRecordList : [], // 2000 条
+      hasNewMessage     : false,
     };
   },
   computed : {
     newMessage() {
       return rtc.account.newMessage;
+    },
+    isRegistered() {
+      return rtc.account.registered;
     },
   },
   methods : {
@@ -31,7 +36,6 @@ export default {
     },
   },
   watch : {
-
     newMessage(val) {
       const raw = val[val.length - 1];
 
@@ -46,5 +50,15 @@ export default {
 
       this.messageRecordList.push(messageObject);
     },
+    isRegistered() {
+      this.messageRecordList = [];
+    },
+    messageRecordList(val) {
+      if (val.length > 2100) {
+        this.messageRecordList = this.messageRecordList.slice(val.length - 2000);
+      }
+    },
   },
-};
+});
+
+export default chat;

@@ -40,8 +40,8 @@
           <div :key="index"
                class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
                :class="{'mt-2':sidebar.isTop,
-                       'bg-active':currentSidebar === index,
-                       'hover:text-indigo': currentSidebar !== index}"
+                       'bg-active':currentSidebar === sidebar,
+                       'hover:text-indigo': currentSidebar !== sidebar}"
                @click="clickMenu(sidebar, index)">
             <a-iconfont :type="sidebar.icon" class="text-base"/>
             <span class="text-3xs font-thin mt-2">{{sidebar.text}}</span>
@@ -62,7 +62,6 @@
 
 <script>
 import CommonAvatar from '../Shared/CommonAvatar.vue';
-import { LOGIN, MAIN, MODULE_NAME } from '../../router/constants';
 import FeedbackModal from '../Login/FeedbackModal.vue';
 
 const avatarList = [
@@ -85,20 +84,23 @@ export default {
   },
   data() {
     return {
-      sidebarItems : [
-        { icon: 'icon-huiyi', text: '会议', name: MODULE_NAME.MEETING, isTop: true, route: MAIN.MEETING_INSTANCE },
-        { icon: 'icon-richeng', text: '日程', name: MODULE_NAME.CALENDAR, route: MAIN.CALENDAR_VIEW },
-        { icon: 'icon-lianxiren', text: '联系人', name: MODULE_NAME.CONTACT, route: MAIN.CONTACT_CORPORATE },
-        { icon: 'icon-shezhi', text: '设置', name: MODULE_NAME.SETTING, route: MAIN.SETTING_ACCOUNT },
-      ],
       headMenuVisible : false,
     };
   },
-  sketch : {
-    ns    : 'state',
-    props : [ 'isInConferenceView', 'isInCallView', 'sidebarStatus' ],
-  },
+  sketch : [
+    {
+      ns    : 'state',
+      props : [ 'isInMiniConference', 'isInMiniCall' ],
+    },
+    {
+      ns    : 'main',
+      props : [ 'currentSidebar' ],
+    },
+  ],
   computed : {
+    sidebarItems() {
+      return this.$model.main.sidebarItems;
+    },
     userInfo() {
       return this.$model.account.currentContact || {
         name : this.$rtc.account.username,
@@ -110,33 +112,22 @@ export default {
     callStatus() {
       return this.$model.state.callStatus;
     },
-    notInMain() {
-      return (this.confStatus === 'connected' && this.isInConferenceView)
-        || (this.callStatus !== 'disconnected' && this.isInCallView);
-    },
-    currentSidebar() {
-      const owner = this.notInMain
-        ? this.$model.state.sidebarStatus.preRoute.meta.owner
-        : this.$route.meta.owner || MODULE_NAME.MEETING;
-
-      return this.sidebarItems.findIndex((s) => owner === s.name);
-    },
   },
   methods : {
     randomAvatar() {
       return avatarList[5];
     },
     clickMenu(sidebar, index) {
-      if (this.$router.currentRoute.meta.owner !== sidebar.name) {
-        this.$router.push(sidebar.route);
-        this.isInConferenceView = false;
-        this.isInCallView = false;
+      if (this.currentSidebar !== sidebar) {
+        this.currentSidebar = sidebar;
       }
       if (this.confStatus === 'connected') {
-        this.$model.state.isInMiniConference = true;
+        this.isInMiniConference = true;
+        this.$router.push(sidebar.currentRoute);
       }
       if (this.callStatus === 'connected' || this.callStatus === 'connecting') {
-        this.$model.state.isInMiniCall = true;
+        this.isInMiniCall = true;
+        this.$router.push(sidebar.currentRoute);
       }
     },
     async clickLogout() {
@@ -144,7 +135,6 @@ export default {
         // 如果当前在会议中，则先退出会议
         await this.$rtc.conference.leave();
       }
-      this.sidebarStatus.mainRoute = this.$router.currentRoute.path;
       this.$rtc.account.signout();
     },
     openFeedback() {
@@ -167,14 +157,6 @@ export default {
     },
   },
   watch : {
-    $route : {
-      handler(val) {
-        if (this.$model.state.isNotInCallOrConference()) {
-          this.sidebarStatus.preRoute = val;
-        }
-      },
-      immediate : true,
-    },
     userInfo : {
       handler(val) {
         if (val && val.parent) {
@@ -186,6 +168,11 @@ export default {
         }
       },
       immediate : true,
+    },
+    currentSidebar(sidebar) {
+      if (sidebar.currentRoute) {
+        this.$router.push(sidebar.currentRoute);
+      }
     },
   },
   filters : {

@@ -4,8 +4,14 @@ import storage from '../../storage';
 
 export default new Vuem().provide({
   data() {
+    let meetingRecord = storage.query('MEETING_INFO_RECORD');
+
+    if (!meetingRecord || !meetingRecord.number) {
+      meetingRecord = { number: '', pin: '', server: '' };
+    }
+    
     return {
-      meetingRecord : storage.query('MEETING_INFO_RECORD') || {},
+      meetingRecord,
     };
   },
   middleware : {

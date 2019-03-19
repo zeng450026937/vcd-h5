@@ -22,12 +22,12 @@
     <div v-show="!searchText">
       <calendar-nav v-if="isInCalendar"/>
       <div v-else>
-        <div class="flex items-center h-12 px-4 cursor-pointer"
-             :class="{'mt-0': nav.isTop,
-             'bg-list-select':currentNav === index,
-             'hover:bg-list-hover': currentNav !== index}"
-             v-for="(nav, index) in navs"
-             :key="index" @click="clickNav(nav, index)">
+        <div v-for="(nav, index) in sidebar.navs"
+             class="flex items-center h-12 px-4 cursor-pointer"
+             :class="{'bg-list-select':currentNav === nav,
+             'hover:bg-list-hover': currentNav !== nav}"
+             :key="index"
+             @click="clickNav(nav, index)">
           <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"/>
           <span class="ml-3 text-sm">{{nav.text}}</span>
         </div>
@@ -53,19 +53,18 @@ export default {
   },
   sketch : {
     ns    : 'main',
-    props : [ 'searchText' ],
+    props : [ 'searchText', 'currentNav' ],
   },
   data() {
     return {
-      navs         : [],
-      currentNav   : 0,
+      sidebar      : {},
       currentRoute : null,
       isInCalendar : false,
     };
   },
   computed : {
-    isCloud() {
-      return this.$model.account.serverType === 'cloud';
+    sidebarMap() {
+      return this.$model.main.sidebarMap;
     },
   },
   created() {
@@ -77,54 +76,20 @@ export default {
       this.isInCalendar = this.currentRoute.meta.owner === MODULE_NAME.CALENDAR;
       if (this.isInCalendar) return;
 
-      this.currentNav = 0;
       const nav = this.currentRoute.meta.owner;
 
-      switch (nav) {
-        case 'meeting':
-          this.navs = [
-            { icon: 'icon-jishihuiyi', route: MAIN.MEETING_INSTANCE, text: '即时会议', isTop: true },
-            { icon: 'icon-jiaruhuiyi', route: MAIN.MEETING_ENTER, text: '加入会议' },
-            { icon: 'icon-tonghuajilu', route: MAIN.CALL_RECORD, text: '通话记录' },
-            { icon: 'icon-bohao', route: MAIN.DIAL_PLATE, text: '拨号' },
-          ];
-          break;
-        case 'contact':
-          this.navs = [
-            { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人', isTop: true },
-            { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人' },
-            { icon: 'icon-bendilianxiren', route: '/main/content/contactTest', text: '联系人测试' },
-          ];
-          if (!this.isCloud) {
-            this.navs.splice(1, 0, { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人' });
-          }
-          break;
-        case 'setting':
-          this.navs = [
-            { icon: 'icon-gerenziliao', route: MAIN.SETTING_ACCOUNT, text: '个人资料', isTop: true },
-            { icon: 'icon-tongyong', route: MAIN.SETTING_COMMON, text: '通用' },
-            { icon: 'icon-huiyishi', route: MAIN.SETTING_CONFERENCE, text: '会议' },
-            { icon: 'icon-maikefeng', route: MAIN.SETTING_AUDIO, text: '音频' },
-            { icon: 'icon-shexiangtou', route: MAIN.SETTING_VIDEO, text: '视频' },
-            { icon: 'icon-guanyu', route: MAIN.ABOUT_US, text: '关于' },
-          ];
-          break;
-        default: break;
-      }
-      this.currentNav = this.navs.findIndex((n) => n.route === this.currentRoute.path);
+      this.sidebar = this.sidebarMap[nav];
+      this.currentNav = this.sidebar.navs.find((n) => n.route === this.currentRoute.path);
     },
     clickNav(nav, index) {
-      this.currentNav = index;
+      this.currentNav = nav;
     },
 
   },
   watch : {
-    currentNav : {
-      handler(val) {
-        if (!this.currentRoute || val < 0) return;
-        this.$router.push(this.navs[val].route);
-      },
-      immediate : true,
+    currentNav(val) {
+      this.sidebar.currentRoute = this.currentNav.route;
+      this.$router.push(this.sidebar.currentRoute);
     },
     $route(val) {
       if (val.meta.owner !== this.currentRoute.meta.owner) {

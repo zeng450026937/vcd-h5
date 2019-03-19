@@ -3,7 +3,7 @@ import rtc from '../../rtc';
 
 const sketch = new Vuem();
 
-const initialDate = {
+const initialDate = () => ({
   hideControls        : false, // 是否隐藏会议页面底部和头部的控制按钮
   isShareInCenter     : false, // 辅流页面是否显示在主页面
   isShareWindowOpen   : false,
@@ -25,11 +25,11 @@ const initialDate = {
   // 会议布局
   currentLayout       : '',
   showMessage         : true, // 入会和离开的提示
-};
+});
 
-const genOptions = () => ({
+sketch.provide({
   data() {
-    return initialDate;
+    return initialDate();
   },
   computed : {
     conferenceStatus() {
@@ -39,12 +39,10 @@ const genOptions = () => ({
   watch : {
     conferenceStatus(val, oldVal) {
       if (val === 'disconnected') { // 退出会议之后重置当前状态
-        Object.assign(this, initialDate);
+        Object.assign(this, initialDate());
       }
     },
   },
 });
-
-sketch.provide(genOptions());
 
 export default sketch;

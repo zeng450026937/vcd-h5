@@ -1,7 +1,10 @@
+import Vuem from '../vuem';
 import rtc from '../../rtc';
-import { secondsToHms } from '../conference/state';
+import { secondsToHms } from '../../utils';
 
-export default {
+const state = new Vuem();
+
+state.provide({
   data() {
     return {
       duration      : '00:00:00',
@@ -49,4 +52,6 @@ export default {
       }
     },
   },
-};
+});
+
+export default state;

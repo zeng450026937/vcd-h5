@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       isInCallMain : true,
-    }
+    };
   },
   computed : {
     isConnecting() {

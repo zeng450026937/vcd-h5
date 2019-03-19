@@ -68,6 +68,10 @@ export default {
       showMorePanel : false,
     };
   },
+  sketch : {
+    ns    : 'state',
+    props : [ 'isInMiniCall' ],
+  },
   computed : {
     callText() {
       const titleMap = {
@@ -90,14 +94,6 @@ export default {
     userName() {
       return this.displayName || this.targetUser || '未知用户';
     },
-    isInCallView : {
-      get() {
-        return this.$model.state.isInCallView;
-      },
-      set(val) {
-        this.$model.state.isInCallView = val;
-      },
-    },
     callStatus() {
       return this.$model.state.callStatus;
     },
@@ -119,7 +115,7 @@ export default {
     },
     expandMiniContent() {
       this.$model.state.isInMiniCall = false;
-      this.isInCallView = true;
+      this.isInMiniCall = false;
       this.$router.push(CALL.CALL_MAIN);
     },
   },

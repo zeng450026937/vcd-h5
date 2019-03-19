@@ -116,7 +116,7 @@ export default {
       return this.$model.contact.favorite.items;
     },
     isCloud() {
-      return this.$model.login.serverType === 'cloud';
+      return this.$model.account.serverType === 'cloud';
     },
   },
   methods : {
