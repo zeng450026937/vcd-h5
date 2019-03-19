@@ -19,7 +19,6 @@ model.mount('invite', invite);
 model.provide({
   data() {
     return {
-      noticeTextList     : [],
       messageTextList    : [],
       isLocalUnmuteAudio : false,
     };
@@ -77,26 +76,6 @@ model.provide({
     },
   },
   middleware : {
-    inviteOther(ctx, payload) {
-      console.warn('inviteOther');
-      // const prefix = protocol === 'H.323' ? 'h323:' : 'sip:';
-      //
-      // const _address = address.startsWith(prefix)
-      // && protocol !== 'rtmp'
-      //   ? address : prefix + address;
-      //
-      // const user = protocol === 'rtmp'
-      //   ? {
-      //     session : [
-      //       {
-      //         '@session-type'     : 'audio-video',
-      //         'rtmp-url'          : _address,
-      //         'video-data-layout' : 'VideoBig',
-      //         'max-video-fs'      : '720P',
-      //       },
-      //     ],
-      //   } : { requestUri: _address };
-    },
     async toggleAudio(ctx, next) {
       if (!this.currentUser) return;
       let ingress = true;
@@ -105,7 +84,7 @@ model.provide({
       this.isLocalUnmuteAudio = true;
 
       return this.currentUser.setAudioFilter({ ingress }).catch((error) => {
-        this.noticeTextList.push(error.reason['@text']);
+        this.$message.error(error.reason['@text']);
         throw error;
       });
     },
@@ -114,7 +93,8 @@ model.provide({
       const ingress = this.videoStatus !== 'unblock';
 
       this.currentUser.setVideoFilter({ ingress }).catch((error) => {
-        this.noticeTextList.push(error.reason['@text']);
+        this.$message.error(error.reason['@text']);
+        throw error;
       });
     },
 
@@ -150,19 +130,29 @@ model.provide({
         case 'block':
         case 'hand':
           if (this.muteBlockBy !== 'client' && oldStatus !== 'unblocking') {
-            this.noticeTextList.push('您被主持人禁言');
+            this.$message.warning('您被主持人禁言');
           }
           else if (this.profile === 'demonstrator' && oldStatus === 'unblocking') {
-            this.noticeTextList.push(this.isLocalUnmuteAudio ? '您取消了发言申请' : '您的发言申请被拒绝');
+            if (this.isLocalUnmuteAudio) {
+              this.$message.info('您取消了发言申请');
+            }
+            else {
+              this.$message.error('您的发言申请被拒绝');
+            }
           }
           break;
         case 'unblock':
           if (this.muteBlockBy !== 'client' && !this.isLocalUnmuteAudio) {
-            this.noticeTextList.push(oldStatus === 'unblocking' ? '您的发言申请被允许' : '您被主持人解除禁言');
+            if (oldStatus === 'unblocking') {
+              this.$message.success('您的发言申请被允许');
+            }
+            else {
+              this.$message.info('您被主持人解除禁言');
+            }
           }
           break;
         case 'unblocking':
-          this.noticeTextList.push('您正在申请发言');
+          this.$message.info('您正在申请发言');
           break;
         default:
           break;
@@ -174,20 +164,20 @@ model.provide({
       if (!oldPri || this.muteBlockBy === 'client') return;
 
       if (permission === 'presenter') {
-        this.noticeTextList.push('您被设置为主持人');
+        this.$message.info('您被设置为主持人');
       }
       else if (permission === 'attendee' || permission === 'castviewer') {
-        this.noticeTextList.push('您被设置为访客');
+        this.$message.info('您被设置为访客');
       }
     },
     onDemostateChanged(role, oldRole) {
       if (this.muteBlockBy === 'client') return;
       // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
       if (role === 'demonstrator' && oldRole === 'audience') {
-        this.noticeTextList.push('您被设置为演讲者');
+        this.$message.info('您被设置为演讲者');
       }
       else if (role === 'audience' && oldRole === 'demonstrator') {
-        this.noticeTextList.push('您被取消演讲权限');
+        this.$message.info('您被取消演讲权限');
       }
     },
     getUserAudioStatus(user) {

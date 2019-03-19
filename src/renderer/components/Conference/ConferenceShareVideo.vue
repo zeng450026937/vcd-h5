@@ -75,14 +75,17 @@ export default {
     },
   },
   watch : {
-    isInConferenceMain(val) {
-      if (val) {
-        this.shareWindowState.current = this.shareWindowState.pre;
-      }
-      else {
-        this.shareWindowState.pre = this.current;
-        this.shareWindowState.current = 2;
-      }
+    isInConferenceMain : {
+      handler(val) {
+        if (val) {
+          this.shareWindowState.current = this.shareWindowState.pre;
+        }
+        else {
+          this.shareWindowState.pre = this.current;
+          this.shareWindowState.current = 2;
+        }
+      },
+      immediate : true,
     },
   },
 };

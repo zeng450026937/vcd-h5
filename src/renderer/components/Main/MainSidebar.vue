@@ -124,7 +124,7 @@ export default {
   },
   methods : {
     randomAvatar() {
-      return process.env.NODE_ENV === 'development' ? avatarList[5] : 'https://graph.baidu.com/resource/106ee00795c4bddd7e50f01550044873.jpg';
+      return avatarList[5];
     },
     clickMenu(sidebar, index) {
       if (this.$router.currentRoute.meta.owner !== sidebar.name) {

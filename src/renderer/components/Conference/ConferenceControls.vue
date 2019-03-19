@@ -144,7 +144,6 @@ export default {
     },
     onExitClicked() {
       this.$rtc.conference.leave();
-      this.$model.conference.noticeTextList = [];
     },
     openPlateModal() {
       this.showMorePanel = false;

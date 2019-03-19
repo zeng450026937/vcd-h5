@@ -8,6 +8,7 @@ chat.provide({
   data() {
     return {
       messageRecordList : [], // 2000 条
+      hasNewMessage     : false,
     };
   },
   computed : {
@@ -46,6 +47,7 @@ chat.provide({
   },
   watch : {
     newMessage(val) {
+      this.hasNewMessage = true;
       const messageObject = {
         from      : val.user['@display-text'],
         content   : val.msg,
