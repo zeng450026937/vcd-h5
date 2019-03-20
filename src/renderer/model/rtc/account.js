@@ -1,7 +1,8 @@
-import Vue from 'vue';
+import Vuem from '../vuem';
 import { UA, Utils, MediaChannel } from 'apollosip';
 import { defer } from '@/renderer/lib/defer';
 import { setupEventHandlers, removeEventHandlers } from '@/renderer/lib/event-handler';
+import SRV from '@/shared/srv';
 
 const SIP_PROTOCOL = {
   WSS : 'wss',
@@ -30,7 +31,9 @@ const SIP_PORT = {
 const MAX_MESSAGE_COUNT = 200;
 const MAX_CHANNEL_COUNT = 10;
 
-export const Account = Vue.extend({
+const model = new Vuem();
+
+model.provide({
   data() {
     return {
       // private
@@ -292,7 +295,7 @@ export const Account = Vue.extend({
     };
   },
 
-  destroyed() {
+  beforeDestroy() {
     if (this.ua) {
       this.ua.stop();
       this.ua.removeAllListeners();
@@ -303,4 +306,4 @@ export const Account = Vue.extend({
   },
 });
 
-export default Account;
+export default model;

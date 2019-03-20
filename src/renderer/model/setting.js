@@ -17,21 +17,21 @@ model.provide({
       autoStart                  : false,
       autoUpdate                 : true,
       updateChannel              : 'stable',
-      hideWhenClose              : false,
+      hideWhenClose              : true,
       // ytms
       ytmsHostAddress            : '',
       // account
       autoLogin                  : false,
       savePassword               : false,
       // media
-      audioInputDevice           : '',
-      videoInputDevice           : '',
-      videoOutputDevice          : '',
+      audioInputDevice           : null,
+      audioOutputDevice          : null,
+      videoInputDevice           : null,
       highProfile                : false,
       horizontalMirroring        : false,
       // conference
-      minimizedWhenLocalSharing  : false,
-      maximizedWhenRemoteSharing : false,
+      minimizedWhenLocalSharing  : true,
+      maximizedWhenRemoteSharing : true,
       muteAudioWhenJoin          : false,
       muteVideoWhenJoin          : false,
       shareWithSound             : false,

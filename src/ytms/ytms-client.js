@@ -99,7 +99,7 @@ export class YTMSClient extends EventEmitter {
 
     this.emit('heartbeat');
 
-    return this.heartbeat(250 * 1000);
+    this.heartbeat(250 * 1000).catch(() => {});
   }
 
   async getEnterpriseInfo() {
