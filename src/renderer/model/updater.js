@@ -78,15 +78,6 @@ model.provide({
       this.quitAndInstallUpdate();
     },
   },
-
-  subscribe : {
-    setting(val) {
-      const { common, about } = val;
-
-      this.channel = common.updateChannel;
-      this.autoInstallOnAppQuit = about.autoUpdate;
-    },
-  },
   
   methods : {
     setFeedURL(url) {
@@ -155,13 +146,26 @@ model.provide({
     },
   },
 
-  created() {
+  async created() {
     autoUpdater.on('error', this.updateError);
     autoUpdater.on('checking-for-update', this.updateChecking);
     autoUpdater.on('update-available', this.updateAvailable);
     autoUpdater.on('update-not-available', this.updateNotAvailable);
     autoUpdater.on('downloaded', this.updateDownloaded);
     autoUpdater.on('download-progress', this.updateDownloading);
+
+    // model hasn't be fully initilized when created() invoked
+    await this.$nextTick();
+    // model fully initilized
+
+    const setting = this.$getVM('setting');
+
+    setting.common.$watch('updateChannel', (val) => {
+      this.channel = val;
+    });
+    setting.about.$watch('autoUpdate', (val) => {
+      this.autoInstallOnAppQuit = val;
+    });
   },
 
   beforeDestroy() {

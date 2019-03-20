@@ -9,6 +9,7 @@ build_windows:
   script:
     - chcp 65001
     - yarn build:prod
+    - curl -v --user devops:UaW9URs9KQlYtFz3 -T ./out/setup/{package-info.json,vc-desktop-%CI_COMMIT_TAG%.exe} https://nexus.yealinkops.com/repository/packages-manager/client_module/vcd-h5/%CI_COMMIT_TAG%/windows/
   only:
     - tags
 #  artifacts:
@@ -25,6 +26,7 @@ build_linux:
   stage: build
   script:
     - yarn build:prod
+    - curl -v -u devops:UaW9URs9KQlYtFz3 -T "./out/setup/{package-info.json,vc-desktop-$CI_COMMIT_TAG.AppImage}" https://nexus.yealinkops.com/repository/packages-manager/client_module/vcd-h5/$CI_COMMIT_TAG/linux/
   only:
     - tags
   cache:
@@ -37,6 +39,7 @@ build_macos:
   stage: build
   script:
     - yarn build:prod
+    - curl -v -u devops:UaW9URs9KQlYtFz3 -T "./out/setup/{package-info.json,vc-desktop-$CI_COMMIT_TAG.dmg}" https://nexus.yealinkops.com/repository/packages-manager/client_module/vcd-h5/$CI_COMMIT_TAG/macos/
   only:
     - tags
   cache:

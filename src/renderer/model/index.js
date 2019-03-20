@@ -28,6 +28,16 @@ model.mount('call', call);
 model.mount('setting', setting1);
 
 model.use(async(ctx, next) => {
+  // error handler
+  try {
+    await next();
+  }
+  catch (error) {
+    console.warn(error);
+  }
+});
+
+model.use(async(ctx, next) => {
   // inject setting
   ctx.setting = ctx.getVM('setting');
 
