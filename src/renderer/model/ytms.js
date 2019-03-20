@@ -52,20 +52,34 @@ model.provide({
     // model fully initilized
 
     const setting = this.$getVM('setting');
-    const url = setting.ytmsHostAddress || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
 
-    if (url) {
-      const clientId = await ipcProxy.startYTMSService(url);
+    setting.$watch(
+      'ytmsHostAddress',
+      async(val) => {
+        val = val || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
 
-      this.api = createApi(url, clientId);
-    }
+        // reset api
+        this.api = null;
 
-    setting.$watch('ytmsHostAddress', async(val) => {
-      console.warn('ytmsHostAddress', val);
-      val = val || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
-      const clientId = await ipcProxy.startYTMSService(val);
+        const clientId = await ipcProxy.startYTMSService(val);
 
-      this.api = createApi(url, clientId);
+        this.api = createApi(val, clientId);
+      
+        const data = {
+          updateChannel : setting.updateChannel,
+        };
+
+        this.$dispatch('ytms.updateClientInfo', { data });
+      },
+      { immediate: true } // connect to ytms at the very first time
+    );
+
+    setting.$watch('updateChannel', (val) => {
+      const data = {
+        updateChannel : val,
+      };
+
+      this.$dispatch('ytms.updateClientInfo', { data });
     });
   },
 
