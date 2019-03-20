@@ -12,10 +12,15 @@
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
     ></video>
-    <div v-if="!videoStream"
+    <div v-show="!hideVideo"
+         v-if="!videoStream"
          class="loading-notice absolute flex flex-col w-full justify-center items-center">
       <a-spin size="large"/>
       <div class="mt-2 text-indigo text-xl">视频加载中...</div>
+    </div>
+    <div v-show="hideVideo">
+      <slot name="bg"/>
+      <slot name="content"/>
     </div>
     <slot name="controls"/>
   </a-layout>
@@ -39,6 +44,10 @@ export default {
       default : 'absolute',
     },
     muted : {
+      type    : Boolean,
+      default : false,
+    },
+    hideVideo : {
       type    : Boolean,
       default : false,
     },
@@ -111,6 +120,14 @@ export default {
     videoStream : {
       handler   : 'onVideoStreamChanged',
       immediate : true,
+    },
+    hideVideo(val) {
+      if (val) { // 隐藏
+        this.videoElement.style.display = 'none';
+      }
+      else {
+        this.videoElement.style.display = 'block';
+      }
     },
   },
 };

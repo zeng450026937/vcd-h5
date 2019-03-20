@@ -11,7 +11,8 @@
                     class="text-white text-base no-dragable mr-4"/>
         <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
                     title="信号"
-                    class="text-white no-dragable text-base mr-4 cursor-pointer"/>
+                    class="text-white no-dragable text-base mr-4 cursor-pointer"
+                    @click="showStatistics"/>
         <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         <div class="w-1 flex flex-grow">
           <span class="text-white text-xs leading-tight truncate">{{subject}}（ID：{{conferenceId}}）</span>
@@ -19,16 +20,19 @@
       </div>
       <common-header class="text-white"/>
     </div>
+    <conference-statistics-modal ref="statisticsModal"/>
   </div>
 </template>
 
 <script>
 import CommonHeader from '../Shared/CommonHeader.vue';
+import ConferenceStatisticsModal from './ConferenceStatisticsModal.vue';
 
 export default {
   name       : 'ConferenceHeader',
   components : {
     CommonHeader,
+    ConferenceStatisticsModal,
   },
   computed : {
     description() {
@@ -51,6 +55,9 @@ export default {
     },
   },
   methods : {
+    showStatistics() {
+      this.$refs.statisticsModal.visible = true;
+    },
   },
 };
 </script>

@@ -23,7 +23,7 @@
       </div>
       <div v-if="isConnected" class="flex flex-grow flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5">音频会议</span>
+        <span class="display-name mt-5">音频通话</span>
       </div>
       <div v-else class="call-content flex flex-grow flex-col items-center justify-center">
         <a-avatar :size="160" class="target-avatar border-8">

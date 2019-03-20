@@ -25,6 +25,8 @@ const initialDate = () => ({
   // 会议布局
   currentLayout       : '',
   showMessage         : true, // 入会和离开的提示
+  // 是否为视频会议 视频会议 OR 音频会议
+  isVideoConference   : true,
 });
 
 sketch.provide({
@@ -41,6 +43,17 @@ sketch.provide({
       if (val === 'disconnected') { // 退出会议之后重置当前状态
         Object.assign(this, initialDate());
       }
+    },
+    isVideoConference(val) { // TODO 失败了呢? -- 返回值
+      rtc.conference.mediaChannel.channel.renegotiate(
+        {
+          rtcOfferConstraints :
+            { offerToReceiveVideo: val, offerToReceiveAudio: true },
+        }
+      );
+      const method = val ? 'unmute' : 'mute';
+
+      rtc.conference.mediaChannel.channel[method]({ video: true });
     },
   },
 });

@@ -35,9 +35,10 @@
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
-          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover">
+          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
+              @click="switchConferenceType">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">切换为音频通话</span>
+            <span class="ml-3 text-xs">{{isVideoConference ? '切换为音频通话' : '切换为视频通话'}}</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                @click="openPlateModal">
@@ -82,7 +83,7 @@ export default {
   },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'isInConferenceMain', 'showMorePanel' ],
+    props : [ 'isInConferenceMain', 'showMorePanel', 'isVideoConference' ],
   },
   computed : {
     shareAvailable() {
@@ -148,6 +149,10 @@ export default {
     openPlateModal() {
       this.showMorePanel = false;
       this.$refs.plateModal.visible = true;
+    },
+    switchConferenceType() {
+      this.showMorePanel = false;
+      this.isVideoConference = !this.isVideoConference;
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="conference-content" class="bg-transparent h-full">
+  <a-layout id="conference-content" class="bg-media h-full">
     <div class="relative h-full w-full" @mousemove="contentClicked">
       <div class="flex flex-col h-full">
         <div class="header no-dragable flex flex-col h-10 z-10"
@@ -35,7 +35,8 @@
            @dblclick="maxConferenceContent">
         <conference-remote-video :source="centerSource"/>
       </div>
-      <div :class="localVideoClasses">
+      <div v-show="isVideoConference"
+           :class="localVideoClasses">
         <conference-local-video/>
       </div>
       <div v-if="hasScreenStream && !isShareWindowOpen"
@@ -82,7 +83,7 @@ export default {
   sketch : [
     {
       ns    : 'conference.sketch',
-      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab' ],
+      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab', 'isVideoConference' ],
     },
     {
       ns    : 'conference.member',
