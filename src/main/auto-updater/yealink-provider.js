@@ -91,7 +91,7 @@ export class YealinkProvider extends Provider {
     // TODO: check releaseDate
     // if (eq && forceUpdate) return true;
 
-    if (lt && allowDowngrade) return true;
+    if (lt && allowDowngrade && forceUpdate) return true;
 
     return false;
   }
