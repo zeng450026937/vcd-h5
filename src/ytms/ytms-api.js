@@ -42,7 +42,7 @@ if (inspectResponse) {
   );
 }
 
-export function throwIfError(res) {
+function throwIfError(res) {
   const { data } = res;
 
   if (data.error || data.ret === -1) {

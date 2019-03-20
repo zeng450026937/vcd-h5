@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import Vuem from './vuem';
 
 const storage = window.localStorage;
@@ -87,6 +88,26 @@ model.provide({
   
   created() {
     this.load();
+
+    ipcRenderer.on(
+      'system-config',
+      async(event, { config }) => {    
+        const {
+          pushUpdateChannelFlag,
+          pushYtmsHostFlag,
+          updateChannel,
+          ytmsHostAddress,
+        } = config;
+    
+        if (pushUpdateChannelFlag && updateChannel) {
+          this.updateChannel = updateChannel;
+        }
+    
+        if (pushYtmsHostFlag && ytmsHostAddress) {
+          this.ytmsHostAddress = ytmsHostAddress;
+        }
+      }
+    );
   },
 
   beforeDestroy() {

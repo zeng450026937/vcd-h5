@@ -129,6 +129,12 @@ export default {
 
   methods : {
     validateAddress(rule, value, callback) {
+      if (!value) {
+        this.ytmsHostAddress = '';
+        
+        return callback();
+      }
+
       const VALID_RE = /^((\w*:)?\/\/)?(\d{1,3}\.){3}(\d{1,3})((:(\d{1,4})?)?)$/;
 
       if (!VALID_RE.test(value)) return callback(new Error());

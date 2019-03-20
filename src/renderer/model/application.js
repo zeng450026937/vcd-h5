@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 
@@ -54,6 +54,14 @@ model.provide({
   },
 
   async created() {
+    ipcRenderer.on(
+      'menu-event',
+      (event, { name }) => {
+        console.warn('menu-event', name);
+        this.$dispatch('menu-event', name);
+      }
+    );
+
     this.autoLauncher = new AutoLaunch({
       name : remote.app.getName(),
       // path is not required for electron app
@@ -65,14 +73,15 @@ model.provide({
 
     const setting = this.$getVM('setting');
 
-    setting.autoStart = this.autoLauncher.isEnabled();
     setting.$watch(
-      'autoStart', (val) => {
+      'autoStart',
+      (val) => {
         if (val) this.autoLauncher.enable();
         else this.autoLauncher.disable();
-      },
-      { immediate: true }
+      }
     );
+
+    setting.autoStart = await this.autoLauncher.isEnabled();
   },
 });
 
