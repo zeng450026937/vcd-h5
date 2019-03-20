@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuem from './vuem';
 import application from './application';
 import setting from './setting';
+import setting1 from './setting1';
 import updater from './updater';
 import ytms from './ytms';
 import account from './account';
@@ -12,6 +13,8 @@ import conference from './conference';
 import main from './main';
 import call from './call/index';
 
+import errorNotice from './middle';
+
 Vue.use(Vuem);
 
 const model = new Vuem();
@@ -19,6 +22,7 @@ const model = new Vuem();
 
 model.mount('application', application);
 model.mount('setting', setting);
+model.mount('setting1', setting1);
 model.mount('updater', updater);
 model.mount('ytms', ytms);
 model.mount('account', account);
@@ -49,6 +53,8 @@ model.use(async(ctx, next) => {
 
   logger.debug(`model method: ${ctx.method}, duration: ${duration} ms, result: ${ret} `);
 });
+
+model.use(errorNotice);
 
 window.kom = model;
 

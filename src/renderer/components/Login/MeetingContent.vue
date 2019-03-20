@@ -16,7 +16,7 @@
                 <a-input
                     v-number-only
                     placeholder='会议ID'
-                    :value="meetingData.account"
+                    :value="meetingInfo.number"
                     @change="onAccountChange"
                 >
                   <a-iconfont slot="prefix" type='icon-ID' class="text-base text-black9"/>
@@ -26,7 +26,7 @@
                 <a-input
                     placeholder='会议密码(选)'
                     type='password'
-                    :value="meetingData.pin"
+                    :value="meetingInfo.pin"
                     @change="onPasswordChange"
                 >
                   <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
@@ -34,7 +34,7 @@
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    v-model="meetingData.server"
+                    v-model="meetingInfo.server"
                     placeholder='服务器'
                 >
                   <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
@@ -42,7 +42,7 @@
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    v-model="meetingData.displayName"
+                    v-model="meetingInfo.displayName"
                     placeholder='昵称'
                 >
                   <a-iconfont slot="prefix" type='icon-ren' class="text-base text-black9"/>
@@ -60,13 +60,13 @@
 
               <div v-if="isProxyPanelVisible" class="mt-3 mb-5 input-without-icon flex justify-between">
                 <a-input
-                    v-model="meetingData.proxyAddress"
+                    v-model="meetingInfo.proxy"
                     placeholder='代理服务器地址'
                     style="width: 188px;"
                 >
                 </a-input>
                 <a-input
-                    v-model="meetingData.proxyPort"
+                    v-model="meetingInfo.proxyPort"
                     v-number-only
                     placeholder='端口'
                     style="width: 76px;"
@@ -122,7 +122,6 @@
 <script>
 import TabSettingMedia from '../Conference/TabSettingMedia.vue';
 import VideoView from '../Common/VideoView.vue';
-import { LOGIN } from '../../router/constants';
 
 export default {
   name       : 'YMAMeeting',
@@ -132,13 +131,7 @@ export default {
   },
   data() {
     return {
-      meetingData : {
-        account     : '',
-        pin         : '',
-        displayName : '',
-        server      : '',
-        proxy       : '',
-      },
+      meetingInfo         : this.$model.meeting.anonMeetingRecord,
       showProxyItem       : false,
       isInSetting         : false,
       isProxyPanelVisible : false,
@@ -193,7 +186,7 @@ export default {
       return {};
     },
     meetingEnabled() {
-      return this.meetingData.account && this.meetingData.displayName;
+      return this.meetingInfo.number && this.meetingInfo.displayName;
     },
     isConnecting() {
       return this.$rtc.conference.connecting;
@@ -206,7 +199,7 @@ export default {
 
       if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
         if (value.length <= 64) {
-          this.meetingData.account = value;
+          this.meetingInfo.number = value;
         }
       }
     },
@@ -215,16 +208,21 @@ export default {
       const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
 
       if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
-        this.meetingData.pin = value;
+        this.meetingInfo.pin = value;
       }
     },
     joinMeeting() {
-      if (!this.meetingData.account) {
+      if (!this.meetingInfo.number) {
         this.$message.error('会议号码不可为空');
-        
+
         return;
       }
-      this.$dispatch('meeting.joinMeeting', this.meetingData);
+      if (!this.meetingInfo.server) {
+        this.$message.error('服务器地址不可为空');
+
+        return;
+      }
+      this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
     },
     returnLogin() {
       this.loginType = 'login';

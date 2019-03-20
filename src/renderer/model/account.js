@@ -1,7 +1,7 @@
 import Vuem from './vuem';
 import storage, { LOGIN_STORAGE } from '../storage';
 import rtc from '../rtc';
-import SRV from '../../shared/srv';
+import { formatServers } from './utils';
 
 const model = new Vuem();
 
@@ -40,34 +40,13 @@ model.provide({
       const { account, pin, server } = ctx.payload;
 
       const protocol = ctx.payload.protocol || 'wss';
-      const defaultPort = this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061;
-
-      let servers;
-
-      if (!this.proxy) {
-        try {
-          const pre = protocol === 'wss' ? '_sips._wss.' : '_sips._tcp.';
-
-          servers = await SRV.Resolve(pre + server);
-        }
-        catch (error) {
-          servers = await SRV.Lookup(server);
-        }
-      }
-      else {
-        const [ address, port ] = this.proxy.split(':');
-
-        servers = [ { address, port: port || this.proxyPort } ];
-      }
+      const port = this.proxyPort || (this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061);
 
       rtc.account.uri = `${account}@${server}`;
       rtc.account.password = pin;
-      rtc.account.servers = servers.map((s) => ({
-        url    : `${protocol}://${s.address}:${s.port || defaultPort}`,
-        weight : s.weight || s.priority,
-      }));
+      rtc.account.servers = await formatServers({ server, protocol, proxy: this.proxy, port });
       rtc.account.protocol = protocol;
-      rtc.account.signin().then(() => {
+      await rtc.account.signin().then(() => {
         const loginData = Object.assign({}, { account, server }, {
           proxy         : this.proxy,
           proxyPort     : this.proxyPort,
@@ -81,7 +60,9 @@ model.provide({
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
         storage.update('CURRENT_ACCOUNT', loginData);
         this.storeConfig(); // 登录成功之后保存登录前的状态
-      }).then((err) => console.warn(err));
+      }).catch((err) => {
+        throw err;
+      });
       await next();
     },
     async logout(ctx, next) {
