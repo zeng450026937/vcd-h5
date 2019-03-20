@@ -16,7 +16,7 @@
           <span class="ml-5">{{$t('setting.common.autoStart')}}</span>
         </div>
         <div class="mt-4">
-          <a-switch size="small" v-model="forceMinimize"/>
+          <a-switch size="small" v-model="hideWhenClose"/>
           <span class="ml-5">{{$t('setting.common.forceMinimize')}}</span>
         </div>
         <div class="mt-6">
@@ -29,10 +29,21 @@
         </div>
         <div class="mt-6">
           
-          <a-form>
-            <a-form-item :validateStatus="showAddressError?'error':''" :help="showAddressError?addressErrorText:''">
-              <span>{{$t('setting.common.address')}}</span>
-              <a-input v-model="addressInput" class="w-48 ml-4" :placeholder="$t('setting.common.addressPlaceHolder')" @blur="handleCheckAddress"/>
+          <a-form :form="form">
+            <a-form-item :label="$t('setting.common.address')" :labelCol="{ span: 4 }" :colon="false">
+              <a-input
+                v-decorator="[ 
+                'ytmsHostAddress',
+                { 
+                  validateTrigger: 'blur',
+                  rules: [
+                  { validator: validateAddress, message: addressErrorText }
+                  ] 
+                }
+                ]"
+                class="w-48 ml-4" 
+                :placeholder="$t('setting.common.addressPlaceHolder')"
+              />
             </a-form-item>
           </a-form>
           
@@ -58,33 +69,35 @@ import AppHeader from '../MainHeader.vue';
 import { langList } from '../../../i18n/config';
 
 export default {
-  name       : 'CommonSetting',
+  name : 'CommonSetting',
+
   components : {
     AppHeader,
   },
+  
   data() {
     return {
-      // updateChannelList : [
-      //   { label: '快速', value: 'insiders' },
-      //   { label: '慢速', value: 'faster' },
-      //   { label: '稳定', value: 'stable' },
-      // ],
       langList : Object.keys(langList).map((key) => (
         { 
           label : langList[key].remark,
           lang  : langList[key].locale, 
         }
       )),
-      addressInput     : '',
-      showAddressError : false,
       addressErrorText : '您输入的地址不合法！',
-      defaultProtocol  : 'http://',
-      defaultPort      : ':9301',
     };
   },
-  created() {
-    this.addressInput = this.address;
+
+  sketch : {
+    ns    : 'setting',
+    props : [ 
+      'autoStart',
+      'hideWhenClose',
+      'language',
+      'ytmsHostAddress',
+      'updateChannel',
+    ],
   },
+
   computed : {
     updateChannelList() {
       return [ 'insiders', 'faster', 'stable' ].map((key) => ({
@@ -93,49 +106,67 @@ export default {
       }));
     },
   },
-  sketch : {
-    ns    : 'setting.common',
-    props : [ 'autoStart', 'forceMinimize', 'language', 'address', 'updateChannel' ],
+
+  created() {
+    this.form = this.$form.createForm(this, {
+      mapPropsToFields : () => ({
+        ytmsHostAddress : this.$form.createFormField({
+          value : this.ytmsHostAddress,
+        }),
+      }),
+    });
+    this.defaultProtocol = 'http';
+    this.defaultPort = '9301';
   },
+  
   deactivated() {
-    this.$model.setting.save('common'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
+
   destroyed() {
-    this.$model.setting.save('common'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
+
   methods : {
-    handleCheckAddress() {
-      if (/^((\w*:)?\/\/)?(\d{1,3}\.){3}(\d{1,3})((:(\d{1,4})?)?)$/.test(this.addressInput)) {
-        let newAddress = /(\d{1,3}\.){3}(\d{1,3})/.exec(this.addressInput)[0];
+    validateAddress(rule, value, callback) {
+      const VALID_RE = /^((\w*:)?\/\/)?(\d{1,3}\.){3}(\d{1,3})((:(\d{1,4})?)?)$/;
 
-        const protocolTest = /^\w+:\/\//.exec(this.addressInput);
+      if (!VALID_RE.test(value)) return callback(new Error());
 
-        if (protocolTest) {
-          newAddress = protocolTest[0] + newAddress;
-        }
-        else {
-          newAddress = this.defaultProtocol + newAddress;
-        }
+      const ADDRESS_RE = /(\d{1,3}\.){3}(\d{1,3})/;
 
-        const portTest = /:\d{1,4}$/.exec(this.addressInput);
+      let address = ADDRESS_RE.exec(value)[0];
 
-        if (portTest) {
-          newAddress += portTest[0];
-        }
-        else {
-          newAddress += this.defaultPort;
-        }
-        this.addressInput = this.address = newAddress;
-        this.showAddressError = false;
+      const PROTOCOL_RE = /^\w+:\/\//;
+
+      const protocol = PROTOCOL_RE.exec(value);
+
+      if (protocol) {
+        address = protocol[0] + address;
       }
       else {
-        this.showAddressError = true;
-        this.addressErrorText = '您输入的地址不合法！';
+        address = `${this.defaultProtocol}://${address}`;
       }
+
+      const PORT_RE = /:\d{1,4}$/;
+      const port = PORT_RE.exec(value);
+
+      if (port) {
+        address += port[0];
+      }
+      else {
+        address += `:${this.defaultPort}`;
+      }
+
+      callback();
+
+      this.ytmsHostAddress = address;
     },
+
     handleNoodGuide() {
       this.$message.warning('新手引导还没做完哦');
     },
+
     handleLanguageChange() {
       this.$i18n.locale = this.language;
       this.$message.success(`已切换至 ${Object.values(langList).find((item) => item.locale === this.language).remark} !`);

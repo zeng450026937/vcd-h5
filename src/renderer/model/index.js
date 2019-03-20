@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuem from './vuem';
-import setting1 from './setting1';
 import application from './application';
+import setting from './setting';
 import updater from './updater';
 import account from './account';
 import state from './state';
@@ -17,6 +17,7 @@ const model = new Vuem();
 
 
 model.mount('application', application);
+model.mount('setting', setting);
 model.mount('updater', updater);
 model.mount('account', account);
 model.mount('contact', contact);
@@ -25,7 +26,6 @@ model.mount('meeting', meeting);
 model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
-model.mount('setting', setting1);
 
 model.use(async(ctx, next) => {
   // error handler

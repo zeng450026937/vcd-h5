@@ -21,7 +21,7 @@ export const AppWindowProxy = {
     let url;
 
     // get url from setting
-    url = this.$model.setting.common.address;
+    url = this.$model.setting.ytmsHostAddress;
     url = url || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
     
     if (url) {
@@ -45,8 +45,7 @@ export const AppWindowProxy = {
         }
     
         if (pushYtmsHostFlag && ytmsHostAddress) {
-          this.$model.setting.common.address = ytmsHostAddress;
-          this.$model.setting.save('common');
+          this.$model.setting.ytmsHostAddress = ytmsHostAddress;
     
           const clientId = await ipcProxy.startYTMSService(ytmsHostAddress);
     

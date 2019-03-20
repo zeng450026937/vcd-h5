@@ -82,22 +82,31 @@ import AppHeader from '../MainHeader.vue';
 import VideoView from '../../Common/VideoView.vue';
 
 export default {
-  name       : 'VideoSetting',
+  name : 'VideoSetting',
+
   components : {
     AppHeader,
     VideoView,
   },
+
   data() {
     return {
     };
   },
+
   sketch : {
-    ns    : 'setting.video',
-    props : [ 'enableHDVideo', 'enableHWSpeed',
-      'disableVideo', 'enableMirroring' ],
+    ns    : 'setting',
+    props : [ 
+      'enableHDVideo',
+      'enableHWSpeed',
+      'disableVideo',
+      'enableMirroring',
+    ],
   },
+
   created() {
   },
+
   computed : {
     muteVideo() {
       return this.$rtc.media.localMedia.muteVideo;
@@ -110,11 +119,9 @@ export default {
       set(val) { this.$model.setting.device.videoInput = val; },
     },
   },
-  destroyed() {
-    this.$model.setting.save('video'); // 页面不显示的时候保存设置
 
-    // TODO:现在没有摄像头输入，后面需要接入摄像头后再进行测试
-    // this.$model.setting.save('device'); // 页面不显示的时候保存设置
+  destroyed() {
+    this.$model.setting.save('video');
   },
 };
 </script>

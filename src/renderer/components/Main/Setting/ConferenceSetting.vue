@@ -17,23 +17,23 @@
             <span class="setting-title">{{$t('setting.conference.share')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="minWindowWhenSharing"/>
+            <a-switch size="small" v-model="minimizedWhenLocalSharing"/>
             <span class="setting-label">{{$t('setting.conference.minWindowWhenSharing')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="maxWindowWhenWatchingSharing"/>
+            <a-switch size="small" v-model="maximizedWhenRemoteSharing"/>
             <span class="setting-label">{{$t('setting.conference.maxWindowWhenWatchingSharing')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="enableGpu"/>
+            <a-switch size="small" v-model="hardwareAcceleration"/>
             <span class="setting-label">{{$t('setting.conference.enableGpu')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="preferredPictureFluency"/>
+            <a-switch size="small" v-model="highProfile"/>
             <span class="setting-label">{{$t('setting.conference.preferredPictureFluency')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="shareComputerSound"/>
+            <a-switch size="small" v-model="shareWithSound"/>
             <span class="setting-label">{{$t('setting.conference.shareComputerSound')}}</span>
           </div>
         </div>
@@ -45,11 +45,11 @@
             <span class="setting-title">{{$t('setting.conference.baseSetting')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="autoSilence"/>
+            <a-switch size="small" v-model="muteAudioWhenJoin"/>
             <span class="setting-label">{{$t('setting.conference.autoSilence')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="noticeWhenLeaving"/>
+            <a-switch size="small" v-model="noticeTip"/>
             <span class="setting-label">{{$t('setting.conference.noticeWhenLeaving')}}</span> 
             <a-tooltip>
               <template slot='title'>
@@ -61,7 +61,7 @@
           </div>
           <!--入会及离会提示音-->
           <div class="flex flex-col ml-10">
-            <a-radio-group class="mt-2" v-model="selectedNotice" :disabled="!noticeWhenLeaving">
+            <a-radio-group class="mt-2" v-model="noticeTip" :disabled="!noticeTip">
               <a-radio  :value="1">{{$t('setting.conference.noticeOnlyJoiner')}}</a-radio>
               <a-radio  :value="2">{{$t('setting.conference.noticeBoth')}}</a-radio>
               <a-radio  :value="3">{{$t('setting.conference.noticeAll')}}</a-radio>
@@ -71,7 +71,7 @@
             <a-form>
               <a-form-item :validateStatus="showAdvanceTimeError?'error':''" :help="showAdvanceTimeError?advanceTimeErrorText:''">
                 <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTime')}}</span>
-                <a-input class="w-16 mx-4" v-model.number="advanceEntryTime" @blur="checkAdvanceTime" :disabled="!noticeWhenLeaving"/>
+                <a-input class="w-16 mx-4" v-model.number="advanceEntryTime" @blur="checkAdvanceTime"/>
                 <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTimeUnite')}}</span>
                 <span class="text-black9 setting-label ml-0">{{$t('setting.conference.advanceEntryTimeNotice')}}</span>
               </a-form-item>
@@ -79,24 +79,24 @@
            
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="instanceMeetingPassword"/>
+            <a-switch size="small" v-model="meetnowPassword"/>
             <span class="setting-label">{{$t('setting.conference.instanceMeetingPassword')}}</span>
           </div>
 
           <div class="mt-3">
-            <a-switch size="small" v-model="reserveMeetingPassword"/>
+            <a-switch size="small" v-model="bookingPassword"/>
             <span class="setting-label">{{$t('setting.conference.reserveMeetingPassword')}}</span>
           </div>
 
           <div class="mt-1 ml-10">
-            <a-radio-group v-model="isRandomOrCustom" :disabled="!reserveMeetingPassword">
+            <a-radio-group v-model="isRandomOrCustom" :disabled="!bookingPassword">
               <a-radio  :value="1">{{$t('setting.conference.randomPassword')}}</a-radio>
               <a-radio  :value="2">{{$t('setting.conference.customPassword')}}</a-radio>
             </a-radio-group>
             <div class="mt-2">
               <a-form>
                 <a-form-item :validateStatus="showCustomPsdError?'error':''" :help="showCustomPsdError?customPsdErrorText:''">
-                  <a-input class="mx-1" style="width: 140px;" v-model="customPassword" @blur="checkCustomPsd" :disabled="!reserveMeetingPassword||isRandomOrCustom===1"/>
+                  <a-input class="mx-1" style="width: 140px;" v-model="customPassword" @blur="checkCustomPsd" :disabled="!bookingPassword||isRandomOrCustom===1"/>
                   <span class="text-black9 setting-label ml-0">{{$t('setting.conference.customPasswordNotice')}}</span>
                 </a-form-item>
               </a-form>
@@ -116,7 +116,7 @@
             <span class="setting-label">{{$t('setting.conference.loginSelector')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="dndWhenCalling"/>
+            <a-switch size="small" v-model="dnd"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
           </div>
         </div>
@@ -138,6 +138,11 @@ import AppHeader from '../MainHeader.vue';
 
 export default {
   name : 'ConferenceSetting',
+
+  components : {
+    AppHeader,
+  },
+  
   data() {
     return {
       advanceEntryTimeRange : [ 5, 180 ],
@@ -145,22 +150,34 @@ export default {
       advanceTimeErrorText  : '',
       showCustomPsdError    : false,
       customPsdErrorText    : '',
+      // settings not supported yet
+      advanceEntryTime      : 5,
+      isRandomOrCustom      : false,
     };
   },
-  components : {
-    AppHeader,
-  },
+
   sketch : {
-    ns    : 'setting.conference',
-    props : [ 'minWindowWhenSharing', 'maxWindowWhenWatchingSharing', 'enableGpu', 'shareComputerSound', 'preferredPictureFluency', 'autoSilence',
-      'noticeWhenLeaving', 'selectedNotice', 'advanceEntryTime', 'instanceMeetingPassword', 'reserveMeetingPassword',
-      'isRandomOrCustom', 'customPassword', 'dndWhenCalling', 'loginSelector' ],
+    ns    : 'setting',
+    props : [ 
+      'minimizedWhenLocalSharing',
+      'maximizedWhenRemoteSharing',
+      'hardwareAcceleration',
+      'shareWithSound',
+      'highProfile',
+      'muteAudioWhenJoin',
+      'noticeTip',
+      'meetnowPassword',
+      'bookingPassword',
+      'dnd',
+    ],
   },
+
   deactivated() {
-    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
+
   destroyed() {
-    this.$model.setting.save('conference'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
   
   methods : {
@@ -178,6 +195,7 @@ export default {
         return true;
       }
     },
+
     checkCustomPsd() {
       if (!/^\d{6}$/.test(this.customPassword)) {
         this.showCustomPsdError = true;
@@ -191,6 +209,7 @@ export default {
         return true;
       }
     },
+
     handleAdvancedSetting() {
       this.$message.warning('高级设置还没做好哦');
     },

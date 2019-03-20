@@ -1,4 +1,5 @@
 import { remote } from 'electron';
+import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 
 const model = new Vuem();
@@ -51,11 +52,33 @@ model.provide({
       return remote.getCurrentWindow().isMaximized();
     },
   },
+
+  async created() {
+    this.autoLauncher = new AutoLaunch({
+      name : remote.app.getName(),
+      // path is not required for electron app
+    });
+
+    // model hasn't be fully initilized when created() invoked
+    await this.$nextTick();
+    // model fully initilized
+
+    const setting = this.$getVM('setting');
+
+    setting.autoStart = this.autoLauncher.isEnabled();
+    setting.$watch(
+      'autoStart', (val) => {
+        if (val) this.autoLauncher.enable();
+        else this.autoLauncher.disable();
+      },
+      { immediate: true }
+    );
+  },
 });
 
 model.use(async(ctx, next) => {
   const { method, setting } = ctx;
-  const hideWhenClose = setting.common.forceMinimize;
+  const hideWhenClose = setting.hideWhenClose;
 
   // if hideWhenClose is enable, redirect close to hide
   if (method === 'close' && hideWhenClose) {

@@ -35,6 +35,7 @@
   "dependencies": {
     "ant-design-vue": "^1.3.5",
     "archiver": "^3.0.0",
+    "auto-launch": "^5.0.5",
     "axios": "^0.18.0",
     "bowser": "1.9.4",
     "clipboard-copy": "^3.0.0",
