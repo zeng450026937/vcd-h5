@@ -85,7 +85,7 @@ export default {
   },
   methods : {
     showInviteModal() {
-      // FIXME ugly way
+      // FIXME modify
       this.$parent.$children[0].showInviteModal();
     },
     switchTab(tab) {

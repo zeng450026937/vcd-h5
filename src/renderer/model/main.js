@@ -1,7 +1,7 @@
 import Vuem from './vuem';
 import kom from '.';
 
-import { MAIN, MODULE_NAME } from '../router/constants';
+import { LOGIN, MAIN, MODULE_NAME } from '../router/constants';
 import rtc from '../rtc';
 import router from '../router';
 
@@ -87,25 +87,24 @@ model.provide({
   },
   watch : {
     isRegistered : {
-      handler(val) {
+      async handler(val) {
         this.sidebarItems = val ? initialSidebar() : [];
         this.currentSidebar = val ? this.sidebarItems[0] : {};
+        // router.push(val ? MAIN.MEETING_INSTANCE : LOGIN.LOGIN_CONTENT);
       },
       immediate : true,
     },
     isConferenceDisConnected(val) {
-      if (val) {
-        router.push(this.currentNav.route);
+      if (val && this.isCallDisConnected) {
+        router.push(this.isRegistered ? this.currentNav.route : LOGIN.LOGIN_CONTENT);
       }
     },
     isCallDisConnected(val) {
-      if (val) {
-        router.push(this.currentNav.route);
+      if (val && this.isConferenceDisConnected) {
+        router.push(this.isRegistered ? this.currentNav.route : LOGIN.LOGIN_CONTENT);
       }
     },
   },
 });
-
-// model.use(() => {});
 
 export default model;

@@ -13,10 +13,11 @@ import conference from './conference';
 import main from './main';
 import call from './call/index';
 
+import errorNotice from './middle';
+
 Vue.use(Vuem);
 
 const model = new Vuem();
-
 
 model.mount('application', application);
 model.mount('setting', setting);
@@ -51,6 +52,8 @@ model.use(async(ctx, next) => {
 
   logger.debug(`model method: ${ctx.method}, duration: ${duration} ms, result: ${ret} `);
 });
+
+model.use(errorNotice);
 
 window.kom = model;
 

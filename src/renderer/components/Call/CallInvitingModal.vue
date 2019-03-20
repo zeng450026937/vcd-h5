@@ -80,7 +80,6 @@
 
 <script>
 /* eslint-disable no-loop-func */
-import copy from 'clipboard-copy';
 import ContactTree from '../Main/Contact/ContactTree.vue';
 import ContactList from '../Main/Contact/ContactList.vue';
 
@@ -141,7 +140,7 @@ export default {
         requestUri : `sip:${user.ip}`,
       }));
 
-      this.$rtc.call.upgrade(users)
+      this.$rtc.call.upgrade(users, { subject: `${this.$rtc.account.username} 的视频会议` })
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;

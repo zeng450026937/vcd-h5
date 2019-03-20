@@ -15,6 +15,13 @@ const storage = new VueStorage({
       default : [],
       autoKey : true,
     },
+    { // 登录的用户 YMS
+      store   : LOGIN_STORAGE.MEETING_ACCOUNT_LIST,
+      type    : Array,
+      key     : 'id',
+      default : [],
+      autoKey : true,
+    },
     { // 服务器类型
       store   : LOGIN_STORAGE.SERVER_TYPE,
       type    : String,

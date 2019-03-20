@@ -37,6 +37,7 @@ chat.provide({
   },
   watch : {
     newMessage(val) {
+      this.hasNewMessage = true;
       const raw = val[val.length - 1];
 
       const messageObject = {

@@ -8,27 +8,30 @@
       @cancel="handleCancel"
       wrapClassName="screen-share-modal"
   >
-    <template slot="footer">
-      <div class="absolute pin-t h-full">
-        <div class="text-left flex flex-col justify-around h-full">
+    <div class="h-14 flex items-center justify-center" slot="footer">
+      <div class="absolute pin-t pin-l ml-5 h-full">
+        <div class="text-left flex flex-col justify-center h-full">
           <div>
-            <a-checkbox class="h-5 text-xs">
+            <a-checkbox class="text-xs">
               共享电脑声音
             </a-checkbox>
           </div>
-          <div class="flex items-center">
-            <a-checkbox class="h-5 text-xs">
+          <div class="flex items-center mt-1">
+            <a-checkbox class="text-xs">
               视频流畅度优先
             </a-checkbox>
             <a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>
           </div>
         </div>
       </div>
-      <a-button key="submit" type="primary" @click="handleShare">
+      <a-button key="submit"
+                type="primary"
+                :disabled="!selectedWindow"
+                @click="handleShare">
         确定
       </a-button>
       <a-button key="back" @click="handleCancel" class="ml-4">取消</a-button>
-    </template>
+    </div>
     <div class="flex flex-col">
       <div class="flex justify-center items-center h-12 border-b">
         <span class="text-base leading-loose text-black">选择一个您想要共享的窗口或程序</span>
@@ -76,7 +79,7 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
-      selectedWindow  : {},
+      selectedWindow  : null,
     };
   },
   computed : {
@@ -86,6 +89,11 @@ export default {
     windowList() {
       return this.share.windowList;
     },
+  },
+  mounted() {
+    if(this.windowList.length > 0) {
+      this.selectedWindow = this.windowList[0];
+    }
   },
   methods : {
     selectWindow(item) {
@@ -131,6 +139,7 @@ export default {
     .ant-modal-footer {
       position: relative;
       text-align: center;
+      padding: 0;
     }
     .inviting-tabs{
       .ant-tabs-nav-scroll {

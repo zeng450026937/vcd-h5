@@ -2,9 +2,19 @@
   <div id="conference-remote-video" class="h-full w-full bg-media relative">
     <remote-video
         :class="{[`remote-video-content-${isInConferenceMain ? 'normal' : 'shrink'}`]: true}"
-        :source="source">
+        :source="source"
+        :hide-video="!isVideoConference">
+      <img slot="bg"
+           src="../Common/static/video-bg.png"
+           class="content-inner"/>
+      <!--<div slot="content"-->
+           <!--class="absolute-center flex flex-col items-center justify-center">-->
+        <!--<a-iconfont type="icon-huiyishi" class="display-icon"/>-->
+        <!--<span class="display-name mt-5">音频会议</span>-->
+      <!--</div>-->
       <conference-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
+
   </div>
 </template>
 
@@ -26,7 +36,7 @@ export default {
   },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'hideControls', 'showMorePanel', 'isInConferenceMain' ],
+    props : [ 'hideControls', 'showMorePanel', 'isInConferenceMain', 'isVideoConference' ],
   },
   computed : {
     controlsClasses() {
@@ -48,6 +58,29 @@ export default {
 
 <style lang="less">
 #conference-remote-video {
+
+    .content-wrapper{
+      border: 1px solid #1d212f;
+    }
+    .content-inner {
+      width: 100%;
+      object-fit: contain;
+      max-height: calc( 100% - 158px );
+    }
+
+  .display-icon {
+    opacity: 0.4;
+    color: white;
+    font-size: 84px;
+  }
+  .display-name {
+    opacity: 0.4;
+    font-size: 24px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 24px;
+  }
+
   .controls {
     &-normal {
       transform: translateY(-100%);

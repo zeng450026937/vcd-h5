@@ -17,8 +17,8 @@
     "shortcutName": "VC Desktop",
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "differentialPackage": false,
-    "artifactName": "vc-desktop-${version}.${ext}"
+    "artifactName": "vc-desktop-${version}.${ext}",
+    "differentialPackage": false
   },
   "protocols": [{
     "name": "x-yealink-client",
@@ -33,7 +33,7 @@
     "category": "public.app-category.video"
   },
   "dmg": {
-    "artifactName": "vc-desktop-${version}.${ext}"
+    "artifactName": "vc-desktop-${version}.${ext}",
   },
   "linux": {
     "target": [
@@ -42,6 +42,6 @@
     "category": "Video"
   },
   "appImage": {
-    "artifactName": "vc-desktop-${version}.${ext}"
+    "artifactName": "vc-desktop-${version}.${ext}",
   }
 }

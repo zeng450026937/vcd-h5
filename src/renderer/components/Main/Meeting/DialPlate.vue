@@ -173,7 +173,7 @@ export default {
     },
     audioCall() {
       if (!this.callNumber) return;
-      this.$dispatch('call.doAudioCall', this.callNumber);
+      this.$dispatch('call.doAudioCall', {number: this.callNumber});
     },
     showAddLocalContact() {
       if (this.localContactExist) return;
