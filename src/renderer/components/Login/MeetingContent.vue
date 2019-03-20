@@ -13,14 +13,41 @@
             <h2 class="text-white">加入会议</h2>
             <div class="mt-10 flex flex-col">
               <div class="input-with-icon">
-                <a-input
-                    v-number-only
-                    placeholder='会议ID'
+
+                <a-auto-complete
+                    class="certain-category-search w-full overflow-x-hidden"
                     :value="meetingInfo.number"
+                    :dropdownMatchSelectWidth="false"
+                    optionLabelProp="value"
+                    @select="selectAccount"
+                    @search="searchAccount"
                     @change="onAccountChange"
                 >
-                  <a-iconfont slot="prefix" type='icon-ID' class="text-base text-black9"/>
-                </a-input>
+                  <template v-if="searchedAccounts.length > 0" slot="dataSource">
+                    <a-select-opt-group>
+                      <div class="flex justify-between px-3 border-b" slot="label">
+                        <span>历史记录</span>
+                        <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
+                      </div>
+                      <a-select-option v-for="item in searchedAccounts"
+                                       :key="item.number" :value="item.number" class="group">
+                        <div class="flex items-center px-2 py-2">
+                          <span class="certain-search-item-count">{{item.number}}</span>
+                          <div class="flex flex-grow"></div>
+                          <a-iconfont
+                              type="icon-guanbi"
+                              class="flex text-red opacity-0 group-hover:opacity-100"
+                              @click.stop="deleteAccount(item)"
+                          ></a-iconfont>
+                        </div>
+                      </a-select-option>
+                    </a-select-opt-group>
+                  </template>
+                  <a-input placeholder='会议ID'>
+                    <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
+                  </a-input>
+                </a-auto-complete>
+
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
@@ -112,7 +139,7 @@
         </a-button>
       </div>
     </div>
-    <video-view v-if="!muteVideo" object-fit="cover" muted class="z-0 bg-media"/>
+    <video-view v-if="meetingInfo.initialVideo" object-fit="cover" muted class="z-0 bg-media"/>
     <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
       <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
     </div>
@@ -120,8 +147,10 @@
 </template>
 
 <script>
+import { cloneDeep, debounce } from 'lodash';
 import TabSettingMedia from '../Conference/TabSettingMedia.vue';
 import VideoView from '../Common/VideoView.vue';
+import { LOGIN_STORAGE } from '../../storage/constants';
 
 export default {
   name       : 'YMAMeeting',
@@ -130,71 +159,74 @@ export default {
     VideoView,
   },
   data() {
+    const dSearch = debounce((val = '') => {
+      this.searchedAccounts = this.modifiedAccounts.filter((a) => a.number.indexOf(val) >= 0);
+    }, 200);
+
     return {
-      meetingInfo         : this.$model.meeting.anonMeetingRecord,
+      dSearch,
       showProxyItem       : false,
       isInSetting         : false,
       isProxyPanelVisible : false,
+      meetingInfo         : {
+        number       : '20017',
+        pin          : '548194',
+        displayName  : 'AAA',
+        server       : 'academia.com',
+        proxy        : '10.200.112.165',
+        proxyPort    : '5061',
+        initialVideo : true,
+        initialAudio : true,
+      },
+      rawAccounts      : [],
+      modifiedAccounts : [],
+      searchedAccounts : [],
     };
   },
   sketch : {
     ns    : 'account',
     props : [ 'loginType' ],
   },
+  mounted() {
+    this.initRawAccounts();
+  },
   computed : {
-    muteAudio : {
-      get() {
-        return this.$rtc.media.localMedia.muteAudio;
-      },
-      set(val) {
-        this.$rtc.media.localMedia.muteAudio = val;
-      },
-    },
-    muteVideo : {
-      get() {
-        return this.$rtc.media.localMedia.muteVideo;
-      },
-      set(val) {
-        this.$rtc.media.localMedia.muteVideo = val;
-      },
+    serverType() {
+      return this.$model.account.serverType;
     },
     localStream() {
       return this.$rtc.media.localMedia.stream;
     },
     videoIcon() {
-      return this.muteVideo ? {
-        title : '打开摄像头',
-        icon  : 'icon-shipinjinyong',
-        color : 'red-light',
-      } : {
+      return this.meetingInfo.initialVideo ? {
         title : '关闭摄像头',
         icon  : 'icon-shipin',
         color : '',
+      } : {
+        title : '打开摄像头',
+        icon  : 'icon-shipinjinyong',
+        color : 'red-light',
       };
     },
     audioIcon() {
-      return this.muteAudio ? {
+      return this.meetingInfo.initialAudio ? {
+        title : '关闭麦克风',
+        icon  : 'icon-maikefeng',
+        color : '' } : {
         title : '打开麦克风',
         icon  : 'icon-maikefengjinyong',
         color : 'red-light',
-      } : {
-        title : '关闭麦克风',
-        icon  : 'icon-maikefeng',
-        color : '' };
+      };
     },
     meetingBtnClasses() {
       return {};
-    },
-    meetingEnabled() {
-      return this.meetingInfo.number && this.meetingInfo.displayName;
     },
     isConnecting() {
       return this.$rtc.conference.connecting;
     },
   },
   methods : {
-    onAccountChange(e) {
-      const { value } = e.target;
+    onAccountChange(value) {
       const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
 
       if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
@@ -212,16 +244,6 @@ export default {
       }
     },
     joinMeeting() {
-      if (!this.meetingInfo.number) {
-        this.$message.error('会议号码不可为空');
-
-        return;
-      }
-      if (!this.meetingInfo.server) {
-        this.$message.error('服务器地址不可为空');
-
-        return;
-      }
       this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
     },
     returnLogin() {
@@ -230,10 +252,54 @@ export default {
     handleMeeting() {
     },
     triggerAudio() {
-      this.muteAudio = !this.muteAudio;
+      this.meetingInfo.initialAudio = !this.meetingInfo.initialAudio;
     },
     triggerVideo() {
-      this.muteVideo = !this.muteVideo;
+      this.meetingInfo.initialVideo = !this.meetingInfo.initialVideo;
+    },
+    deleteAccount(val) {
+      this.$storage.deleteItem(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, val.number, 'number');
+      this.initRawAccounts();
+    },
+    clearAccount() {
+      this.$storage.deleteItem(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
+      this.initRawAccounts();
+    },
+    selectAccount(val) {
+      Object.assign(this.meetingInfo, {
+        number       : '',
+        pin          : '',
+        server       : this.serverType === 'cloud' ? 'yealinkvc.com' : '',
+        displayName  : '',
+        proxy        : '',
+        proxyPort    : '',
+        initialVideo : true,
+        initialAudio : true,
+      }, this.modifiedAccounts.find((a) => a.number === val));
+    },
+    searchAccount(val) {
+      this.dSearch(val.trim());
+    },
+    initRawAccounts() {
+      this.rawAccounts = (this.$storage.query(LOGIN_STORAGE.MEETING_ACCOUNT_LIST) || []); // 得到最初的登陆历史记录
+      this.modifyAccounts();
+    },
+    modifyAccounts() {
+      this.modifiedAccounts = this.rawAccounts
+        .filter((account) => account.type === this.serverType)
+        .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
+      this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
+      this.meetingInfo = {
+        number       : '',
+        pin          : '',
+        server       : this.serverType === 'cloud' ? 'yealinkvc.com' : '',
+        displayName  : '',
+        proxy        : '',
+        proxyPort    : '',
+        initialVideo : true,
+        initialAudio : true,
+      };
+      this.dSearch();
     },
   },
 };

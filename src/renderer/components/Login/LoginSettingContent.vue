@@ -21,7 +21,7 @@
       <a-button type="primary" style="width: 68px" @click="handlerEnsure">
         确定
       </a-button>
-      <a-button class="ml-4" style="width: 68px" @click="handlerCancel">
+      <a-button class="ml-4" style="width: 68px" @click="closeSetting">
         取消
       </a-button>
     </div>
@@ -41,6 +41,7 @@ export default {
     return {
       tmpProxy     : '',
       tmpProxyPort : '',
+      errorQueue   : Promise.resolve(),
     };
   },
   mounted() {
@@ -60,13 +61,13 @@ export default {
       if (this.validateProxy()) {
         this.proxy = this.tmpProxy;
         this.proxyPort = this.tmpProxyPort;
-        this.$emit('closeSetting');
+        this.closeSetting();
       }
       else {
-        this.$message.error('代理服务器格式错误');
+        this.errorQueue = this.errorQueue.then(() => this.$message.error('代理服务器格式错误'));
       }
     },
-    handlerCancel() {
+    closeSetting() {
       this.$emit('closeSetting');
     },
   },

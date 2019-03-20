@@ -114,7 +114,7 @@
 <script>
 import { cloneDeep, debounce } from 'lodash';
 import { LOGIN_STORAGE } from '../../storage';
-import { isCapsLockOn, IP_REG, DOMAIN_REG } from '../../utils';
+import { isCapsLockOn } from '../../utils';
 
 const { shell } = require('electron');
 
@@ -154,23 +154,13 @@ export default {
     },
   },
   methods : {
-    validateForm(values) {
-      if (!values.account) this.$message.error('账号不能为空');
-      else if (values.account.length > 128) this.$message.error('无法输入超过128个字符');
-      else if (!values.pin) this.$message.error('密码不能为空');
-      else if (!values.pin.length > 128) this.$message.error('无法输入超过128个字符');
-      else if (!values.server) this.$message.error('服务器地址不能为空');
-      else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) this.$message.error('服务器地址格式错误');
-      else return true;
-      
-      return false;
-    },
+
     handleLogin(e) {
       if (e) e.preventDefault();
       this.form.validateFields([ 'account', 'pin', 'server' ],
         { force: true },
         (err, values) => {
-          if (!err && this.validateForm(values)) {
+          if (!err) {
             this.$dispatch('account.login', values);
             this.autoLoginDisabled = true;
           }

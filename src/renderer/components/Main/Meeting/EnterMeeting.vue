@@ -8,7 +8,7 @@
            @keyup.enter="enterMeeting">
         <div style="height: 270px;"
              class="relative flex bg-media">
-          <video-view v-if="!muteVideo" class="w-full h-full"
+          <video-view v-if="meetingInfo.initialVideo" class="w-full h-full"
                       muted
                       object-fit="cover"/>
           <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
@@ -110,43 +110,28 @@ export default {
     isConnected() {
       return this.$rtc.conference.connected;
     },
-    muteAudio : {
-      get() {
-        return this.$rtc.media.localMedia.muteAudio;
-      },
-      set(val) {
-        this.$rtc.media.localMedia.muteAudio = val;
-      },
-    },
-    muteVideo : {
-      get() {
-        return this.$rtc.media.localMedia.muteVideo;
-      },
-      set(val) {
-        this.$rtc.media.localMedia.muteVideo = val;
-      },
-    },
     videoIcon() {
-      return this.muteVideo ? {
-        title : '打开摄像头',
-        icon  : 'icon-shipinjinyong',
-        color : 'red-light',
-      } : {
+      return this.meetingInfo.initialVideo ? {
         title : '关闭摄像头',
         icon  : 'icon-shipin',
         color : '',
+      } : {
+        title : '打开摄像头',
+        icon  : 'icon-shipinjinyong',
+        color : 'red-light',
       };
     },
     audioIcon() {
-      return this.muteAudio ? {
-        title : '打开麦克风',
-        icon  : 'icon-maikefengjinyong',
-        color : 'red-light',
-      } : {
-        title : '关闭麦克风',
-        icon  : 'icon-maikefeng',
-        color : '',
-      };
+      return this.meetingInfo.initialAudio
+        ? {
+          title : '关闭麦克风',
+          icon  : 'icon-maikefeng',
+          color : '',
+        } : {
+          title : '打开麦克风',
+          icon  : 'icon-maikefengjinyong',
+          color : 'red-light',
+        };
     },
   },
   data() {
@@ -193,12 +178,11 @@ export default {
       this.$rtc.conference.leave();
     },
     triggerAudio() {
-      this.muteAudio = !this.muteAudio;
+      this.meetingInfo.initialAudio = !this.meetingInfo.initialAudio;
     },
     triggerVideo() {
-      this.muteVideo = !this.muteVideo;
+      this.meetingInfo.initialVideo = !this.meetingInfo.initialVideo;
     },
-
   },
 };
 </script>
