@@ -302,6 +302,16 @@ export default {
       this.dSearch();
     },
   },
+  watch : {
+    serverType() { // f服务器类型发生变化
+      if (this.modifiedAccounts.length <= 0) { // 没有联系人则从数据库重新获取
+        this.initRawAccounts();
+      }
+      else { // 重新设置 searchResult
+        this.modifyAccounts();
+      }
+    },
+  },
 };
 </script>
 
