@@ -7,7 +7,7 @@ const initialDate = () => ({
   currentTab       : '',
   isInCallMain     : true,
   hideControls     : false,
-  showMorePanel    : true,
+  showMorePanel    : false,
   localWindowState : { current: 1, pre: 1 }, // 0.min 1.shrink 2.mini 3.normal 4.expand
   shareWindowState : { current: 1, pre: 1 }, // 0.min 1.shrink 2.mini 3.normal 4.expand
 

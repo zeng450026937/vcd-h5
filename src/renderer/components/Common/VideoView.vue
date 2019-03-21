@@ -95,9 +95,13 @@ export default {
       if (!this.videoElement) { // TODO update DOM to refs
         this.videoElement = document.getElementById(this.videoId);
       }
+      if (this.hideVideo) {
+        this.videoElement.style.display = 'none';
+
+        return;
+      }
       if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.srcObject = stream;
-        // this.videoElement.src = 'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4';
       }
     },
     initStream() {
@@ -126,7 +130,9 @@ export default {
         if (this.videoElement) {
           if (val) { // 隐藏
             this.videoElement.style.display = 'none';
-          } else {
+          }
+          else {
+            this.onVideoStreamChanged(this.videoStream);
             this.videoElement.style.display = 'block';
           }
         }
