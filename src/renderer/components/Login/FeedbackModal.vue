@@ -122,12 +122,13 @@ export default {
     reset() {
       this.fileList = [];
       this.problemDescribe = '';
+      this.contactInfo = '';
       this.isUploadLog = true;
     },
     async submitFeedBack() {
       if (!this.check()) return;
 
-      const formData = new FormData();
+      const formdata = new FormData();
 
       if (this.isUploadLog) {
         const todayLog = await this.getTodayLog();
@@ -135,29 +136,28 @@ export default {
         const filename = this.getLogFileName();
         const blob = new Blob([ content ], { type: 'text/plain' });
 
-        formData.append('log', blob, filename);
+        formdata.append('log', blob, filename);
       }
 
       if (this.useUploadImg) {
         this.fileList.map((item) => item.originFileObj).forEach((img) => {
-          formData.append('img', img);
+          formdata.append('img', img);
         });
       }
 
-      formData.append('param', JSON.stringify({
+      formdata.append('param', JSON.stringify({
         feedbackContent : this.problemDescribe,
         contactInfo     : this.contactInfo,
         // feedbackCategory,
         // feedbackTitle,
       }));
 
-      const api = window.api;
-
-      if (!api) return;
-
-      const res = await api.doFeedback(formData);
-
-      if (res == null) return this.$message.info('上报反馈信息失败！');
+      try {
+        await this.$dispatch('ytms.doFeedback', { formdata });
+      }
+      catch (error) {
+        this.$message.info('上报反馈信息失败！');
+      }
 
       this.visible = false;
       this.close();
