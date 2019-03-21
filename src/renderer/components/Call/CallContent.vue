@@ -1,38 +1,48 @@
 <template>
-  <a-layout id="call-content" class="h-full bg-media">
-    <div class="flex flex-col h-full">
-      <div class="call-content-header flex flex-col h-10">
-        <div class="flex items-center h-full text-white self-end px-5 no-dragable">
-          <a-iconfont type="icon-quanping" class="ml-5 cursor-pointer hover:text-indigo text-base"
-                      @click="maxCallContent"/>
-          <template v-if="isInCallMain">
-            <template v-if="isConnected">
-              <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo text-base"
-                          @click="showInviteModal"/>
-              <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
-                       class="shadow-none"
-                       :dot="hasNewMessage">
-                <a-iconfont type="icon-liaotian" class="ml-5 cursor-pointer hover:text-indigo text-base"
-                            @click="openDrawer('TabChatting')"/>
-              </a-badge>
+  <a-layout id="call-content" class="bg-media h-full">
+    <div class="relative h-full w-full" @mousemove="contentClicked">
+      <div class="flex flex-col h-full">
+        <div class="header no-dragable flex flex-col h-10 z-10"
+             :class="{'opacity-0': hideControls}">
+          <div class="flex items-center h-full text-white self-end px-4">
+            <a-iconfont v-if="hasScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
+                        title="弹出辅流"
+                        class="cursor-pointer hover:text-indigo text-base"
+                        @click="openShareWindow"/>
+            <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
+                        title="最大化/最小化"
+                        @click="maxCallContent"/>
+            <template v-if="isInCallMain">
+              <template v-if="isConnected">
+                <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                            @click="showInviteModal"/>
+                <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
+                         class="shadow-none"
+                         :dot="hasNewMessage">
+                  <a-iconfont type="icon-liaotian" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                              @click="openDrawer('TabChatting')"/>
+                </a-badge>
+              </template>
+              <a-iconfont type="icon-kongzhi" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                          @click="openDrawer('TabSetting')"/>
             </template>
-            <a-iconfont type="icon-kongzhi" class="ml-5 cursor-pointer hover:text-indigo text-base"
-                        @click="openDrawer('TabSetting')"/>
-          </template>
+          </div>
         </div>
+        <div class="flex flex-grow"></div>
       </div>
-      <div v-if="isConnected" class="flex flex-grow flex-col items-center justify-center">
-        <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5">音频通话</span>
+      <div :class="remoteVideoClass"
+           @dblclick="maxCallContent">
+        <call-remote-video :source="centerSource"/>
       </div>
-      <div v-else class="call-content flex flex-grow flex-col items-center justify-center">
-        <a-avatar :size="160" class="target-avatar border-8">
-          <span class="target-name">{{userName}}</span>
-        </a-avatar>
-        <span class="text-white text-2xl leading-loose mt-5">{{callText}}</span>
+      <div v-show="isVideoCall"
+           :class="localVideoClasses">
+        <call-local-video/>
       </div>
-      <div class="flex flex-shrink">
-        <call-controls/>
+      <div v-if="hasScreenStream && !isShareWindowOpen"
+           :class="shareVideoClasses">
+        <call-share-video
+            :source="leftSource"
+            @video-clicked="shareScreenClicked"/>
       </div>
       <call-inviting-modal ref="invitingModal"/>
     </div>
@@ -41,24 +51,38 @@
 
 <script>
 import screenfull from 'screenfull';
-import CallControls from './CallControls.vue';
-import { CALL } from '../../router/constants';
+import CallRemoteVideo from './CallRemoteVideo.vue';
+import CallLocalVideo from './CallLocalVideo.vue';
+import CallShareVideo from './CallShareVideo.vue';
 import CallInvitingModal from './CallInvitingModal.vue';
+import { CALL } from '../../router/constants';
 
 export default {
   name       : 'CallContent',
   components : {
-    CallControls,
     CallInvitingModal,
+    CallRemoteVideo,
+    CallLocalVideo,
+    CallShareVideo,
+  },
+  data() {
+    return {
+      shareWindow       : null,
+      hideControlsTimer : null,
+    };
   },
   sketch : [
     {
       ns    : 'call.sketch',
-      props : [ 'isInCallMain', 'currentTab' ],
+      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInCallMain', 'currentTab' ],
     },
     {
       ns    : 'call.chat',
       props : [ 'hasNewMessage' ],
+    },
+    {
+      ns    : 'call',
+      props : [ 'isVideoCall' ],
     },
   ],
   computed : {
@@ -68,7 +92,6 @@ export default {
     isConnected() {
       return this.$rtc.call.connected;
     },
-
     callText() {
       const titleMap = {
         connecting   : `正在呼叫 ${this.userName}`,
@@ -93,8 +116,54 @@ export default {
     userName() {
       return this.displayName || this.targetUser || '未知用户';
     },
+    centerSource() {
+      return this.isShareInCenter ? 'screen' : 'call-remote';
+    },
+    leftSource() {
+      return this.isShareInCenter ? 'call-remote' : 'screen';
+    },
+    localVideoClasses() {
+      const position = this.isInCallMain ? 'right'
+        : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
+
+      return {
+        [`local-video-content local-video-content-${position}`] : true,
+      };
+    },
+    shareVideoClasses() {
+      const position = this.isInCallMain ? 'left' : 'center';
+
+      return {
+        [`share-video-content share-video-content-${position}`] : true,
+      };
+    },
+    remoteVideoClass() {
+      return {
+        'remote-video-content absolute h-full w-full pin-t pin-r' : true,
+      };
+    },
+    hasScreenStream() {
+      return false;
+    },
+  },
+  mounted() {
+    this.contentClicked();
   },
   methods : {
+    openShareWindow() {
+      if (this.isShareWindowOpen) return;
+
+      const option = 'width=528,height=297,minWidth=528,minHeight=297,directories=no,resizable,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
+
+      this.shareWindow = window.open('shareScreen.html', 'screen-share', option);
+      this.isShareWindowOpen = true;
+      this.shareWindow.onbeforeunload = () => {
+        // FIXME TMP SOLUTION
+        setTimeout(() => {
+          this.isShareWindowOpen = !this.shareWindow.closed;
+        }, 1000);
+      };
+    },
     showInviteModal() {
       this.$refs.invitingModal.visible = true;
     },
@@ -107,6 +176,19 @@ export default {
     },
     maxCallContent() {
       screenfull.toggle(document.getElementById('layout-call-content'));
+    },
+    contentClicked() {
+      if (!this.hideControls && this.hideControlsTimer) {
+        clearTimeout(this.hideControlsTimer);
+      }
+      this.hideControls = false;
+
+      this.hideControlsTimer = setTimeout(() => {
+        this.hideControls = true;
+      }, 6000);
+    },
+    shareScreenClicked() {
+      this.isShareInCenter = !this.isShareInCenter;
     },
   },
   watch : {
@@ -124,35 +206,75 @@ export default {
       },
       immediate : true,
     },
+    hasScreenStream(val) {
+      // 第一次打开辅流将其显示在主页面
+      this.isShareInCenter = !!val;
+    },
+    isShareWindowOpen(val) {
+      if (val) this.isShareInCenter = false;
+    },
   },
 };
 </script>
 
 <style lang="less">
-  #call-content{
-    .call-content-header {
+  #call-content {
+    .header {
       background-image: linear-gradient(-180deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.00) 98%);
+      transition: opacity ease-out .5s;
     }
-    .target-avatar {
-      background-color: #55638C;
+    .button-content {
+      button {
+        background: rgba(0,0,0,0.65);
+      }
     }
-    .target-name {
-      font-size: 32px;
-      color: #FFFFFF;
-      text-align: center;
-      line-height: 40px;
+    .local-video-content {
+      position: absolute;
+      top: 100%;
+      &-right {
+        left: 100%;
+        transform: translate(calc( -100% - 4px ), calc( -100% - 4px ));
+      }
+      &-center-right {
+        left: 50%;
+        transform: translateY(-100%);
+      }
+      &-center {
+        left: 50%;
+        transform: translate(-50%, -100%);
+      }
     }
-    .display-icon {
-      opacity: 0.4;
-      color: white;
-      font-size: 84px;
+
+    .share-video-content {
+      position: absolute;
+      top: 100%;
+      &-left {
+        left: 0;
+        transform: translate(4px, calc( -100% - 4px ));
+      }
+      &-center {
+        left: 50%;
+        transform: translate(-100%, -100%);
+      }
     }
-    .display-name {
-      opacity: 0.4;
-      font-size: 24px;
-      color: #FFFFFF;
-      text-align: center;
-      line-height: 24px;
+  }
+  .more-panel-popover {
+    .ant-popover-inner-content {
+      padding: 4px 0;
+      .popover-content {
+        width: 180px;
+        height: 64px;
+        .popover-content-item {
+          cursor: pointer;
+          .ant-slider-rail, .ant-slider-track,.ant-slider-step {
+            height: 2px;
+          }
+          .ant-slider-handle {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
     }
   }
 </style>

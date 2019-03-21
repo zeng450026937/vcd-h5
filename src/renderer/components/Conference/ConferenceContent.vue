@@ -35,8 +35,7 @@
            @dblclick="maxConferenceContent">
         <conference-remote-video :source="centerSource"/>
       </div>
-      <div v-show="isVideoConference"
-           :class="localVideoClasses">
+      <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
       <div v-if="hasScreenStream && !isShareWindowOpen"
@@ -110,6 +109,7 @@ export default {
 
       return {
         [`local-video-content local-video-content-${position}`] : true,
+        'z-end'                                                   : !this.isVideoConference,
       };
     },
     shareVideoClasses() {

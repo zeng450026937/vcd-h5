@@ -1,5 +1,5 @@
 <template>
-  <div id="conference-controls" class="flex justify-center py-5 items-center">
+  <div id="conference-controls" class="flex justify-center py-5 items-center w-full">
     <div class="button-content flex h-12 items-center z-10">
       <!--视频控制-->
       <a-button :disabled="videoDisabled"
@@ -38,7 +38,7 @@
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
               @click="switchConferenceType">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">{{isVideoConference ? '切换为音频通话' : '切换为视频通话'}}</span>
+            <span class="ml-3 text-xs">{{isVideoConference ? '切换为音频会议' : '切换为视频会议'}}</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                @click="openPlateModal">
@@ -61,7 +61,7 @@
     </div>
     <conference-leaving-modal ref="leavingModal"/>
     <screen-share-modal ref="shareModal"/>
-    <conference-message v-show="!isInConferenceMain" class="conference-message"/>
+    <conference-message v-show="!isInConferenceMain || !isVideoConference" class="conference-message"/>
     <conference-plate-modal ref="plateModal"/>
   </div>
 </template>
@@ -71,7 +71,6 @@ import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
 import ConferencePlateModal from './ConferencePlateModal.vue';
 import ConferenceMessage from './ConferenceMessage.vue';
-import { CONFERENCE } from '../../router/constants';
 
 export default {
   name       : 'ConferenceControls',

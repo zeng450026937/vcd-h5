@@ -12,6 +12,11 @@ model.mount('state', state);
 model.mount('sketch', sketch);
 
 model.provide({
+  data() {
+    return {
+      isVideoCall : false,
+    };
+  },
   middleware : {
     call(ctx) {
       let { number } = ctx.payload;
@@ -25,6 +30,8 @@ model.provide({
       const { call } = rtc;
 
       call.target = number;
+
+      this.isVideoCall = ctx.payload.options.video;
 
       return call.connect('send', ctx.payload.options);
     },

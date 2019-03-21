@@ -12,8 +12,7 @@
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
     ></video>
-    <div v-show="!hideVideo"
-         v-if="!videoStream"
+    <div v-if="!videoStream && !hideVideo"
          class="loading-notice absolute flex flex-col w-full justify-center items-center">
       <a-spin size="large"/>
       <div class="mt-2 text-indigo text-xl">视频加载中...</div>
@@ -32,7 +31,7 @@ export default {
   props : {
     source : {
       type    : String,
-      default : 'local', // local remote screen
+      default : 'local', // local remote screen call-remote
     },
     objectFit : {
       type    : String,
@@ -81,6 +80,7 @@ export default {
         remote : this.$rtc.conference.mediaChannel.remoteStream,
         screen : this.$rtc.conference.shareChannel.remoteStream
           || this.$rtc.conference.shareChannel.localStream,
+        'call-remote' : this.$rtc.call.remoteStream,
       };
 
       return streamMap[this.source];
@@ -120,13 +120,18 @@ export default {
       handler   : 'onVideoStreamChanged',
       immediate : true,
     },
-    hideVideo(val) {
-      if (val) { // 隐藏
-        this.videoElement.style.display = 'none';
-      }
-      else {
-        this.videoElement.style.display = 'block';
-      }
+    hideVideo : {
+      async handler(val) {
+        await this.$nextTick();
+        if (this.videoElement) {
+          if (val) { // 隐藏
+            this.videoElement.style.display = 'none';
+          } else {
+            this.videoElement.style.display = 'block';
+          }
+        }
+      },
+      immediate : true,
     },
   },
 };

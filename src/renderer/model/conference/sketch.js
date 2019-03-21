@@ -27,6 +27,7 @@ const initialDate = () => ({
   showMessage         : true, // 入会和离开的提示
   // 是否为视频会议 视频会议 OR 音频会议
   isVideoConference   : true,
+  hideMessage         : true,
 });
 
 sketch.provide({
