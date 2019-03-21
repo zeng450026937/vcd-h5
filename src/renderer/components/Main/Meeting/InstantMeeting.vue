@@ -1,51 +1,13 @@
 <template>
   <a-layout id="instant-meeting" class="h-full w-full">
     <div class="flex flex-col h-full">
-      <app-header :title="`${contacts.name}（${contacts.amount}）`"/>
+      <app-header :title="`${rootNode.name} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
       <a-divider class="my-0"/>
-      <div class="flex h-full m-4">
-
-        <div class="w-1/2 bg-white overflow-hidden">
-          <contact-tree ref="contactTree"
-                        :checked="checkedKeys"
-                        self-checked
-                        @onCheck="onCheck"
-                        @onPush="onPush"
-                        @onPop="onPop"
-          ></contact-tree>
-        </div>
-        <div class="flex mx-2 justify-center items-center">
-          <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"/>
-        </div>
-        <div class="flex w-1/2 bg-white overflow-hidden border">
-          <div class="w-full flex flex-col">
-            <div class="border-b">
-              <div class="flex flex-col">
-                <div class="flex h-10 items-center px-3">
-                  <span class="flex flex-grow text-sm leading-normal">{{selectedContact.length || 0}}/100</span>
-                  <span v-if="selectedContact.length > 1"
-                        class="flex text-indigo text-xs cursor-pointer leading-tight"
-                        @click="clearAll">全部清空</span>
-                </div>
-              </div>
-            </div>
-            <template v-if="!selectedContact.length">
-              <common-empty class="mt-10 text-grey"
-                            image="empty-contact"
-                            text="当前只有本人加入会议"/>
-            </template>
-            <contact-list v-else
-                          :contactList="selectedContact"
-                          :video-icon="false"
-                          :audio-icon="false"
-                          delete-icon highlightSelected
-                          hide-popup
-                          self-un-deleted
-                          @deleteContact="deleteContact"
-            ></contact-list>
-          </div>
-        </div>
+      <div class="flex flex-col h-full m-4">
+        <transfer ref="transfer"></transfer>
       </div>
+
+
       <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
       <div class="h-12">
@@ -68,6 +30,8 @@ import AppHeader from '../MainHeader.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactTree from '../Contact/ContactTree.vue';
 import ContactList from '../Contact/ContactList.vue';
+import PlainTree from '../../Common/CommonTree/index.vue';
+import transfer from '../../transfer/index.vue';
 
 export default {
   name       : 'InstantMeeting',
@@ -76,6 +40,8 @@ export default {
     ContactTree,
     ContactList,
     CommonEmpty,
+    PlainTree,
+    transfer,
   },
   data() {
     return {
@@ -84,78 +50,59 @@ export default {
       selectedContact : [ ],
     };
   },
+  watch : {
+    dataLoaded(val) {
+      if (val) {
+        this.create();
+      }
+    },
+  },
   computed : {
-    currentContact() {
-      return this.$model.contact.currentContact;
+    dataLoaded() {
+      return this.$model.contact.phoneBookLoaded;
+    },
+    store() {
+      return this.$model.contact.phoneBookStore;
     },
     contacts() {
-      return this.$model.contact.phoneBook || {};
+      return this.$model.contact.phoneBookStore.originTree;
+    },
+    currentUser() {
+      return this.$model.contact.currentUser;
+    },
+    rootNode() {
+      if (!this.store) {
+        return {
+          name : '',
+        };
+      }
+
+      return this.store.rootNode;
     },
   },
   mounted() {
+    if (this.dataLoaded) {
+      this.create();
+    }
   },
   methods : {
-    deleteContact(contact) {
-      const { checkedKeys, unCheckSearchResult } = this.$refs.contactTree;
-
-      let parent = contact;
-      const i = this.selectedContact.findIndex((c) => c.id === contact.id);
-
-      if (i >= 0) this.selectedContact.splice(i, 1);
-
-      while (parent) {
-        const index = checkedKeys.findIndex((c) => c === parent.id);
-
-        if (index >= 0) checkedKeys.splice(index, 1);
-        parent = parent.parent;
-      }
-      // 取消勾选搜索结果
-      unCheckSearchResult(contact);
+    getAmount(id) {
+      return this.store.getAmount(id);
     },
     enterMeeting() {
-      const list = [];
+      const checked = this.$refs.transfer.getChecked()
+        .map((item) => ({ requestUri: item.number }));
 
-      this.selectedContact.forEach((item) => {
-        list.push({
-          requestUri : item.number,
+      this.$rtc.conference.meetnow(checked, { subject: `${this.$rtc.account.username} 的视频会议` });
+    },
+    create() {
+      setTimeout(() => {
+        this.$refs.transfer.create({
+          data           : this.contacts,
+          defaultChecked : this.currentUser,
+          maxChecked     : 100,
         });
       });
-      this.$rtc.conference.meetnow(list,
-        {
-          subject : `${this.$rtc.account.username} 的视频会议`,
-        }).catch((err) => {
-        // TODO conference user dial out duplicate
-        // console.warn(err);
-        // this.$message.error('即时会议出错，请稍候重试！');
-      });
-    },
-    onCheck(selectedContact) {
-      this.selectedContact = selectedContact;
-    },
-    onPush(contact) {
-      this.selectedContact.push(contact);
-    },
-    onPop(contact) {
-      if (contact.id === this.currentContact.id) return;
-      const index = this.selectedContact.findIndex((c) => c.id === contact.id);
-
-      if (index > -1) this.selectedContact.splice(index, 1);
-    },
-    clearAll() {
-      this.selectedContact = [ this.currentContact ];
-      this.$refs.contactTree.checkedKeys = [ this.currentContact.id ];
-      this.$refs.contactTree.unCheckSearchResult();
-    },
-  },
-  watch : {
-    currentContact : {
-      handler(val) {
-        if (val && this.checkedKeys.length <= 0) {
-          this.checkedKeys.push(this.currentContact.id);
-          this.selectedContact.push(this.currentContact);
-        }
-      },
-      immediate : true,
     },
   },
 };

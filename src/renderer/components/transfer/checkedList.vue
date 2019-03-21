@@ -26,6 +26,7 @@
             <span class="number">{{item.number}}</span>
           </div>
           <a-iconfont
+              v-if="item.id !== defaultChecked.id"
               title="删除"
               type="icon-guanbi"
               class="delete-btn text-base text-black9 hover:text-red cursor-pointer"
@@ -41,7 +42,12 @@
 import { RecycleScroller } from 'vue-virtual-scroller';
 
 export default {
-  name       : 'CheckedList',
+  name  : 'CheckedList',
+  props : {
+    defaultChecked : {
+      type : Object,
+    },
+  },
   components : {
     RecycleScroller,
   },
@@ -59,7 +65,7 @@ export default {
       this.list = data;
     },
     clear() {
-      this.list = [];
+      this.list = this.list.filter((n) => n.id === this.defaultChecked.id);
       this.$emit('clear');
     },
     cancelChecked(id) {

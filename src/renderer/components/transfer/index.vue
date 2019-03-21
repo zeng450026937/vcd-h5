@@ -2,14 +2,19 @@
   <div class="transfer-content">
     <div class="tree-content">
       <search-bar @search="handleSearch"></search-bar>
-      <tree v-show="!showSearchResult" ref="tree" @change="handleChange" class="tree-list"></tree>
+      <tree @ready="handleReady" v-show="!showSearchResult" ref="tree" @change="handleChange" class="tree-list"></tree>
       <search-list ref="searchList" v-show="showSearchResult"></search-list>
     </div>
     <div class="arrow">
       <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"></a-iconfont>
     </div>
     <div class="list-content">
-      <checked-list @cancel-checked="handleCancelChecked" @clear="handleClear" ref="checkedList"></checked-list>
+      <checked-list
+          :defaultChecked="defaultChecked"
+          @cancel-checked="handleCancelChecked"
+          @clear="handleClear"
+          ref="checkedList">
+      </checked-list>
     </div>
 
   </div>
@@ -34,6 +39,7 @@ export default {
   data() {
     return {
       showSearchResult : false,
+      defaultChecked   : null,
     };
   },
   methods : {
@@ -55,6 +61,9 @@ export default {
       console.log('transfer:', checked);
       this.$refs.checkedList.update(checked);
     },
+    handleReady() {
+      this.$refs.checkedList.update(this.getChecked());
+    },
     handleClear() {
       this.$refs.tree.clear();
     },
@@ -64,8 +73,13 @@ export default {
     getChecked() {
       return this.$refs.tree.getChecked();
     },
-    create(data) {
-      this.$refs.tree.createTree({ data, maxChecked: 100 });
+    create({ data, defaultChecked, maxChecked }) {
+      this.defaultChecked = defaultChecked;
+      this.$refs.tree.createTree({
+        data,
+        defaultChecked : defaultChecked.id,
+        maxChecked,
+      });
     },
   },
 };

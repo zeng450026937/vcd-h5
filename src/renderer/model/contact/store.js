@@ -43,7 +43,6 @@ export default class TreeStore {
     this.genTree();
     this.genAmount();
     this.genRootGroup();
-    console.log(this.originTree);
     console.timeEnd('generate tree cost time');
   }
 
@@ -62,6 +61,8 @@ export default class TreeStore {
 
   genRootGroup() {
     this.rootGroup.forEach((n) => {
+      if (!groupMap.hasOwnProperty(n.attributes.name)) return;
+
       const groupInfo = this.clone(groupMap[n.attributes.name]);
 
       Object.assign(n, groupInfo);

@@ -80,6 +80,24 @@ export default {
 
       return result;
     },
+    getAvatar(node) {
+      if (node.isUser) return `${/^(.*)\\\\\\\\(.*\\\\\\\\)$/.test(node.name) ? RegExp.$1.substr(-2, 2) : node.name.substr(-2, 2)}`;
+
+      const iconType = node.isDevice
+        ? 'icon-huiyishishebei'
+        : node.isExternal
+          ? 'icon-zuzhi'
+          : node.isService
+            ? 'icon-wangluo'
+            : node.isVMR
+              ? 'icon-xunihuiyishi'
+              : 'icon-zuzhi';
+
+      return this.icon(iconType);
+    },
+    icon(type) {
+      return `<svg width="1.5em" height="1.5em" fill="currentColor" aria-hidden="true" focusable="false" class=""><use xlink:href="#${type}"></use></svg>`;
+    },
     createGroupRow(row) {
       const styles = {
         'padding-left' : `${10 + row.level * 15}px`,
@@ -115,7 +133,9 @@ export default {
                 <div>
                   <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
                   <label check-box node-id="${row.node.id}" node-type="${row.node.type}" class="tree-checkbox-label" for="${row.node.id}">
-                     <div class="avatar"> ${/^(.*)\\(.*\\)$/.test(row.name) ? RegExp.$1.substr(-2, 2) : row.name.substr(-2, 2)}</div>
+                     <div class="avatar">
+                     ${this.getAvatar(row)}
+                      </div>
                      <div class="name-content">
                         <span class="name">${row.name}</span>
                         <span class="number">${row.number}</span>
@@ -161,17 +181,14 @@ export default {
       cluster._isVue = true;
 
       this.cluster = cluster;
+
+      this.$emit('ready');
     },
-    createTree({ data, useNative = true, maxChecked, ID_PATH, PID_PATH }) {
+    createTree(options) {
       // TODO api 接口
 
-      if (useNative) {
-        treeStore = new TreeStore({
-          data,
-          maxChecked,
-        });
-        this.createTreeViews(treeStore);
-      }
+      treeStore = new TreeStore(options);
+      this.createTreeViews(treeStore);
     },
   },
 };

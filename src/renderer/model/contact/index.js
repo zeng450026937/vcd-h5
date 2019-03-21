@@ -27,6 +27,9 @@ model.provide({
     loadMode() {
       return rtc.contact.loadMode;
     },
+    currentUser() {
+      return this.currentContact;
+    },
     phoneBookLoaded() {
       return rtc.contact.phonebook.dataLoaded;
     },

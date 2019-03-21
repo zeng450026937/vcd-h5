@@ -5,12 +5,13 @@ const PID_PATH = 'node.parentId';
 const NODE_TYPE_PATH = 'node.type';
 
 export default class TreeStore {
-  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000 }) {
+  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000, defaultChecked }) {
     if (!Array.isArray(data)) return;
     console.time('generate Tree model cost time');
     this.tree = [];
     this.expandLevel = expandLevel;
     this.maxChecked = maxChecked;
+    this.defaultChecked = defaultChecked;
     this.originTree = data;
     this.checkedMap = {};
     this.genTree();
@@ -53,9 +54,15 @@ export default class TreeStore {
     
     this.originTree.forEach((node) => {
       try {
+        const id = this.getNodeId(node);
+
         node.expand = false;
         node.halfChecked = false;
-        node.checked = false;
+        node.checked = id === this.defaultChecked;
+        if (id === this.defaultChecked) {
+          this.checkedMap[id] = true;
+        }
+
         this.addNodeMap(nodeMap, node);
         this.addParentMap(parentMap, node);
       }
@@ -200,6 +207,8 @@ export default class TreeStore {
   }
 
   async checkNode(id, checked) {
+    if (id === this.defaultChecked) return;
+
     const checkers = this.getChecked();
 
     if (checkers.length >= this.maxChecked) return checkers;
@@ -411,10 +420,12 @@ export default class TreeStore {
   clear() {
     console.time('clear all checked cost time');
     Object.keys(this.checkedMap).forEach((key) => {
+      if (key === this.defaultChecked) return;
       this.checkedMap[key] = false;
     });
 
     this.originTree.forEach((n) => {
+      if (n.id === this.defaultChecked) return;
       n.checked = false;
       n.halfChecked = false;
     });
