@@ -46,6 +46,14 @@ export default class TreeStore {
     console.timeEnd('generate tree cost time');
   }
 
+  destroy() {
+    this.tree = [];
+    this.originTree = [];
+    this.checkedMap = {};
+    this.nodeMap = {};
+    this.parentMap = {};
+  }
+
   get rootGroup() {
     return this.parentMap[get(ID_PATH)(this.rootNode)] || [];
   }

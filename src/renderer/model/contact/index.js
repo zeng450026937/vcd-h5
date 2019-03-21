@@ -41,7 +41,9 @@ model.provide({
 
       const { phonebook } = rtc.contact;
 
-      if (phoneBookStore) return phoneBookStore;
+      if (phoneBookStore) {
+        phoneBookStore.destroy();
+      }
 
       return phoneBookStore = new Store(phonebook.list);
     },
@@ -49,8 +51,10 @@ model.provide({
       if (!this.favoriteLoaded) return null;
 
       const { favorite } = rtc.contact;
-      
-      if (favoriteStore) return favoriteStore;
+
+      if (favoriteStore) {
+        favoriteStore.destroy();
+      }
 
       return favoriteStore = new Store(favorite.list);
     },
