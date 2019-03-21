@@ -1,5 +1,6 @@
 import Vuem from './vuem';
 import { createApi } from '../../ytms/create-api';
+import rtc from '../rtc';
 
 const model = new Vuem();
 
@@ -77,6 +78,36 @@ model.provide({
     setting.$watch('updateChannel', (val) => {
       const data = {
         updateChannel : val,
+      };
+
+      this.$dispatch('ytms.updateClientInfo', { data });
+    });
+
+    const account = this.$getVM('account');
+
+    rtc.account.$watch('ua', (val) => {
+      const configuration = val && val.configuration;
+
+      const data = {
+        user : {
+          account      : configuration && configuration.uri.user,
+          domain       : configuration && configuration.uri.host,
+          outbound     : account.proxy,
+          outboundPort : account.proxyPort,
+          type         : account.serverType,
+        },
+      };
+
+      console.warn(data, account);
+
+      this.$dispatch('ytms.updateClientInfo', { data });
+    });
+
+    rtc.account.$watch('status', (val) => {
+      const data = {
+        user : {
+          status : val,
+        },
       };
 
       this.$dispatch('ytms.updateClientInfo', { data });

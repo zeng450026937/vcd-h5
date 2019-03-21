@@ -14,10 +14,10 @@
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.audio.audioInput')}}</span>
           <a-select :defaultValue="$t('setting.audio.inputPlaceHolder')"
-                    v-model="audioInput" class="mt-2">
-            <a-select-option v-for="audioInput in audioInputList"
-                             :key="audioInput.id"
-                             :value="audioInput.id"
+                    v-model="audioInputDevice.deviceId" class="mt-2">
+            <a-select-option v-for="audioInput in audioInputDevices"
+                             :key="audioInput.deviceId"
+                             :value="audioInput.deviceId"
             >{{audioInput.label}}
             </a-select-option>
           </a-select>
@@ -29,10 +29,10 @@
           <span class="leading-normal">{{$t('setting.audio.audioOutput')}}</span>
 
           <a-select :defaultValue="$t('setting.audio.outputPlaceHolder')"
-                    v-model="audioOutput" class="mt-2">
-            <a-select-option v-for="audioOutput in audioOutputList"
-                             :key="audioOutput.id"
-                             :value="audioOutput.id"
+                    v-model="audioOutputDevice.deviceId" class="mt-2">
+            <a-select-option v-for="audioOutput in audioOutputDevices"
+                             :key="audioOutput.deviceId"
+                             :value="audioOutput.deviceId"
             >{{audioOutput.label}}
             </a-select-option>
           </a-select>
@@ -71,18 +71,16 @@ export default {
     // TODO:device初始化失败
     // this.$model.setting.save('device'); // 页面不显示的时候保存设置
   },
-  sketch : {
-    ns    : 'setting.device',
-    props : [ 'audioInput', 'audioOutput', 'audioInputList', 'audioOutputList' ],
-  },
-  watch : {
-    audioInput(value) {
-      console.log(value);
+  sketch : [
+    {
+      ns    : 'setting',
+      props : [ 'audioInputDevice', 'audioOutputDevice' ],
     },
-    audioOutput(value) {
-      console.log(value);
+    {
+      ns    : 'media',
+      props : [ 'audioInputDevices', 'audioOutputDevices' ],
     },
-  },
+  ],
   methods : {
     playTestMusic() {
       this.isPlaying = !this.isPlaying;

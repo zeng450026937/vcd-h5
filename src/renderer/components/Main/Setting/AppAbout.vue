@@ -20,19 +20,24 @@ import AppHeader from '../MainHeader.vue';
 import updatePanel from '../../Common/update-panel.vue';
 
 export default {
-  name       : 'AppAbout',
+  name : 'AppAbout',
+  
   components : {
     AppHeader,
     updatePanel,
   },
+
   mounted() {
   },
+
   deactivated() {
-    this.$model.setting.save('about'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
+
   destroyed() {
-    this.$model.setting.save('about'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
+  
   methods : {},
 };
 </script>

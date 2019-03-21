@@ -66,7 +66,7 @@ export default {
   },
 
   sketch : {
-    ns    : 'setting.about',
+    ns    : 'setting',
     props : [ 'autoUpdate' ],
   },
 

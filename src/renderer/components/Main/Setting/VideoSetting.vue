@@ -15,11 +15,11 @@
           <span class="leading-normal">{{$t('setting.video.camera')}}</span>
           <div class="flex items-center mt-2">
             <a-select :placeholder="$t('setting.video.cameraPlaceHolder')"
-                      v-model="videoInput"
+                      v-model="videoInputDevice.deviceId"
                       style="width: 320px;">
-              <a-select-option v-for="videoInput in videoInputList"
-                               :key="videoInput.id"
-                               :value="videoInput.id"
+              <a-select-option v-for="videoInput in videoInputDevices"
+                               :key="videoInput.deviceId"
+                               :value="videoInput.deviceId"
               >{{videoInput.label}}
               </a-select-option>
             </a-select>
@@ -45,31 +45,28 @@
           </div>
         </div>
         <div class="mt-3 relative bg-media" style="height: 180px;width: 320px;">
-          <video-view v-if="!muteVideo"
-                      muted
-                      class="w-full h-full bg-white"
-                      position="absolute"
-                      object-fit="cover"/>
-          <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
-            <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
-          </div>
+          <video-view 
+            muted
+            class="w-full h-full bg-white"
+            position="absolute"
+            object-fit="cover"/>
         </div>
       </div>
       <div class="flex flex-col mt-3">
         <div class="leading-normal">
-          <a-switch size="small" v-model="enableHDVideo"/>
+          <a-switch size="small" v-model="highProfile"/>
           <span class="ml-5">{{$t('setting.video.enableHDVideo')}}</span>
         </div>
         <div class="mt-3 leading-normal">
-          <a-switch size="small" v-model="enableHWSpeed"/>
+          <a-switch size="small" v-model="hardwareAcceleration"/>
           <span class="ml-5">{{$t('setting.video.enableHWSpeed')}}</span>
         </div>
         <div class="mt-3 leading-normal">
-          <a-switch size="small" v-model="enableMirroring"/>
+          <a-switch size="small" v-model="horizontalMirroring"/>
           <span class="ml-5">{{$t('setting.video.enableMirroring')}}</span>
         </div>
         <div class="mt-3 leading-normal">
-          <a-switch size="small" v-model="disableVideo"/>
+          <a-switch size="small" v-model="muteVideoWhenJoin"/>
           <span class="ml-5">{{$t('setting.video.disableVideo')}}</span>
         </div>
       </div>
@@ -94,34 +91,32 @@ export default {
     };
   },
 
-  sketch : {
-    ns    : 'setting',
-    props : [ 
-      'enableHDVideo',
-      'enableHWSpeed',
-      'disableVideo',
-      'enableMirroring',
-    ],
-  },
+  sketch : [ 
+    {
+      ns    : 'setting',
+      props : [ 
+        'highProfile',
+        'hardwareAcceleration',
+        'muteVideoWhenJoin',
+        'horizontalMirroring',
+        'videoInputDevice',
+      ],
+    },
+    {
+      ns    : 'media',
+      props : [ 'videoInputDevices' ],
+    },
+  ],
 
   created() {
   },
 
-  computed : {
-    muteVideo() {
-      return this.$rtc.media.localMedia.muteVideo;
-    },
-    videoInputList() { // 摄像头
-      return this.$model.setting.device.videoInputList;
-    },
-    videoInput : {
-      get() { return this.$model.setting.device.videoInput; },
-      set(val) { this.$model.setting.device.videoInput = val; },
-    },
+  deactivated() {
+    this.$dispatch('setting.save');
   },
 
   destroyed() {
-    this.$model.setting.save('video');
+    this.$dispatch('setting.save');
   },
 };
 </script>

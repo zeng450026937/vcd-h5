@@ -7,13 +7,22 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      name     : remote.app.getName(),
-      version  : remote.app.getVersion(),
-      title    : process.env.VUE_APP_TITLE,
-      model    : process.env.VUE_APP_MODEL,
-      category : process.env.VUE_APP_CATEGORY,
-      customId : process.env.VUE_APP_CUSTOMID,
+      name       : remote.app.getName(),
+      version    : remote.app.getVersion(),
+      title      : process.env.VUE_APP_TITLE,
+      model      : process.env.VUE_APP_MODEL,
+      category   : process.env.VUE_APP_CATEGORY,
+      customId   : process.env.VUE_APP_CUSTOMID,
+      //
+      onLine     : false,
+      connection : null,
     };
+  },
+
+  computed : {
+    offLine() {
+      return !this.onLine;
+    },
   },
 
   middleware : {
@@ -51,9 +60,30 @@ model.provide({
     isMaximized() {
       return remote.getCurrentWindow().isMaximized();
     },
+
+    onLineChanged() {
+      this.onLine = navigator.onLine;
+    },
+
+    connectionChanged() {
+      const connection = navigator;
+
+      this.connection = {
+        downlink      : connection.downlink,
+        downlinkMax   : connection.downlinkMax,
+        effectiveType : connection.effectiveType,
+        rtt           : connection.rtt,
+        saveData      : connection.saveData,
+        type          : connection.type,
+      };
+    },
   },
 
   async created() {
+    window.addEventListener('online', this.onLineChanged);
+    window.addEventListener('offline', this.onLineChanged);
+    navigator.connection.addEventListener('change', this.connectionChanged);
+
     ipcRenderer.on(
       'menu-event',
       (event, { name }) => {
@@ -82,6 +112,12 @@ model.provide({
     );
 
     setting.autoStart = await this.autoLauncher.isEnabled();
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('online', this.onLineChanged);
+    window.removeEventListener('offline', this.onLineChanged);
+    navigator.connection.removeEventListener('change', this.connectionChanged);
   },
 });
 
