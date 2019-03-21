@@ -1,10 +1,14 @@
 import Vuem from '../vuem';
 import rtc from '../../rtc';
 import localContact from './local-contact';
-import { formatContact as formatPhoneBook } from './Contact';
-import { formatFavorite } from './favorite-contact';
+import Store from './store';
 
 const model = new Vuem();
+
+let phoneBookStore;
+
+let favoriteStore;
+
 
 model.mount('local', localContact);
 model.provide({
@@ -23,49 +27,55 @@ model.provide({
     loadMode() {
       return rtc.contact.loadMode;
     },
-    rawFavorite() {
-      return rtc.contact.favorite.tree || [];
+    phoneBookLoaded() {
+      return rtc.contact.phonebook.dataLoaded;
     },
-    rawPhoneBook() {
+    favoriteLoaded() {
+      return rtc.contact.favorite.dataLoaded;
+    },
+    phoneBookStore() {
+      if (!this.phoneBookLoaded) return null;
+
       const { phonebook } = rtc.contact;
 
-      return this.loadMode === 'SPLIT' ? phonebook.org.tree || {}
-        : phonebook.tree || phonebook.org.tree || {};
+      if (phoneBookStore) return phoneBookStore;
+
+      return phoneBookStore = new Store(phonebook.list);
     },
-    phoneBook() {
-      return this.formattedPhoneBook;
-    },
-    favorite() {
-      return this.formattedFavorite;
+    favoriteStore() {
+      if (!this.favoriteLoaded) return null;
+
+      const { favorite } = rtc.contact;
+      
+      if (favoriteStore) return favoriteStore;
+
+      return favoriteStore = new Store(favorite.list);
     },
   },
   methods : {
-    async findContacts(val) {
-      return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
-        .map((c) => {
-          if (c.attributes.number === this.username) {
-            c.attributes.isSelf = true;
-          }
-
-          return Object.assign({
-            parent : { isUser: true },
-            nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
-              ? RegExp.$1.substr(-2, 2)
-              : c.attributes.name.substr(-2, 2),
-          }, c.attributes, c.node);
-        }));
-    },
-    phoneBookFormat(val) {
-      return formatPhoneBook(val, this.loadMode);
-    },
+    // async findContacts(val) {
+    //   return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
+    //     .map((c) => {
+    //       if (c.attributes.number === this.username) {
+    //         c.attributes.isSelf = true;
+    //       }
+    //
+    //       return Object.assign({
+    //         parent : { isUser: true },
+    //         nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
+    //           ? RegExp.$1.substr(-2, 2)
+    //           : c.attributes.name.substr(-2, 2),
+    //       }, c.attributes, c.node);
+    //     }));
+    // },
   },
   watch : {
-    rawPhoneBook(val) {
-      this.formattedPhoneBook = formatPhoneBook(val, this.loadMode);
-    },
-    rawFavorite(val) {
-      this.formattedFavorite = formatFavorite(val);
-    },
+    // rawPhoneBook(val) {
+    //   this.formattedPhoneBook = formatPhoneBook(val, this.loadMode);
+    // },
+    // rawFavorite(val) {
+    //   this.formattedFavorite = formatFavorite(val);
+    // },
     loginStatus(val) {
       if (val === 'disconnected') {
         this.formattedPhoneBook = null;

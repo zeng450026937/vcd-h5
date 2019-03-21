@@ -5,11 +5,16 @@ const PID_PATH = 'node.parentId';
 const NODE_TYPE_PATH = 'node.type';
 
 export default class TreeStore {
-  constructor(originTree) {
+  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000 }) {
+    if (!Array.isArray(data)) return;
+    console.time('generate Tree model cost time');
     this.tree = [];
-    this.originTree = originTree;
+    this.expandLevel = expandLevel;
+    this.maxChecked = maxChecked;
+    this.originTree = data;
     this.checkedMap = {};
     this.genTree();
+    console.timeEnd('generate Tree model cost time');
   }
 
   get rootGroup() {
@@ -25,8 +30,21 @@ export default class TreeStore {
 
     this.nodeMap = nodeMap;
     this.parentMap = parentMap;
+    this.offspringMap = {};
     this.rootNode.level = 0;
     this.tree.push(this.rootNode);
+
+    console.time(`expand tree level ${this.expandLevel} time:`);
+    for (let i = 0; i < this.expandLevel; i++) {
+      this.tree.forEach((n) => {
+        const isOrg = this.isORG(n);
+
+        if (isOrg && !n.expand) {
+          this.expand(this.getNodeId(n));
+        }
+      });
+    }
+    console.timeEnd(`expand tree level ${this.expandLevel} time:`);
   }
 
   genTreeMap() {
@@ -36,6 +54,7 @@ export default class TreeStore {
     this.originTree.forEach((node) => {
       try {
         node.expand = false;
+        node.halfChecked = false;
         node.checked = false;
         this.addNodeMap(nodeMap, node);
         this.addParentMap(parentMap, node);
@@ -86,10 +105,18 @@ export default class TreeStore {
     return this.nodeMap[id];
   }
 
+  getNodeId(node) {
+    return get(ID_PATH)(node);
+  }
+
+  getNodeType(node) {
+    return get(NODE_TYPE_PATH)(node);
+  }
+
   async toggle(id) {
     const node = this.getNode(id);
 
-    if (get(NODE_TYPE_PATH)(node).indexOf('ORG') === -1) return;
+    if (this.getNodeType(node).indexOf('ORG') === -1) return;
 
     return node.expand ? this.collapse(id) : this.expand(id);
   }
@@ -155,8 +182,29 @@ export default class TreeStore {
     }
   }
 
+  findBranch(id, branch = []) {
+    const node = this.getNode(id);
+    const parent = this.findParentNode(id);
+
+    branch.push(node);
+
+    if (parent == null) return branch;
+
+    return this.findBranch(parent, branch);
+  }
+
+  isGroupAllChecked(id) {
+    const groupNode = this.findGroupNode(id);
+
+    return groupNode.every((n) => n.checked);
+  }
+
   async checkNode(id, checked) {
-    this.nodeMap[id].checked = checked;
+    const checkers = this.getChecked();
+
+    if (checkers.length >= this.maxChecked) return checkers;
+
+    this.getNode(id).checked = checked;
     this.checkedMap[id] = checked;
 
     this.correctParentChecked(id, checked);
@@ -165,14 +213,17 @@ export default class TreeStore {
   }
 
   async checkGroupChild(id, checked) {
+    const checkedNodes = this.getChecked();
+
+    if (checkedNodes.length >= this.maxChecked) return checkedNodes;
+
     const childes = this.getChild(id);
 
-    this.nodeMap[id].checked = checked;
+    this.getNode(id).checked = checked;
     childes.forEach((node) => {
       const nodeId = get(ID_PATH)(node);
-      const isORGNode = this.isORG(node);
 
-      if (!isORGNode) {
+      if (!this.isORG(node)) {
         node.checked = checked;
         this.checkedMap[nodeId] = checked;
       }
@@ -181,57 +232,148 @@ export default class TreeStore {
     return this.getChecked();
   }
 
-  findParentNode(id) {
-    const node = this.nodeMap[id];
+  getCheckedNum() {
+    return this.getChecked().length;
+  }
 
-    return this.nodeMap[get(PID_PATH)(node)];
+  findParentNode(id) {
+    const node = this.getNode(id);
+
+    return this.getNode(get(PID_PATH)(node));
   }
 
   findBrotherNode(id) {
+    const groupNode = this.findGroupNode(id);
+
+    return groupNode.filter((n) => get(ID_PATH)(n) !== id);
+  }
+
+  findGroupNode(id) {
     const parentNode = this.findParentNode(id);
 
-    return this.parentMap[get(ID_PATH)(parentNode)];
+    return this.getChild(this.getNodeId(parentNode)) || [];
   }
 
   async checkOffspring(id, checked) {
-    const offspring = this.getOffspring(id);
-    const parent = this.nodeMap[id];
+    const parent = this.getNode(id);
+    const checkedNodes = this.getChecked();
+
+    if (checked && checkedNodes.length >= this.maxChecked) return checkedNodes;
+
+    const offspring = this.genOffspring(id);
 
 
+    if (checked) {
+      parent.halfChecked = false;
+    }
     parent.checked = checked;
+
+    let checkedNum = checkedNodes.length;
 
     offspring.forEach((node) => {
       const nodeId = get(ID_PATH)(node);
-      const isORGNode = this.isORG(node);
+
+      if (!this.isORG(node)) { // TODO 如果大于 maxChecked 需要break
+        checkedNum++;
+      }
+
+      if (checked && checkedNum > this.maxChecked) {
+        parent.checked = false;
+        parent.halfChecked = true;
+
+        return;
+      }
 
       node.checked = checked;
 
-      if (!isORGNode) {
+      if (!this.isORG(node)) {
         this.checkedMap[nodeId] = checked;
+      }
+
+      if (checked && this.isORG(node)) {
+        node.halfChecked = false;
       }
     });
 
     this.correctParentChecked(id, checked);
 
-    return this.getChecked();
+    const checkers = this.getChecked();
+
+    if (checkers.length === this.maxChecked) this.correctChildChecked(id);
+
+    return checkers;
+  }
+
+  hasUncheckedBrother(id) {
+    const brotherNode = this.findBrotherNode(id);
+
+    return brotherNode.some((n) => !n.checked);
+  }
+
+  hasCheckedBrother(id) {
+    const brotherNode = this.findBrotherNode(id);
+
+    return brotherNode.some((n) => n.checked);
+  }
+
+  hasCheckedOffspring(id) {
+    const offspring = this.genOffspring(id);
+
+    return offspring.some((n) => n.checked);
+  }
+
+  isCheckedAllOffspring(id) {
+    const offspring = this.genOffspring(id);
+
+    return offspring.every((n) => n.checked);
+  }
+
+  isUncheckedAllOffspring() {
+    return !this.isCheckedAllOffspring();
   }
 
   correctParentChecked(id, checked) {
-    const node = this.nodeMap[id];
-    const parent = this.findParentNode(get(ID_PATH)(node));
+    const parent = this.findParentNode(id);
+    const parentId = this.getNodeId(parent);
 
-    if (parent != null) {
-      if (checked) {
-        const brotherNode = this.findBrotherNode(id);
+    if (parent == null) return;
 
-        const unCheckedNode = brotherNode.find((n) => !n.checked);
+    if (checked) {
+      const isCheckAllOffspring = this.isCheckedAllOffspring(parentId);
 
-        if (!unCheckedNode) parent.checked = true;
-      }
-      else {
-        parent.checked = false;
-      }
+      parent.checked = isCheckAllOffspring;
+      parent.halfChecked = !isCheckAllOffspring;
+
+      this.correctParentChecked(parentId, true);
     }
+    else {
+      parent.halfChecked = this.hasCheckedOffspring(parentId);
+      parent.checked = false;
+
+      this.correctParentChecked(parentId, false);
+    }
+  }
+
+  correctChildChecked(id) {
+    const offspring = this.genOffspring(id);
+    const groups = offspring.filter((n) => n.isGroup);
+
+    groups.forEach((n) => {
+      const groupId = this.getNodeId(n);
+      const isCheckAllOffspring = this.isCheckedAllOffspring(groupId);
+
+      n.checked = isCheckAllOffspring;
+
+      n.halfChecked = !isCheckAllOffspring && this.hasCheckedOffspring(groupId);
+    });
+  }
+
+  genOffspring(id) {
+    let offspring = this.offspringMap[id];
+
+    if (offspring == null) offspring = this.getOffspring(id);
+
+    return this.offspringMap[id] = offspring;
   }
 
   getOffspring(id, offsprings = []) {
@@ -249,7 +391,7 @@ export default class TreeStore {
   }
 
   isORG(node) {
-    const type = get(NODE_TYPE_PATH)(node);
+    const type = this.getNodeType(node);
 
     return type.indexOf('ORG') > -1;
   }
@@ -259,10 +401,34 @@ export default class TreeStore {
 
     Object.keys(this.checkedMap).forEach((key) => {
       if (this.checkedMap[key]) {
-        result.push(this.nodeMap[key]);
+        result.push(this.getNode(key));
       }
     });
 
     return result;
+  }
+
+  clear() {
+    console.time('clear all checked cost time');
+    Object.keys(this.checkedMap).forEach((key) => {
+      this.checkedMap[key] = false;
+    });
+
+    this.originTree.forEach((n) => {
+      n.checked = false;
+      n.halfChecked = false;
+    });
+    console.timeEnd('clear all checked cost time');
+  }
+
+  cancelChecked(id) {
+    const node = this.getNode(id);
+
+    node.checked = false;
+    this.correctParentChecked(id, false);
+  }
+
+  search(text) {
+    return this.originTree.filter((n) => n.name.indexOf(text) > -1);
   }
 }

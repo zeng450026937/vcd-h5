@@ -63,8 +63,8 @@ class Contact extends ContactBase {
     this.phone = data.extension || '';
     this.email = data.email || '';
     this.avatar = this.parent.isUser ? '' : this.parent.avatar;
-    this.scopedSlots = { title: 'title' }; // just for tree/
-    this.isLeaf = true; // just for tree
+    this.scopedSlots = { title: 'title' }; // just for tree/ // 没用
+    this.isLeaf = true; // just for tree // 没用
   }
 }
 

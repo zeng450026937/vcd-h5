@@ -29,7 +29,7 @@
 
 <script>
 import AppHeader from '../MainHeader.vue';
-import Tree from '../../tree/tree.vue';
+import Tree from '../../tree/index.vue';
 
 export default {
   name       : 'LocalContact',
