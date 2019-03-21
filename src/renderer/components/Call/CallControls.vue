@@ -82,4 +82,23 @@ export default {
       box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
     }
   }
+  .more-panel-popover {
+    .ant-popover-inner-content {
+      padding: 4px 0;
+      .popover-content {
+        width: 180px;
+        height: 64px;
+        .popover-content-item {
+          cursor: pointer;
+          .ant-slider-rail, .ant-slider-track,.ant-slider-step {
+            height: 2px;
+          }
+          .ant-slider-handle {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+  }
 </style>

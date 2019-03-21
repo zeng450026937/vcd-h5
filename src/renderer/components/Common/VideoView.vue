@@ -18,10 +18,9 @@
       <a-spin size="large"/>
       <div class="mt-2 text-indigo text-xl">视频加载中...</div>
     </div>
-    <div v-show="hideVideo">
-      <slot name="bg"/>
+    <template v-show="hideVideo">
       <slot name="content"/>
-    </div>
+    </template>
     <slot name="controls"/>
   </a-layout>
 </template>

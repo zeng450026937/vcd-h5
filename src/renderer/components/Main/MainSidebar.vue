@@ -21,7 +21,7 @@
                     >{{userInfo.parent && userInfo.parent.fullPath | fullName}}</div>
 
               <div class="mt-10">
-                <a-button class="w-24" @click="clickLogout">退出账号</a-button>
+                <a-button class="w-24" @click="clickLogout">注销</a-button>
               </div>
 
               <div class="text-center absolute mt-10">

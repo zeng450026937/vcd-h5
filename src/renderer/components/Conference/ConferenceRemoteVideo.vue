@@ -1,17 +1,15 @@
 <template>
   <div id="conference-remote-video" class="h-full w-full bg-media relative">
     <remote-video
-        :class="{[`remote-video-content-${isInConferenceMain ? 'normal' : 'shrink'}`]: true}"
+        :class="videoClasses"
         :source="source"
         :hide-video="!isVideoConference">
-      <img slot="bg"
-           src="../Common/static/video-bg.png"
-           class="content-inner"/>
-      <!--<div slot="content"-->
-           <!--class="absolute-center flex flex-col items-center justify-center">-->
-        <!--<a-iconfont type="icon-huiyishi" class="display-icon"/>-->
-        <!--<span class="display-name mt-5">音频会议</span>-->
-      <!--</div>-->
+      <div v-if="!isVideoConference"
+           slot="content"
+           class="absolute-center h-full flex flex-col items-center justify-center">
+        <a-iconfont type="icon-huiyishi" class="display-icon"/>
+        <span class="display-name mt-5">音频会议</span>
+      </div>
       <conference-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
 
@@ -41,8 +39,15 @@ export default {
   computed : {
     controlsClasses() {
       return {
-        [this.isInConferenceMain ? 'controls-bottom' : 'controls-normal'] : true,
-        'hide-controls'                                                   : this.hideControls,
+        [this.isInConferenceMain || !this.isVideoConference ? 'controls-bottom' : 'controls-normal'] : true,
+        'hide-controls'                                                                              : this.hideControls,
+      };
+    },
+    videoClasses() {
+      return {
+        [`remote-video-content-${this.isInConferenceMain ? 'normal' : 'shrink'}`] : true,
+        'h-full'                                                                  : !this.isVideoConference,
+        'remote-video-content-normal-auto'                                        : this.isInConferenceMain && this.isVideoConference,
       };
     },
   },
@@ -110,7 +115,9 @@ export default {
   .remote-video-content-normal {
     position: absolute;
     max-height: 100%;
-    height: auto !important;
+    &-auto {
+      height: auto !important;
+    }
 
     #video-view {
       height: auto !important;

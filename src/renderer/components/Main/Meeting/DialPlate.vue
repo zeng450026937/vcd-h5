@@ -33,7 +33,7 @@
           <plate-content :class="{'mt-10': localContactExist}" @inputNumber="clickNumber"/>
           <div class="flex mt-8 w-full">
             <a-button type="primary" class="w-1/2" :disabled="!callNumber"
-                      @click="audioCall">
+                      @click="videoCall">
               <a-iconfont type="icon-shipin" class="text-base"/>
               视频呼叫
             </a-button>
@@ -171,9 +171,25 @@ export default {
 
       return false;
     },
+    videoCall() {
+      if (!this.callNumber) return;
+      this.$dispatch('call.call', {
+        number  : this.callNumber,
+        options : {
+          audio : true,
+          video : true,
+        },
+      });
+    },
     audioCall() {
       if (!this.callNumber) return;
-      this.$dispatch('call.doAudioCall', {number: this.callNumber});
+      this.$dispatch('call.call', {
+        number  : this.callNumber,
+        options : {
+          audio : true,
+          video : false,
+        },
+      });
     },
     showAddLocalContact() {
       if (this.localContactExist) return;
