@@ -92,6 +92,7 @@ module.exports = {
         fullPropertyNotice   : '当前属性已满，无法继续添加！',
         deletePropertyNotice : '属性删除成功！',
         emptyPropertyNotice  : '当前输入属性为空',
+        propertyCreateAt     : '属性创建于',
         updateChannelList    : {
           insiders : '内测',
           faster   : '快速',

@@ -63,21 +63,25 @@
             <div v-if="showAddPropetyInput" class="mb-2">
               <a-input v-model="addPropertyText"  maxlength="64"  class="w-60"
                        @keypress.enter="handleAddProperty"></a-input>
-              <a-button type="primary"  class="ml-2" shape="circle" size="small"
+              <a-button type="primary" class="ml-2" shape="circle" size="small"
                         icon="check" @click="handleAddProperty"></a-button>
               <a-button type="danger" class="ml-2" shape="circle" icon="close" size="small"
                         @click="showAddPropetyInput=false" ></a-button>
             </div>
             <div class="mt-2">
-              <a-tag  closable  @close="handleDeleteProperty(index)" v-for="(item, index) in propertyList" 
-                      :key="item+index">{{item}}</a-tag>
-            <a-tag  color="blue"  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
-              v-if="propertyList.length<=20">
-                <span>+ {{$t('setting.common.addProperty')}}</span>
-            </a-tag>
-            <a-tag v-else color="gray">
-              {{$t('setting.common.fullPropertyNotice')}}
-            </a-tag>
+              <a-tooltip v-for="(item,index) in propertyList" :key="item.id">
+                <template slot="title">
+                  <span>{{$t('setting.common.propertyCreateAt')+item.createdAt}}</span>
+                </template>
+                <a-tag closable @close="handleDeleteProperty(index)" >{{item.label}}</a-tag>
+              </a-tooltip>
+              <a-tag  color="blue"  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
+                v-if="propertyList.length<=20">
+                  <span>+ {{$t('setting.common.addProperty')}}</span>
+              </a-tag>
+              <a-tag v-else color="gray">
+                {{$t('setting.common.fullPropertyNotice')}}
+              </a-tag>
             </div>
           </div>
         </div>
@@ -210,7 +214,11 @@ export default {
       if (this.addPropertyText.trim() !== '') {
         if (this.propertyList.length < 20) {
           this.showAddPropetyInput = false;
-          this.propertyList.push(this.addPropertyText);
+          this.propertyList.push({
+            label     : this.addPropertyText,
+            id        : this.getNewPropertyId() + 1,
+            createdAt : (new Date()).toLocaleString(),
+          });
           this.addPropertyText = '';
           this.$message.success(this.$t('setting.common.addPropertyNotice'));
         }
@@ -218,14 +226,17 @@ export default {
           this.$message.error(this.$t('setting.common.fullPropertyNotice'));
         }
       }
-else {
+      else {
         this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
       }
     },
     handleDeleteProperty(index) {
-      const deleteMsg = this.propertyList.splice(index, 1);
+      const deleteMsg = this.propertyList.splice(index, 1)[0].label;
 
       this.$message.success(`${deleteMsg} ${this.$t('setting.common.deletePropertyNotice')}`);
+    },
+    getNewPropertyId() {
+      return this.propertyList.length ? this.propertyList[this.propertyList.length - 1].id : 0;
     },
   },
 };
