@@ -10,6 +10,7 @@
     </div>
     <div class="list-content">
       <checked-list
+          :maxChecked="maxChecked"
           :defaultChecked="defaultChecked"
           @cancel-checked="handleCancelChecked"
           @clear="handleClear"
@@ -35,6 +36,11 @@ export default {
     CommonEmpty,
     CheckedList,
     SearchList,
+  },
+  props : {
+    maxChecked : {
+      type : Number,
+    },
   },
   data() {
     return {
@@ -73,11 +79,16 @@ export default {
     getChecked() {
       return this.$refs.tree.getChecked();
     },
+    setCheckers(ids) {
+      return this.$refs.tree.setCheckers(ids).then((checkers)=> {
+        this.$refs.checkedList.update(checkers);
+      });
+    },
     create({ data, defaultChecked, maxChecked }) {
       this.defaultChecked = defaultChecked;
       this.$refs.tree.createTree({
         data,
-        defaultChecked : defaultChecked.id,
+        defaultChecked : defaultChecked ? defaultChecked.id : null,
         maxChecked,
       });
     },

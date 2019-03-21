@@ -22,7 +22,7 @@
                                    :key="crumb.id"
                                    class="cursor-pointer text-xs no-dragable"
                                    :class="{'text-indigo': index !==  breadcrumbs.length -1}">
-                  <span @click="onBreadcrumbClicked(crumb)">{{crumb.text}}</span>
+                  <span @click="breadcrumbChange(crumb)">{{crumb.text}}</span>
                 </a-breadcrumb-item>
               </a-breadcrumb>
             </div>
@@ -126,9 +126,10 @@ export default {
   },
   methods : {
     toGroup(path) {
-      this.breadcrumbs = path;
+      this.breadcrumbChange(path);
+      this.selectedContact = {};
     },
-    onBreadcrumbClicked(item) {
+    breadcrumbChange(item) {
       const index = this.breadcrumbs.findIndex((b) => b.id === item.id);
 
       this.breadcrumbs = this.breadcrumbs.slice(0, index + 1);

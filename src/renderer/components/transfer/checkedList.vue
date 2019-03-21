@@ -2,7 +2,7 @@
   <div class="content">
     <div class="operate-bar">
       <span class="number">
-        {{list.length}}/100
+        {{list.length}}{{maxChecked ? `/${maxChecked}`: ''}}
       </span>
       <span class="clear" @click="clear">
         全部清空
@@ -19,7 +19,12 @@
       <template v-slot="{item, index}">
         <div class="list-item">
           <div class="avatar">
-            {{/^(.*)\(.*\)$/.test(item.name) ? RegExp.$1.substr(-2, 2) : item.name.substr(-2, 2)}}
+            <template v-if="item.isUser">
+              {{/^(.*)\(.*\)$/.test(item.name) ? RegExp.$1.substr(-2, 2) : item.name.substr(-2, 2)}}
+            </template>
+           <template v-else>
+             <a-iconfont class="icon" :type="item | icon"></a-iconfont>
+           </template>
           </div>
           <div class="name-content">
             <span class="name">{{item.name}}</span>
@@ -46,6 +51,14 @@ export default {
   props : {
     defaultChecked : {
       type : Object,
+      default() {
+        return {
+          id : '',
+        };
+      },
+    },
+    maxChecked : {
+      type : Number,
     },
   },
   components : {
@@ -55,6 +68,19 @@ export default {
     return {
       list : [],
     };
+  },
+  filters : {
+    icon(node) {
+      return node.isDevice
+        ? 'icon-huiyishishebei'
+        : node.isExternal
+          ? 'icon-zuzhi'
+          : node.isService
+            ? 'icon-wangluo'
+            : node.isVMR
+              ? 'icon-xunihuiyishi'
+              : 'icon-zuzhi';
+    },
   },
   methods : {
     update(data) {
@@ -77,6 +103,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.icon {
+  font-size: 1.5em;
+}
 .content {
   user-select: none;
   border:1px solid #ccc;

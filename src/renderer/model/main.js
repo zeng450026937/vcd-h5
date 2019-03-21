@@ -28,13 +28,15 @@ const initialSidebar = () => {
       text         : '联系人',
       name         : MODULE_NAME.CONTACT,
       currentRoute : MAIN.CONTACT_CORPORATE,
-      navs         : isCloud ? [ { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人' },
-        { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人' },
-        { icon: 'icon-bendilianxiren', route: '/main/content/contactTest', text: '联系人测试' } ]
+      navs         : isCloud
+        ? [
+          { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人' },
+          { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人' },
+        ]
         : [ { icon: 'icon-qiyelianxiren', route: MAIN.CONTACT_CORPORATE, text: '企业联系人' },
           { icon: 'icon-changyonglianxiren', route: MAIN.CONTACT_FREQUENT, text: '常用联系人' },
           { icon: 'icon-bendilianxiren', route: MAIN.CONTACT_LOCAL, text: '本地联系人' },
-          { icon: 'icon-bendilianxiren', route: '/main/content/contactTest', text: '联系人测试' } ],
+        ],
     },
     {
       icon         : 'icon-shezhi',
@@ -52,7 +54,7 @@ const initialSidebar = () => {
     },
   ];
 
-  
+
   return sidebar;
 };
 

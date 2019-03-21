@@ -8,76 +8,41 @@
       :visible="visible"
       wrapClassName="frequent-contact-drawer"
   >
-    <div class="flex flex-col h-full w-full">
-      <div class="flex flex-col p-5 flex-grow">
-        <div>
+    <div class="flex h-full w-full">
+
+      <div class="flex p-5 w-full flex-col">
+
+        <div class="w-full">
           <a-input placeholder="请输入分组名称" v-model="groupName"/>
         </div>
-        <div class="flex flex-grow mt-5">
-          <div class="w-1/2">
-            <contact-tree ref="contactTree"
-                          :checked="checkedKeys"
-                          @onCheck="onCheck"
-                          @onPush="onPush"
-                          @onPop="onPop"
-            ></contact-tree>
-          </div>
-          <div class="flex justify-center items-center"
-               style="width: 48px;">
-            <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
-          </div>
-          <div class="flex flex-col border w-1/2">
-            <div class="border-b">
-              <div class="flex flex-col">
-                <div class="flex h-10 items-center px-3">
-                  <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
-                  <span class="flex text-indigo text-xs cursor-pointer"
-                        :class="{'text-grey cursor-not-allowed': selectedContact.length <= 0}"
-                        @click="clearAll">全部清空</span>
-                </div>
-              </div>
-            </div>
-            <template v-if="!selectedContact.length">
-              <common-empty class="mt-10 text-grey"
-                            text="暂未选择联系人"/>
-            </template>
-            <contact-list v-else
-                          hide-popup
-                          :contactList="selectedContact"
-                          :video-icon="false"
-                          :audio-icon="false"
-                          delete-icon highlightSelected
-                          @deleteContact="deleteContact"
-            ></contact-list>
-          </div>
+
+        <div class="transfer-model-content pb-5  mt-5">
+          <transfer ref="transfer"></transfer>
         </div>
 
-      </div>
-      <div>
-        <div class="flex h-12 border-t justify-center items-center">
+        <div class="w-full flex h-12 border-t justify-center items-center pt-5">
           <a-button type="primary" class="mx-2"
                     :disabled="!groupName || groupName.length > 30"
                     :title="!groupName ? '分组名称不能为空' : groupName.length > 30 ? '分组长度不能超过30' : '添加分组'"
                     @click="ensure">确定</a-button>
           <a-button class="mx-2" @click="visible = false">取消</a-button>
         </div>
+
       </div>
+
     </div>
   </a-drawer>
 </template>
 
 <script>
 /* eslint-disable no-loop-func */
-
-import ContactList from './ContactList.vue';
-import ContactTree from './ContactTree.vue';
+import Transfer from '../../transfer/index.vue'
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 
 export default {
   name       : 'FrequentContactDrawer',
   components : {
-    ContactList,
-    ContactTree,
+    Transfer,
     CommonEmpty,
   },
   props : {
@@ -88,61 +53,34 @@ export default {
   },
   data() {
     return {
-      visible         : false,
-      groupName       : '',
-      selectedContact : [],
-      checkedKeys     : [],
-      editedGroup     : {},
+      visible     : false,
+      groupName   : '',
+      checkedKeys : [],
+      editedGroup : {},
     };
   },
   computed : {
     modalTitle() {
       return this.modalType === 'add' ? '添加分组' : '更新分组';
     },
+    dataLoaded() {
+      return this.$model.contact.phoneBookLoaded;
+    },
+    store() {
+      return this.$model.contact.phoneBookStore;
+    },
+    contacts() {
+      return this.$model.contact.phoneBookStore.originTree;
+    },
   },
   methods : {
-
-    onCheck(selectedContact) {
-      this.selectedContact = selectedContact;
-    },
-    onPush(contact) {
-      this.selectedContact.push(contact);
-    },
-    onPop(contact) {
-      const index = this.selectedContact.findIndex((c) => c.id === contact.id);
-
-      if (index > -1) this.selectedContact.splice(index, 1);
-    },
-    deleteContact(contact) {
-      const { checkedKeys, unCheckSearchResult } = this.$refs.contactTree;
-
-      let parent = contact;
-      const i = this.selectedContact.findIndex((c) => c.id === contact.id);
-
-      if (i >= 0) this.selectedContact.splice(i, 1);
-
-      while (parent) {
-        const index = checkedKeys.findIndex((c) => c === parent.id);
-
-        if (index >= 0) checkedKeys.splice(index, 1);
-        parent = parent.parent;
-      }
-      // 取消勾选搜索结果
-      unCheckSearchResult(contact);
-    },
-    clearAll() {
-      if (this.selectedContact.length <= 0) return;
-      this.selectedContact = [];
-      this.$refs.contactTree.checkedKeys = [];
-      this.$refs.contactTree.unCheckSearchResult();
-    },
     async ensure() {
       if (!this.groupName || this.groupName.length > 30) return;
       if (this.modalType === 'edit') {
         await this.$rtc.contact.favorite.categoryEdit({
           id       : this.editedGroup.id,
           name     : this.groupName,
-          contacts : this.selectedContact.map((c) => ({
+          contacts : this.$refs.transfer.getChecked().map((c) => ({
             contactsId : c.id,
             type       : c.type,
           })),
@@ -151,7 +89,7 @@ export default {
       else {
         await this.$rtc.contact.favorite.categoryAdd({
           groupName : this.groupName,
-          contacts  : this.selectedContact.map((c) => ({
+          contacts  : this.$refs.transfer.getChecked().map((c) => ({
             contactsId : c.id,
             type       : c.type,
           })),
@@ -162,8 +100,33 @@ export default {
         this.visible = false;
       });
     },
+    updateGroupInfo(datas) {
+      Object.keys(datas).forEach((key) => {
+        this[key] = datas[key];
+      });
+    },
+    createTree() {
+      this.$refs.transfer.create({
+        data       : this.contacts,
+        maxChecked : 100,
+      });
+      this.$refs.transfer.setCheckers(this.checkedKeys);
+    },
+    reset() {
+      this.checkedKeys = [];
+    },
   },
   watch : {
+    visible(val) {
+      if (val && this.dataLoaded) {
+        this.$nextTick(() => {
+          this.createTree();
+        });
+      }
+      else {
+        this.reset();
+      }
+    },
   },
 };
 </script>
@@ -181,6 +144,12 @@ export default {
       display: flex;
       height: 100%;
       padding: 0;
+    }
+
+    .transfer-model-content {
+      width: 100%;
+      height: 100%;
+      max-height: calc( 100% - 95px );
     }
   }
 </style>

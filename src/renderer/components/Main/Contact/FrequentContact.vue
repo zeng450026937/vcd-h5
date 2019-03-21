@@ -10,7 +10,7 @@
                         class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
                         @click="goBack"></a-iconfont>
             <span>{{currentGroupName}}</span>
-            <a-iconfont v-if="currentGroup !== 'rootNode'"
+            <a-iconfont v-if="currentGroup === 'rootNode'"
                         title="添加常用联系人分组"
                         class="ml-4 text-indigo cursor-pointer no-dragable"
                         type="icon-tianjiafenzu"
@@ -147,19 +147,17 @@ export default {
   },
   methods : {
     getAmount(id) {
-      return this.store.getAmount(id);
+      return this.store.getNode(id).amount;
     },
     editGroup(group) {
       this.modalType = 'edit';
+      this.$refs.contactDrawer.updateGroupInfo({
+        groupName   : group.name,
+        checkedKeys : this.store.getOffspringNoGroup(group.id).map((n) => n.id),
+        editedGroup : group,
+      });
 
-      const { contactDrawer } = this.$refs;
-
-      contactDrawer.visible = true;
-      contactDrawer.groupName = group.name;
-      contactDrawer.editedGroup = group;
-      contactDrawer.groupName = group.name;
-      contactDrawer.checkedKeys = group.items.map((g) => g.id);
-      contactDrawer.selectedContact = group.items;
+      this.$refs.contactDrawer.visible = true;
     },
     addGroup() {
       this.modalType = 'add';

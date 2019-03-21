@@ -104,7 +104,7 @@ export default {
       };
 
       const inputStyles = {
-        display        : row.halfChecked ? 'none' : 'initial',
+        display        : row.halfChecked ? 'none' : 'inline-block',
         'margin-right' : '6px',
       };
 
@@ -168,6 +168,13 @@ export default {
     cancelChecked(id) {
       treeStore.cancelChecked(id);
       this.updateTreeViews();
+    },
+    setCheckers(ids) {
+      return treeStore.setCheckers(ids).then((checkers) => {
+        this.updateTreeViews();
+
+        return checkers;
+      });
     },
     createTreeViews(store) {
       const cluster = new Clusterize({
@@ -291,6 +298,7 @@ export default {
   vertical-align: middle;
   background-color: #fff;
   border-radius: 2px;
+  line-height: 16px;
 }
 .tree-checkbox {
   &[type="checkbox"] {
@@ -310,6 +318,7 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
+  line-height: 16px;
 }
 .tree-checkbox-label::before {
   content: '\a0';

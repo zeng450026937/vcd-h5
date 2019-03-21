@@ -221,6 +221,20 @@ export default class TreeStore {
     return this.getChecked();
   }
 
+  setCheckers(data) {
+    return new Promise((resolve) => {
+      data.forEach((id) => {
+        this.checkNode(id, true).then(() => {});
+      });
+
+      return resolve(this.getChecked());
+    });
+  }
+
+  getOffspringNoGroup() {
+    return this.genOffspring().filter((n) => !n.isGroup);
+  }
+
   async checkGroupChild(id, checked) {
     const checkedNodes = this.getChecked();
 
@@ -436,6 +450,7 @@ export default class TreeStore {
     const node = this.getNode(id);
 
     node.checked = false;
+    this.checkedMap[id] = false;
     this.correctParentChecked(id, false);
   }
 

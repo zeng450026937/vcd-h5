@@ -4,7 +4,7 @@
       <app-header :title="`${rootNode.name} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
       <a-divider class="my-0"/>
       <div class="flex flex-col h-full m-4">
-        <transfer ref="transfer"></transfer>
+        <transfer :maxChecked="100" ref="transfer"></transfer>
       </div>
 
 
