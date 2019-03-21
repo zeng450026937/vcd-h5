@@ -15,7 +15,7 @@
           <span class="leading-normal">{{$t('setting.video.camera')}}</span>
           <div class="flex items-center mt-2">
             <a-select :placeholder="$t('setting.video.cameraPlaceHolder')"
-                      v-model="videoInputDevice.deviceId"
+                      v-model="videoInputDeviceId"
                       style="width: 320px;">
               <a-select-option v-for="videoInput in videoInputDevices"
                                :key="videoInput.deviceId"
@@ -110,7 +110,16 @@ export default {
 
   created() {
   },
-
+  computed : {
+    videoInputDeviceId : {
+      get() {
+        return this.videoInputDevice ? this.videoInputDevice.deviceId : '';
+      },
+      set(deviceId) {
+        this.videoInputDevice = this.videoInputDevices.find((item) => item.deviceId === deviceId);
+      },
+    },
+  },
   deactivated() {
     this.$dispatch('setting.save');
   },

@@ -170,7 +170,13 @@ model.provide({
       },
       { immediate: true }
     );
-
+    setting.$watch(
+      'noiseSuppression',
+      (val) => {
+        this.audioQuality.noiseSuppression = val;
+      },
+      { immediate: true }
+    );
     // saved for later use
     this.setting = setting;
   },

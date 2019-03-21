@@ -14,7 +14,7 @@
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.audio.audioInput')}}</span>
           <a-select :defaultValue="$t('setting.audio.inputPlaceHolder')"
-                    v-model="audioInputDevice.deviceId" class="mt-2">
+                    v-model="audioInputDeviceId" class="mt-2">
             <a-select-option v-for="audioInput in audioInputDevices"
                              :key="audioInput.deviceId"
                              :value="audioInput.deviceId"
@@ -25,14 +25,14 @@
           <span class="test-mic-text leading-tight text-xs text-black6">{{$t('setting.audio.microphoneTest')}}</span>
         </div>
         <div class="mt-5">
-          <a-switch size="small" v-model="clearNoise"/>
+          <a-switch size="small" v-model="noiseSuppression"/>
           <span class="ml-5">{{$t('setting.audio.clearNoise')}}</span>
         </div>
         <div class="flex flex-col mt-5">
           <span class="leading-normal">{{$t('setting.audio.audioOutput')}}</span>
 
           <a-select :defaultValue="$t('setting.audio.outputPlaceHolder')"
-                    v-model="audioOutputDevice.deviceId" class="mt-2">
+                    v-model="audioOutputDeviceId" class="mt-2">
             <a-select-option v-for="audioOutput in audioOutputDevices"
                              :key="audioOutput.deviceId"
                              :value="audioOutput.deviceId"
@@ -71,13 +71,32 @@ export default {
   },
   destroyed() {
     this.$rtc.media.localMedia.releaseStream();
+    this.$model.setting.save();
     // TODO:device初始化失败
     // this.$model.setting.save('device'); // 页面不显示的时候保存设置
+  },
+  computed : {
+    audioInputDeviceId : {
+      get() {
+        return this.audioInputDevice ? this.audioInputDevice.deviceId : '';
+      },
+      set(deviceId) {
+        this.audioInputDevice = this.audioInputDevices.find((item) => item.deviceId === deviceId);
+      },
+    },
+    audioOutputDeviceId : {
+      get() {
+        return this.audioOutputDevice ? this.audioOutputDevice.deviceId : '';
+      },
+      set(deviceId) {
+        this.audioOutputDevice = this.audioOutputDevices.find((item) => item.deviceId === deviceId);
+      },
+    },
   },
   sketch : [
     {
       ns    : 'setting',
-      props : [ 'audioInputDevice', 'audioOutputDevice', 'clearNoise' ],
+      props : [ 'audioInputDevice', 'audioOutputDevice', 'noiseSuppression' ],
     },
     {
       ns    : 'media',

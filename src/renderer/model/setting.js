@@ -18,6 +18,7 @@ model.provide({
       autoUpdate                 : true,
       updateChannel              : 'stable',
       hideWhenClose              : true,
+      tags                       : [],
       // ytms
       ytmsHostAddress            : '',
       // account
@@ -29,6 +30,7 @@ model.provide({
       videoInputDevice           : null,
       highProfile                : false,
       horizontalMirroring        : false,
+      noiseSuppression           : true,
       // conference
       minimizedWhenLocalSharing  : true,
       maximizedWhenRemoteSharing : true,

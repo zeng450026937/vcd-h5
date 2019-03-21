@@ -24,14 +24,14 @@
             <a-switch size="small" v-model="maximizedWhenRemoteSharing"/>
             <span class="setting-label">{{$t('setting.conference.maxWindowWhenWatchingSharing')}}</span>
           </div>
-          <div class="mt-3">
+          <!-- <div class="mt-3">
             <a-switch size="small" v-model="enableGpu"/>
             <span class="setting-label">{{$t('setting.conference.enableGpu')}}</span>
-          </div>
+          </div>-->
           <div class="mt-3">
             <a-switch size="small" v-model="highProfile"/>
             <span class="setting-label">{{$t('setting.conference.preferredPictureFluency')}}</span>
-          </div>
+          </div> 
           <div class="mt-3">
             <a-switch size="small" v-model="shareWithSound"/>
             <span class="setting-label">{{$t('setting.conference.shareComputerSound')}}</span>
@@ -44,7 +44,7 @@
             <span class="border-l-4 border-black h-4"></span>
             <span class="setting-title">{{$t('setting.conference.baseSetting')}}</span>
           </div>
-          <div class="mt-3">
+          <!-- <div class="mt-3">
             <a-switch size="small" v-model="muteAudioWhenJoin"/>
             <span class="setting-label">{{$t('setting.conference.autoSilence')}}</span>
           </div>
@@ -57,7 +57,6 @@
               </template>
               <a-iconfont type="icon-tishi" class="ml-3 text-indigo-dark cursor-pointer text-base"/>
             </a-tooltip>
-            
           </div>
           
           <div class="flex flex-col ml-10">
@@ -75,7 +74,7 @@
           <div class="mt-3">
             <a-switch size="small" v-model="loginOptions"/>
             <span class="setting-label">{{$t('setting.conference.loginSelector')}}</span>
-          </div>
+          </div> -->
           <div class="mt-3">
             <a-switch size="small" v-model="dnd"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
@@ -105,36 +104,36 @@ export default {
   
   data() {
     return {
-      advanceEntryTimeRange : [ 5, 180 ],
-      showAdvanceTimeError  : false,
-      advanceTimeErrorText  : '',
+      // advanceEntryTimeRange : [ 5, 180 ],
+      // showAdvanceTimeError  : false,
+      // advanceTimeErrorText  : '',
       // customPasswordInput   : '',
       // showCustomPsdError    : false,
-      customPsdErrorText    : '',
+      // customPsdErrorText    : '',
       // settings not supported yet
-      advanceEntryTime      : 5,
+      // advanceEntryTime      : 5,
       // isRandomOrCustom      : false,
       // showNoticeTip         : false,
-      form                  : this.$form.createForm(this),
+      // form                  : this.$form.createForm(this),
     };
   },
   computed : {
-    showNoticeTip : {
-      set(val) {
-        if (val) {
-          this.noticeTip = 1;
-        }
-        else {
-          this.noticeTip = 0;
-        }
-      },
-      get() {
-        return this.noticeTip > 0;
-      },
-    },
+    // showNoticeTip : {
+    //   set(val) {
+    //     if (val) {
+    //       this.noticeTip = 1;
+    //     }
+    //     else {
+    //       this.noticeTip = 0;
+    //     }
+    //   },
+    //   get() {
+    //     return this.noticeTip > 0;
+    //   },
+    // },
   },
   mounted() {
-    this.customPasswordInput = this.customPassword;
+    // this.customPasswordInput = this.customPassword;
   },
   sketch : [
     {
@@ -142,16 +141,16 @@ export default {
       props : [ 
         'minimizedWhenLocalSharing',
         'maximizedWhenRemoteSharing',
-        'enableGpu',
+        // 'enableGpu',
         'shareWithSound',
-        'muteAudioWhenJoin',
-        'noticeTip',
-        'muteVideoWhenJoin',
-        'customPassword',
-        'meetnowPassword',
-        'bookingPassword',
-        'noticeSound',
-        'loginOptions',
+        // 'muteAudioWhenJoin',
+        // 'noticeTip',
+        // 'muteVideoWhenJoin',
+        // 'customPassword',
+        // 'meetnowPassword',
+        // 'bookingPassword',
+        // 'noticeSound',
+        // 'loginOptions',
         'highProfile',
         'dnd',
       ],

@@ -69,14 +69,14 @@
                         @click="showAddPropetyInput=false" ></a-button>
             </div>
             <div class="mt-2">
-              <a-tooltip v-for="(item,index) in propertyList" :key="item.id">
+              <a-tooltip v-for="(item,index) in tags" :key="item.id">
                 <template slot="title">
                   <span>{{$t('setting.common.propertyCreateAt')+item.createdAt}}</span>
                 </template>
                 <a-tag closable @close="handleDeleteProperty(index)" >{{item.label}}</a-tag>
               </a-tooltip>
               <a-tag  color="blue"  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
-                v-if="propertyList.length<=20">
+                v-if="tags.length<=20">
                   <span>+ {{$t('setting.common.addProperty')}}</span>
               </a-tag>
               <a-tag v-else color="gray">
@@ -126,7 +126,7 @@ export default {
       'language',
       'ytmsHostAddress',
       'updateChannel',
-      'propertyList',
+      'tags',
     ],
   },
 
@@ -212,9 +212,9 @@ export default {
     
     handleAddProperty() {
       if (this.addPropertyText.trim() !== '') {
-        if (this.propertyList.length < 20) {
+        if (this.tags.length < 20) {
           this.showAddPropetyInput = false;
-          this.propertyList.push({
+          this.tags.push({
             label     : this.addPropertyText,
             id        : this.getNewPropertyId() + 1,
             createdAt : (new Date()).toLocaleString(),
@@ -231,12 +231,12 @@ export default {
       }
     },
     handleDeleteProperty(index) {
-      const deleteMsg = this.propertyList.splice(index, 1)[0].label;
+      const deleteMsg = this.tags.splice(index, 1)[0].label;
 
       this.$message.success(`${deleteMsg} ${this.$t('setting.common.deletePropertyNotice')}`);
     },
     getNewPropertyId() {
-      return this.propertyList.length ? this.propertyList[this.propertyList.length - 1].id : 0;
+      return this.tags.length ? this.tags[this.tags.length - 1].id : 0;
     },
   },
 };
