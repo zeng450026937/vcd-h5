@@ -26,7 +26,7 @@
       </div>
       <a-button key="submit"
                 type="primary"
-                :disabled="!selectedWindow"
+                :disabled="!selectedWindow.id"
                 @click="handleShare">
         确定
       </a-button>
@@ -79,7 +79,7 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
-      selectedWindow  : null,
+      selectedWindow  : {},
     };
   },
   computed : {
@@ -91,7 +91,7 @@ export default {
     },
   },
   mounted() {
-    if(this.windowList.length > 0) {
+    if (this.windowList.length > 0) {
       this.selectedWindow = this.windowList[0];
     }
   },
