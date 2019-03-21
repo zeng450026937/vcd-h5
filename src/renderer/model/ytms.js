@@ -98,8 +98,6 @@ model.provide({
         },
       };
 
-      console.warn(data, account);
-
       this.$dispatch('ytms.updateClientInfo', { data });
     });
 
@@ -128,12 +126,14 @@ model.use(async(ctx, next) => {
     'doAlarm',
   ];
 
+  // is not api method
   if (apis.indexOf(method) === -1) {
     await next();
 
     return;
   }
 
+  // redirect to apiChecker
   ctx.redirect = method;
   ctx.method = 'apiChecker';
 
@@ -141,6 +141,7 @@ model.use(async(ctx, next) => {
 });
 
 model.register('apiChecker', async function(ctx, next) {
+  // api is not ready or unavailable
   if (!this.api) {
     throw new Error('ytms is not connected');
   }

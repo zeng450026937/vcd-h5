@@ -93,7 +93,8 @@ model.provide({
         .catch((error) => logger.warn('enumerate devices error: %s', error));
     },
 
-    acquireStream() {
+    // get media stream with setting constraints 
+    getUserMedia() {
       const constraints = {
         audio : { 
           ...this.setting.audioInputDevice,

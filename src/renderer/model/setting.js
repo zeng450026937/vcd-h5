@@ -5,6 +5,7 @@ const storage = window.localStorage;
 
 const VERSION = '1';
 const STORAGE_KEY = `SETTING_V${VERSION}`;
+const LANGUAGE = navigator.browserLanguage || navigator.languages[0] || navigator.language;
 
 const model = new Vuem();
 
@@ -12,7 +13,7 @@ model.provide({
   data() {
     return {
       // common
-      language                   : 'zh-CN',
+      language                   : LANGUAGE,
       hardwareAcceleration       : true, // consider to be removed, currently not work
       autoStart                  : false,
       autoUpdate                 : true,
@@ -42,6 +43,12 @@ model.provide({
       // p2p
       dnd                        : false,
     };
+  },
+
+  watch : {
+    language(val) {
+      this.$broadcast('language-change', val);
+    },
   },
 
   middleware : {
