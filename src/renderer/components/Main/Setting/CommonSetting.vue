@@ -57,6 +57,30 @@
             >{{channel.label}}</a-select-option>
           </a-select>
         </div>
+        <div class="mt-8 flex align-top">
+          <div class="mt-2">{{$t('setting.common.property')}}</div>
+          <div class="ml-4 flex-1">
+            <div v-if="showAddPropetyInput" class="mb-2">
+              <a-input v-model="addPropertyText"  maxlength="64"  class="w-60"
+                       @keypress.enter="handleAddProperty"></a-input>
+              <a-button type="primary"  class="ml-2" shape="circle" size="small"
+                        icon="check" @click="handleAddProperty"></a-button>
+              <a-button type="danger" class="ml-2" shape="circle" icon="close" size="small"
+                        @click="showAddPropetyInput=false" ></a-button>
+            </div>
+            <div class="mt-2">
+              <a-tag  closable  @close="handleDeleteProperty(index)" v-for="(item, index) in propertyList" 
+                      :key="item+index">{{item}}</a-tag>
+            <a-tag  color="blue"  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
+              v-if="propertyList.length<=20">
+                <span>+ {{$t('setting.common.addProperty')}}</span>
+            </a-tag>
+            <a-tag v-else color="gray">
+              {{$t('setting.common.fullPropertyNotice')}}
+            </a-tag>
+            </div>
+          </div>
+        </div>
         <div class="mt-10">
           <a-button type="primary" class="w-32" @click="handleNoodGuide">{{$t('setting.common.noobGuide')}}</a-button>
         </div>
@@ -84,7 +108,9 @@ export default {
           lang  : langList[key].locale, 
         }
       )),
-      addressErrorText : '您输入的地址不合法！',
+      addressErrorText    : '您输入的地址不合法！',
+      showAddPropetyInput : false,
+      addPropertyText     : '',
     };
   },
 
@@ -96,6 +122,7 @@ export default {
       'language',
       'ytmsHostAddress',
       'updateChannel',
+      'propertyList',
     ],
   },
 
@@ -176,7 +203,29 @@ export default {
 
     handleLanguageChange() {
       this.$i18n.locale = this.language;
-      this.$message.success(`已切换至 ${Object.values(langList).find((item) => item.locale === this.language).remark} !`);
+      this.$message.success(`${this.$t('setting.common.langChangeNotice')} ${Object.values(langList).find((item) => item.locale === this.language).remark} !`);
+    },
+    
+    handleAddProperty() {
+      if (this.addPropertyText.trim() !== '') {
+        if (this.propertyList.length < 20) {
+          this.showAddPropetyInput = false;
+          this.propertyList.push(this.addPropertyText);
+          this.addPropertyText = '';
+          this.$message.success(this.$t('setting.common.addPropertyNotice'));
+        }
+        else {
+          this.$message.error(this.$t('setting.common.fullPropertyNotice'));
+        }
+      }
+else {
+        this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
+      }
+    },
+    handleDeleteProperty(index) {
+      const deleteMsg = this.propertyList.splice(index, 1);
+
+      this.$message.success(`${deleteMsg} ${this.$t('setting.common.deletePropertyNotice')}`);
     },
   },
 };
