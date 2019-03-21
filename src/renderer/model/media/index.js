@@ -1,5 +1,6 @@
 import Vuem from '../vuem';
-import { closeMediaStream } from '../../lib/close-stream';
+import { getUserMedia } from '../../lib/get-user-media';
+import MediaDevice from './media-device';
 
 function stringifyDeviceList(list) {
   return list.map((d) => JSON.stringify({
@@ -16,6 +17,7 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
+      setting      : null,
       deviceList   : [],
       audioQuality : {        
         autoGainControl  : true,
@@ -32,15 +34,32 @@ model.provide({
         height      : 720,
         width       : 1280,
       },
+      screenQuality : {
+        aspectRatio : 16 / 9,
+        frameRate   : 30,
+        height      : 720,
+        width       : 1280,
+      },
     };
   },
 
   computed : {
+    audioInputDevice() {
+      return this.setting && this.setting.audioInputDevice;
+    },
     audioInputDevices() {
       return this.deviceList.filter((d) => d.kind === 'audioinput');
     },
+
+    audioOutputDevice() {
+      return this.setting && this.setting.audioOutputDevice;
+    },
     audioOutputDevices() {
       return this.deviceList.filter((d) => d.kind === 'audiooutput');
+    },
+
+    videoInputDevice() {
+      return this.setting && this.setting.videoInputDevice;
     },
     videoInputDevices() {
       return this.deviceList.filter((d) => d.kind === 'videoinput');
@@ -48,6 +67,9 @@ model.provide({
   },
 
   watch : {
+    audioInputDevice(device) {
+      this.localMedia.audioDevice = device;
+    },
     audioInputDevices(devices) {
       const [ device ] = devices;
       const using = this.audioInput;
@@ -72,6 +94,9 @@ model.provide({
         this.setting.audioOutputDevice = device;
       }
     },
+    videoInputDevice(device) {
+      this.localMedia.videoDevice = device;
+    },
     videoInputDevices(devices) {
       const [ device ] = devices;
       const using = this.videoInput;
@@ -84,18 +109,25 @@ model.provide({
         this.setting.videoInputDevice = device;
       }
     },
+
+    audioQuality(quality) {
+      this.localMedia.audioQuality = quality;
+    }, 
+    videoQuality(quality) {
+      this.localMedia.videoQuality = quality;
+    }, 
   },
 
   methods : {
     detectDevice() {
       return navigator.mediaDevices.enumerateDevices()
-        .then((deviceList) => this.deviceList = deviceList)
+        .then((deviceList) => this.deviceList = deviceList.map((d) => d.toJSON()))
         .catch((error) => logger.warn('enumerate devices error: %s', error));
     },
 
     // get media stream with setting constraints 
-    getUserMedia() {
-      const constraints = {
+    getUserMedia(constraints) {
+      constraints = constraints || {
         audio : { 
           ...this.setting.audioInputDevice,
           ...this.audioQuality,
@@ -107,18 +139,56 @@ model.provide({
       };
 
       // add stream.close()
-      return navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream) => {
-          stream.close = function() {
-            closeMediaStream(this);
-          };
+      return getUserMedia(constraints);
+    },
 
-          return stream;
-        });
+    getDisplayMedia(sourceId) {
+      const constraints = {
+        audio : false,
+        video : this.toScreenConstraints({
+          sourceId,
+          ...this.screenQuality,
+        }), 
+      };
+
+      return this.getUserMedia(constraints);
+    },
+
+    toScreenConstraints(constraints) {
+      const mandatory = {
+        // desktop for chrome & screen for firefox
+        chromeMediaSource   : 'desktop',
+        chromeMediaSourceId : constraints.deviceId || constraints.sourceId,
+        // minWidth            : constraints.width,
+        maxWidth            : constraints.width,
+        // minHeight           : constraints.height,
+        maxHeight           : constraints.height,
+        minFrameRate        : constraints.frameRate,
+        maxFrameRate        : constraints.frameRate,
+      };
+      const optional = [
+        { googTemporalLayeredScreencast: true },
+      ];
+
+      return {
+        mandatory,
+        optional,
+      };
+
+      /* for firefox
+      return {
+        mozMediaSource : 'screen',
+        mediaSource    : 'screen',
+      };
+      */
     },
   },
 
   async created() {
+    this.localMedia = new MediaDevice();
+    this.localMedia.audioQuality = this.audioQuality;
+    this.localMedia.videoQuality = this.videoQuality;
+
     this.detectTimer = null;
     this.detectInterval = 3000;
     
@@ -138,7 +208,7 @@ model.provide({
                               !== stringifyDeviceList(this.deviceList);
             }
 
-            if (deviceChanged) { this.deviceList = deviceList; }
+            if (deviceChanged) { this.deviceList = deviceList.map((d) => d.toJSON()); }
           })
           .catch((error) => logger.warn('enumerate devices error: %s', error));
       }, this.detectInterval);

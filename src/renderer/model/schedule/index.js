@@ -180,7 +180,9 @@ model.provide({
       if (oldVal) {
         oldVal.off('bookConferenceUpdated', this.updateScheduleUpdated);
       }
-      val.on('bookConferenceUpdated', this.updateScheduleUpdated);
+      if (val) {
+        val.on('bookConferenceUpdated', this.updateScheduleUpdated);
+      }
     });
 
     rtc.account.$watch('registered', (val) => {

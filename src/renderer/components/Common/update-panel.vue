@@ -84,7 +84,11 @@ export default {
       return this.$model.updater.lastSuccessfulCheck;
     },
     percent() {      
-      return this.progress ? Math.ceil(this.progress.percent) : 0;
+      return this.progress 
+        ? Math.ceil(this.progress.percent) 
+        : this.status === 3 // ready
+          ? 100 
+          : 0;
     },
     statusName() {
       return this.statusNameList[this.status];

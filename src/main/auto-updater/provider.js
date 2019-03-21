@@ -109,7 +109,7 @@ export class ProgressTransform extends Transform {
     this.downloader.onProgress({
       total          : this.total,
       delta          : this.delta,
-      received       : this.total,
+      received       : this.received,
       percent        : 100,
       bytesPerSecond : this.avg_speed,
     });
