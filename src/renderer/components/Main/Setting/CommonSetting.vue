@@ -9,7 +9,7 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5">
+    <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-auto">
       <div class="overflow-y-auto">
         <div>
           <a-switch size="small" v-model="autoStart"/>
@@ -30,7 +30,8 @@
         <div class="mt-6">
           
           <a-form :form="form">
-            <a-form-item :label="$t('setting.common.address')" :labelCol="{ span: 4 }" :colon="false">
+            <div class="mt-2 inline-block">{{$t('setting.common.address')}}</div>
+            <a-form-item class="ml-4">
               <a-input
                 v-decorator="[ 
                 'ytmsHostAddress',
@@ -41,14 +42,14 @@
                   ] 
                 }
                 ]"
-                class="w-48 ml-4" 
+                class="w-48" 
                 :placeholder="$t('setting.common.addressPlaceHolder')"
               />
             </a-form-item>
           </a-form>
           
         </div>
-        <div class="mt-6">
+        <div class="mt-3">
           <span>{{$t('setting.common.updateChannel')}}</span>
           <a-select v-model="updateChannel" class="w-48 ml-4">
             <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
@@ -165,7 +166,7 @@ export default {
       }
 
       callback();
-
+      
       this.ytmsHostAddress = address;
     },
 
@@ -180,3 +181,8 @@ export default {
   },
 };
 </script>
+<style scope>
+  .ant-form-item{
+    display:inline-block;
+  }
+</style>

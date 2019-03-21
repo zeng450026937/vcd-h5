@@ -12,6 +12,7 @@ import meeting from './meeting';
 import conference from './conference';
 import main from './main';
 import call from './call/index';
+import device from './device';
 
 import errorNotice from './middle';
 
@@ -31,6 +32,7 @@ model.mount('meeting', meeting);
 model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
+model.mount('device', device);
 
 model.use(async(ctx, next) => {
   // inject setting
