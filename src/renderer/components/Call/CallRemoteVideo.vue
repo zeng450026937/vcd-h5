@@ -1,16 +1,16 @@
 <template>
-  <div id="conference-remote-video" class="h-full w-full bg-media relative">
+  <div id="call-remote-video" class="h-full w-full bg-media relative">
     <remote-video
         :class="videoClasses"
         :source="source"
-        :hide-video="!isVideoConference">
-      <div v-if="!isVideoConference"
+        :hide-video="!isVideoCall">
+      <div v-if="!isVideoCall"
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5">音频会议</span>
+        <span class="display-name mt-5">音频通话</span>
       </div>
-      <conference-controls slot="controls" class="controls" :class="controlsClasses"/>
+      <call-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
 
   </div>
@@ -18,36 +18,42 @@
 
 <script>
 import RemoteVideo from '../Common/VideoView.vue';
-import ConferenceControls from './ConferenceControls.vue';
+import CallControls from './CallControls.vue';
 
 export default {
-  name       : 'ConferenceRemoteVideo',
+  name       : 'CallRemoteVideo',
   components : {
     RemoteVideo,
-    ConferenceControls,
+    CallControls,
   },
   props : {
     source : {
       type    : String,
-      default : 'remote',
+      default : 'call-remote',
     },
   },
-  sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'hideControls', 'showMorePanel', 'isInConferenceMain', 'isVideoConference' ],
-  },
+  sketch : [
+    {
+      ns    : 'call.sketch',
+      props : [ 'hideControls', 'showMorePanel', 'isInCallMain' ],
+    },
+    {
+      ns    : 'call',
+      props : [ 'isVideoCall' ],
+    },
+  ],
   computed : {
     controlsClasses() {
       return {
-        [this.isInConferenceMain || !this.isVideoConference ? 'controls-bottom' : 'controls-normal'] : true,
-        'hide-controls'                                                                              : this.hideControls,
+        [this.isInCallMain || !this.isVideoCall ? 'controls-bottom' : 'controls-normal'] : true,
+        'hide-controls'                                                                  : this.hideControls,
       };
     },
     videoClasses() {
       return {
-        [`remote-video-content-${this.isInConferenceMain ? 'normal' : 'shrink'}`] : true,
-        'h-full'                                                                  : !this.isVideoConference,
-        'remote-video-content-normal-auto'                                        : this.isInConferenceMain && this.isVideoConference,
+        [`remote-video-content-${this.isInCallMain ? 'normal' : 'shrink'}`] : true,
+        'h-full'                                                            : !this.isVideoCall,
+        'remote-video-content-normal-auto'                                  : this.isInCallMain && this.isVideoCall,
       };
     },
   },
@@ -62,7 +68,8 @@ export default {
 </script>
 
 <style lang="less">
-#conference-remote-video {
+#call-remote-video {
+
     .content-wrapper{
       border: 1px solid #1d212f;
     }
@@ -125,7 +132,7 @@ export default {
         height: auto;
       }
 
-      #conference-controls {
+      #call-controls {
         width: 100%;
         position: absolute;
         top: 100%;

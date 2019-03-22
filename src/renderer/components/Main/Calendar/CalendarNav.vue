@@ -49,14 +49,14 @@ export default {
   },
   computed : {
     eventList() {
-      return this.$model.calendar.formatCalendar || [];
+      return this.$model.schedule.calendar || [];
     },
     selectedDate : {
       get() {
-        return this.$model.calendar.selectedDate || new Date();
+        return this.$model.schedule.selectedDate || new Date();
       },
       set(val) {
-        this.$model.calendar.selectedDate = val;
+        this.$model.schedule.selectedDate = val;
       },
     },
   },
@@ -89,10 +89,10 @@ export default {
     },
     selectDate(date) {
       this.selectedDate = date.raw;
-      this.$model.calendar.currentDateEvents = [];
+      this.$model.schedule.currentDateEvents = [];
       this.eventList.forEach((e) => {
         if (e.expiryMoment.toDate() >= date.raw.toDate() || e.startMoment.toDate() >= date.raw.toDate()) {
-          this.$model.calendar.currentDateEvents.push(e);
+          this.$model.schedule.currentDateEvents.push(e);
         }
       });
     },

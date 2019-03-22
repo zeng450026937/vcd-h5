@@ -12,8 +12,13 @@ model.mount('state', state);
 model.mount('sketch', sketch);
 
 model.provide({
+  data() {
+    return {
+      isVideoCall : false,
+    };
+  },
   middleware : {
-    doAudioCall(ctx) {
+    call(ctx) {
       let { number } = ctx.payload;
       // 判断是否为IP 直播 10.81.45.13 or 10*86*5*3
 
@@ -26,7 +31,9 @@ model.provide({
 
       call.target = number;
 
-      return call.connect();
+      this.isVideoCall = ctx.payload.options.video;
+
+      return call.connect('send', ctx.payload.options);
     },
   },
 });

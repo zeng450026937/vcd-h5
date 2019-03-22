@@ -3,24 +3,32 @@
     <div class="px-4 flex h-full select-none">
       <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
         <template v-if="callStatus === 'connected'">
-          <a-iconfont type="icon-tonghuabaohu" class="text-white text-base mr-4"/>
-          <a-iconfont :type="`icon-wangluozhuangtai_${signal}`" class="text-white text-base mr-4"/>
+          <a-iconfont type="icon-tonghuabaohu"
+                      title="通话保护"
+                      class="text-white text-base mr-4 no-dragable"/>
+          <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
+                      title="信号"
+                      class="text-white text-base mr-4 no-dragable cursor-pointer"
+                      @click="showStatistics"/>
           <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         </template>
         <span class="text-white text-xs leading-tight truncate">{{title}}</span>
       </div>
       <common-header class="text-white"/>
     </div>
+    <conference-statistics-modal content="call" ref="statisticsModal"/>
   </div>
 </template>
 
 <script>
 import CommonHeader from '../Shared/CommonHeader.vue';
+import ConferenceStatisticsModal from '../Conference/ConferenceStatisticsModal.vue';
 
 export default {
   name       : 'CallHeader',
   components : {
     CommonHeader,
+    ConferenceStatisticsModal,
   },
   data() {
     return {
@@ -57,6 +65,11 @@ export default {
     },
     signal() {
       return this.$model.call.state.signal;
+    },
+  },
+  methods : {
+    showStatistics() {
+      this.$refs.statisticsModal.visible = true;
     },
   },
   watch : {

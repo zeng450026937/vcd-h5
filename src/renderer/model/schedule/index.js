@@ -2,6 +2,7 @@ import { ConferenceManager } from 'apollosip';
 import Vuem from '../vuem';
 import { ScheduleDatabse } from '../../database/schedule-database';
 import { arrayify } from '../../lib/arrayify';
+import { formatCalendar } from './format-calendar';
 import {
   fixConference,
   fixTemplate,
@@ -14,7 +15,10 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      lastUpdated : 0,
+      lastUpdated       : 0,
+      selectedDate      : new Date(),
+      currentDateEvents : [],
+      currentEvent      : {},
     };
   },
 
@@ -25,6 +29,14 @@ model.provide({
       /* eslint-enable no-unused-expressions */ 
 
       return this.merged;
+    },
+
+    calendar() {
+      /* eslint-disable no-unused-expressions */
+      this.lastUpdated;
+      /* eslint-enable no-unused-expressions */
+
+      return formatCalendar(this.merged);
     },
   },
 

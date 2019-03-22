@@ -39,7 +39,7 @@ state.provide({
 
             if (quality <= 0 && !isShowSignalWarning) { // 丢包率 > 12% (10%)
               isShowSignalWarning = true;
-              this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+              this.$message.warning('当前网络状况不佳，建议切换为音频通话。', this.isConnected ? 0 : 1);
             }
             else {
               isShowSignalWarning = false;

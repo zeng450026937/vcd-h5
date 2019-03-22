@@ -12,6 +12,9 @@ chat.provide({
     };
   },
   computed : {
+    currentTab() {
+      return this.$parent.sketch.currentTab;
+    },
     newMessage() {
       return rtc.conference.message;
     },
@@ -50,7 +53,9 @@ chat.provide({
   },
   watch : {
     newMessage(val) {
-      this.hasNewMessage = true;
+      if (this.currentTab !== 'TabChatting') {
+        this.hasNewMessage = true;
+      }
       const messageObject = {
         from      : val.user['@display-text'],
         content   : val.msg,

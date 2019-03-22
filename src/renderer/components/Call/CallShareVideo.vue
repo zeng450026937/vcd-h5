@@ -1,16 +1,12 @@
 <template>
-  <div id="conference-local-video" class="relative group"
-       :class="{[`conference-local-video-${videoLayouts[current]}`]: true}">
-    <!--//TODO 如果添加该段消息提示代码，则会导致本地视频-->
-    <div :class="{'message-bottom': !isVideoConference}">
-      <conference-message v-if="current !== 2 && isVideoConference" class="conference-message"/>
-    </div>
-    <video-view v-show="isVideoConference"
-                source="local"
+  <div id="call-share-video" class="relative group"
+       :class="{[`call-local-video-${videoLayouts[current]}`]: true}">
+    <video-view :source="source"
                 object-fit="cover"
                 class="cursor-pointer"
-                :class="{'opacity-0':current === 0}"/>
-    <template v-if="current !== 2 && isVideoConference">
+                :class="{'opacity-0':current === 0}"
+                @video-clicked="videoClicked"/>
+    <template v-if="current !== 2">
       <div class="video-controls group-hover:opacity-100 h-8"
            :class="{'opacity-0': current !== 0}">
         <div class="flex px-4 justify-end pt-2">
@@ -27,7 +23,7 @@
       </div>
       <div v-if="current === 0"
            class="video-title h-full flex items-center text-white mx-4">
-        <span class="z-10 text-xs">本地视频</span>
+        <span class="z-10 text-xs">辅流分享</span>
       </div>
     </template>
   </div>
@@ -35,14 +31,17 @@
 
 <script>
 import VideoView from '../Common/VideoView.vue';
-import ConferenceMessage from './ConferenceMessage.vue';
-import { CONFERENCE } from '../../router/constants';
 
 export default {
-  name       : 'ConferenceLocalVideo',
+  name       : 'CallShareVideo',
   components : {
     VideoView,
-    ConferenceMessage,
+  },
+  props : {
+    source : {
+      type    : String,
+      default : 'screen',
+    },
   },
   data() {
     // FIXME may hard code
@@ -53,40 +52,46 @@ export default {
     };
   },
   sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'localWindowState', 'isInConferenceMain', 'isVideoConference' ],
+    ns    : 'call.sketch',
+    props : [ 'shareWindowState', 'isInCallMain' ],
   },
   computed : {
     current() {
-      return this.localWindowState.current;
+      return this.shareWindowState.current;
     },
   },
   methods : {
     // 变大或者变小
     switchShrinkOrExpand() {
-      this.localWindowState.current = this.current === 1 ? 3 : 1;
+      this.shareWindowState.current = this.current === 1 ? 3 : 1;
     },
     // 最大或者最小
     switchMaxOrMin() {
-      this.localWindowState.current = this.current === 0 ? 1 : 0;
+      this.shareWindowState.current = this.current === 0 ? 1 : 0;
+    },
+    videoClicked() {
+      this.$emit('video-clicked');
     },
   },
   watch : {
-    isInConferenceMain(val) {
-      if (val) {
-        this.localWindowState.current = this.localWindowState.pre;
-      }
-      else {
-        this.localWindowState.pre = this.current;
-        this.localWindowState.current = 2;
-      }
+    isInCallMain : {
+      handler(val) {
+        if (val) {
+          this.shareWindowState.current = this.shareWindowState.pre;
+        }
+        else {
+          this.shareWindowState.pre = this.current;
+          this.shareWindowState.current = 2;
+        }
+      },
+      immediate : true,
     },
   },
 };
 </script>
 
 <style lang="less">
-  #conference-local-video {
+  #call-share-video {
     border: 1px solid #1D212F;
     .video-controls {
       position: absolute;
@@ -98,20 +103,8 @@ export default {
       background: rgba(0,0,0,0.65);
       transition: opacity ease-in-out .5s;
     }
-    .message-bottom{
-      bottom: 0;
-      position: absolute;
-      width: 100%;
-    }
-    .conference-message {
-      position: absolute;
-      width: 100%;
-      text-align: right;
-      color: white;
-      transform: translateY(-100%);
-    }
   }
-  .conference-local-video { // min shrink normal expand
+  .call-local-video { // min shrink normal expand
     &-min {
       width: 176px;
       height: 32px;

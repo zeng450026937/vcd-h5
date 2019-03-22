@@ -4,8 +4,15 @@ import rtc from '../../rtc';
 const sketch = new Vuem();
 
 const initialDate = () => ({
-  isInCallMain : true, // 是否隐藏会议页面底部和头部的控制按钮
-  currentTab   : '',
+  currentTab       : '', // TabSetting TabChatting
+  isInCallMain     : true,
+  hideControls     : false,
+  showMorePanel    : false,
+  localWindowState : { current: 1, pre: 1 }, // 0.min 1.shrink 2.mini 3.normal 4.expand
+  shareWindowState : { current: 1, pre: 1 }, // 0.min 1.shrink 2.mini 3.normal 4.expand
+
+  isShareInCenter   : false,
+  isShareWindowOpen : false,
 });
 
 sketch.provide({
@@ -19,7 +26,7 @@ sketch.provide({
   },
   watch : {
     callStatus(val, oldVal) {
-      if (val === 'disconnected') { // 退出会议之后重置当前状态
+      if (val === 'disconnected' || val === 'finished') { // 退出会议之后重置当前状态
         Object.assign(this, initialDate());
       }
     },

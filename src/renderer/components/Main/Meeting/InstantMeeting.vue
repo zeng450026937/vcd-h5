@@ -68,7 +68,6 @@ import AppHeader from '../MainHeader.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactTree from '../Contact/ContactTree.vue';
 import ContactList from '../Contact/ContactList.vue';
-import PlainTree from '../../Common/CommonTree/index.vue';
 
 export default {
   name       : 'InstantMeeting',
@@ -77,7 +76,6 @@ export default {
     ContactTree,
     ContactList,
     CommonEmpty,
-    PlainTree,
   },
   data() {
     return {
@@ -122,7 +120,14 @@ export default {
           requestUri : item.number,
         });
       });
-      this.$rtc.conference.meetnow(list, { subject: `${this.$rtc.account.username} 的视频会议` });
+      this.$rtc.conference.meetnow(list,
+        {
+          subject : `${this.$rtc.account.username} 的视频会议`,
+        }).catch((err) => {
+        // TODO conference user dial out duplicate
+        // console.warn(err);
+        // this.$message.error('即时会议出错，请稍候重试！');
+      });
     },
     onCheck(selectedContact) {
       this.selectedContact = selectedContact;

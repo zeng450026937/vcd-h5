@@ -10,8 +10,9 @@
   >
     <div class="flex flex-col items-center px-12 pb-4">
       <h4 class="mt-5 leading-loose">{{isPresenter ? '您要结束会议还是离开会议?' : '您确定要离开会议?'}}</h4>
-      <a-button v-if="isPresenter" class="mt-5" type="danger" block @click="endedConference">结束会议</a-button>
-      <a-button class="mt-5" type="primary" block
+      <a-button v-if="isPresenter" class="mt-5 bg-red-light text-white border-transparent"
+                block @click="endedConference">结束会议</a-button>
+      <a-button class="mt-5 bg-main-theme text-white border-transparent" block
                 @click="leaveConference">{{isPresenter ? '离开会议，会议继续进行' : '离开会议'}}</a-button>
       <a-button class="mt-5" block @click="cancel">取消</a-button>
     </div>

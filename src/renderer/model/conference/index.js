@@ -5,6 +5,7 @@ import share from './share';
 import member from './member';
 import chat from './chat';
 import invite from './invite';
+import statistics from './statistics';
 import rtc from '../../rtc';
 
 const model = new Vuem();
@@ -15,6 +16,7 @@ model.mount('share', share);
 model.mount('member', member);
 model.mount('chat', chat);
 model.mount('invite', invite);
+model.mount('statistics', statistics);
 
 model.provide({
   data() {

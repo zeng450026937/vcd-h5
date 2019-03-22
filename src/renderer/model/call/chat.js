@@ -12,6 +12,9 @@ chat.provide({
     };
   },
   computed : {
+    currentTab() {
+      return this.$parent.sketch.currentTab;
+    },
     newMessage() {
       return rtc.account.newMessage;
     },
@@ -37,7 +40,9 @@ chat.provide({
   },
   watch : {
     newMessage(val) {
-      this.hasNewMessage = true;
+      if (this.currentTab !== 'TabChatting') {
+        this.hasNewMessage = true;
+      }
       const raw = val[val.length - 1];
 
       const messageObject = {

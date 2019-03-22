@@ -1,16 +1,11 @@
 <template>
-  <div id="conference-local-video" class="relative group"
-       :class="{[`conference-local-video-${videoLayouts[current]}`]: true}">
-    <!--//TODO 如果添加该段消息提示代码，则会导致本地视频-->
-    <div :class="{'message-bottom': !isVideoConference}">
-      <conference-message v-if="current !== 2 && isVideoConference" class="conference-message"/>
-    </div>
-    <video-view v-show="isVideoConference"
-                source="local"
+  <div id="call-local-video" class="relative group"
+       :class="{[`call-local-video-${videoLayouts[current]}`]: true}">
+    <video-view source="local"
                 object-fit="cover"
                 class="cursor-pointer"
                 :class="{'opacity-0':current === 0}"/>
-    <template v-if="current !== 2 && isVideoConference">
+    <template v-if="current !== 2">
       <div class="video-controls group-hover:opacity-100 h-8"
            :class="{'opacity-0': current !== 0}">
         <div class="flex px-4 justify-end pt-2">
@@ -35,14 +30,11 @@
 
 <script>
 import VideoView from '../Common/VideoView.vue';
-import ConferenceMessage from './ConferenceMessage.vue';
-import { CONFERENCE } from '../../router/constants';
 
 export default {
-  name       : 'ConferenceLocalVideo',
+  name       : 'CallLocalVideo',
   components : {
     VideoView,
-    ConferenceMessage,
   },
   data() {
     // FIXME may hard code
@@ -53,8 +45,8 @@ export default {
     };
   },
   sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'localWindowState', 'isInConferenceMain', 'isVideoConference' ],
+    ns    : 'call.sketch',
+    props : [ 'localWindowState', 'isInCallMain' ],
   },
   computed : {
     current() {
@@ -72,7 +64,7 @@ export default {
     },
   },
   watch : {
-    isInConferenceMain(val) {
+    isInCallMain(val) {
       if (val) {
         this.localWindowState.current = this.localWindowState.pre;
       }
@@ -86,7 +78,7 @@ export default {
 </script>
 
 <style lang="less">
-  #conference-local-video {
+  #call-local-video {
     border: 1px solid #1D212F;
     .video-controls {
       position: absolute;
@@ -98,20 +90,8 @@ export default {
       background: rgba(0,0,0,0.65);
       transition: opacity ease-in-out .5s;
     }
-    .message-bottom{
-      bottom: 0;
-      position: absolute;
-      width: 100%;
-    }
-    .conference-message {
-      position: absolute;
-      width: 100%;
-      text-align: right;
-      color: white;
-      transform: translateY(-100%);
-    }
   }
-  .conference-local-video { // min shrink normal expand
+  .call-local-video { // min shrink normal expand
     &-min {
       width: 176px;
       height: 32px;

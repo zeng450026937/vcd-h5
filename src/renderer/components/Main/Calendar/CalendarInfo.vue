@@ -166,24 +166,28 @@ export default {
     CommonEmpty,
     RecycleScroller,
   },
+  sketch: {
+    ns: 'meeting',
+    props: ['meetingRecord']
+  },
   computed : {
     currentEvent() {
-      return this.$model.calendar.currentEvent || {};
+      return this.$model.schedule.currentEvent || {};
     },
     status() {
-      return this.currentEvent.status || {}
+      return this.currentEvent.status || {};
     },
     hasEvent() {
       return Object.keys(this.currentEvent).length > 0;
     },
     enterpriseId() {
-      return this.$rtc.account.schedule.enterpriseId;
+      return this.$model.account.enterpriseId || '';
     },
     liveQRCode() {
       return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
     },
     shareUrl() {
-      return `http://${this.$model.login.proxy}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+      return `http://${this.$model.account.proxy}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
     },
     shareQRCode() {
       return jrQrcode.getQrBase64(this.shareUrl);
@@ -194,13 +198,22 @@ export default {
       this.$refs.deleteModal.visible = false;
     },
     enterMeeting() {
-      this.$dispatch('meeting.joinMeeting', {
-        number : this.currentEvent.conferenceNumber,
-        pin    : this.currentEvent.attendeePin,
-      });
+      this.meetingRecord = {
+        number       : this.currentEvent.conferenceNumber,
+        pin          : this.currentEvent.attendeePin,
+        initialVideo : true,
+        initialAudio : true,
+      };
+      this.$dispatch('meeting.joinMeeting');
     },
     audioEnter() {
-      console.warn(this.currentEvent);
+      this.meetingRecord = {
+        number       : this.currentEvent.conferenceNumber,
+        pin          : this.currentEvent.attendeePin,
+        initialVideo : true,
+        initialAudio : false,
+      };
+      this.$dispatch('meeting.joinMeeting');
     },
     toLiveShareUrl() {
       shell.openExternal(this.currentEvent.liveShareUrl);

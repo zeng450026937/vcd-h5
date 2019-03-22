@@ -15,9 +15,12 @@ export default {
   name : 'ConferenceMessage',
   data() {
     return {
-      hideMessage      : true,
       hideMessageTimer : null,
     };
+  },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'hideMessage' ],
   },
   destroyed() {
     if (this.hideMessageTimer) clearTimeout(this.hideMessageTimer);
