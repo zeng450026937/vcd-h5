@@ -24,7 +24,7 @@ model.provide({
   methods : {
     async send(to, body) {
       if (!this.account) throw new Error('not ready');
-      if (!this.account.registered) throw new Error('not avialiable');
+      if (!this.account.registered) throw new Error('not available');
       if (!to) throw new Error('message target is required');
       if (!body) throw new Error('no message body is required');
 

@@ -160,12 +160,20 @@ model.provide({
 
     const setting = this.$getVM('setting');
 
-    setting.$watch('updateChannel', (val) => {
-      this.channel = val;
-    });
-    setting.$watch('autoUpdate', (val) => {
-      this.autoInstallOnAppQuit = val;
-    });
+    setting.$watch(
+      'updateChannel',
+      (val) => {
+        this.channel = val;
+      },
+      { immediate: true }
+    );
+    setting.$watch(
+      'autoUpdate',
+      (val) => {
+        this.autoInstallOnAppQuit = val;
+      },
+      { immediate: true }
+    );
   },
 
   beforeDestroy() {

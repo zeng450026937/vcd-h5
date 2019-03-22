@@ -188,6 +188,11 @@ model.provide({
 
   beforeDestroy() {
     this.db = null;
+    this.cm = null;
+
+    this.conferences = null;
+    this.templates = null;
+    this.merged = null;
   },
 });
 

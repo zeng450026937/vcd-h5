@@ -42,6 +42,30 @@ model.provide({
     const account = this.$getVM('account');
 
     account.$on('newRTCSession', (session) => {
+      /*
+      const channel = new MediaChannel(this.ua);
+
+      channel._isVue = true;
+      channel.session = data.session;
+      this.newChannel.push(channel);
+
+      const listeners = {
+        finished : () => {
+          const index = this.newChannel.indexOf(channel);
+
+          this.newChannel.splice(index, 1);
+          removeEventHandlers(channel, listeners);
+        },
+        failed : () => {
+          const index = this.newChannel.indexOf(channel);
+
+          this.newChannel.splice(index, 1);
+          removeEventHandlers(channel, listeners);
+        },
+      };
+
+      setupEventHandlers(channel, listeners);
+      */
       this.lastRecvTime = Date.now();
     });
 
