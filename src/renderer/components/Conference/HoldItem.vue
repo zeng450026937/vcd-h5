@@ -2,7 +2,7 @@
   <!--<div id="hold-item" class="absolute">-->
     <draggable-element parentId="conference-content"
                        place="end"
-                       :class="{'z-top': isTop, 'z-50': !isTop}"
+                       :class="{'z-50': isTop, 'z-40': !isTop}"
                        :style="itemStyles">
       <div slot="content" class="hold-content flex items-center pl-3 pr-4"
            @mousedown="contentClicked">

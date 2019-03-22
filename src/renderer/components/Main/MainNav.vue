@@ -74,12 +74,14 @@ export default {
     initNav() {
       this.currentRoute = this.$router.currentRoute;
       this.isInCalendar = this.currentRoute.meta.owner === MODULE_NAME.CALENDAR;
-      if (this.isInCalendar) return;
+      // if (this.isInCalendar) return;
 
       const nav = this.currentRoute.meta.owner;
 
       this.sidebar = this.sidebarMap[nav];
-      this.currentNav = this.sidebar.navs.find((n) => n.route === this.currentRoute.path);
+      this.currentNav = this.sidebar.navs
+        ? this.sidebar.navs.find((n) => n.route === this.currentRoute.path)
+        : this.sidebar.currentRoute;
     },
     clickNav(nav, index) {
       this.currentNav = nav;

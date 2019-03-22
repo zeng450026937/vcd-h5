@@ -166,10 +166,16 @@ export default {
     CommonEmpty,
     RecycleScroller,
   },
-  sketch: {
-    ns: 'meeting',
-    props: ['meetingRecord']
-  },
+  sketch : [
+    {
+      ns    : 'meeting',
+      props : [ 'meetingRecord' ],
+    },
+    {
+      ns    : 'conference.sketch',
+      props : [ 'isVideoConference' ],
+    },
+  ],
   computed : {
     currentEvent() {
       return this.$model.schedule.currentEvent || {};
@@ -198,6 +204,7 @@ export default {
       this.$refs.deleteModal.visible = false;
     },
     enterMeeting() {
+      this.isVideoConference = true;
       this.meetingRecord = {
         number       : this.currentEvent.conferenceNumber,
         pin          : this.currentEvent.attendeePin,
@@ -207,11 +214,12 @@ export default {
       this.$dispatch('meeting.joinMeeting');
     },
     audioEnter() {
+      this.isVideoConference = false;
       this.meetingRecord = {
         number       : this.currentEvent.conferenceNumber,
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
-        initialAudio : false,
+        initialAudio : true,
       };
       this.$dispatch('meeting.joinMeeting');
     },

@@ -325,7 +325,9 @@ export default {
       this.$emit('moreOption', item);
     },
     switchContact(direction) {
-      const { items } = this.selectedContact.parent;
+      // const { items } = this.selectedContact.parent;
+      const items = this.contactList;
+
       const index = items.findIndex((c) => this.selectedContact.id === c.id);
       const length = items.length;
       const cursor = direction === 'down' ? index + 1 : index - 1;

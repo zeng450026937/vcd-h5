@@ -22,7 +22,14 @@ const initialSidebar = () => {
         { icon: 'icon-bohao', route: MAIN.DIAL_PLATE, text: '拨号' },
       ],
     },
-    { icon: 'icon-richeng', text: '日程', name: MODULE_NAME.CALENDAR, currentRoute: MAIN.CALENDAR_VIEW },
+    { icon         : 'icon-richeng',
+      text         : '日程',
+      name         : MODULE_NAME.CALENDAR,
+      currentRoute : MAIN.CALENDAR_VIEW,
+      navs         : [
+        { route: MAIN.CALENDAR_VIEW },
+      ],
+    },
     {
       icon         : 'icon-lianxiren',
       text         : '联系人',
@@ -75,9 +82,10 @@ model.provide({
     },
     sidebarMap() {
       return {
-        meeting : this.sidebarItems[0],
-        contact : this.sidebarItems[2],
-        setting : this.sidebarItems[3],
+        meeting  : this.sidebarItems[0],
+        calendar : this.sidebarItems[1],
+        contact  : this.sidebarItems[2],
+        setting  : this.sidebarItems[3],
       };
     },
     isConferenceDisConnected() {
