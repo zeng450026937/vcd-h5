@@ -263,10 +263,17 @@ export default {
     getPathList(group) {
       if (!group) return [];
 
-      return this.store.findBranch(group).map((i) => ({
+      const currentGroup = this.store.getNode(group);
+
+
+      const pathList = this.store.findBranch(group).map((i) => ({
         text : i.name,
         id   : i.id,
       })).reverse();
+
+      pathList.push({ text: currentGroup.name, id: currentGroup.id });
+
+      return pathList;
     },
     clickItem(item) {
       //  if (this.checkable) this.contactChecked(item);
@@ -330,7 +337,6 @@ export default {
   watch : {
     currentGroup(val) {
       this.pathList = this.getPathList(val);
-      console.log(this.pathList.map(item=>item.text))
     },
   },
   filters : {
