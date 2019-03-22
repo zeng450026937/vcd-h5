@@ -1,15 +1,17 @@
 <template>
   <a-layout id="instant-meeting" class="h-full w-full">
+
     <div class="flex flex-col h-full">
-      <app-header :title="`${rootNode.name} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
-      <a-divider class="my-0"/>
-      <div class="flex flex-col h-full m-4">
-        <transfer :maxChecked="100" ref="transfer"></transfer>
-      </div>
 
+      <app-header :title="`${rootNode.name || ''} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
 
-      <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
+        <div class="flex flex-col h-full m-4">
+          <transfer ref="transfer"></transfer>
+        </div>
+        <div class="flex flex-grow"></div>
+      <a-divider class="my-0"/>
+
       <div class="h-12">
         <div class="flex justify-center items-center py-2 bg-white">
           <a-button large type="primary"
@@ -19,7 +21,9 @@
           </a-button>
         </div>
       </div>
+
     </div>
+
   </a-layout>
 </template>
 

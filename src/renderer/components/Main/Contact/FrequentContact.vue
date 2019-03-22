@@ -108,7 +108,7 @@ export default {
     };
   },
   mounted() {
-    this.$rtc.contact.favorite.doSync().then(() => {});
+    // this.$rtc.contact.favorite.doSync().then(() => {});
   },
   destroyed() {
     this.$popup.destroy(this.ensureModal);
@@ -136,6 +136,9 @@ export default {
       return this.store.getChild(this.currentGroup);
     },
     currentGroupName() {
+      debugger
+      if (this.currentGroup === 'rootNode') return this.rootNode.name;
+
       return this.store.getNode(this.currentGroup).name;
     },
     frequentContacts() {

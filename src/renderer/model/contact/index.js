@@ -37,26 +37,18 @@ model.provide({
       return rtc.contact.favorite.dataLoaded;
     },
     phoneBookStore() {
-      if (!this.phoneBookLoaded) return null;
+      phoneBookStore = new Store();
 
-      const { phonebook } = rtc.contact;
+      if (!this.phoneBookLoaded) return phoneBookStore;
 
-      if (phoneBookStore) {
-        phoneBookStore.destroy();
-      }
-
-      return phoneBookStore = new Store(phonebook.list);
+      return phoneBookStore.update(rtc.contact.phonebook.list);
     },
     favoriteStore() {
-      if (!this.favoriteLoaded) return null;
+      favoriteStore = new Store();
 
-      const { favorite } = rtc.contact;
+      if (!this.favoriteLoaded) return favoriteStore;
 
-      if (favoriteStore) {
-        favoriteStore.destroy();
-      }
-
-      return favoriteStore = new Store(favorite.list);
+      return favoriteStore.update(rtc.contact.favorite.list);
     },
   },
   methods : {
@@ -85,8 +77,8 @@ model.provide({
     // },
     loginStatus(val) {
       if (val === 'disconnected') {
-        this.formattedPhoneBook = null;
-        this.formattedFavorite = null;
+        this.favoriteStore.destroy();
+        this.phoneBookStore.destroy();
       }
     },
 

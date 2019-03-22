@@ -37,14 +37,14 @@
                           :trigger="['click']">
                 <a-iconfont type="icon-gengduo1"
                             title="更多"
-                            class="mr-2 text-indigo cursor-pointer text-base"/>
+                            class="mr-2 text-indigo cursor-pointer text-base"></a-iconfont>
                 <a-menu slot="overlay">
                   <a-menu-item @click="editContact(item)">
-                    <a-iconfont type="icon-bianji"/>
+                    <a-iconfont type="icon-bianji"></a-iconfont>
                     <span>编辑该联系人</span>
                   </a-menu-item>
                   <a-menu-item @click="deleteContact(item)">
-                    <a-iconfont type="icon-shanchu"/>
+                    <a-iconfont type="icon-shanchu"></a-iconfont>
                     <span>删除该联系人</span>
                   </a-menu-item>
                 </a-menu>
@@ -97,7 +97,7 @@ export default {
   },
   computed : {
     localContacts() {
-      return this.$model.storage.localContactGroup.items;
+      // return this.$model.contact.local.localContactGroup.items;
     },
     groupInfo() {
       return {

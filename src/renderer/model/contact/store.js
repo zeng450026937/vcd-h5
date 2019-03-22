@@ -35,15 +35,8 @@ const groupMap = {
 };
 
 export default class TreeStore {
-  constructor(originTree) {
-    console.time('generate tree cost time');
-    this.tree = [];
-    this.originTree = originTree;
-    this.checkedMap = {};
-    this.genTree();
-    this.genAmount();
-    this.genRootGroup();
-    console.timeEnd('generate tree cost time');
+  constructor(tree = []) {
+    this.generate(tree);
   }
 
   destroy() {
@@ -52,6 +45,27 @@ export default class TreeStore {
     this.checkedMap = {};
     this.nodeMap = {};
     this.parentMap = {};
+    this.offspringMap = {};
+  }
+
+  generate(tree) {
+    if (!Array.isArray(tree)) return;
+
+    console.time('generate tree cost time');
+    this.tree = [];
+    this.originTree = tree;
+    this.checkedMap = {};
+    this.genTree();
+    this.genAmount();
+    this.genRootGroup();
+    console.timeEnd('generate tree cost time');
+  }
+
+  update(tree) {
+    this.destroy();
+    this.generate(tree);
+
+    return this;
   }
 
   get rootGroup() {
@@ -59,12 +73,11 @@ export default class TreeStore {
   }
 
   get rootNode() {
-    return this.nodeMap.rootNode;
+    return this.nodeMap.rootNode || {};
   }
 
   clone(data) {
-    // 小数据用
-    return JSON.parse(JSON.stringify(data));
+    return JSON.parse(JSON.stringify(data)); // 小数据用
   }
 
   genRootGroup() {
@@ -82,7 +95,7 @@ export default class TreeStore {
       });
     });
 
-    if (groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
+    if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
       Object.assign(this.rootNode, groupMap[this.rootNode.attributes.name]);
     }
   }
