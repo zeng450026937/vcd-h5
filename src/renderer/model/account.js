@@ -1,101 +1,345 @@
+import { UA, Utils } from 'apollosip';
 import Vuem from './vuem';
-import storage, { LOGIN_STORAGE } from '../storage';
-import rtc from '../rtc';
-import { formatServers } from './utils';
-import { IP_REG, DOMAIN_REG } from '../utils';
+import { defer } from '../lib/defer';
+import { setupEventHandlers, removeEventHandlers } from '../lib/event-handler';
+import { resolveSipDomain } from '../lib/resolve-sip-domain';
+
+const SIP_PROTOCOL = {
+  WSS : 'wss',
+  TLS : 'tls',
+  UDP : 'udp',
+};
+
+const ACCOUNT_TYPE = {};
+
+ACCOUNT_TYPE[ACCOUNT_TYPE.YMS = 0] = 'YMS';
+ACCOUNT_TYPE[ACCOUNT_TYPE.CLOUD = 1] = 'CLOUD';
+
+const SIP_PORT = {
+  [ACCOUNT_TYPE.YMS] : {
+    [SIP_PROTOCOL.WSS] : 5061,
+    [SIP_PROTOCOL.TLS] : 5061,
+    [SIP_PROTOCOL.UDP] : 5061,
+  },
+  [ACCOUNT_TYPE.CLOUD] : {
+    [SIP_PROTOCOL.WSS] : 7443,
+    [SIP_PROTOCOL.TLS] : 5061,
+    [SIP_PROTOCOL.UDP] : 5061,
+  },
+};
+
+export { SIP_PROTOCOL, ACCOUNT_TYPE, SIP_PORT };
 
 const model = new Vuem();
 
-class AccountHistory {
-  get() {}
-
-  add() {}
-
-  remove() {}
-
-  update() {}
-}
-
-// ...
 model.provide({
   data() {
-    const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE) || 'cloud';
-    const rmbPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD);
-    const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN);
-    
     return {
-      serverType,
-      rmbPassword,
-      autoLogin,
-      autoLoginDisabled : false,
-      loginType         : 'login',
-      proxy             : '',
-      proxyPort         : '',
+      // private
+      ua           : null,
+      // public
+      type         : ACCOUNT_TYPE.YMS,
+      username     : '',
+      domain       : '',
+      password     : '',
+      displayName  : 'VC Desktop',
+      authName     : '',
+      outbound     : '',
+      outboundPort : '',
+      protocol     : SIP_PROTOCOL.WSS,
+      // readonly
+      status       : 'disconnected',
+      error        : null,
+      reason       : null,
     };
   },
-  created() {
-    this.history = new AccountHistory();
+
+  computed : {
+    defaultPort() {
+      return SIP_PORT[this.type] && SIP_PORT[this.type][this.protocol];
+    },
+
+    uri : {
+      get() {
+        return `${this.username}@${this.domain}`;
+      },
+      set(val = '') {
+        const [ username = '', domain = '' ] = val.split('@', 2);
+
+        this.username = username;
+        this.domain = domain;
+      },
+    },
+
+    connecting() {
+      return this.status === 'connecting';
+    },
+
+    connected() {
+      return this.status === 'connected'
+        || this.status === 'registering'
+        || this.status === 'registered';
+    },
+
+    disconnected() {
+      return this.status === 'disconnected';
+    },
+
+    registering() {
+      return this.status === 'registering';
+    },
+
+    registered() {
+      return this.status === 'registered';
+    },
+
+    unregistered() {
+      return this.status === 'unregistered'
+        || this.status === 'registrationFailed'
+        || this.status === 'disconnected';
+    },
+
+    registrationFailed() {
+      return this.status === 'registrationFailed';
+    },
   },
+
+  watch : {
+    ua(val, oldVal) {
+      if (oldVal) {
+        removeEventHandlers(oldVal, this.handlers);
+        oldVal.stop();
+        this.status = 'disconnected';
+      }
+
+      if (val) {
+        setupEventHandlers(val, this.handlers);
+        this.status = val.isRegistered()
+          ? 'registered'
+          : val.isConnected()
+            ? 'connected'
+            : 'disconnected';
+        val.start();
+      }
+    },
+  },
+
   middleware : {
-    async login(ctx, next) {
+    async signin(ctx, next) {
       await next();
-      const { account, pin, server } = ctx.payload;
 
-      this.validateForm(ctx.payload);
+      const {
+        username = '',
+        password = '',
+        domain = 'yealinkvc.com',
+        outbound = '',
+        outboundPort = '',
+        displayName = '',
+      } = ctx.payload;
 
-      const protocol = ctx.payload.protocol || 'wss';
-      const port = this.proxyPort || (this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061);
+      this.username = username;
+      this.password = password;
+      this.domain = domain;
+      this.outbound = outbound;
+      this.outboundPort = outboundPort;
+      this.displayName = displayName;
 
-      rtc.account.uri = `${account}@${server}`;
-      rtc.account.password = pin;
-      rtc.account.servers = await formatServers({ server, protocol, proxy: this.proxy, port });
-      rtc.account.protocol = protocol;
-      await rtc.account.signin().then(() => {
-        const loginData = Object.assign({}, { account, server }, {
-          proxy         : this.proxy,
-          proxyPort     : this.proxyPort,
-          lastLoginDate : Date.now(),
-          type          : this.serverType,
-        });
-
-        if (this.rmbPassword) {
-          loginData.pin = pin;
-        }
-        storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
-        storage.update('CURRENT_ACCOUNT', loginData);
-        this.storeConfig(); // 登录成功之后保存登录前的状态
-      }).catch((err) => {
-        throw err;
-      });
+      await this.signin();
     },
-    async logout(ctx, next) {
-      rtc.account.signout();
+
+    async signout(ctx, next) {
       await next();
+
+      this.signout();
     },
   },
-  subscribe : {
-  },
+
   methods : {
-    storeConfig() {
-      storage.insert(LOGIN_STORAGE.SERVER_TYPE, this.serverType);
-      storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, this.rmbPassword);
-      storage.insert(LOGIN_STORAGE.AUTO_LOGIN, this.autoLogin);
-    },
-    validateForm(values) {
-      let errorText = '';
+    async signin() {
+      let servers;
 
-      if (!values.account) errorText = '账号不能为空';
-      else if (values.account.length > 128) errorText = '无法输入超过128个字符';
-      else if (!values.pin) errorText = '密码不能为空';
-      else if (!values.pin.length > 128) errorText = '无法输入超过128个字符';
-      else if (!values.server) errorText = '服务器地址不能为空';
-      else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) errorText = '服务器地址格式错误';
+      if (!this.outbound) {
+        servers = await resolveSipDomain(this.domain);
+      }
+      else {
+        const [ address, port ] = this.outbound.split(':');
 
-      if (errorText) throw new Error(errorText);
+        servers = [ { address, port } ];
+      }
+
+      servers = servers.map((s) => ({
+        url    : `${this.protocol}://${s.address}:${s.port || this.defaultPort}`,
+        weight : s.weight || s.priority,
+      }));
+
+      const ua = new UA({
+        uri           : this.uri,
+        password      : this.password,
+        servers,
+        display_name  : this.displayName || this.username,
+        socketOptions : {
+          type               : this.protocol,
+          mode               : 'direct',
+          rejectUnauthorized : false,
+        },
+        register             : true,
+        debug                : true,
+        client_info          : 'Apollo_WebRTC',
+        user_agent           : 'Yealink SIP-WEB',
+        DtlsSrtpKeyAgreement : false,
+        rtcpMuxPolicy        : 'negotiate',
+      });
+
+      ua._isVue = true; // prevent to be observed
+
+      this.signinDefer = defer(5000);
+
+      const listeners = {
+        registered : () => {
+          this.signinDefer.resolve();
+          removeEventHandlers(ua, listeners);
+        },
+        registrationFailed : (e) => {
+          this.signinDefer.reject(e);
+          removeEventHandlers(ua, listeners);
+        },
+      };
+
+      setupEventHandlers(ua, listeners);
+
+      this.ua = ua; // start ua
+
+      await this.signinDefer.promise;
     },
+
+    signout() {
+      if (this.ua) {
+        this.ua.removeAllListeners();
+        this.ua.stop();
+        this.ua = null;
+      }
+    },
+
+    async sendVerificationCode() {
+      let ua = new UA({
+        uri      : this.uri,
+        password : this.password,
+        servers  : this.server,
+        register : false,
+        debug    : true,
+      });
+
+      const d = defer(5000, null, () => {
+        ua.removeAllListeners();
+        ua.stop();
+        ua = null;
+      });
+
+      ua.once('connected', () => {
+        ua.sendService(
+          'anoymous@anoymous.com', // target is not required
+          'apollo-get-sms', // event
+          '',
+          {
+            contentType   : 'application/account-auth+xml',
+            eventHandlers : {
+              succeeded : (data) => {
+                const response = Utils.objectify(data.response.body);
+
+                const smsId = response.Result.code_uid;
+                const smsRetryAfter = response.Result.retry_interval;
+
+                d.resolve({ smsId, smsRetryAfter });
+              },
+              failed : (data) => {
+                d.reject(data);
+              },
+            },
+          }
+        );
+      });
+
+      ua.start();
+
+      const ret = await d.promise;
+
+      return ret;
+    },
+  },
+
+  created() {
+    this.signinPromise = null;
+    this.handlers = null;
+
+    this.handlers = {
+      connecting : () => {
+        this.status = 'connecting';
+      },
+      connected : () => {
+        this.status = 'connected';
+        this.status = 'registering';
+      },
+      disconnected : () => {
+        this.status = 'disconnected';
+      },
+      registered : () => {
+        this.status = 'registered';
+      },
+      unregistered : () => {
+        this.status = 'unregistered';
+      },
+      registrationFailed : (data) => {
+        this.status = 'registrationFailed';
+        this.error = data;
+        this.signout();
+      },
+      newMessage : (data) => {
+        if (data.originator === 'local') return;
+
+        this.$emit('newMessage', data.message);
+      },
+      newRTCSession : (data) => {
+        if (data.originator === 'local') return;
+
+        this.$emit('newRTCSession', data.session);
+
+        /*
+        const channel = new MediaChannel(this.ua);
+
+        channel._isVue = true;
+        channel.session = data.session;
+        this.newChannel.push(channel);
+
+        const listeners = {
+          finished : () => {
+            const index = this.newChannel.indexOf(channel);
+
+            this.newChannel.splice(index, 1);
+            removeEventHandlers(channel, listeners);
+          },
+          failed : () => {
+            const index = this.newChannel.indexOf(channel);
+
+            this.newChannel.splice(index, 1);
+            removeEventHandlers(channel, listeners);
+          },
+        };
+
+        setupEventHandlers(channel, listeners);
+        */
+      },
+      bookConferenceUpdated : (data) => {
+        this.$emit('bookConferenceUpdated', data);
+      },
+    };
+  },
+
+  beforeDestroy() {
+    this.signout();
+
+    this.handlers = null;
+    this.d = null;
   },
 });
-
-// model.use(() => {});
 
 export default model;

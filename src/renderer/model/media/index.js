@@ -114,9 +114,34 @@ model.provide({
       this.localMedia.audioQuality = quality;
     }, 
     videoQuality(quality) {
-      this.setting.videoQuality = quality;
+      this.setting.audioQuality = quality;
       this.localMedia.videoQuality = quality;
     }, 
+    screenQuality(quality) {
+      this.setting.screenQuality = quality;
+    }, 
+  },
+
+  middleware : {
+    async getUserMedia(ctx, next) {
+      await next();
+
+      const { constraints } = ctx.payload;
+
+      const stream = await this.getUserMedia(constraints);
+
+      return stream;
+    },
+
+    async getDisplayMedia(ctx, next) {
+      await next();
+
+      const { sourceId } = ctx.payload;
+
+      const stream = await this.getDisplayMedia(sourceId);
+
+      return stream;
+    },
   },
 
   methods : {
@@ -235,6 +260,10 @@ model.provide({
 
     const setting = this.$getVM('setting');
 
+    this.audioInputDevice = setting.audioInputDevice;
+    this.audioOutputDevice = setting.audioOutputDevice;
+    this.videoInputDevice = setting.videoInputDevice;
+
     setting.$watch(
       'highProfile',
       (val) => {
@@ -246,6 +275,13 @@ model.provide({
           this.videoQuality.width = 1280;
           this.videoQuality.height = 720;
         }
+      },
+      { immediate: true }
+    );
+    setting.$watch(
+      'noiseSuppression',
+      (val) => {
+        this.audioQuality.noiseSuppression = val;
       },
       { immediate: true }
     );

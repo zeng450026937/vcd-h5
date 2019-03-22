@@ -1,4 +1,4 @@
-const errorMap = {
+const ERROR_MAP = {
   // meeting
   'Has End'               : '会议号码错误，请重新输入！',
   'Unallocated Number'    : '会议号码错误，请重新输入！',
@@ -13,9 +13,11 @@ const errorMap = {
   'User No Exist'         : '账号错误',
   'Number Resource Limit' : '无法找到该账号',
   ENOTFOUND               : '服务器地址错误',
+  // message
+  'User not register'     : '用户未注册',
   // call
   'Not Found'             : '未找到当前号码',
   Canceled                : '当前通话已取消',
 };
 
-export default Object.assign({}, errorMap);
+export default ERROR_MAP;

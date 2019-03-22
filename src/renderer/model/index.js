@@ -7,6 +7,7 @@ import ytms from './ytms';
 import media from './media';
 import account from './account';
 import schedule from './schedule';
+import messager from './messager';
 import state from './state';
 import contact from './contact';
 import meeting from './meeting';
@@ -14,7 +15,7 @@ import conference from './conference';
 import main from './main';
 import call from './call/index';
 
-import errorNotice from './middle';
+import errorMessage from './middleware/error-message';
 
 Vue.use(Vuem);
 
@@ -27,6 +28,7 @@ model.mount('ytms', ytms);
 model.mount('media', media);
 model.mount('account', account);
 model.mount('schedule', schedule);
+model.mount('messager', messager);
 model.mount('contact', contact);
 model.mount('state', state);
 model.mount('meeting', meeting);
@@ -34,28 +36,32 @@ model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
 
+// logging middleware must be the first one
 model.use(async(ctx, next) => {
   // inject setting
   ctx.setting = ctx.getVM('setting');
 
   const tick = Date.now();
 
-  let ret = true;
+  let error;
 
   // error handler
   try {
     await next();
   }
-  catch (error) {
-    ret = false;
+  catch (e) {
+    error = e;
   }
 
   const duration = Date.now() - tick;
 
-  logger.debug(`model method: ${ctx.method}, duration: ${duration} ms, result: ${ret} `);
+  logger.debug(`model method: ${ctx.method}, duration: ${duration} ms, result: ${!error}`);
+
+  // FIXME: maybe we should not throw error here
+  if (error) throw error;
 });
 
-model.use(errorNotice);
+model.use(errorMessage);
 
 window.kom = model;
 

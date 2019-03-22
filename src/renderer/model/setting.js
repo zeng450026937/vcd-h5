@@ -31,6 +31,7 @@ model.provide({
       audioQuality               : null,
       videoQuality               : null,
       screenQuality              : null,
+      noiseSuppression           : true,
       highProfile                : false,
       horizontalMirroring        : false,
       // conference

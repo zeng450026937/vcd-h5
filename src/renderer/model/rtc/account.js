@@ -2,7 +2,6 @@ import Vuem from '../vuem';
 import { UA, Utils, MediaChannel } from 'apollosip';
 import { defer } from '@/renderer/lib/defer';
 import { setupEventHandlers, removeEventHandlers } from '@/renderer/lib/event-handler';
-import SRV from '@/shared/srv';
 
 const SIP_PROTOCOL = {
   WSS : 'wss',
@@ -27,9 +26,6 @@ const SIP_PORT = {
     [SIP_PROTOCOL.UDP] : 5061,
   },
 };
-
-const MAX_MESSAGE_COUNT = 200;
-const MAX_CHANNEL_COUNT = 10;
 
 const model = new Vuem();
 
@@ -135,8 +131,6 @@ model.provide({
             : 'disconnected';
         val.start();
       }
-      
-      this.cm.ua = val;
     },
 
     registered(val) {

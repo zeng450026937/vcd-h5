@@ -6,7 +6,6 @@ import {
   fixConference,
   fixTemplate,
 } from './fix-info';
-import rtc from '../../rtc';
 
 const C = ConferenceManager.Command;
 
@@ -93,7 +92,7 @@ model.provide({
       await Promise.all(tasks);
     },
 
-    async updateScheduleUpdated(schedule) {
+    async bookConferenceUpdated(schedule) {
       const templateUpdated = schedule['template-update'];
       const conferences = arrayify(schedule['conference-info']);
 
@@ -175,20 +174,13 @@ model.provide({
 
     const account = this.$getVM('account');
 
-    this.account = account;
+    account.$on('bookConferenceUpdated', this.bookConferenceUpdated);
 
-    rtc.account.$watch('ua', (val, oldVal) => {
+    account.$watch('ua', (val) => {
       this.cm.ua = val;
-
-      if (oldVal) {
-        oldVal.off('bookConferenceUpdated', this.updateScheduleUpdated);
-      }
-      if (val) {
-        val.on('bookConferenceUpdated', this.updateScheduleUpdated);
-      }
     });
 
-    rtc.account.$watch('registered', (val) => {
+    account.$watch('registered', (val) => {
       if (!val) return; 
       this.fetch();
     });
