@@ -1,7 +1,7 @@
 <template>
   <a-layout id="calendar-list" class="bg-white h-full">
     <div class="px-2 h-full bg-white">
-      <div v-for="(event, index) in eventList" :key="index" class="mt-2">
+      <div v-for="(event, index) in currentDateEvents" :key="index" class="mt-2">
         <div class="flex flex-col p-3
                     cursor-pointer rounded border hover:border-indigo"
              :class="{
@@ -24,7 +24,7 @@
           <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.expiryTime}}</div>
         </div>
       </div>
-      <div v-if="!eventList || eventList.length <= 0" class="h-full flex items-center justify-center">
+      <div v-if="!currentDateEvents || currentDateEvents.length <= 0" class="h-full flex items-center justify-center">
         <common-empty class="text-grey" text="暂未选择日程信息"/>
       </div>
     </div>
@@ -44,30 +44,21 @@ export default {
 
     };
   },
-  computed : {
-    eventList() {
-      return this.$model.calendar.currentDateEvents;
-    },
-    currentEvent : {
-      get() {
-        return this.$model.calendar.currentEvent;
-      },
-      set(val) {
-        this.$model.calendar.currentEvent = val;
-      },
-    },
+  sketch : {
+    ns    : 'schedule',
+    props : [ 'currentEvent', 'currentDateEvents' ],
   },
   mounted() {
   },
   methods : {
     clickCalendar(event) {
-      this.$model.calendar.currentEvent = event;
+      this.currentEvent = event;
     },
   },
   watch : {
-    eventList(val, once) {
+    currentDateEvents(val, once) {
       if ((!once || once.length <= 0) && !this.currentEvent.scheduleId) {
-        this.currentEvent = this.eventList[0] || {};
+        this.currentEvent = this.currentDateEvents[0] || {};
       }
       else if (!val || val.length <= 0) {
         this.currentEvent = {};
