@@ -8,7 +8,7 @@
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
                         title="添加本地联系人"
                         type="icon-tianjialianxiren"
-                        @click="addLocalContact"/>
+                        @click="addLocalContact"></a-iconfont>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
@@ -90,14 +90,14 @@ export default {
     };
   },
   created() {
-    this.$dispatch('storage.initData');
+    this.$dispatch('contact.local.initData');
   },
   destroyed() {
     this.$popup.destroyAll();
   },
   computed : {
     localContacts() {
-      // return this.$model.contact.local.localContactGroup.items;
+      return this.$model.contact.local.localContactGroup.items;
     },
     groupInfo() {
       return {
@@ -118,7 +118,7 @@ export default {
       this.ensureModal = this.$popup.prepared('ensureModal', { content: `确认删除用户 ${item.name}?` });
       this.ensureModal.vm.$on('cancel', () => {});
       this.ensureModal.vm.$on('ok', () => {
-        this.$dispatch('storage.deleteData', { id: item.id }).then(() => {
+        this.$dispatch('contact.local.deleteData', { id: item.id }).then(() => {
           this.$refs.localContactDrawer.visible = false;
           this.$message.success('删除成功');
           this.ensureModal.hide();

@@ -62,7 +62,7 @@
                                   :size="48"
                                   :class="{ 'bg-transparent' : item.isGroup,
                                     [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
-                          <a-iconfont :type="item.avatar" class="text-3xl"></a-iconfont>
+                          <a-iconfont :type="item|icon" class="text-3xl"></a-iconfont>
                         </a-avatar>
                         <a-avatar v-else :size="48">{{item.nick}}</a-avatar>
                       </div>
@@ -91,7 +91,16 @@
                         </div>
                         <div class="mt-3 flex items-start">
                           <span class="mr-3 whitespace-no-wrap text-black6">分组</span>
-                          <span class="text-indigo">{{getBranch(item)}}</span>
+                          <span class="text-indigo">
+                             <template v-for="(item, index) in pathList" >
+                                <a :key="item.id"
+                                   v-if="index < pathList.length - 1"
+                                   class="hover:underline text-indigo"
+                                   @click="clickDept(item)">{{item.text}}/
+                                </a>
+                                <span v-else style="cursor: unset" :key="item.id">{{item.text}}</span>
+                            </template>
+                          </span>
                         </div>
                       </template>
                     </div>
@@ -193,6 +202,9 @@ export default {
     store : {
       type : Object,
     },
+    currentGroup : {
+      type : String,
+    },
     highlightContent : { // 用于搜索 高亮搜索内容
       type    : String,
       default : '',
@@ -222,6 +234,7 @@ export default {
     return {
       selectedContact : {},
       enableScroll    : false,
+      pathList        : [],
     };
   },
   computed : {
@@ -236,18 +249,24 @@ export default {
         return item;
       });
     },
+
   },
   methods : {
-    getBranch(item) {
-      return;
-      const branch = this.store.findBranch(item.id);
-
-      return '12312321312';
+    clickDept(path) {
+      this.$emit('toGroup', path);
     },
     contactChecked(contact) {
       if (this.selfUnDeleted && contact.isSelf) return;
       contact.checked = !contact.checked;
       this.$emit('onCheck', contact);
+    },
+    getPathList(group) {
+      if (!group) return [];
+
+      return this.store.findBranch(group).map((i) => ({
+        text : i.name,
+        id   : i.id,
+      })).reverse();
     },
     clickItem(item) {
       //  if (this.checkable) this.contactChecked(item);
@@ -308,31 +327,13 @@ export default {
     },
 
   },
-  watch   : {},
-  filters : {
-    fullName(item) {
-      debugger;
-      const branch = this.store.findBranch(item.id);
-
-
-      return '431'
-      if (!item.parent.fullPath) {
-        const fullPath = [];
-
-        let tmpParent = item.parent;
-
-        while (tmpParent) {
-          fullPath.push({
-            id   : tmpParent.id,
-            text : tmpParent.name,
-          });
-          tmpParent = tmpParent.parent;
-        }
-        item.parent.fullPath = fullPath.reverse();
-      }
-
-      return item.parent.fullPath.map((b) => b.text).join('/');
+  watch : {
+    currentGroup(val) {
+      this.pathList = this.getPathList(val);
+      console.log(this.pathList.map(item=>item.text))
     },
+  },
+  filters : {
     icon(node) {
       return node.isUser ? 'icon-zuzhi'
         : node.isDevice ? 'icon-huiyishishebei'

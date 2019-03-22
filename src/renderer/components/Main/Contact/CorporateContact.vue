@@ -34,8 +34,10 @@
         <div class="border-r w-2/5">
           <div class="h-full p-1 overflow-y-hidden">
             <contact-list :contact-list="currentGroupList"
+                          :currentGroup="currentGroup"
                           :store="store"
                           enable-keyboard
+                          @toGroup="toGroup"
                           @clickItem="onListItemClicked">
               <a-dropdown v-if="!isCloud && !item.isGroup && !item.isVMR"
                           slot-scope="{item}"

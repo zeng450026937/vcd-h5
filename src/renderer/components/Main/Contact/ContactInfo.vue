@@ -40,8 +40,15 @@
               <span v-if="user.email" class="mt-5">{{user.email}}</span>
             </template>
             <span class="mt-5">
-              <a :key="item.id" v-for="item in path" class="text-indigo  hover:underline"
-                 @click="clickDept(item)">{{item.text}}/</a>
+              <template v-for="(item, index) in path" >
+                <a :key="item.id"
+                   v-if="index < path.length - 1"
+                   class="hover:underline text-indigo"
+                   @click="clickDept(item)">{{item.text}}/
+                </a>
+                <span v-else style="cursor: unset" :key="item.id">{{item.text}}</span>
+              </template>
+
             </span>
 
           </div>

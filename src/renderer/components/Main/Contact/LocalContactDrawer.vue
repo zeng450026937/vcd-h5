@@ -116,11 +116,11 @@ export default {
         this.newLocalContact = values;
         this.newLocalContact.nick = /^(.*)\(.*\)$/.test(values.name) ? RegExp.$1.substr(-2, 2) : values.name.substr(-2, 2);
         if (this.type === 'add') {
-          await this.$dispatch('storage.insertData', this.newLocalContact);
+          await this.$dispatch('contact.local.insertData', this.newLocalContact);
         }
         else {
           this.newLocalContact.id = this.editedContact.id;
-          await this.$dispatch('storage.updateData', this.newLocalContact);
+          await this.$dispatch('contact.local.updateData', this.newLocalContact);
         }
         this.visible = false;
         this.$message.success('操作成功');

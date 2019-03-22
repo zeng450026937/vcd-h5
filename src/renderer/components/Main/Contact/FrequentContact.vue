@@ -30,9 +30,11 @@
           <contact-list
               v-else
               :store="store"
+              :currentGroup="currentGroup"
               :contact-list="currents"
               enable-keyboard
               :audio-icon="false"
+              @toGroup="goBack"
               @clickItem="clickItem">
             <a-dropdown slot-scope="{item}"
                         slot="more"
@@ -73,7 +75,7 @@
           <contact-info :user="currentUser"
                         :store="store"
                         :group="groupInfo"
-                        @toGroup="toGroup"/>
+                        @toGroup="goBack"/>
         </div>
       </div>
       <frequent-contact-drawer ref="contactDrawer"
@@ -136,7 +138,6 @@ export default {
       return this.store.getChild(this.currentGroup);
     },
     currentGroupName() {
-      debugger
       if (this.currentGroup === 'rootNode') return this.rootNode.name;
 
       return this.store.getNode(this.currentGroup).name;
@@ -199,11 +200,7 @@ export default {
     },
     goBack() {
       this.currentGroup = 'rootNode';
-    },
-    toGroup(path) {
-      this.selectedGroup = path.length <= 1
-        ? this.frequentContacts
-        : this.frequentContacts.items.find((c) => c.id === path[1].id);
+      this.currentUser = {};
     },
     clickItem(contact) {
       if (contact.isGroup) {
