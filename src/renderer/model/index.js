@@ -13,7 +13,6 @@ import meeting from './meeting';
 import conference from './conference';
 import main from './main';
 import call from './call/index';
-
 import errorNotice from './middle';
 
 Vue.use(Vuem);

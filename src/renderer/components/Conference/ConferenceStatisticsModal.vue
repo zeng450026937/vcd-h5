@@ -23,8 +23,10 @@
                class="w-1/2"
                style="padding: 10px">
             <div class="border h-full">
-              <div class="h-8 border-b flex items-center pl-5 font-semibold">
-                {{sections.title}}
+              <div class="h-8 border-b flex items-center px-5">
+                <span class="w-2/5 font-semibold">{{sections.title}}</span>
+                <span class="w-1/3">接收</span>
+                <span class="w-1/3">发送</span>
               </div>
               <div class="flex flex-col px-5 py-1">
                 <div v-for="(section, index) in sections.sections"

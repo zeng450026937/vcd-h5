@@ -18,7 +18,7 @@ function formatStatistics(data) {
 
   const sectionInfo = [
     {
-      title    : '视频收发',
+      title    : '视频',
       sections : [
         {
           name : '带宽',
@@ -58,7 +58,7 @@ function formatStatistics(data) {
       ],
     },
     {
-      title    : '辅流收发',
+      title    : '辅流',
       sections : [
         {
           name : '带宽',
@@ -98,7 +98,7 @@ function formatStatistics(data) {
       ],
     },
     {
-      title    : '音频收发',
+      title    : '音频',
       sections : [
         {
           name : '带宽',

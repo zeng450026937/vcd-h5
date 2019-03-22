@@ -46,6 +46,14 @@
       </div>
       <conference-inviting-modal ref="invitingModal"/>
     </div>
+    <template v-for="(hold,index) in holdList">
+      <hold-item :key="hold.id"
+                 :is-top="hold.id === currentHold"
+                 :info="hold"
+                 :index="index"
+                 @contentClicked="currentHold = hold.id"/>
+    </template>
+
   </a-layout>
 </template>
 
@@ -55,6 +63,7 @@ import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
+import HoldItem from './HoldItem.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
@@ -64,6 +73,7 @@ export default {
     ConferenceLocalVideo,
     ConferenceShareVideo,
     ConferenceInvitingModal,
+    HoldItem,
   },
   data() {
     const tabList = [
@@ -73,8 +83,24 @@ export default {
       { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
     ];
 
+    const holdList = [
+      {
+        id       : '1',
+        subject  : '来自张三的视频会议',
+        interval : '12:00:03',
+      },
+      {
+        id       : '2',
+        subject  : '来自李四的视频会议',
+        interval : '12:00:03',
+      },
+    ];
+
+    
     return {
       tabList,
+      holdList,
+      currentHold       : '1',
       shareWindow       : null,
       hideControlsTimer : null,
     };
@@ -109,7 +135,7 @@ export default {
 
       return {
         [`local-video-content local-video-content-${position}`] : true,
-        'z-end'                                                   : !this.isVideoConference,
+        'z-end'                                                 : !this.isVideoConference,
       };
     },
     shareVideoClasses() {
@@ -174,6 +200,9 @@ export default {
     shareScreenClicked() {
       this.isShareInCenter = !this.isShareInCenter;
     },
+    holdClicked() {
+      console.warn('holdClicked')
+    }
   },
   watch : {
     isInConferenceMain : {

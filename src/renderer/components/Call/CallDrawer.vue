@@ -75,13 +75,14 @@ export default {
     },
     closeDrawer() {
       this.isInCallMain = true;
+      this.currentTab = '';
     },
     switchTab(tab) {
       if (this.hasNewMessage && tab === 'TabChatting') {
         this.hasNewMessage = false;
       }
       if (this.currentTab === tab) {
-        this.isInCallMain = true;
+        this.closeDrawer();
 
         return;
       }

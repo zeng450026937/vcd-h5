@@ -4,7 +4,7 @@ import rtc from '../../rtc';
 const sketch = new Vuem();
 
 const initialDate = () => ({
-  currentTab       : '',
+  currentTab       : '', // TabSetting TabChatting
   isInCallMain     : true,
   hideControls     : false,
   showMorePanel    : false,
@@ -26,7 +26,7 @@ sketch.provide({
   },
   watch : {
     callStatus(val, oldVal) {
-      if (val === 'disconnected') { // 退出会议之后重置当前状态
+      if (val === 'disconnected' || val === 'finished') { // 退出会议之后重置当前状态
         Object.assign(this, initialDate());
       }
     },

@@ -25,7 +25,6 @@
 import LoginFormContent from './LoginFormContent.vue';
 import LoginSettingContent from './LoginSettingContent.vue';
 
-
 export default {
   name       : 'YMSLoginContent',
   components : {

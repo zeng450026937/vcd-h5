@@ -8,7 +8,7 @@
           <div class="flex flex-grow h-full items-center">
             <a-iconfont type="icon-guanbi" class="cursor-pointer hover:text-red text-base"
                         title="关闭"
-                        @click="isInConferenceMain = true"/>
+                        @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
             <a-iconfont type="icon-tianjialianxiren"
@@ -84,6 +84,10 @@ export default {
     },
   },
   methods : {
+    closeDrawer() {
+      this.isInConferenceMain = true;
+      this.currentTab = '';
+    },
     showInviteModal() {
       // FIXME modify
       this.$parent.$children[0].showInviteModal();
@@ -93,7 +97,7 @@ export default {
         this.hasNewMessage = false;
       }
       if (this.currentTab === tab) {
-        this.isInConferenceMain = true;
+        this.closeDrawer();
         
         return;
       }
