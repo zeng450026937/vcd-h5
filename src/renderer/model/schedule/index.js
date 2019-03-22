@@ -165,8 +165,11 @@ model.provide({
     this.cm = new ConferenceManager();
     
     this.conferences = Object.create(null);
+    this.conferences._isVue = true; // prevent object to be observed by vue
     this.templates = Object.create(null);
+    this.templates._isVue = true;
     this.merged = [];
+    this.merged._isVue = true;
 
     await this.$nextTick();
 

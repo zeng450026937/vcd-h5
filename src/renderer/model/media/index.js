@@ -17,9 +17,11 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      setting      : null,
-      deviceList   : [],
-      audioQuality : {        
+      deviceList        : [],
+      audioInputDevice  : null,
+      audioOutputDevice : null,
+      videoInputDevice  : null,
+      audioQuality      : {        
         autoGainControl  : true,
         channelCount     : 2,
         echoCancellation : true,
@@ -44,23 +46,14 @@ model.provide({
   },
 
   computed : {
-    audioInputDevice() {
-      return this.setting && this.setting.audioInputDevice;
-    },
     audioInputDevices() {
       return this.deviceList.filter((d) => d.kind === 'audioinput');
     },
 
-    audioOutputDevice() {
-      return this.setting && this.setting.audioOutputDevice;
-    },
     audioOutputDevices() {
       return this.deviceList.filter((d) => d.kind === 'audiooutput');
     },
 
-    videoInputDevice() {
-      return this.setting && this.setting.videoInputDevice;
-    },
     videoInputDevices() {
       return this.deviceList.filter((d) => d.kind === 'videoinput');
     },
@@ -68,6 +61,7 @@ model.provide({
 
   watch : {
     audioInputDevice(device) {
+      this.setting.audioInputDevice = device;
       this.localMedia.audioDevice = device;
     },
     audioInputDevices(devices) {
@@ -79,8 +73,12 @@ model.provide({
       
       // can't find setting device, use the first one
       if (!hasUsing) {
-        this.setting.audioInputDevice = device;
+        this.audioInputDevice = device;
       }
+    },
+    audioOutputDevice(device) {
+      this.setting.audioOutputDevice = device;
+      this.localMedia.videoDevice = device;
     },
     audioOutputDevices(devices) {
       const [ device ] = devices;
@@ -91,10 +89,11 @@ model.provide({
       
       // can't find setting device, use the first one
       if (!hasUsing) {
-        this.setting.audioOutputDevice = device;
+        this.audioOutputDevice = device;
       }
     },
     videoInputDevice(device) {
+      this.setting.videoInputDevice = device;
       this.localMedia.videoDevice = device;
     },
     videoInputDevices(devices) {
@@ -106,14 +105,16 @@ model.provide({
       
       // can't find setting device, use the first one
       if (!hasUsing) {
-        this.setting.videoInputDevice = device;
+        this.videoInputDevice = device;
       }
     },
 
     audioQuality(quality) {
+      this.setting.audioQuality = quality;
       this.localMedia.audioQuality = quality;
     }, 
     videoQuality(quality) {
+      this.setting.videoQuality = quality;
       this.localMedia.videoQuality = quality;
     }, 
   },
@@ -127,19 +128,26 @@ model.provide({
 
     // get media stream with setting constraints 
     getUserMedia(constraints) {
-      constraints = constraints || {
-        audio : { 
-          ...this.setting.audioInputDevice,
-          ...this.audioQuality,
-        },
-        video : { 
-          ...this.setting.videoInputDevice,
-          ...this.videoQuality,
-        },
-      };
+      return getUserMedia(constraints || this.genConstraints());
+    },
 
-      // add stream.close()
-      return getUserMedia(constraints);
+    genConstraints() {
+      const constraints = {};
+
+      if (this.audioInputDevice) {
+        constraints.audio = Object.assign({}, this.audioInputDevice);
+      }
+      if (this.videoInputDevice) {
+        constraints.video = Object.assign({}, this.videoInputDevice);
+      }
+      if (constraints.audio && this.audioQuality) {
+        Object.assign(constraints.audio, this.audioQuality);
+      }
+      if (constraints.video && this.videoQuality) {
+        Object.assign(constraints.video, this.videoQuality);
+      }
+
+      return constraints;
     },
 
     getDisplayMedia(sourceId) {

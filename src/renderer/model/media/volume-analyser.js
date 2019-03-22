@@ -25,26 +25,32 @@ const VolumeAnalyser = Analyser.extend({
     },
 
     start() {
-      Analyser.options.methods.start.call(this);
-
       this.createContextAnalyser();
       this.createStreamSource();
+
+      if (!this.streamSource) return;
+
+      Analyser.options.methods.start.call(this);
     },
 
     stop() {
-      Analyser.options.methods.stop.call(this);
-
       if (this.streamSource) {
         this.streamSource.disconnect();
         this.streamSource = null;
       }
 
       this.volume = 0;
+
+      Analyser.options.methods.stop.call(this);
     },
 
     createContextAnalyser() {
-      if (!window.AudioContext) return;
       if (this.context && this.contextAnalyser) return;
+      if (!window.AudioContext) {
+        console.warn('cannot context analyser');
+
+        return;
+      }
 
       this.context = new AudioContext();
       this.contextAnalyser = this.context.createAnalyser();
@@ -53,6 +59,11 @@ const VolumeAnalyser = Analyser.extend({
     },
 
     createStreamSource() {
+      if (this.streamSource) {
+        this.streamSource.disconnect();
+        this.streamSource = null;
+      }
+
       if (this.context && this.stream && this.stream.getAudioTracks().length > 0) {
         // createMediaStreamSource will fail if there is no audio track.
         // use try,catch instead will be better?

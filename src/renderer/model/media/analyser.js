@@ -10,12 +10,13 @@ export default Vue.extend({
 
   watch : {
     enable(val) {
-      if (val) this.start();
-      else this.stop();
+      if (!val) return this.stop();
+
+      this.start();
     },
 
     stream(val) {
-      if (!val) return this.stop();
+      if (!val && this.timer) return this.stop();
 
       if (this.enable && !this.timer) {
         this.start();

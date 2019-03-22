@@ -28,6 +28,9 @@ model.provide({
       audioInputDevice           : null,
       audioOutputDevice          : null,
       videoInputDevice           : null,
+      audioQuality               : null,
+      videoQuality               : null,
+      screenQuality              : null,
       highProfile                : false,
       horizontalMirroring        : false,
       // conference

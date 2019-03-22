@@ -62,6 +62,7 @@ const MediaDevice = Vue.extend({
         this.error = null;       
       }
       catch (error) {
+        logger.warn(`Get user media failed, error: ${error}`);
         this.error = error;
         this.stream = null;
       }
