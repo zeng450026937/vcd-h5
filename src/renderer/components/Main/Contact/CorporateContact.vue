@@ -34,11 +34,12 @@
         <div class="border-r w-2/5">
           <div class="h-full p-1 overflow-y-hidden">
             <contact-list :contact-list="currentGroupList"
-                          :currentGroup="currentGroup"
+                          :load-mode="loadMode"
+                          :current-group="currentGroup"
                           :store="store"
                           enable-keyboard
                           @toGroup="toGroup"
-                          @clickItem="onListItemClicked">
+                          @clickItem="handleListItemClick">
               <a-dropdown v-if="!isCloud && !item.isGroup && !item.isVMR"
                           slot-scope="{item}"
                           slot="more"
@@ -99,6 +100,12 @@ export default {
         amount  : this.rootNode.amount,
       };
     },
+    LOAD_MODE() {
+      return this.$model.contact.LOAD_MODE;
+    },
+    loadMode() {
+      return this.$model.contact.loadMode;
+    },
     store() {
       return this.$model.contact.phoneBookStore;
     },
@@ -137,16 +144,21 @@ export default {
       this.breadcrumbs = this.breadcrumbs.slice(0, index + 1);
       this.currentGroup = item.id;
     },
-    onListItemClicked(item) {
+    async handleListItemClick(item) {
       if (!item.isGroup) {
         this.selectedContact = item;
 
         return;
       }
+
       this.breadcrumbs.push({
         id   : item.id,
         text : item.name,
       });
+
+      if (this.loadMode === this.LOAD_MODE.SPLIT) {
+        await this.$model.contact.getAsyncChildNodes({ parentId: item.id });
+      }
 
       this.currentGroup = item.id;
     },

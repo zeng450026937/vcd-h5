@@ -109,8 +109,8 @@ export default {
       currentGroup  : 'rootNode',
     };
   },
-  mounted() {
-    // this.$rtc.contact.favorite.doSync().then(() => {});
+  beforeCreate() {
+    this.$rtc.contact.favorite.doSync().then(() => {});
   },
   destroyed() {
     this.$popup.destroy(this.ensureModal);
@@ -151,7 +151,9 @@ export default {
   },
   methods : {
     getAmount(id) {
-      return this.store.getNode(id).amount;
+      const node = this.store.getNode(id);
+
+      return node ? node.amount : 0;
     },
     editGroup(group) {
       this.modalType = 'edit';

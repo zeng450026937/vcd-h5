@@ -2,7 +2,15 @@
   <div class="transfer-content">
     <div class="tree-content">
       <search-bar @search="handleSearch"></search-bar>
-      <tree @ready="handleReady" v-show="!showSearchResult" ref="tree" @change="handleChange" class="tree-list"></tree>
+      <tree
+          :getChild="getChild"
+          :loadMode="loadMode"
+          @ready="handleReady"
+          v-show="!showSearchResult"
+          ref="tree"
+          @change="handleChange"
+          class="tree-list">
+      </tree>
       <search-list ref="searchList" v-show="showSearchResult"></search-list>
     </div>
     <div class="arrow">
@@ -28,6 +36,12 @@ import Tree from '../tree/index.vue';
 import CheckedList from './checkedList.vue';
 import SearchList from './searchList.vue';
 
+const LOAD_MODE = {
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
+
+
 export default {
   name       : 'transfer',
   components : {
@@ -40,6 +54,13 @@ export default {
   props : {
     maxChecked : {
       type : Number,
+    },
+    loadMode : {
+      type    : String,
+      default : LOAD_MODE.OVERALL,
+    },
+    getChild : {
+      type : Function,
     },
   },
   data() {
@@ -80,7 +101,7 @@ export default {
       return this.$refs.tree.getChecked();
     },
     setCheckers(ids) {
-      return this.$refs.tree.setCheckers(ids).then((checkers)=> {
+      return this.$refs.tree.setCheckers(ids).then((checkers) => {
         this.$refs.checkedList.update(checkers);
       });
     },

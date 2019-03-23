@@ -1,11 +1,15 @@
 import rtc from '../../rtc';
-
-import { get } from 'lodash/fp';
 import kom from '..';
 
-const ID_PATH = 'node.id';
-const PID_PATH = 'node.parentId';
-const NODE_TYPE_PATH = 'node.type';
+const ID_PATH = [ 'node', 'id' ];
+const PID_PATH = [ 'node', 'parentId' ];
+const NODE_TYPE_PATH = [ 'node', 'type' ];
+
+const LOAD_MODE = {
+  AUTO    : 'AUTO',
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
 
 const groupMap = {
   'phone.book.staff.root.name' : {
@@ -34,8 +38,9 @@ const groupMap = {
   },
 };
 
-export default class TreeStore {
-  constructor(tree = []) {
+export default class Store {
+  constructor(tree = [], loadMode = LOAD_MODE.OVERALL) {
+    this.loadMode = loadMode;
     this.generate(tree);
   }
 
@@ -51,14 +56,35 @@ export default class TreeStore {
   generate(tree) {
     if (!Array.isArray(tree)) return;
 
-    console.time('generate tree cost time');
+    console.time('generate contact model cost time');
     this.tree = [];
     this.originTree = tree;
     this.checkedMap = {};
+    this.asyncMap = {};
     this.genTree();
     this.genAmount();
     this.genRootGroup();
-    console.timeEnd('generate tree cost time');
+    console.timeEnd('generate contact model cost time');
+  }
+
+  getAsyncData(id) {
+    return this.asyncMap[id];
+  }
+
+  updateAsyncData(id, data) {
+    if (this.asyncMap[id]) return this.asyncMap[id];
+
+    this.originTree.push(...data);
+
+    data.forEach((n) => {
+      this.formatContact(n);
+      this.addParentMap(this.parentMap, n);
+      this.addNodeMap(this.nodeMap, n);
+    });
+
+    this.asyncMap[id] = data;
+
+    return data;
   }
 
   update(tree) {
@@ -69,7 +95,7 @@ export default class TreeStore {
   }
 
   get rootGroup() {
-    return this.parentMap[get(ID_PATH)(this.rootNode)] || [];
+    return this.parentMap[this.getNodeId(this.rootNode)] || [];
   }
 
   get rootNode() {
@@ -111,6 +137,8 @@ export default class TreeStore {
   }
 
   genAmount() {
+    if (this.loadMode === LOAD_MODE.SPLIT) return;
+
     this.originTree.forEach((n) => {
       const id = this.getNodeId(n);
 
@@ -120,30 +148,36 @@ export default class TreeStore {
     });
   }
 
+  formatContact(node) {
+    node.isGroup = /ORG/.test(node.node.type);
+    node.name = node.attributes.name || '';
+    node.number = node.attributes.number || '';
+    if (!node.isGroup) {
+      node.nick = /^(.*)\(.*\)$/.test(node.name) ? RegExp.$1.substr(-2, 2) : node.name.substr(-2, 2);
+    }
+    else {
+      node.amount = 0;
+    }
+
+    if (node.number === rtc.account.username) {
+      node.isSelf = true;
+      kom.vm.contact.currentContact = node;
+    }
+    node.phone = node.attributes.extension || '';
+    node.email = node.attributes.email || '';
+    node.id = node.node.id;
+    node.amount = node.attributes.amount || 0;
+
+    return node;
+  }
+
   genTreeMap() {
     const nodeMap = {};
     const parentMap = {};
 
     this.originTree.forEach((node) => {
       try {
-        node.isGroup = /ORG/.test(node.node.type);
-        node.name = node.attributes.name || '';
-        node.number = node.attributes.number || '';
-        if (!node.isGroup) {
-          node.nick = /^(.*)\(.*\)$/.test(node.name) ? RegExp.$1.substr(-2, 2) : node.name.substr(-2, 2);
-        }
-        else {
-          node.amount = 0;
-        }
-
-        if (node.number === rtc.account.username) {
-          node.isSelf = true;
-          kom.vm.contact.currentContact = node;
-        }
-        node.phone = node.attributes.extension || '';
-        node.email = node.attributes.email || '';
-        node.id = node.node.id;
-
+        this.formatContact(node);
         this.addNodeMap(nodeMap, node);
         this.addParentMap(parentMap, node);
       }
@@ -159,8 +193,8 @@ export default class TreeStore {
   }
 
   addNodeMap(map, node) {
-    const id = get(ID_PATH)(node);
-    const pid = get(PID_PATH)(node);
+    const id = this.getNodeId(node);
+    const pid = this.getParentId(node);
 
     if (pid == null) map.rootNode = node;
 
@@ -173,7 +207,7 @@ export default class TreeStore {
   }
 
   addParentMap(map, node) {
-    const pid = get(PID_PATH)(node);
+    const pid = this.getParentId(node);
 
     if (!pid) return;
 
@@ -217,34 +251,43 @@ export default class TreeStore {
     return this.nodeMap[id];
   }
 
-
   getAmount(id) {
     return this.getOffspringNoGroup(id).length;
   }
 
   getNodeId(node) {
-    return get(ID_PATH)(node);
+    if (!node || !node.node) return null;
+
+    return node.node.id;
+  }
+
+  getParentId(node) {
+    if (!node || !node.node) return null;
+
+    return node.node.parentId;
   }
 
   getNodeType(node) {
-    return get(NODE_TYPE_PATH)(node);
+    if (!node || !node.node) return null;
+
+    return node.node.type;
   }
 
   findNodeIndex(node) {
-    return this.tree.findIndex((i) => get(ID_PATH)(i) === get(ID_PATH)(node));
+    return this.tree.findIndex((i) => this.getNodeId(i) === this.getNodeId(node));
   }
 
 
   findParentNode(id) {
     const node = this.getNode(id);
 
-    return this.getNode(get(PID_PATH)(node));
+    return this.getNode(this.getParentId(node));
   }
 
   findBrotherNode(id) {
     const groupNode = this.findGroupNode(id);
 
-    return groupNode.filter((n) => get(ID_PATH)(n) !== id);
+    return groupNode.filter((n) => this.getNodeId(n) !== id);
   }
 
   findGroupNode(id) {

@@ -9,6 +9,11 @@ let phoneBookStore;
 
 let favoriteStore;
 
+const LOAD_MODE = {
+  AUTO    : 'AUTO',
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
 
 model.mount('local', localContact);
 model.provide({
@@ -20,6 +25,9 @@ model.provide({
     };
   },
   computed : {
+    LOAD_MODE() {
+      return LOAD_MODE;
+    },
     username() {
       return rtc.account.username;
     },
@@ -37,9 +45,11 @@ model.provide({
       return rtc.contact.favorite.dataLoaded;
     },
     phoneBookStore() {
-      phoneBookStore = new Store();
+      phoneBookStore = new Store([], this.loadMode);
 
       if (!this.phoneBookLoaded) return phoneBookStore;
+
+      if (this.loadMode === LOAD_MODE.SPLIT) return phoneBookStore.update(rtc.contact.phonebook.org.list);
 
       return phoneBookStore.update(rtc.contact.phonebook.list);
     },
@@ -52,29 +62,32 @@ model.provide({
     },
   },
   methods : {
-    // async findContacts(val) {
-    //   return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
-    //     .map((c) => {
-    //       if (c.attributes.number === this.username) {
-    //         c.attributes.isSelf = true;
-    //       }
-    //
-    //       return Object.assign({
-    //         parent : { isUser: true },
-    //         nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
-    //           ? RegExp.$1.substr(-2, 2)
-    //           : c.attributes.name.substr(-2, 2),
-    //       }, c.attributes, c.node);
-    //     }));
-    // },
+    async findContacts(val) {
+      return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
+        .map((c) => {
+          if (c.attributes.number === this.username) {
+            c.attributes.isSelf = true;
+          }
+
+          return Object.assign({
+            parent : { isUser: true },
+            nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
+              ? RegExp.$1.substr(-2, 2)
+              : c.attributes.name.substr(-2, 2),
+          }, c.attributes, c.node);
+        }));
+    },
+    async getAsyncChildNodes(options) {
+      const asyncData = phoneBookStore.getAsyncData(options.parentId);
+
+      if (asyncData) return asyncData;
+
+      const data = await rtc.contact.phonebook.childNodes(options);
+
+      return phoneBookStore.updateAsyncData(options.parentId, data);
+    },
   },
   watch : {
-    // rawPhoneBook(val) {
-    //   this.formattedPhoneBook = formatPhoneBook(val, this.loadMode);
-    // },
-    // rawFavorite(val) {
-    //   this.formattedFavorite = formatFavorite(val);
-    // },
     loginStatus(val) {
       if (val === 'disconnected') {
         this.favoriteStore.destroy();

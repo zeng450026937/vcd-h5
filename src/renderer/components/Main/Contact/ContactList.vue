@@ -23,7 +23,7 @@
                 <div class="flex flex-col justify-center">
                   <div class="flex items-center">
                     <span class="text-sm leading-none truncate">{{item.name}}</span>
-                    <template v-if="item.isGroup">（{{item.amount}}）</template>
+                    <template v-if="item.isGroup && loadMode !== LOAD_MODE.SPLIT">（{{item.amount}}）</template>
                   </div>
                   <span v-if="!item.isGroup"
                         class="text-xs opacity-75 leading-none"
@@ -162,6 +162,12 @@ import { RecycleScroller } from 'vue-virtual-scroller';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
+const LOAD_MODE = {
+  AUTO    : 'AUTO',
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
+
 export default {
   name  : 'ContactList',
   props : {
@@ -202,6 +208,10 @@ export default {
     store : {
       type : Object,
     },
+    loadMode : {
+      type    : String,
+      default : LOAD_MODE.OVERALL,
+    },
     currentGroup : {
       type : String,
     },
@@ -232,6 +242,7 @@ export default {
   },
   data() {
     return {
+      LOAD_MODE,
       selectedContact : {},
       enableScroll    : false,
       pathList        : [],
@@ -264,7 +275,6 @@ export default {
       if (!group) return [];
 
       const currentGroup = this.store.getNode(group);
-
 
       const pathList = this.store.findBranch(group).map((i) => ({
         text : i.name,

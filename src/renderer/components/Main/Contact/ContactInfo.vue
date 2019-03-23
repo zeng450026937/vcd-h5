@@ -30,7 +30,7 @@
               <span v-if="user.phone" class="mt-5 mr-3 text-black6">手机</span>
               <span v-if="user.email" class="mt-5 mr-3 text-black6">邮箱</span>
             </template>
-            <span class="mt-5 mr-3 whitespace-no-wrap text-black6">分组</span>
+            <span v-if="store" class="mt-5 mr-3 whitespace-no-wrap text-black6">分组</span>
           </div>
           <div class="flex flex-col">
             <span class="mt-5">{{user.number}}</span>
@@ -110,7 +110,7 @@ export default {
       return !!this.user && Object.keys(this.user).length > 0;
     },
     path() {
-      if (!this.user) return [];
+      if (!this.user || !this.store) return [];
 
       return this.store.findBranch(this.user.id).map((i) => ({
         text : i.name,

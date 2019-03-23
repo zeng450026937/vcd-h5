@@ -12,9 +12,23 @@ import TreeStore from './tree-store';
 import Loading from './loading.vue';
 
 let treeStore;
+const LOAD_MODE = {
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
 
 export default {
-  name : 'tree',
+  name  : 'tree',
+  props : {
+    loadMode : {
+      type    : String,
+      default : LOAD_MODE.OVERALL,
+    },
+    getChild : {
+      type : Function,
+    },
+  },
+
   data() {
     return {
       tree     : [],
@@ -108,19 +122,23 @@ export default {
         'margin-right' : '6px',
       };
 
+      const input = `
+        <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
+        <label
+           style="${this.createStyleString(inputStyles)}"
+           check-box node-id="${row.node.id}"
+           node-type="${row.node.type}"
+           class="tree-checkbox-label"
+           for="${row.node.id}">
+         </label>
+         <lable half-check style="${row.halfChecked ? '' : 'display:none'}" node-id="${row.node.id}" node-type="${row.node.type}" class="tree-half-checkbox"></lable>
+     `;
+
       return `
         <div class="group-node" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
           <div class="${row.expand ? 'triangle-down' : 'triangle-right'}" node-type="${row.node.type}" node-id="${row.node.id}"></div>
-          <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
-          <label
-             style="${this.createStyleString(inputStyles)}"
-             check-box node-id="${row.node.id}"
-             node-type="${row.node.type}"
-             class="tree-checkbox-label"
-             for="${row.node.id}">
-           </label>
-           <lable half-check style="${row.halfChecked ? '' : 'display:none'}" node-id="${row.node.id}" node-type="${row.node.type}" class="tree-half-checkbox"></lable>
-           ${row.name}（${row.amount}）
+          ${this.loadMode === LOAD_MODE.SPLIT ? '' : input}
+           ${row.name} ${this.loadMode === LOAD_MODE.SPLIT ? '' : `(${row.amount})`}
         </div>
       `;
     },
@@ -151,7 +169,7 @@ export default {
       return node.node.type.indexOf('ORG') > -1;
     },
     toggleGroup(id) {
-      treeStore.toggle(id).then(() => {
+      treeStore.toggle(id, this.getChild, true).then(() => {
         this.updateTreeViews();
       });
     },
@@ -193,7 +211,7 @@ export default {
     },
     createTree(options) {
       // TODO api 接口
-
+      options.loadMode = this.loadMode;
       treeStore = new TreeStore(options);
       this.createTreeViews(treeStore);
     },

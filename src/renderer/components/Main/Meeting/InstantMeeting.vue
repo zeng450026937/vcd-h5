@@ -7,7 +7,7 @@
 
       <a-divider class="my-0"/>
         <div class="flex flex-col h-full m-4">
-          <transfer ref="transfer"></transfer>
+          <transfer :getChild="getAsyncChildNodes" :loadMode="loadMode" ref="transfer"></transfer>
         </div>
         <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
@@ -65,6 +65,9 @@ export default {
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
     },
+    loadMode() {
+      return this.$model.contact.loadMode;
+    },
     store() {
       return this.$model.contact.phoneBookStore;
     },
@@ -98,6 +101,9 @@ export default {
         .map((item) => ({ requestUri: item.number }));
 
       this.$rtc.conference.meetnow(checked, { subject: `${this.$rtc.account.username} 的视频会议` });
+    },
+    getAsyncChildNodes(id) {
+      return this.$model.contact.getAsyncChildNodes(id);
     },
     create() {
       setTimeout(() => {

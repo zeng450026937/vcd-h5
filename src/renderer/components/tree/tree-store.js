@@ -1,25 +1,32 @@
-import { get } from 'lodash/fp';
 
-const ID_PATH = 'node.id';
-const PID_PATH = 'node.parentId';
-const NODE_TYPE_PATH = 'node.type';
+const ID_PATH = [ 'node', 'id' ];
+const PID_PATH = [ 'node', 'parentId' ];
+const NODE_TYPE_PATH = [ 'node', 'type' ];
+
+const LOAD_MODE = {
+  AUTO    : 'AUTO',
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
 
 export default class TreeStore {
-  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000, defaultChecked }) {
+  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000, defaultChecked, loadMode = LOAD_MODE.OVERALL }) {
     if (!Array.isArray(data)) return;
     console.time('generate Tree model cost time');
+    this.loadMode = loadMode;
     this.tree = [];
-    this.expandLevel = expandLevel;
+    this.expandLevel = loadMode === LOAD_MODE.OVERALL ? expandLevel : 1;
     this.maxChecked = maxChecked;
     this.defaultChecked = defaultChecked;
     this.originTree = data;
     this.checkedMap = {};
+    this.asyncMap = {};
     this.genTree();
     console.timeEnd('generate Tree model cost time');
   }
 
   get rootGroup() {
-    return this.parentMap[get(ID_PATH)(this.rootNode)];
+    return this.parentMap[this.getNodeId(this.rootNode)];
   }
 
   get rootNode() {
@@ -35,7 +42,7 @@ export default class TreeStore {
     this.rootNode.level = 0;
     this.tree.push(this.rootNode);
 
-    console.time(`expand tree level ${this.expandLevel} time:`);
+    console.time(`expand tree level-${this.expandLevel} time:`);
     for (let i = 0; i < this.expandLevel; i++) {
       this.tree.forEach((n) => {
         const isOrg = this.isORG(n);
@@ -45,10 +52,10 @@ export default class TreeStore {
         }
       });
     }
-    console.timeEnd(`expand tree level ${this.expandLevel} time:`);
+    console.timeEnd(`expand tree level-${this.expandLevel} time:`);
   }
 
-  genTreeMap() {
+  genTreeMap({ reset = true } = {}) {
     const nodeMap = {};
     const parentMap = {};
     
@@ -56,8 +63,11 @@ export default class TreeStore {
       try {
         const id = this.getNodeId(node);
 
-        node.expand = false;
-        node.halfChecked = false;
+        if (reset) {
+          node.expand = false;
+          node.halfChecked = false;
+        }
+
         node.checked = id === this.defaultChecked;
         if (id === this.defaultChecked) {
           this.checkedMap[id] = true;
@@ -78,8 +88,8 @@ export default class TreeStore {
   }
 
   addNodeMap(map, node) {
-    const id = get(ID_PATH)(node);
-    const pid = get(PID_PATH)(node);
+    const id = this.getNodeId(node);
+    const pid = this.getParentId(node);
 
     if (pid == null) map.rootNode = node;
 
@@ -92,12 +102,16 @@ export default class TreeStore {
   }
 
   addParentMap(map, node) {
-    const pid = get(PID_PATH)(node);
+    const pid = this.getParentId(node);
 
     if (!pid) return;
 
     if (Array.isArray(map[pid])) {
+      // if (this.updatedNodes[node.id]) return console.log('repeat !!!');
+
       map[pid].push(node);
+
+      // this.updatedNodes[node.id] = node;
     }
     else {
       map[pid] = [ node ];
@@ -113,23 +127,52 @@ export default class TreeStore {
   }
 
   getNodeId(node) {
-    return get(ID_PATH)(node);
+    if (!node || !node.node) return null;
+
+    return node.node.id;
+  }
+
+  getParentId(node) {
+    if (!node || !node.node) return null;
+
+    return node.node.parentId;
   }
 
   getNodeType(node) {
-    return get(NODE_TYPE_PATH)(node);
+    if (!node || !node.node) return null;
+
+    return node.node.type;
   }
 
-  async toggle(id) {
+  async toggle(id, getChildAsync, useAsync) {
     const node = this.getNode(id);
 
     if (this.getNodeType(node).indexOf('ORG') === -1) return;
 
-    return node.expand ? this.collapse(id) : this.expand(id);
+    return node.expand ? this.collapse(id) : this.expand(id, getChildAsync, useAsync);
   }
 
-  expand(id) {
+  genAsyncData(nodeId, data) {
+    if (this.asyncMap[nodeId] || data.length === 0) return;
+
+    // this.originTree.push(...data);  树数据 是引用关系 已经添加了新成员
+
+    const { nodeMap, parentMap } = this.genTreeMap({ reset: false });
+
+    this.nodeMap = nodeMap;
+    this.parentMap = parentMap;
+
+    this.asyncMap[nodeId] = data;
+  }
+
+  async expand(id, getChildAsync, useAsync = false) {
     const parent = this.getNode(id);
+
+    if (this.loadMode === LOAD_MODE.SPLIT && useAsync) {
+      const asyncData = await getChildAsync({ parentId: id });
+
+      this.genAsyncData(id, asyncData);
+    }
     const childes = this.getChild(id);
 
     if (!Array.isArray(childes)) return parent.expand = true;
@@ -159,7 +202,7 @@ export default class TreeStore {
   }
 
   findNodeIndex(node) {
-    return this.tree.findIndex((i) => get(ID_PATH)(i) === get(ID_PATH)(node));
+    return this.tree.findIndex((i) => this.getNodeId(i) === this.getNodeId(node));
   }
 
   findNextLevelIndex(level, currentIndex) {
@@ -176,8 +219,8 @@ export default class TreeStore {
   findLastOffspringIndex(groupMap, currentIndex) {
     const nextIndex = currentIndex + 1;
     const nextNode = this.tree[nextIndex];
-    const nextNodeId = get(ID_PATH)(nextNode);
-    const nextNodePid = get(PID_PATH)(nextNode);
+    const nextNodeId = this.getNodeId(nextNode);
+    const nextNodePid = this.getParentId(nextNode);
 
     if (groupMap.hasOwnProperty(nextNodePid)) {
       groupMap[nextNodeId] = 1;
@@ -211,7 +254,7 @@ export default class TreeStore {
 
     const checkers = this.getChecked();
 
-    if (checkers.length >= this.maxChecked) return checkers;
+    if (checked && checkers.length >= this.maxChecked) return checkers;
 
     this.getNode(id).checked = checked;
     this.checkedMap[id] = checked;
@@ -244,7 +287,7 @@ export default class TreeStore {
 
     this.getNode(id).checked = checked;
     childes.forEach((node) => {
-      const nodeId = get(ID_PATH)(node);
+      const nodeId = this.getNodeId(node);
 
       if (!this.isORG(node)) {
         node.checked = checked;
@@ -262,13 +305,13 @@ export default class TreeStore {
   findParentNode(id) {
     const node = this.getNode(id);
 
-    return this.getNode(get(PID_PATH)(node));
+    return this.getNode(this.getParentId(node));
   }
 
   findBrotherNode(id) {
     const groupNode = this.findGroupNode(id);
 
-    return groupNode.filter((n) => get(ID_PATH)(n) !== id);
+    return groupNode.filter((n) => this.getNodeId(n) !== id);
   }
 
   findGroupNode(id) {
@@ -294,7 +337,7 @@ export default class TreeStore {
     let checkedNum = checkedNodes.length;
 
     offspring.forEach((node) => {
-      const nodeId = get(ID_PATH)(node);
+      const nodeId = this.getNodeId(node);
 
       if (!this.isORG(node)) { // TODO 如果大于 maxChecked 需要break
         checkedNum++;
