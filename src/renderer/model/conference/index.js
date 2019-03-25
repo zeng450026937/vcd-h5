@@ -23,6 +23,18 @@ model.provide({
     return {
       messageTextList    : [],
       isLocalUnmuteAudio : false,
+      holdList           : [
+        {
+          id       : '1',
+          subject  : '来自张三的视频会议',
+          interval : '12:00:03',
+        },
+        {
+          id       : '2',
+          subject  : '来自李四的视频会议',
+          interval : '12:00:03',
+        },
+      ],
     };
   },
   computed : {

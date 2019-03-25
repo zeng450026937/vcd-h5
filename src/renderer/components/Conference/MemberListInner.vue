@@ -6,7 +6,15 @@
         <span class="flex flex-grow">{{l.title}}</span>
         <a-iconfont type="icon-right" class="anticon anticon-right"/>
       </div>
-
+      <div v-if="l.group === 'visitor' && l.castViewerNum > 0"
+           class="h-14 px-4 flex items-center">
+        <a-avatar>
+          <a-iconfont type="icon-ren"/>
+        </a-avatar>
+        <span class="ml-3">广播方（{{l.castViewerNum}}）</span>
+      </div>
+      <!--<span v-if="l.group === 'visitor'"-->
+            <!--class="h-7 px-4 text-xs bg-list">广播方（{{l.castViewerNum}}）</span>-->
       <template v-for="item in l.list">
         <member-list-item :group="l.group" :item="item" :key="item.entity"/>
       </template>

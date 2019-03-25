@@ -177,9 +177,6 @@ export default {
     shareScreenClicked() {
       this.isShareInCenter = !this.isShareInCenter;
     },
-    holdClicked() {
-      console.warn('holdClicked')
-    }
   },
   watch : {
     isInConferenceMain : {

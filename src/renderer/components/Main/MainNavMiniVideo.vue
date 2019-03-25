@@ -1,74 +1,83 @@
 <template>
   <div id="main-nav-mini-video" class="bg-white">
-    <div class="relative" style="border: 1px solid #1D212F;">
+    <div class="relative main-nav-mini-video-inner" style="border: 1px solid #1D212F;">
       <div class="h-8 flex items-center absolute w-full z-10" style="background: rgba(0,0,0,0.65);">
-        <span class="text-white text-xs mx-3 truncate leading-tight">{{conferenceTitle}}</span>
+        <span class="text-white text-xs mx-3 truncate leading-tight">{{conferenceTitle || '暂无'}}</span>
       </div>
       <div class="video-controls absolute w-full">
-      <div class="h-full w-full flex flex-col">
+        <div class="h-full w-full flex flex-col">
 
-        <div class="flex flex-grow"></div>
-        <div class="flex justify-center py-3 items-center">
-          <div class="button-content flex h-8 items-center z-10">
+          <div class="flex flex-grow"></div>
+          <div class="flex justify-center py-3 items-center">
+            <div class="button-content flex h-8 items-center z-10">
 
-            <a-button :disabled="videoDisabled"
-                      shape="circle"
-                      class="mx-2 text-white border-transparent"
-                      :class="{[`bg-${videoIcon.color}`] : true}"
-                      :title="videoIcon.title"
-                      @click="onVideoBtnClick"
-            >
-              <a-iconfont :type="videoIcon.icon"/>
-            </a-button>
+              <a-button v-if="isVideoConference"
+                        :disabled="videoDisabled"
+                        shape="circle"
+                        class="mx-2 text-white border-transparent"
+                        :class="{[`bg-${videoIcon.color}`] : true}"
+                        :title="videoIcon.title"
+                        @click="onVideoBtnClick"
+              >
+                <a-iconfont :type="videoIcon.icon"/>
+              </a-button>
 
-            <a-button :disabled="audioDisabled"
-                      shape="circle"
-                      class="mx-2 text-white border-transparent"
-                      :class="{[`bg-${audioIcon.color}`] : true}"
-                      :title="audioIcon.title"
-                      @click="onAudioBtnClick"
-            >
-              <a-iconfont :type="audioIcon.icon"/>
-            </a-button>
+              <a-button :disabled="audioDisabled"
+                        shape="circle"
+                        class="mx-2 text-white border-transparent"
+                        :class="{[`bg-${audioIcon.color}`] : true}"
+                        :title="audioIcon.title"
+                        @click="onAudioBtnClick"
+              >
+                <a-iconfont :type="audioIcon.icon"/>
+              </a-button>
 
-            <a-popover
-                trigger="click"
-                v-model="showMorePanel"
-                overlayClassName="more-panel-popover"
-            >
-              <div slot="content" class="popover-content">
-                <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-select">
-                  <a-iconfont type="icon-yuyin"
-                              class="text-base text-indigo"/>
-                  <span class="ml-3 text-xs">切换为音频通话</span>
+              <a-popover
+                  trigger="click"
+                  v-model="showMorePanel"
+                  overlayClassName="mini-more-panel-popover"
+              >
+                <div slot="content" class="popover-content">
+                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-select"
+                       @click="switchConferenceType">
+                    <a-iconfont :type="isVideoConference ? 'icon-yuyin' : 'icon-shipin'"
+                                class="text-base text-indigo"/>
+                    <span class="ml-3 text-xs">{{isVideoConference ? '切换为音频会议' : '切换为视频会议'}}</span>
+                  </div>
                 </div>
-                <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-select">
-                  <a-iconfont type="icon-bohao"
-                              class="text-base text-indigo"/>
-                  <span class="ml-3 text-xs">拨号盘</span>
-                </div>
-              </div>
+                <a-button shape="circle"
+                          title="更多"
+                          class="text-white mx-2 border-transparent"
+                          @click="showMorePanel = !showMorePanel"
+                >
+                  <a-iconfont type="icon-gengduo1"/>
+                </a-button>
+              </a-popover>
               <a-button shape="circle"
-                        title="更多"
-                        class="text-white mx-2 border-transparent"
-                        @click="showMorePanel = !showMorePanel"
-              ><a-iconfont type="icon-gengduo1"/></a-button>
-            </a-popover>
-            <a-button shape="circle"
-                      title="退出"
-                      class="text-white mx-2 bg-red-light border-transparent"
-                      @click="showLeaveModal"
-            ><a-iconfont type="icon-guaduan"/></a-button>
+                        title="退出"
+                        class="text-white mx-2 bg-red-light border-transparent"
+                        @click="showLeaveModal"
+              >
+                <a-iconfont type="icon-guaduan"/>
+              </a-button>
+            </div>
           </div>
         </div>
       </div>
-      </div>
-      <video-view class="nav-mini-video bg-white cursor-pointer"
+      <video-view class="nav-mini-video bg-white cursor-pointer h-full"
                   title="双击回到视频会议界面"
                   :source="isShareInCenter ? 'screen': 'remote'"
                   object-fit="cover"
                   position="relative"
-                  @dblclick.native="expandVideoContent"/>
+                  @dblclick.native="expandVideoContent"
+                  :hide-video="!isVideoConference">
+        <div v-if="!isVideoConference"
+             slot="content"
+             class="absolute-center h-full flex flex-col items-center justify-center">
+          <a-iconfont type="icon-huiyishi" class="display-icon"/>
+          <span class="display-name">音频会议</span>
+        </div>
+      </video-view>
     </div>
     <conference-leaving-modal ref="leavingModal"/>
   </div>
@@ -96,9 +105,9 @@ export default {
       props : [ 'isInMiniConference' ],
     },
     {
-      ns: 'conference.sketch',
-      props: ['isShareInCenter']
-    }
+      ns    : 'conference.sketch',
+      props : [ 'isShareInCenter', 'isVideoConference' ],
+    },
   ],
   computed : {
     confStatus() {
@@ -137,6 +146,10 @@ export default {
     },
   },
   methods : {
+    switchConferenceType() {
+      this.showMorePanel = false;
+      this.isVideoConference = !this.isVideoConference;
+    },
     showLeaveModal() {
       this.$refs.leavingModal.visible = true;
     },
@@ -157,6 +170,10 @@ export default {
 
 <style lang="less">
 #main-nav-mini-video {
+  .main-nav-mini-video-inner {
+    width: 240px;
+    height: 136px;
+  }
   .video-controls {
     top: 100%;
     transform: translateY(-100%);
@@ -167,11 +184,43 @@ export default {
       }
     }
   }
+  .display-icon {
+    opacity: 0.4;
+    color: white;
+    font-size: 32px;
+  }
+  .display-name {
+    opacity: 0.4;
+    font-size: 12px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 24px;
+    margin-top: 10px;
+  }
   .nav-mini-video {
 
   }
   button {
     box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
+  }
+}
+.mini-more-panel-popover {
+  .ant-popover-inner-content {
+    padding: 4px 0;
+    .popover-content {
+      width: 180px;
+      height: 32px;
+      .popover-content-item {
+        cursor: pointer;
+        .ant-slider-rail, .ant-slider-track,.ant-slider-step {
+          height: 2px;
+        }
+        .ant-slider-handle {
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
   }
 }
 </style>

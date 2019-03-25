@@ -86,9 +86,6 @@ export default {
     },
   ],
   computed : {
-    isConnecting() {
-      return this.$rtc.call.connecting;
-    },
     isConnected() {
       return this.$rtc.call.connected;
     },

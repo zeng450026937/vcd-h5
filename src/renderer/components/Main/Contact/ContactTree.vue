@@ -63,13 +63,11 @@
 
 <script>
 import ContactSearch from './ContactSearch.vue';
-import PlainTree from '../../Common/CommonTree/tree';
 
 export default {
   name       : 'ContactTree',
   components : {
     ContactSearch,
-    PlainTree,
   },
   props : {
     checked : {

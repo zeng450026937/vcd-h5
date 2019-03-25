@@ -3,8 +3,8 @@
     <remote-video
         :class="videoClasses"
         :source="source"
-        :hide-video="!isVideoCall">
-      <div v-if="!isVideoCall"
+        :hide-video="!showVideo">
+      <div v-if="!showVideo"
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
@@ -32,6 +32,10 @@ export default {
       default : 'call-remote',
     },
   },
+  data() {
+    return {
+    };
+  },
   sketch : [
     {
       ns    : 'call.sketch',
@@ -42,7 +46,16 @@ export default {
       props : [ 'isVideoCall' ],
     },
   ],
+  destroyed() {
+    this.$message.destroy();
+  },
   computed : {
+    isConnecting() {
+      return this.$rtc.call.connecting;
+    },
+    showVideo() {
+      return this.isVideoCall && this.$rtc.call.connected;
+    },
     controlsClasses() {
       return {
         [this.isInCallMain || !this.isVideoCall ? 'controls-bottom' : 'controls-normal'] : true,
@@ -62,6 +75,28 @@ export default {
       if (val) {
         this.showMorePanel = false;
       }
+    },
+    isConnecting : {
+      handler(val) {
+        if (val) {
+          setTimeout(() => {
+            this.$message.info('对方可能暂时不在或设备静音，建议稍后再次尝试！', 0);
+          }, 10000);
+          setTimeout(() => {
+            this.$message.destroy();
+            this.$message.info('对方长时间未接听，请稍后重试！', 0);
+            setTimeout(() => {
+              if (!this.$rtc.call.connected) {
+                this.$rtc.call.disconnect();
+              }
+            }, 2000);
+          }, 20000);
+        }
+        else {
+          this.$message.destroy();
+        }
+      },
+      immediate : true,
     },
   },
 };

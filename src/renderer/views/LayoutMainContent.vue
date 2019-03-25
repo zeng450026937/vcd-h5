@@ -2,9 +2,9 @@
   <a-layout id="main-contact" class="h-full">
     <div class="flex h-full">
       <div v-if="!hideNav" class="flex flex-col h-full bg-under-painting">
-        <main-nav style="width: 240px;"/>
-        <main-nav-mini-video v-if="showMiniVideo" style="width: 240px;"/>
-        <main-nav-mini-call v-if="showMiniCall" style="width: 240px;"/>
+        <main-nav class="w-nav-normal normal:w-nav-normal middle:w-nav-middle max:w-nav-max"/>
+        <main-nav-mini-video v-if="showMiniVideo"/>
+        <main-nav-mini-call v-if="showMiniCall"/>
       </div>
       <div class="flex h-full bg-white"
             :style="{

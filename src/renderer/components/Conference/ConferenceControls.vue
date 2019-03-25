@@ -2,9 +2,10 @@
   <div id="conference-controls" class="flex justify-center py-5 items-center w-full">
     <div class="button-content flex h-12 items-center z-10">
       <!--视频控制-->
-      <a-button :disabled="videoDisabled"
+      <a-button v-if="isVideoConference"
+                :disabled="videoDisabled"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white border-transparent"
+                class="w-10 h-10 text-lg text-white mx-2 border-transparent"
                 :class="{[`bg-${videoIcon.color}`] : true}"
                 :title="videoIcon.title"
                 @click="onVideoBtnClick"
@@ -14,7 +15,7 @@
       <!--音频-->
       <a-button :disabled="audioDisabled"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white mx-3 border-transparent"
+                class="w-10 h-10 text-lg text-white mx-2 border-transparent"
                 :class="{[`bg-${audioIcon.color}`] : true}"
                 :title="audioIcon.title"
                 @click="onAudioBtnClick"
@@ -22,9 +23,10 @@
         <a-iconfont :type="audioIcon.icon"/>
       </a-button>
       <!--分享辅流-->
-      <a-button :disabled="!shareAvailable"
+      <a-button v-if="isVideoConference"
+                :disabled="!shareAvailable"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white border-transparent"
+                class="w-10 h-10 text-lg text-white mx-2 border-transparent"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
@@ -37,7 +39,7 @@
         <div slot="content" class="popover-content">
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
               @click="switchConferenceType">
-            <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
+            <a-iconfont :type="isVideoConference ? 'icon-yuyin' : 'icon-shipin'" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">{{isVideoConference ? '切换为音频会议' : '切换为视频会议'}}</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
@@ -48,14 +50,14 @@
         </div>
         <a-button shape="circle"
                   title="更多"
-                  class="w-10 h-10 text-lg text-white mx-3 border-transparent"
+                  class="w-10 h-10 text-lg text-white mx-2 border-transparent"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
                 title="退出会议"
-                class="w-10 h-10 text-lg border-transparent text-white bg-red-light"
+                class="w-10 h-10 text-lg mx-2 border-transparent text-white bg-red-light"
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
     </div>

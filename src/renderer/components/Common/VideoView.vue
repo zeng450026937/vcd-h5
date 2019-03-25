@@ -90,8 +90,9 @@ export default {
     videoClicked() {
       this.$emit('video-clicked');
     },
-    onVideoStreamChanged(stream) {
+    async onVideoStreamChanged(stream) {
       if (!stream) return;
+      await this.$nextTick();
       if (!this.videoElement) { // TODO update DOM to refs
         this.videoElement = document.getElementById(this.videoId);
       }

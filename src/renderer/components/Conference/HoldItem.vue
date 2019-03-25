@@ -14,8 +14,12 @@
           <span class="leading-none truncate">{{info.subject}}</span>
           <span class="mt-2 leading-none truncate">保持 {{info.interval}}</span>
         </div>
-        <a-iconfont type="icon-huifu" class="text-white ml-4 text-base"/>
-        <a-iconfont type="icon-guaduan" class="text-white ml-4 text-base"/>
+        <a-iconfont type="icon-huifu"
+                    title="恢复通话"
+                    class="text-white ml-4 text-base cursor-pointer" @click="unhold"/>
+        <a-iconfont type="icon-guaduan"
+                    title="挂断通话"
+                    class="text-white ml-4 text-base cursor-pointer" @click="decline"/>
       </div>
     </draggable-element>
   <!--</div>-->
@@ -55,6 +59,12 @@ export default {
   methods : {
     contentClicked() {
       this.$emit('contentClicked');
+    },
+    unhold() {
+
+    },
+    decline() {
+
     },
   },
 };

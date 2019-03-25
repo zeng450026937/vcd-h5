@@ -31,6 +31,8 @@ member.provide({
         && (user.displayText.indexOf(this.filterText) > -1
           || user.displayText.indexOf(this.phone) > -1));
 
+      const castViewerNum = userList.filter((user) => user.isCastViewer()).length;
+
       return [
         {
           title : `主持人 (${presenterList.length})`,
@@ -40,6 +42,7 @@ member.provide({
         {
           title : `访客 (${visitorList.length})`,
           group : 'visitor',
+          castViewerNum,
           list  : visitorList,
         },
       ];

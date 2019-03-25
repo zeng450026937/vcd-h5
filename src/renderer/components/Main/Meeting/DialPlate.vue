@@ -3,8 +3,8 @@
     <div class="flex flex-col h-full">
       <app-header title="拨号"/>
       <div class="h-full m-4 bg-white flex border">
-        <div class="flex flex-col p-10 mt-6"
-             style="width: 328px;">
+        <div class="flex flex-col"
+             style="width: 360px;padding: 56px">
           <div class="flex items-center">
             <a-input ref="numberInput"
                      id="number-input"
@@ -53,6 +53,7 @@
             </div>
             <contact-list v-else
                           hide-popup
+                          class="mx-1"
                           :contactList="searchResult"
                           :highlightContent="callNumber"
                           highlightSelected

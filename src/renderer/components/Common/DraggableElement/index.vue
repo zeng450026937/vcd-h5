@@ -22,9 +22,6 @@ export default {
     const ops = {
       direction : 'all',
       handler   : false,
-      dragStart(x, y) {},
-      dragEnd(x, y) {},
-      dragMove(x, y) {},
     };
 
 
@@ -198,6 +195,15 @@ export default {
       if (this.moveY > (this.boxHeight - this.sonHeight)) {
         this.selfElement.style.top = `${this.boxHeight - this.sonHeight}px`;
       }
+    },
+    dragStart(x, y) {
+      this.$emit('dragStart', { x, y });
+    },
+    dragEnd(x, y) {
+      this.$emit('dragEnd', { x, y });
+    },
+    dragMove(x, y) {
+      this.$emit('dragMove', { x, y });
     },
   },
 };

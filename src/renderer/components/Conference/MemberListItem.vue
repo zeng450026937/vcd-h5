@@ -57,11 +57,18 @@
                 <span class="text-xs">{{setAsPresenterText}}</span>
               </div>
             </a-menu-item>
+            <a-menu-item v-if="currentIsPresenter" key="2" @click="setSpeaker">
+              <div class="h-8 px-3 w-full popover-content-item flex items-center">
+                <span class="text-xs">{{setAsSpeakerText}}</span>
+              </div>
+            </a-menu-item>
+
             <a-menu-item v-if="showSetWaitItem" key="2" @click="setWaiting">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设为等待</span>
               </div>
             </a-menu-item>
+
             <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="4" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设备详情</span>
@@ -206,7 +213,7 @@ export default {
       return this.group === 'waiting' || this.group === 'audioApply';
     },
     displayName() {
-      return this.item.displayText + (this.item.isCurrentUser() ? ' ( 我 )' : '');
+      return this.item.displayText + (this.item.isCurrentUser() ? '（我）' : '');
     },
     displayPhone() {
       return this.item.phone === 'unauth-web-client' ? 'WebRTC' : this.item.phone;
@@ -262,6 +269,13 @@ export default {
 
       return '设为主持人';
     },
+    setAsSpeakerText() {
+      if (this.item.isDemonstrator()) {
+        return '取消演讲者';
+      }
+
+      return '设为演讲者';
+    },
     showSetPresenterItem() {
       return this.currentIsPresenter && !this.item.isOrganizer();
     },
@@ -314,6 +328,9 @@ export default {
       else {
         this.item.setPermission('presenter');
       }
+    },
+    setSpeaker() {
+      this.item.setDemonstrator(!this.item.isDemonstrator());
     },
     setWaiting() {
       this.item.hold();

@@ -67,7 +67,7 @@ export default {
   sketch : [
     {
       ns    : 'conference.sketch',
-      props : [ 'isInConferenceMain', 'currentTab' ],
+      props : [ 'isInConferenceMain', 'currentTab', 'updateHoldPosition' ],
     },
     {
       ns    : 'conference.member',
@@ -82,6 +82,10 @@ export default {
     hasNewApply() {
       return this.hasNewMeetingApply || this.hasNewSpeakApply;
     },
+  },
+  async mounted() {
+    await this.$nextTick();
+    this.updateHoldPosition = true;
   },
   methods : {
     closeDrawer() {

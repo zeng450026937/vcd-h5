@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="meeting-nav" class="flex-col h-full select-none bg-white border-r">
+  <a-layout id="main-nav" class="flex-col h-full select-none bg-white border-r">
     <div class="h-14">
       <div class="flex px-3 h-full items-center border-b">
         <a-input

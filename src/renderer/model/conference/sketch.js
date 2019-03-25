@@ -28,6 +28,8 @@ const initialDate = () => ({
   // 是否为视频会议 视频会议 OR 音频会议
   isVideoConference   : true,
   hideMessage         : true,
+  // Hold
+  updateHoldPosition  : false,
 });
 
 sketch.provide({

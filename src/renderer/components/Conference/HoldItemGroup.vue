@@ -20,32 +20,35 @@ export default {
     HoldItem,
   },
   data() {
-    const holdList = [
-      {
-        id       : '1',
-        subject  : '来自张三的视频会议',
-        interval : '12:00:03',
-      },
-      {
-        id       : '2',
-        subject  : '来自李四的视频会议',
-        interval : '12:00:03',
-      },
-    ];
-      
     return {
       currentHold : '1',
-      holdList,
     };
   },
   mounted() {
     window.addEventListener('resize', this.onWindowResize);
   },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'updateHoldPosition' ],
+  },
+  computed : {
+    holdList() {
+      return this.$model.conference.holdList;
+    },
+  },
   methods : {
     onWindowResize() {
-      this.$refs.hold.forEach((element) => {
-        element.$refs.draggableElement.updatePosition();
-      });
+      this.updateHoldPosition = true;
+    },
+  },
+  watch : {
+    updateHoldPosition(val) {
+      if (val) {
+        this.$refs.hold.forEach((element) => {
+          element.$refs.draggableElement.updatePosition();
+        });
+      }
+      this.updateHoldPosition = false;
     },
   },
 };

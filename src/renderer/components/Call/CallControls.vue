@@ -39,7 +39,7 @@
         <div slot="content" class="popover-content">
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                @click="switchCallType">
-            <a-iconfont type="icon-shipin" class="text-lg text-indigo"/>
+            <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"

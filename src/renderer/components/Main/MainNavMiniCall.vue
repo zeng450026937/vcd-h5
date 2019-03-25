@@ -1,19 +1,7 @@
 <template>
   <div id="main-nav-mini-call">
-    <div class="relative" style="border: 1px solid #1D212F;">
-      <div style="margin-bottom: 56px;" class="mt-4" @dblclick="expandMiniContent">
-        <div v-if="isConnected" class="flex flex-grow flex-col items-center justify-center">
-          <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        </div>
-        <div v-else class="call-content flex flex-grow flex-col items-center justify-center">
-          <div style="width: 80px;height: 80px"
-               class="flex items-center justify-center target-avatar border-8 rounded-full">
-            <span class="target-name">{{userName.substr(-2, 2)}}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="video-controls absolute w-full">
+    <div class="relative call-inner" style="border: 1px solid #1D212F;">
+      <div class="audio-controls absolute w-full">
         <div class="h-full w-full flex flex-col">
 
           <div class="flex flex-grow"></div>
@@ -26,16 +14,14 @@
               <a-popover
                   trigger="click"
                   v-model="showMorePanel"
-                  overlayClassName="more-panel-popover"
+                  overlayClassName="mini-more-panel-popover"
               >
                 <div slot="content" class="popover-content">
-                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover">
-                    <a-iconfont type="icon-yuyin" class="text-base text-indigo"/>
-                    <span class="ml-3 text-xs">切换为音频通话</span>
-                  </div>
-                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover">
-                    <a-iconfont type="icon-bohao" theme="filled" class="text-base text-indigo"/>
-                    <span class="ml-3 text-xs">拨号盘</span>
+                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
+                       @click="switchCallType">
+                    <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'"
+                                class="text-base text-indigo"/>
+                    <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
                   </div>
                 </div>
                 <a-button shape="circle"
@@ -52,26 +38,50 @@
         </div>
       </div>
 
+      <video-view class="nav-mini-video bg-white cursor-pointer h-full"
+                  title="双击回到视频会议界面"
+                  source="call-remote"
+                  object-fit="cover"
+                  position="relative"
+                  @dblclick.native="expandMiniContent"
+                  :hide-video="!isVideoCall">
+        <div v-if="!isVideoCall"
+             slot="content"
+             class="absolute-center h-full flex flex-col items-center justify-center"
+             style="top: 40%">
+          <a-iconfont type="icon-huiyishi" class="display-icon"/>
+          <span class="display-name">音频通话</span>
+        </div>
+      </video-view>
+
     </div>
   </div>
 </template>
 
 <script>
+import VideoView from '../Common/VideoView.vue';
 import { CALL } from '../../router/constants';
 
 export default {
   name       : 'MainNavMiniCall',
   components : {
+    VideoView,
   },
   data() {
     return {
       showMorePanel : false,
     };
   },
-  sketch : {
-    ns    : 'state',
-    props : [ 'isInMiniCall' ],
-  },
+  sketch : [
+    {
+      ns    : 'state',
+      props : [ 'isInMiniCall' ],
+    },
+    {
+      ns    : 'call',
+      props : [ 'isVideoCall' ],
+    },
+  ],
   computed : {
     callText() {
       const titleMap = {
@@ -118,6 +128,10 @@ export default {
       this.isInMiniCall = false;
       this.$router.push(CALL.CALL_MAIN);
     },
+    switchCallType() {
+      this.showMorePanel = false;
+      this.isVideoCall = !this.isVideoCall;
+    },
   },
   watch : {
     displayName(cur, once) {
@@ -130,7 +144,11 @@ export default {
 <style lang="less">
   #main-nav-mini-call {
     background-color: rgb(31, 36, 55);
-    .video-controls {
+    .call-inner{
+      width: 240px;
+      height: 136px;
+    }
+    .audio-controls {
       top: 100%;
       transform: translateY(-100%);
       z-index: 1;
@@ -150,17 +168,23 @@ export default {
       text-align: center;
       line-height: 40px;
     }
+    .nav-mini-video {
+      .video-content {
+        height: 100%;
+      }
+    }
     .display-icon {
       opacity: 0.4;
       color: white;
-      font-size: 80px;
+      font-size: 32px;
     }
     .display-name {
       opacity: 0.4;
-      font-size: 24px;
+      font-size: 12px;
       color: #FFFFFF;
       text-align: center;
-      line-height: 24px;
+      margin-top: 10px;
     }
   }
+
 </style>
