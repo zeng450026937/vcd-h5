@@ -47,7 +47,7 @@ export default {
       return {
         [`remote-video-content-${this.isInConferenceMain ? 'normal' : 'shrink'}`] : true,
         'h-full'                                                                  : !this.isVideoConference,
-        'remote-video-content-normal-auto'                                        : this.isInConferenceMain && this.isVideoConference,
+        // 'remote-video-content-normal-auto'                                        : this.isInConferenceMain && this.isVideoConference,
       };
     },
   },

@@ -31,18 +31,18 @@ export default {
     return {
       selfElement      : null,
       parentElement    : null,
-      x                : 0,
+      x                : 0, // 元素左上角的坐标
       y                : 0,
-      X                : 0,
+      X                : 0, // 记录点击的坐标
       Y                : 0,
-      moveX            : null,
-      moveY            : null,
-      boxWidth         : 0,
+      moveX            : 0, // 移动的距离
+      moveY            : 0,
+      boxWidth         : 0, // 可移动区域的大小
       boxHeight        : 0,
-      sonWidth         : 0,
+      sonWidth         : 0, // 移动元素的大小
       sonHeight        : 0,
       isDown           : false, // 鼠标是否按下
-      hasDocumentEvent : false,
+      hasDocumentEvent : false, // 是否添加document事件
       ...ops,
     };
   },
@@ -65,16 +65,37 @@ export default {
         }
       });
       this.initSize();
+      this.initPosition();
+      this.selfElement.addEventListener('mousedown', this.onHandlerMouseDown);
+    },
+    initPosition() {
       if (this.place === 'end') { // 初始化位置
         this.selfElement.style.left = `${this.boxWidth - this.sonWidth}px`;
       }
-      this.selfElement.addEventListener('mousedown', this.onHandlerMouseDown);
     },
     initSize() {
       this.boxWidth = this.parentElement.offsetWidth;
       this.boxHeight = this.parentElement.offsetHeight;
       this.sonWidth = this.selfElement.offsetWidth;
       this.sonHeight = this.selfElement.offsetHeight;
+    },
+    updatePosition() { // for outer
+      this.initSize();
+      const left = parseInt(this.selfElement.style.left.split('px')[0], 10);
+      const top = parseInt(this.selfElement.style.top.split('px')[0], 10);
+
+      if (left > this.boxWidth - this.sonWidth) {
+        this.selfElement.style.left = `${this.boxWidth - this.sonWidth}px`;
+      }
+      else if (left < 0) {
+        this.selfElement.style.left = '0px';
+      }
+      else if (top > this.boxHeight - this.sonHeight) {
+        this.selfElement.style.top = `${this.boxHeight - this.sonHeight}px`;
+      }
+      else if (top < 0) {
+        this.selfElement.style.top = '0px';
+      }
     },
     onHandlerMouseDown(e) {
       if (!this.hasDocumentEvent) {

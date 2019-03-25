@@ -1,6 +1,7 @@
 <template>
   <!--<div id="hold-item" class="absolute">-->
-    <draggable-element parentId="conference-content"
+    <draggable-element ref="draggableElement"
+                       parentId="conference-content"
                        place="end"
                        :class="{'z-50': isTop, 'z-40': !isTop}"
                        :style="itemStyles">
@@ -9,7 +10,7 @@
         <a-avatar class='bg-white'>
           <a-iconfont type="icon-huiyishi" class="text-indigo"/>
         </a-avatar>
-        <div class="flex flex-col text-white flex-grow w-1 ml-2 text-xs justify-between select-none">
+        <div class="flex flex-col text-white flex-grow w-1 ml-2 text-xs justify-between">
           <span class="leading-none truncate">{{info.subject}}</span>
           <span class="mt-2 leading-none truncate">保持 {{info.interval}}</span>
         </div>
