@@ -247,6 +247,12 @@ export default class TreeStore {
     return result;
   }
 
+  getCheckedMultiple(id) {
+    const multiple = this.getNodeInMultiple(id);
+
+    return multiple.filter((n) => n.checked);
+  }
+
   async checkNode(id, checked) {
     if (id === this.defaultChecked) return;
 
@@ -318,7 +324,8 @@ export default class TreeStore {
         checkedNum++;
       }
 
-      if (checked && checkedNum > this.maxChecked) {
+      if (checked && checkedNum > (this.maxChecked - this.getCheckedMultiple(this.getNodeId(node)).length)) {
+        // 设置 当前勾选的分组 选中状态
         parent.checked = false;
         parent.halfChecked = true;
 
@@ -329,6 +336,7 @@ export default class TreeStore {
 
       if (!this.isORG(node)) {
         this.checkedMap[nodeId] = checked;
+        this.correctMultiple(node.id, checked);
       }
 
       if (checked && this.isORG(node)) {
