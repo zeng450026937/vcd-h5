@@ -33,7 +33,13 @@ export default {
   },
   computed : {
     holdList() {
-      return this.$model.conference.holdList;
+      return this.holdedChannels.map((channel, index) => ({
+        id : `${index + 1}`,
+        ...channel,
+      }));
+    },
+    holdedChannels() {
+      return this.$rtc.call.holdedChannels || [];
     },
   },
   methods : {

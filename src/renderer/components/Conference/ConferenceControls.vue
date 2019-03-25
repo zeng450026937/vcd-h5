@@ -5,7 +5,7 @@
       <a-button v-if="isVideoConference"
                 :disabled="videoDisabled"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white mx-2 border-transparent"
+                class="control-btn"
                 :class="{[`bg-${videoIcon.color}`] : true}"
                 :title="videoIcon.title"
                 @click="onVideoBtnClick"
@@ -15,7 +15,7 @@
       <!--音频-->
       <a-button :disabled="audioDisabled"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white mx-2 border-transparent"
+                class="control-btn"
                 :class="{[`bg-${audioIcon.color}`] : true}"
                 :title="audioIcon.title"
                 @click="onAudioBtnClick"
@@ -26,7 +26,7 @@
       <a-button v-if="isVideoConference"
                 :disabled="!shareAvailable"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white mx-2 border-transparent"
+                class="control-btn"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
@@ -50,14 +50,14 @@
         </div>
         <a-button shape="circle"
                   title="更多"
-                  class="w-10 h-10 text-lg text-white mx-2 border-transparent"
+                  class="control-btn"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
                 title="退出会议"
-                class="w-10 h-10 text-lg mx-2 border-transparent text-white bg-red-light"
+                class="control-btn bg-red-light"
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
     </div>
@@ -167,6 +167,9 @@ export default {
       bottom: 4px;
       transform: translateX(-100%);
       width: 100%;
+    }
+    .control-btn {
+      @apply w-10 h-10 text-lg text-white mx-2 border-transparent;
     }
     button {
       box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

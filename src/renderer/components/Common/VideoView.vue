@@ -13,7 +13,7 @@
         @click="videoClicked"
     ></video>
     <div v-if="!videoStream && !hideVideo"
-         class="loading-notice absolute flex flex-col w-full justify-center items-center">
+         class="loading-notice">
       <a-spin size="large"/>
       <div class="mt-2 text-indigo text-xl">视频加载中...</div>
     </div>
@@ -153,6 +153,9 @@ export default {
       .video-content {
         height: 100%;
       }
+    }
+    .loading-notice {
+      @apply absolute flex flex-col w-full justify-center items-center;
     }
     .video-content {
       width: 100%;

@@ -2,8 +2,8 @@
   <div id="call-remote-video" class="h-full w-full bg-media relative">
     <remote-video
         :class="videoClasses"
-        :source="source"
-        :hide-video="!showVideo">
+        :hide-video="!showVideo"
+        source="call-remote">
       <div v-if="!showVideo"
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
@@ -25,12 +25,6 @@ export default {
   components : {
     RemoteVideo,
     CallControls,
-  },
-  props : {
-    source : {
-      type    : String,
-      default : 'call-remote',
-    },
   },
   data() {
     return {
@@ -79,13 +73,13 @@ export default {
     isConnecting : {
       handler(val) {
         if (val) {
-          setTimeout(() => {
+          this.step1Timer = setTimeout(() => {
             this.$message.info('对方可能暂时不在或设备静音，建议稍后再次尝试！', 0);
           }, 10000);
           setTimeout(() => {
             this.$message.destroy();
             this.$message.info('对方长时间未接听，请稍后重试！', 0);
-            setTimeout(() => {
+            this.step2Timer = setTimeout(() => {
               if (!this.$rtc.call.connected) {
                 this.$rtc.call.disconnect();
               }
@@ -93,6 +87,12 @@ export default {
           }, 20000);
         }
         else {
+          if (this.step1Timer) {
+            clearTimeout(this.step1Timer);
+          }
+          if (this.step2Timer) {
+            clearTimeout(this.step2Timer);
+          }
           this.$message.destroy();
         }
       },

@@ -35,6 +35,9 @@ export default {
     rtc() {
       return (window.opener && window.opener.rtc) || window.rtc;
     },
+    kom() {
+      return (window.opener && window.opener.kom) || window.kom;
+    },
     displayName() {
       const { remoteIdentity } = this.rtc.call.incoming[0];
 
@@ -49,19 +52,12 @@ export default {
   },
   methods : {
     hangUp() {
-      this.rtc.call.decline().catch(() => {});
+      this.kom.dispatch('call.decline');
     },
     answerCall() {
-      this.rtc.call.answer().catch(() => {});
+      this.kom.dispatch('call.answer');
     },
-    // getStatus() {
-    //   if (this.rtc.call.ringing) return 'ringing';
-    //   else if (this.rtc.call.connecting) return 'connecting';
-    //   else if (this.rtc.call.connected) return 'connected';
-    //   else return 'disconnected';
-    // },
     checkStatus() {
-      // const status = this.getStatus();
       if (!this.rtc.call.ringing) {
         window.close();
       }

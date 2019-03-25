@@ -46,6 +46,7 @@
       </div>
       <call-inviting-modal ref="invitingModal"/>
     </div>
+    <hold-item-group/>
   </a-layout>
 </template>
 
@@ -55,6 +56,7 @@ import CallRemoteVideo from './CallRemoteVideo.vue';
 import CallLocalVideo from './CallLocalVideo.vue';
 import CallShareVideo from './CallShareVideo.vue';
 import CallInvitingModal from './CallInvitingModal.vue';
+import HoldItemGroup from '../Conference/HoldItemGroup.vue';
 import { CALL } from '../../router/constants';
 
 export default {
@@ -64,6 +66,7 @@ export default {
     CallRemoteVideo,
     CallLocalVideo,
     CallShareVideo,
+    HoldItemGroup,
   },
   data() {
     return {
@@ -83,6 +86,10 @@ export default {
     {
       ns    : 'call',
       props : [ 'isVideoCall' ],
+    },
+    {
+      ns    : 'conference.sketch',
+      props : [ 'updateHoldPosition' ],
     },
   ],
   computed : {
@@ -172,7 +179,9 @@ export default {
       this.isInCallMain = false;
     },
     maxCallContent() {
-      screenfull.toggle(document.getElementById('layout-call-content'));
+      screenfull.toggle(document.getElementById('layout-call-content')).then(() => {
+        this.updateHoldPosition = true;
+      });
     },
     contentClicked() {
       if (!this.hideControls && this.hideControlsTimer) {

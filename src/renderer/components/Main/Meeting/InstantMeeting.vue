@@ -34,7 +34,6 @@ import AppHeader from '../MainHeader.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactTree from '../Contact/ContactTree.vue';
 import ContactList from '../Contact/ContactList.vue';
-import PlainTree from '../../Common/CommonTree/index.vue';
 import transfer from '../../transfer/index.vue';
 
 export default {
@@ -44,7 +43,6 @@ export default {
     ContactTree,
     ContactList,
     CommonEmpty,
-    PlainTree,
     transfer,
   },
   data() {

@@ -85,7 +85,7 @@ export default {
   sketch : [
     {
       ns    : 'conference.sketch',
-      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab', 'isVideoConference' ],
+      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab', 'isVideoConference', 'updateHoldPosition' ],
     },
     {
       ns    : 'conference.member',
@@ -139,7 +139,9 @@ export default {
     openShareWindow() {
       if (this.isShareWindowOpen) return;
 
-      const option = 'width=528,height=297,minWidth=528,minHeight=297,directories=no,resizable,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no';
+      const option = 'width=528,height=297,minWidth=528,minHeight=297,'
+        + 'directories=no,resizable,titlebar=no,toolbar=no,'
+        + 'location=no,status=no,menubar=no,scrollbars=no';
 
       this.shareWindow = window.open('shareScreen.html', 'screen-share', option);
       this.isShareWindowOpen = true;
@@ -162,7 +164,9 @@ export default {
     },
     maxConferenceContent() {
       // FIXME DBLCLICK 双击是如果间隔时间过短，则不会响应事件
-      screenfull.toggle(document.getElementById('layout-conference-content'));
+      screenfull.toggle(document.getElementById('layout-conference-content')).then(() => {
+        this.updateHoldPosition = true;
+      });
     },
     contentClicked() {
       if (!this.hideControls && this.hideControlsTimer) {

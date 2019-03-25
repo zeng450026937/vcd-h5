@@ -35,6 +35,12 @@ model.provide({
 
       return call.connect('send', ctx.payload.options);
     },
+    answer() {
+      rtc.call.answer().catch(() => {});
+    },
+    decline() {
+      rtc.call.decline().catch(() => {});
+    },
   },
 });
 

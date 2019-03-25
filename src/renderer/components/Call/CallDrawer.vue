@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="flex h-full">
-        <component :is="currentTab" @close="closeDrawer"></component>
+        <component :is="currentTab" @close="closeDrawer"/>
       </div>
     </div>
   </div>
@@ -54,6 +54,10 @@ export default {
       ns    : 'call.chat',
       props : [ 'hasNewMessage' ],
     },
+    {
+      ns    : 'conference.sketch',
+      props : [ 'updateHoldPosition' ],
+    },
   ],
 
   data() {
@@ -66,7 +70,9 @@ export default {
       tabList,
     };
   },
-  mounted() {
+  async mounted() {
+    await this.$nextTick();
+    this.updateHoldPosition = true;
   },
   methods : {
     showInviteModal() {

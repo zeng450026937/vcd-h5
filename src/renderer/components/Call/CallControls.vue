@@ -15,7 +15,7 @@
       <!--音频-->
       <a-button :disabled="audioDisabled"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white mx-2 border-transparent control-btn"
+                class="control-btn"
                 :class="{[`bg-${audioIcon.color}`] : true}"
                 :title="audioIcon.title"
                 @click="onAudioBtnClick"
@@ -26,7 +26,7 @@
       <a-button v-if="isVideoCall"
                 :disabled="!shareAvailable"
                 shape="circle"
-                class="w-10 h-10 text-lg text-white mx-2 border-transparent control-btn"
+                class="control-btn"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
@@ -37,12 +37,12 @@
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
-          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
+          <div class="popover-content-item hover:bg-list-hover"
                @click="switchCallType">
             <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
           </div>
-          <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
+          <div class="popover-content-item hover:bg-list-hover"
                @click="openPlateModal">
             <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">拨号盘</span>
@@ -50,13 +50,13 @@
         </div>
         <a-button shape="circle"
                   title="更多"
-                  class="control-btn w-10 h-10 text-lg text-white mx-2 border-transparent"
+                  class="control-btn"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <a-button shape="circle"
                 title="挂断"
-                class="control-btn w-10 h-10 text-lg text-white mx-2 bg-red-light border-transparent"
+                class="control-btn bg-red-light"
                 @click="hangUp"
       >
         <a-iconfont type="icon-guaduan"/>
@@ -169,6 +169,7 @@ export default {
     .control-btn {
       background: rgba(0,0,0,0.65);
       box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
+      @apply w-10 h-10 text-lg text-white mx-2 border-transparent;
     }
   }
   .more-panel-popover {
@@ -178,7 +179,8 @@ export default {
         width: 180px;
         height: 64px;
         .popover-content-item {
-          cursor: pointer;
+          @apply h-8 w-full px-3 flex items-center cursor-pointer;
+
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {
             height: 2px;
           }

@@ -1,7 +1,7 @@
 <template>
   <!--<div id="hold-item" class="absolute">-->
     <draggable-element ref="draggableElement"
-                       parentId="conference-content"
+                       :parentId="parentId"
                        place="end"
                        :class="{'z-50': isTop, 'z-40': !isTop}"
                        :style="itemStyles">
@@ -11,8 +11,8 @@
           <a-iconfont type="icon-huiyishi" class="text-indigo"/>
         </a-avatar>
         <div class="flex flex-col text-white flex-grow w-1 ml-2 text-xs justify-between">
-          <span class="leading-none truncate">{{info.subject}}</span>
-          <span class="mt-2 leading-none truncate">保持 {{info.interval}}</span>
+          <span class="leading-none truncate">{{info.displayName}}</span>
+          <span class="mt-2 leading-none truncate">保持 {{interval}}</span>
         </div>
         <a-iconfont type="icon-huifu"
                     title="恢复通话"
@@ -27,9 +27,14 @@
 
 <script>
 import DraggableElement from '../Common/DraggableElement/index.vue';
+import { secondsToHms } from '../../utils/index';
 
 export default {
-  name  : 'HoldItem',
+  name : 'HoldItem',
+
+  components : {
+    DraggableElement,
+  },
   props : {
     isTop : {
       type    : Boolean,
@@ -46,8 +51,18 @@ export default {
       default : 0,
     },
   },
-  components : {
-    DraggableElement,
+  data() {
+    return {
+      interval : '00:00:00',
+    };
+  },
+  mounted() {
+    setInterval(() => {
+      this.interval = secondsToHms((Date.now() - this.info.date)/1000);
+    }, 1000);
+  },
+  destroyed() {
+    clearInterval(this.timer);
   },
   computed : {
     itemStyles() {
@@ -55,16 +70,19 @@ export default {
         top : `${44 + this.index * 52}px`,
       };
     },
+    parentId() {
+      return this.$rtc.conference.connected ? 'conference-content' : 'call-content';
+    },
   },
   methods : {
     contentClicked() {
       this.$emit('contentClicked');
     },
     unhold() {
-
+      this.info.channel.unhold();
     },
     decline() {
-
+      this.info.channel.disconnect();
     },
   },
 };
