@@ -93,8 +93,8 @@
 </template>
 
 <script>
+import {shell} from 'electron'
 import AppHeader from '../MainHeader.vue';
-
 export default {
   name : 'ConferenceSetting',
 
@@ -115,6 +115,7 @@ export default {
       // isRandomOrCustom      : false,
       // showNoticeTip         : false,
       // form                  : this.$form.createForm(this),
+      advancedSettingUrl : 'http://www.yealink.com',
     };
   },
   computed : {
@@ -197,7 +198,7 @@ export default {
     // },
 
     handleAdvancedSetting() {
-      this.$message.warning('高级设置还没做好哦!');
+      shell.openExternal(this.advancedSettingUrl);
     },
   },
 };

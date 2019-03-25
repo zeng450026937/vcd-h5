@@ -3,6 +3,28 @@ module.exports = {
   name : 'setting',
   lang : {
     zh : {
+      account : {
+        personalData         : '个人资料',
+        signature            : '这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字',
+        username             : '账号',
+        phone                : '手机',
+        email                : '邮箱',
+        group                : '分组',
+        enterprise           : '企业',
+        switchEnterPrize     : '切换企业',
+        edit                 : '编辑',
+        logout               : '注销',
+        getDataFailNotice    : '暂时无法获取当前用户信息',
+        editPsd              : '修改密码',
+        confirm              : '确认',
+        cancel               : '取消',
+        originPsd            : '原密码',
+        originPsdPlaceHolder : '若包含字母，请注意大小写',
+        newPsd               : '新密码',
+        newPsdPlaceHolder    : '输入6-16位密码',
+        repeatPsd            : '确认密码',
+        repeatPsdPlaceHolder : '再次输入密码',
+      },
       about : {
         title           : '关于',
         logoText        : 'Yealink',

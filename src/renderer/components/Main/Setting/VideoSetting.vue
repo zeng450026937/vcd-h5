@@ -9,7 +9,7 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5">
+    <div class=" border h-full m-4 bg-white p-5 overflow-y-auto">
       <div class="flex flex-col">
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.video.camera')}}</span>
@@ -36,7 +36,11 @@
                   <a-divider></a-divider>
                   <div class="text-xs mt-1 leading-tight">
                     {{$t('setting.video.questionNotice')}}
-                    <span class="text-indigo cursor-pointer">{{$t('setting.video.techniqueCenter')}}</span>。
+                    <span 
+                      class="text-indigo cursor-pointer" 
+                      @click="handleTechCenter">
+                      {{$t('setting.video.techniqueCenter')}}
+                    </span>。
                   </div>
                 </div>
                 <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>
@@ -75,6 +79,7 @@
 </template>
 
 <script>
+import { shell } from 'electron';
 import AppHeader from '../MainHeader.vue';
 import VideoView from '../../Common/VideoView.vue';
 
@@ -88,6 +93,7 @@ export default {
 
   data() {
     return {
+      techSupportUrl : 'http://www.yealink.com',
     };
   },
 
@@ -118,6 +124,11 @@ export default {
       set(deviceId) {
         this.videoInputDevice = this.videoInputDevices.find((item) => item.deviceId === deviceId);
       },
+    },
+  },
+  methods : {
+    handleTechCenter() {
+      shell.openExternal(this.techSupportUrl);
     },
   },
   deactivated() {

@@ -9,7 +9,7 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5">
+    <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-auto">
       <div class="" style="width: 320px;">
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.audio.audioInput')}}</span>

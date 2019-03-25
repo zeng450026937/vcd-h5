@@ -73,9 +73,9 @@
                 <template slot="title">
                   <span>{{$t('setting.common.propertyCreateAt')+item.createdAt}}</span>
                 </template>
-                <a-tag closable @close="handleDeleteProperty(index)" >{{item.label}}</a-tag>
+                <a-tag closable @close="handleDeleteProperty(index)" color="gray">{{item.label}}</a-tag>
               </a-tooltip>
-              <a-tag  color="blue"  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
+              <a-tag  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
                 v-if="tags.length<=20">
                   <span>+ {{$t('setting.common.addProperty')}}</span>
               </a-tag>
