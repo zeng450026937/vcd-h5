@@ -17,9 +17,9 @@ model.provide({
   data() {
     return {
       lastUpdated       : 0,
-      selectedDate      : new Date(),
-      currentDateEvents : [],
-      currentEvent      : {},
+      selectedDate      : new Date(), // consider to be remove
+      currentDateEvents : [], // consider to be remove
+      currentEvent      : {}, // consider to be remove
     };
   },
 
@@ -92,7 +92,7 @@ model.provide({
         if (!finded) {
           tasks.push(
             this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
-              .then((result) => {
+              .then(async(result) => {
                 result = fixTemplate(result);
                 // await this.db.templates.put(result);
                 this.templates[planId] = result;
@@ -137,7 +137,7 @@ model.provide({
         if (templateUpdated) {
           tasks.push(
             this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
-              .then((result) => {
+              .then(async(result) => {
                 result = fixTemplate(result);
                 // await this.db.templates.put(result);
                 this.templates[planId] = result;
@@ -151,7 +151,7 @@ model.provide({
         );
       });
 
-      return Promise.all(tasks);
+      await Promise.all(tasks);
     },
     
     toArray() {

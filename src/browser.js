@@ -3,7 +3,7 @@ import './ytms/install';
 import './main/app-updater';
 import './ipc/install';
 
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import { AppWindow } from './main/app-window';
 import { handleSquirrelEvent } from './main/squirrel-updater';
 import { now } from './main/utils';
@@ -173,7 +173,7 @@ function createWindow() {
 
   window.load();
 
-  mainWindow = global.mainWindow = window;
+  mainWindow = window;
 }
 
 let hasInstanceLock = false;
@@ -203,6 +203,15 @@ if (!handlingSquirrelEvent) {
       // setAsDefaultProtocolClient('x-yealink-client');
   
       createWindow();
+
+      // setup ipcMain
+      ipcMain.on('send-system-config', (event) => {
+        const { config } = event;
+        
+        if (mainWindow) {
+          mainWindow.sendSystemConfig(config);
+        }
+      });
     });
     
     app.on('gpu-process-crashed', (event, killed) => { 

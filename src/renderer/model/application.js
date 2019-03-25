@@ -54,6 +54,15 @@ model.provide({
 
       remote.getCurrentWindow().hide();
     },
+
+    async updateTrayMenu(ctx, next) {
+      await next();
+
+      const { template } = ctx.payload;
+      
+      // send template via ipc message to main process
+      ipcRenderer.send('update-tray-menu', template);
+    },
   },
   
   methods : {

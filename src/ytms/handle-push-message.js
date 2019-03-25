@@ -1,4 +1,4 @@
-import { Notification } from 'electron';
+import { Notification, ipcMain } from 'electron';
 import axios from 'axios';
 import { MESSAGE_TYPE } from './push-service';
 import { JobManager } from './job';
@@ -35,9 +35,13 @@ export function handlePushMessage(pushService, hook) {
 
         if (!job) {
           job = new NetLogJob(api, sessionId);
+          
+          jobManager.add(job);
+        }
+        else {
+          logger.warn('start netlog session is already exist');
         }
 
-        jobManager.add(job);
         break;
 
       case MESSAGE_TYPE.STOP_NETLOG:
@@ -48,6 +52,10 @@ export function handlePushMessage(pushService, hook) {
         if (job) {
           job.stop();
         }
+        else {
+          logger.warn('can not find stop netlog session');
+        }
+
         break;
 
       case MESSAGE_TYPE.GET_LOG:
@@ -57,15 +65,19 @@ export function handlePushMessage(pushService, hook) {
 
         if (!job) {
           job = new LogJob(api, sessionId);
+
+          jobManager.add(job);
+        }
+        else {
+          logger.warn('get log session is already exist');
         }
 
-        jobManager.add(job);
         break;
 
       case MESSAGE_TYPE.PUT_CONFIG:
         axios(body.downloadUrl)
           .then((res) => {
-            global.mainWindow.sendSystemConfig(res.data);
+            ipcMain.emit('send-system-config', { config: res.data });
           })
           .catch((e) => logger.warn('download config file failed, error: %s', e));
         break;

@@ -32,8 +32,9 @@ export class YTMSClient extends EventEmitter {
   async whenReady() {
     if (this.isReady) return;
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.once('ready', () => resolve());
+      this.once('stop', () => reject());
     });
   }
 
@@ -86,6 +87,8 @@ export class YTMSClient extends EventEmitter {
     // stop heartbeat
     this.isStop = stop;
     this.isReady = false;
+    
+    this.emit('stop');
   }
 
   async heartbeat(wait) {

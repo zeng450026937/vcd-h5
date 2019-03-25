@@ -1,25 +1,9 @@
-import { EventEmitter } from 'events';
 import { getClientId, getClientInfo, clientInfo } from '../ytms/client-info';
 import { getLogDirectoryPath, getNetLogDirectoryPath } from '../logger/get-log-path';
-
-const signal = new EventEmitter();
 
 // IPCHost will be proxyed by electron remote module.
 export const ipcHost = {
   clientInfo,
-
-  // renderer -> main
-  emit(event) {
-    signal.emit(event);
-  },
-
-  on(event, fn) {
-    signal.on(event, fn);
-  },
-
-  once(event, fn) {
-    signal.once(event, fn);
-  },
 
   boomdown() {
     setImmediate(() => {
@@ -44,6 +28,10 @@ export const ipcHost = {
   },
 
   async startYTMSService(url) {
+    if (ytms.url === url && ytms.isReady) {
+      return ytms.clientId;
+    }
+
     const service = await ytms.connect(url);
 
     logger.info(`ytms connected, url: ${service.url} push-service: ${service.baseURL} ${service.tenantId}`);

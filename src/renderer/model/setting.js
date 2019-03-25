@@ -110,12 +110,12 @@ model.provide({
           ytmsHostAddress,
         } = config;
     
-        if (pushUpdateChannelFlag && updateChannel) {
-          this.updateChannel = updateChannel;
-        }
-    
         if (pushYtmsHostFlag && ytmsHostAddress) {
           this.ytmsHostAddress = ytmsHostAddress;
+        }
+
+        if (pushUpdateChannelFlag && updateChannel) {
+          this.updateChannel = updateChannel;
         }
       }
     );

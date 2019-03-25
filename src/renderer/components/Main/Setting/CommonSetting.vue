@@ -37,7 +37,10 @@
                 { 
                   validateTrigger: 'blur',
                   rules: [
-                  { validator: validateAddress, message: addressErrorText }
+                    { 
+                    validator: validateAddress,
+                    message: addressErrorText,
+                    }
                   ] 
                 }
                 ]"
@@ -65,6 +68,7 @@
 </template>
 
 <script>
+import { isURL } from 'validator';
 import AppHeader from '../MainHeader.vue';
 import { langList } from '../../../i18n/config';
 
@@ -145,38 +149,11 @@ export default {
         return callback();
       }
 
-      const VALID_RE = /^((\w*:)?\/\/)?(\d{1,3}\.){3}(\d{1,3})((:(\d{1,4})?)?)$/;
-
-      if (!VALID_RE.test(value)) return callback(new Error());
-
-      const ADDRESS_RE = /(\d{1,3}\.){3}(\d{1,3})/;
-
-      let address = ADDRESS_RE.exec(value)[0];
-
-      const PROTOCOL_RE = /^\w+:\/\//;
-
-      const protocol = PROTOCOL_RE.exec(value);
-
-      if (protocol) {
-        address = protocol[0] + address;
-      }
-      else {
-        address = `${this.defaultProtocol}://${address}`;
-      }
-
-      const PORT_RE = /:\d{1,4}$/;
-      const port = PORT_RE.exec(value);
-
-      if (port) {
-        address += port[0];
-      }
-      else {
-        address += `:${this.defaultPort}`;
-      }
+      if (!isURL(value)) return callback(new Error());
 
       callback();
 
-      this.ytmsHostAddress = address;
+      this.ytmsHostAddress = value;
     },
 
     handleNoodGuide() {

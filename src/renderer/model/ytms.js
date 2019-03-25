@@ -53,22 +53,44 @@ model.provide({
     // model fully initilized
 
     const setting = this.$getVM('setting');
+    const account = this.$getVM('account');
 
     setting.$watch(
       'ytmsHostAddress',
       async(val) => {
         val = val || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
 
+        if (!/^http[s]*:\/\//.test(val)) {
+          val = `http://${val}`;
+        }
+
         // reset api
         this.api = null;
 
-        const clientId = await ipcProxy.startYTMSService(val);
+        const clientId = await ipcProxy.startYTMSService(val).catch(() => {});
+
+        if (!clientId) return;
 
         this.api = createApi(val, clientId);
       
         const data = {
           updateChannel : setting.updateChannel,
         };
+
+        const { ua, status } = rtc.account;
+
+        if (ua) {
+          const configuration = ua && ua.configuration;
+
+          data.user = {
+            account      : configuration && configuration.uri.user,
+            domain       : configuration && configuration.uri.host,
+            outbound     : account.proxy,
+            outboundPort : account.proxyPort,
+            type         : account.serverType,
+            status,
+          };
+        }
 
         this.$dispatch('ytms.updateClientInfo', { data });
       },
@@ -83,8 +105,6 @@ model.provide({
       this.$dispatch('ytms.updateClientInfo', { data });
     });
 
-    const account = this.$getVM('account');
-
     rtc.account.$watch('ua', (val) => {
       const configuration = val && val.configuration;
 
@@ -95,6 +115,7 @@ model.provide({
           outbound     : account.proxy,
           outboundPort : account.proxyPort,
           type         : account.serverType,
+          status       : account.status,
         },
       };
 
@@ -143,7 +164,10 @@ model.use(async(ctx, next) => {
 model.register('apiChecker', async function(ctx, next) {
   // api is not ready or unavailable
   if (!this.api) {
-    throw new Error('ytms is not connected');
+    logger.warn('ytms is not connected');
+    // throw new Error('ytms is not connected');
+    
+    return;
   }
 
   ctx.method = ctx.redirect;

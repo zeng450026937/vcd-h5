@@ -11,6 +11,10 @@ module.exports = {
           transform         : 'lodash/${member}',
           preventFullImport : true,
         },
+        validator : {
+          transform         : 'validator/lib/${member}',
+          preventFullImport : true,
+        },
       },
     ],
     [
