@@ -82,6 +82,8 @@ export default class Store {
       this.addNodeMap(this.nodeMap, n);
     });
 
+    this.genRootGroup(true);
+
     this.asyncMap[id] = data;
 
     return data;
@@ -106,7 +108,7 @@ export default class Store {
     return JSON.parse(JSON.stringify(data)); // 小数据用
   }
 
-  genRootGroup() {
+  genRootGroup(regenerate = false) {
     this.rootGroup.forEach((n) => {
       if (!groupMap.hasOwnProperty(n.attributes.name)) return;
 
@@ -114,7 +116,7 @@ export default class Store {
 
       Object.assign(n, groupInfo);
       delete groupInfo.name;
-      const offspring = this.genOffspring(n.id);
+      const offspring = this.genOffspring(this.getNodeId(n), regenerate);
 
       offspring.forEach((i) => {
         Object.assign(i, groupInfo);
@@ -175,11 +177,11 @@ export default class Store {
     const nodeMap = {};
     const parentMap = {};
 
-    this.originTree.forEach((node) => {
+    this.originTree.forEach((n) => {
       try {
-        this.formatContact(node);
-        this.addNodeMap(nodeMap, node);
-        this.addParentMap(parentMap, node);
+        this.formatContact(n);
+        this.addNodeMap(nodeMap, n);
+        this.addParentMap(parentMap, n);
       }
       catch (e) {
         console.log(e);
@@ -280,7 +282,7 @@ export default class Store {
 
   findParentNode(id) {
     const node = this.getNode(id);
-
+    
     return this.getNode(this.getParentId(node));
   }
 
@@ -296,10 +298,10 @@ export default class Store {
     return this.getChild(this.getNodeId(parentNode)) || [];
   }
 
-  genOffspring(id) {
+  genOffspring(id, regenerate = false) {
     let offspring = this.offspringMap[id];
 
-    if (offspring == null) offspring = this.getOffspring(id);
+    if (offspring == null || regenerate) offspring = this.getOffspring(id);
 
     return this.offspringMap[id] = offspring;
   }

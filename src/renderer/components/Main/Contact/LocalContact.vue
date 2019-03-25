@@ -30,7 +30,7 @@
                 v-else
                 enable-keyboard
                 :contact-list="localContacts"
-                @clickItem="clickItem">
+                @check="handleCheck">
               <a-dropdown slot-scope="{item}"
                           slot="more"
                           @click.stop=""
@@ -132,7 +132,7 @@ export default {
         this.drawerType = 'add';
       });
     },
-    clickItem(contact) {
+    handleCheck(contact) {
       this.currentUser = contact;
     },
   },

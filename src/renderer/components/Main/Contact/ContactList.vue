@@ -15,7 +15,7 @@
                              'hover:bg-list-hover': selectedContact.id !== item.id,
                              'h-14' : !item.isGroup,
                              'h-12' : item.isGroup}"
-                       @click="clickItem(item)"
+                       @click="check(item)"
                        @keyup.up="preContact"
                        @keyup.down="nextContact">
             <a-list-item-meta class="w-full">
@@ -134,18 +134,19 @@
                           type="icon-yuyin"
                           class="mr-3 text-indigo cursor-pointer text-base"
                           @click.stop="doAudio(item)"></a-iconfont>
+
               <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
                           title="更多"
                           type="icon-gengduo1"
-                          class="mr-2 text-indigo cursor-pointer text-base"
-                          @click.stop="moreOption(item)"></a-iconfont>
-              <slot name="more"
-                    :item="item"></slot>
+                          class="mr-2 text-indigo cursor-pointer text-base">
+              </a-iconfont>
+              <slot name="more" :item="item"></slot>
+
               <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
                           title="删除"
                           type="icon-guanbi"
                           class="mr-2 text-black9 cursor-pointer text-base hover:text-red"
-                          @click.stop="deleteContact(item)"></a-iconfont>
+                          @click="deleteContact(item)"></a-iconfont>
             </div>
           </a-list-item>
         </template>
@@ -285,10 +286,10 @@ export default {
 
       return pathList;
     },
-    clickItem(item) {
+    check(item) {
       //  if (this.checkable) this.contactChecked(item);
-      // if (this.highlightSelected) this.selectedContact = item;
-      this.$emit('clickItem', item);
+      if (this.highlightSelected && !item.isGroup) this.selectedContact = item;
+      this.$emit('check', item);
     },
     deleteContact(item) {
       if (this.selfUnDeleted && item.isSelf) return;
@@ -321,25 +322,25 @@ export default {
       }
       this.$dispatch('call.doAudioCall', item.number);
     },
-    moreOption(item) {
-      this.$emit('moreOption', item);
-    },
     switchContact(direction) {
-      const { items } = this.selectedContact.parent;
-      const index = items.findIndex((c) => this.selectedContact.id === c.id);
-      const length = items.length;
-      const cursor = direction === 'down' ? index + 1 : index - 1;
+      const index = this.contactList.findIndex((n) => n.id === this.selectedContact.id);
+      const nextIndex = direction === 'down' ? index + 1 : index - 1;
+      const nextItem = this.contactList[nextIndex];
 
-      this.enableScroll = !(cursor < length && cursor >= 0) || items[cursor].isGroup;
-      if (this.enableScroll) return;
-      this.clickItem(items[cursor]);
+      if (!nextItem) return;
+
+      if (nextItem.isGroup) return;
+
+      this.$emit('check', this.selectedContact = nextItem);
     },
     nextContact() {
-      if (!this.selectedContact.parent || !this.enableKeyboard) return;
+      if (!this.enableKeyboard) return;
+
       this.switchContact('down');
     },
     preContact() {
-      if (!this.selectedContact.parent || !this.enableKeyboard) return;
+      if (!this.enableKeyboard) return;
+
       this.switchContact('up');
     },
 
@@ -358,23 +359,20 @@ export default {
               : node.isVMR ? 'icon-xunihuiyishi' : 'icon-zuzhi';
     },
     filterCardText(item) {
-      return;
-      const { parent } = item;
-
-      if (parent.isUser || parent.isExternal) return '暂时无法获取当前联系人的个性签名信息。';
-      else if (parent.isDevice) return '暂时无法获取当前设备绑定的会议室';
-      else if (parent.isVMR) return '暂时无法获取当前虚拟会议模式';
-      else if (parent.isService) return '服务号';
+      if (item.isUser || item.isExternal) return '暂时无法获取当前联系人的个性签名信息。';
+      else if (item.isDevice) return '暂时无法获取当前设备绑定的会议室';
+      else if (item.isVMR) return '暂时无法获取当前虚拟会议模式';
+      else if (item.isService) return '服务号';
     },
   },
   mounted() {
     this.$nextTick().then(() => {
-      if (!this.enableKeyboard) return;
-      document.getElementById('contact-list').onkeydown = (evt) => { // 阻止按键导致的滚动
-        const key = evt.key;
-
-        return this.enableScroll || !(key === 'ArrowDown' || key === 'ArrowUp');
-      };
+      // if (!this.enableKeyboard) return;
+      // document.getElementById('contact-list').onkeydown = (evt) => { // 阻止按键导致的滚动
+      //   const key = evt.key;
+      //
+      //   return this.enableScroll || !(key === 'ArrowDown' || key === 'ArrowUp');
+      // };
     });
   },
 };

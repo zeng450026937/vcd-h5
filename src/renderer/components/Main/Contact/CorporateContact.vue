@@ -39,7 +39,7 @@
                           :store="store"
                           enable-keyboard
                           @toGroup="toGroup"
-                          @clickItem="handleListItemClick">
+                          @check="handleCheck">
               <a-dropdown v-if="!isCloud && !item.isGroup && !item.isVMR"
                           slot-scope="{item}"
                           slot="more"
@@ -144,7 +144,7 @@ export default {
       this.breadcrumbs = this.breadcrumbs.slice(0, index + 1);
       this.currentGroup = item.id;
     },
-    async handleListItemClick(item) {
+    async handleCheck(item) {
       if (!item.isGroup) {
         this.selectedContact = item;
 

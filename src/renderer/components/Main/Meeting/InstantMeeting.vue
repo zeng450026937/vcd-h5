@@ -7,7 +7,7 @@
 
       <a-divider class="my-0"/>
         <div class="flex flex-col h-full m-4">
-          <transfer :getChild="getAsyncChildNodes" :loadMode="loadMode" ref="transfer"></transfer>
+          <transfer :max-checked="100"  :getChild="getAsyncChildNodes" :loadMode="loadMode" ref="transfer"></transfer>
         </div>
         <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
@@ -34,7 +34,6 @@ import AppHeader from '../MainHeader.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import ContactTree from '../Contact/ContactTree.vue';
 import ContactList from '../Contact/ContactList.vue';
-import PlainTree from '../../Common/CommonTree/index.vue';
 import transfer from '../../transfer/index.vue';
 
 export default {
@@ -44,7 +43,6 @@ export default {
     ContactTree,
     ContactList,
     CommonEmpty,
-    PlainTree,
     transfer,
   },
   data() {
@@ -110,7 +108,6 @@ export default {
         this.$refs.transfer.create({
           data           : this.contacts,
           defaultChecked : this.currentUser,
-          maxChecked     : 100,
         });
       });
     },
