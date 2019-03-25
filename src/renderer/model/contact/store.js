@@ -47,7 +47,6 @@ export default class Store {
   destroy() {
     this.tree = [];
     this.originTree = [];
-    this.checkedMap = {};
     this.nodeMap = {};
     this.parentMap = {};
     this.offspringMap = {};
@@ -59,7 +58,6 @@ export default class Store {
     console.time('generate contact model cost time');
     this.tree = [];
     this.originTree = tree;
-    this.checkedMap = {};
     this.asyncMap = {};
     this.genTree();
     this.genAmount();
@@ -168,6 +166,7 @@ export default class Store {
     node.phone = node.attributes.extension || '';
     node.email = node.attributes.email || '';
     node.id = node.node.id;
+    node.parentId = node.node.parentId;
     node.amount = node.attributes.amount || 0;
 
     return node;
@@ -225,32 +224,18 @@ export default class Store {
     return this.parentMap[id];
   }
 
-  isSomething(name, id) {
-    const node = this.getNode(id);
-    const parent = this.findParentNode(id);
-
-    if (!parent) return false;
-
-    if (parent.id === this.rootNode.id) return node[name];
-
-    if (groupMap.hasOwnProperty(parent.attributes.name)) {
-      return groupMap[parent.attributes.name][name];
-    }
-
-    return this.isSomething(name, parent.id);
-  }
-
-  findBranch(id, branch = []) {
-    const parent = this.findParentNode(id);
+  findBranch(node, branch = []) {
+    const { id, parentId } = node;
+    const parent = this.findParentNode(id, parentId);
 
     if (parent == null) return branch;
     branch.push(parent);
 
-    return this.findBranch(parent.id, branch);
+    return this.findBranch(parent, branch);
   }
 
-  getNode(id) {
-    return this.nodeMap[id];
+  getNode(id, parentId) {
+    return this.nodeMap[`${id}-${parentId}`] || this.nodeMap[id];
   }
 
   getAmount(id) {
@@ -280,22 +265,12 @@ export default class Store {
   }
 
 
-  findParentNode(id) {
+  findParentNode(id, pid) {
+    if (pid) return this.getNode(pid);
+
     const node = this.getNode(id);
-    
+
     return this.getNode(this.getParentId(node));
-  }
-
-  findBrotherNode(id) {
-    const groupNode = this.findGroupNode(id);
-
-    return groupNode.filter((n) => this.getNodeId(n) !== id);
-  }
-
-  findGroupNode(id) {
-    const parentNode = this.findParentNode(id);
-
-    return this.getChild(this.getNodeId(parentNode)) || [];
   }
 
   genOffspring(id, regenerate = false) {
@@ -332,17 +307,5 @@ export default class Store {
     const type = this.getNodeType(node);
 
     return type.indexOf('ORG') > -1;
-  }
-
-  getChecked() {
-    const result = [];
-
-    Object.keys(this.checkedMap).forEach((key) => {
-      if (this.checkedMap[key]) {
-        result.push(this.getNode(key));
-      }
-    });
-
-    return result;
   }
 }

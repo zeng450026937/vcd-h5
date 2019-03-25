@@ -112,7 +112,7 @@ export default {
     path() {
       if (!this.user || !this.store) return [];
 
-      return this.store.findBranch(this.user.id).map((i) => ({
+      return this.store.findBranch(this.user).map((i) => ({
         text : i.name,
         id   : i.id,
       })).reverse();

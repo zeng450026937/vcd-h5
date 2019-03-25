@@ -166,9 +166,9 @@ export default {
     CommonEmpty,
     RecycleScroller,
   },
-  sketch: {
-    ns: 'meeting',
-    props: ['meetingRecord']
+  sketch : {
+    ns    : 'meeting',
+    props : [ 'meetingRecord' ],
   },
   computed : {
     currentEvent() {

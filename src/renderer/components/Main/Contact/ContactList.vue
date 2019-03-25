@@ -274,10 +274,8 @@ export default {
     },
     getPathList(group) {
       if (!group) return [];
-
       const currentGroup = this.store.getNode(group);
-
-      const pathList = this.store.findBranch(group).map((i) => ({
+      const pathList = this.store.findBranch(currentGroup).map((i) => ({
         text : i.name,
         id   : i.id,
       })).reverse();

@@ -230,25 +230,34 @@ export default {
         type        : contact.type,
         contactsId  : contact.id,
         categoryIds : [ group.id ],
-      }).then(() => {
+      }).then(async() => {
+        const currentGroup = this.store.getNode(contact.parentId);
+
+        await this.deleteContact(contact, currentGroup);
+
         this.$rtc.contact.favorite.doSync().then(() => {
           this.$message.success('移动成功');
         });
       }).catch(() => {
-        this.$message.error('移动失败，请重试');
+        this.$message.error('移动失败，可能目标分组已经存在此联系人，请重试');
       });
     },
+
+    deleteContact(contact, group) {
+      return this.$rtc.contact.favorite.delete({
+        relations : [ {
+          categoryId : group.id,
+          contacts   : [ { contactsId: contact.id, type: contact.type } ],
+        } ],
+      });
+    },
+
     removeContact(contact) {
-      const group = this.store.findParentNode(contact.id);
+      const group = this.store.getNode(contact.parentId);
 
       this.genEnsurePopup('确认删除当前常用联系人?', () => {
         // 删除当前联系人
-        this.$rtc.contact.favorite.delete({
-          relations : [ {
-            categoryId : group.id,
-            contacts   : [ { contactsId: contact.id, type: contact.type } ],
-          } ],
-        }).then(() => {
+        this.deleteContact(contact, group).then(() => {
           this.$rtc.contact.favorite.doSync().then(() => {
             this.$message.success('删除成功');
           });

@@ -126,12 +126,13 @@ export default {
         <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
         <label
            style="${this.createStyleString(inputStyles)}"
-           check-box node-id="${row.node.id}"
+           check-box
+           node-id="${row.node.id}"
            node-type="${row.node.type}"
            class="tree-checkbox-label"
            for="${row.node.id}">
          </label>
-         <lable half-check style="${row.halfChecked ? '' : 'display:none'}" node-id="${row.node.id}" node-type="${row.node.type}" class="tree-half-checkbox"></lable>
+         <lable half-check style="${row.halfChecked ? '' : 'display:none'}"  node-id="${row.node.id}" node-type="${row.node.type}" class="tree-half-checkbox"></lable>
      `;
 
       return `
@@ -147,10 +148,10 @@ export default {
         'padding-left' : `${24 + row.level * 15}px`,
       };
 
-      return `<div class="entity-node" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
+      return `<div class="entity-node" node-pid="${row.node.parentId}" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
                 <div>
                   <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
-                  <label check-box node-id="${row.node.id}" node-type="${row.node.type}" class="tree-checkbox-label" for="${row.node.id}">
+                  <label check-box node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}" class="tree-checkbox-label" for="${row.node.id}">
                      <div class="avatar">
                      ${this.getAvatar(row)}
                       </div>
