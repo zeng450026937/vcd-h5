@@ -5,16 +5,16 @@
       <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <a-iconfont v-if="!selectedGroup.isRoot" type="icon-left"
+            <a-iconfont v-if="currentGroup !== 'rootNode'" type="icon-left"
                         title="返回"
                         class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
-                        @click="goBack"/>
-            <span>{{selectedGroup.name}}</span>
-            <a-iconfont v-if="selectedGroup.isRoot"
+                        @click="goBack"></a-iconfont>
+            <span>{{currentGroupName}}</span>
+            <a-iconfont v-if="currentGroup === 'rootNode'"
                         title="添加常用联系人分组"
                         class="ml-4 text-indigo cursor-pointer no-dragable"
                         type="icon-tianjiafenzu"
-                        theme="filled" @click="addGroup"/>
+                        theme="filled" @click="addGroup"></a-iconfont>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
@@ -22,18 +22,19 @@
       </div>
       <div class="flex h-full m-4 bg-white border">
         <div class="h-full border-r overflow-y-auto px-1 py-1 w-2/5">
-          <div v-if="selectedGroup.isRoot && currents.length <= 0"
+          <div v-if="currentGroup === 'rootNode' && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
             <common-empty image="empty-contact" text="暂未添加常用联系人"/>
-            <a-button type="primary" ghost
-                      class="mt-8"
-                      @click="addGroup">添加分组</a-button>
+            <a-button type="primary" ghost class="mt-8" @click="addGroup">添加分组</a-button>
           </div>
           <contact-list
               v-else
+              :store="store"
+              :currentGroup="currentGroup"
               :contact-list="currents"
               enable-keyboard
               :audio-icon="false"
+              @toGroup="goBack"
               @clickItem="clickItem">
             <a-dropdown slot-scope="{item}"
                         slot="more"
@@ -41,7 +42,7 @@
               <a-iconfont type="icon-gengduo1"
                           title="更多"
                       class="mr-2 text-indigo cursor-pointer text-sm"
-                      @click.stop="moreOption(item)"/>
+                      @click.stop="moreOption(item)"></a-iconfont>
               <a-menu slot="overlay" v-if="item.isGroup">
                 <a-menu-item @click="editGroup(item)">
                   编辑分组
@@ -54,9 +55,11 @@
                 <a-sub-menu title="移动该联系人至" key="test">
                   <template v-if="groupList.length > 1">
                     <a-menu-item v-for="(group, index) in groupList"
-                                 v-if="group.id !== item.parent.id"
+                                 v-if="group.id !== currentGroup"
                                  :key="index"
-                                 @click="moveContact(group, item)">{{group.name}}</a-menu-item>
+                                 @click="moveContact(group, item)">
+                      {{group.name}}
+                    </a-menu-item>
                   </template>
                   <a-menu-item class="cursor-not-allowed text-black9" v-else>暂无其他分组</a-menu-item>
                 </a-sub-menu>
@@ -70,8 +73,9 @@
         </div>
         <div class="flex flex-grow bg-white justify-center w-3/5">
           <contact-info :user="currentUser"
+                        :store="store"
                         :group="groupInfo"
-                        @toGroup="toGroup"/>
+                        @toGroup="goBack"/>
         </div>
       </div>
       <frequent-contact-drawer ref="contactDrawer"
@@ -102,44 +106,64 @@ export default {
       currentUser   : {},
       selectedGroup : {},
       modalType     : 'add',
+      currentGroup  : 'rootNode',
     };
   },
-  mounted() {
+  beforeCreate() {
     this.$rtc.contact.favorite.doSync().then(() => {});
   },
   destroyed() {
     this.$popup.destroy(this.ensureModal);
   },
   computed : {
+    store() {
+      return this.$model.contact.favoriteStore;
+    },
     groupInfo() {
       return {
-        company : this.frequentContacts && this.frequentContacts.name,
-        group   : this.selectedGroup.name,
-        amount  : this.selectedGroup.amount,
+        company : this.rootNode.name,
+        group   : this.currentGroupName,
+        amount  : this.getAmount(this.currentGroup),
       };
     },
+    rootGroup() {
+      return this.store.rootGroup;
+    },
+    rootNode() {
+      return this.store.rootNode;
+    },
     currents() {
-      return (this.selectedGroup && this.selectedGroup.items) ? this.selectedGroup.items : [];
+      if (this.currentGroup === 'rootNode') return this.rootGroup;
+
+      return this.store.getChild(this.currentGroup);
+    },
+    currentGroupName() {
+      if (this.currentGroup === 'rootNode') return this.rootNode.name;
+
+      return this.store.getNode(this.currentGroup).name;
     },
     frequentContacts() {
       return this.$model.contact.favorite;
     },
     groupList() {
-      return this.frequentContacts.items;
+      return this.rootGroup;
     },
   },
   methods : {
+    getAmount(id) {
+      const node = this.store.getNode(id);
+
+      return node ? node.amount : 0;
+    },
     editGroup(group) {
       this.modalType = 'edit';
+      this.$refs.contactDrawer.updateGroupInfo({
+        groupName   : group.name,
+        checkedKeys : this.store.getOffspringNoGroup(group.id).map((n) => n.id),
+        editedGroup : group,
+      });
 
-      const { contactDrawer } = this.$refs;
-
-      contactDrawer.visible = true;
-      contactDrawer.groupName = group.name;
-      contactDrawer.editedGroup = group;
-      contactDrawer.groupName = group.name;
-      contactDrawer.checkedKeys = group.items.map((g) => g.id);
-      contactDrawer.selectedContact = group.items;
+      this.$refs.contactDrawer.visible = true;
     },
     addGroup() {
       this.modalType = 'add';
@@ -177,16 +201,12 @@ export default {
       console.warn(item);
     },
     goBack() {
-      this.selectedGroup = this.selectedGroup.parent;
-    },
-    toGroup(path) {
-      this.selectedGroup = path.length <= 1
-        ? this.frequentContacts
-        : this.frequentContacts.items.find((c) => c.id === path[1].id);
+      this.currentGroup = 'rootNode';
+      this.currentUser = {};
     },
     clickItem(contact) {
       if (contact.isGroup) {
-        this.selectedGroup = contact;
+        this.currentGroup = contact.id;
       }
       else {
         this.currentUser = contact;

@@ -1,11 +1,8 @@
-import Vuem from '../vuem';
 import uuid from 'uuid/v1';
+import Vuem from '../vuem';
 import storage from '../../storage';
 import contactDB from '../../database/contact';
 
-function getCurrentAccount() {
-  return storage.query('CURRENT_ACCOUNT');
-}
 
 export default new Vuem().provide({
   data() {
@@ -14,21 +11,30 @@ export default new Vuem().provide({
     };
   },
   methods : {
-    async initData(ctx, next) {
-      await next();
-
-      const { account, server } = getCurrentAccount();
+    getCurrentAccount() {
+      return storage.query('CURRENT_ACCOUNT');
+    },
+    async generate() {
+      const { account, server } = this.getCurrentAccount();
       const localContact = await contactDB.getLocalContact([ account, server ]);
 
       localContact.forEach((contact) => contact.parent = this.localContactGroup);
       this.localContactGroup.items = localContact;
     },
+  },
+  middleware : {
+    async initData(ctx, next) {
+      await next();
+
+      this.generate();
+    },
     async insertData(ctx, next) {
+      await next();
       const { payload } = ctx;
 
       if (!payload.id) payload.id = uuid();
 
-      const { account, server } = getCurrentAccount();
+      const { account, server } = this.getCurrentAccount();
 
       await contactDB.add('localContact', {
         ...ctx.payload,
@@ -36,14 +42,20 @@ export default new Vuem().provide({
         server,
       });
 
-      await this.initData(ctx, next);
+      this.generate();
     },
     async deleteData(ctx, next) {
-      await contactDB.deleteByKey('localContact', 'id', ctx.payload.id);
-      await this.initData(ctx, next);
+      await next();
+
+      const { account, server } = this.getCurrentAccount();
+
+      await contactDB.deleteByKey('localContact', '[account+server+id]', [ account, server, ctx.payload.id ]);
+      this.generate();
     },
     async updateData(ctx, next) {
-      const { account, server } = getCurrentAccount();
+      await next();
+
+      const { account, server } = this.getCurrentAccount();
 
       await contactDB.updateContactInfo(
         'localContact',
@@ -51,7 +63,7 @@ export default new Vuem().provide({
         [ account, server, ctx.payload.id ],
         ctx.payload
       );
-      await this.initData(ctx, next);
+      this.generate();
     },
   },
 });

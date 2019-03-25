@@ -1,10 +1,19 @@
 import Vuem from '../vuem';
 import rtc from '../../rtc';
 import localContact from './local-contact';
-import { formatContact as formatPhoneBook } from './Contact';
-import { formatFavorite } from './favorite-contact';
+import Store from './store';
 
 const model = new Vuem();
+
+let phoneBookStore;
+
+let favoriteStore;
+
+const LOAD_MODE = {
+  AUTO    : 'AUTO',
+  OVERALL : 'OVERALL',
+  SPLIT   : 'SPLIT',
+};
 
 model.mount('local', localContact);
 model.provide({
@@ -16,6 +25,9 @@ model.provide({
     };
   },
   computed : {
+    LOAD_MODE() {
+      return LOAD_MODE;
+    },
     username() {
       return rtc.account.username;
     },
@@ -23,20 +35,30 @@ model.provide({
     loadMode() {
       return rtc.contact.loadMode;
     },
-    rawFavorite() {
-      return rtc.contact.favorite.tree || [];
+    currentUser() {
+      return this.currentContact;
     },
-    rawPhoneBook() {
-      const { phonebook } = rtc.contact;
+    phoneBookLoaded() {
+      return rtc.contact.phonebook.dataLoaded;
+    },
+    favoriteLoaded() {
+      return rtc.contact.favorite.dataLoaded;
+    },
+    phoneBookStore() {
+      phoneBookStore = new Store([], this.loadMode);
 
-      return this.loadMode === 'SPLIT' ? phonebook.org.tree || {}
-        : phonebook.tree || phonebook.org.tree || {};
+      if (!this.phoneBookLoaded) return phoneBookStore;
+
+      if (this.loadMode === LOAD_MODE.SPLIT) return phoneBookStore.update(rtc.contact.phonebook.org.list);
+
+      return phoneBookStore.update(rtc.contact.phonebook.list);
     },
-    phoneBook() {
-      return this.formattedPhoneBook;
-    },
-    favorite() {
-      return this.formattedFavorite;
+    favoriteStore() {
+      favoriteStore = new Store();
+
+      if (!this.favoriteLoaded) return favoriteStore;
+
+      return favoriteStore.update(rtc.contact.favorite.list);
     },
   },
   methods : {
@@ -55,21 +77,21 @@ model.provide({
           }, c.attributes, c.node);
         }));
     },
-    phoneBookFormat(val) {
-      return formatPhoneBook(val, this.loadMode);
+    async getAsyncChildNodes(options) {
+      const asyncData = phoneBookStore.getAsyncData(options.parentId);
+
+      if (asyncData) return asyncData;
+
+      const data = await rtc.contact.phonebook.childNodes(options);
+
+      return phoneBookStore.updateAsyncData(options.parentId, data);
     },
   },
   watch : {
-    rawPhoneBook(val) {
-      this.formattedPhoneBook = formatPhoneBook(val, this.loadMode);
-    },
-    rawFavorite(val) {
-      this.formattedFavorite = formatFavorite(val);
-    },
     loginStatus(val) {
       if (val === 'disconnected') {
-        this.formattedPhoneBook = null;
-        this.formattedFavorite = null;
+        this.favoriteStore.destroy();
+        this.phoneBookStore.destroy();
       }
     },
 

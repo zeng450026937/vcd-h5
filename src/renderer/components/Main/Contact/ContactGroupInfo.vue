@@ -3,7 +3,7 @@
     <div v-if="group" class="flex flex-col items-center">
       <div class="text-xl">{{group.company}}</div>
       <div class="text-base mt-4 text-center">{{group.group}}</div>
-      <div class="text-base mt-4">{{group.amount | amountFilter}}</div>
+      <div v-if="loadMode!=='SPLIT'" class="text-base mt-4">-{{group.amount}} 人-</div>
     </div>
   </a-layout>
 </template>
@@ -16,11 +16,16 @@ export default {
       type : Object,
       default() {
         return {
-          company : '厦门亿联网络技术股份有限公司',
+          company : 0,
           group   : '企业联系人',
-          amount  : 1000,
+          amount  : 0,
         };
       },
+    },
+  },
+  computed : {
+    loadMode() {
+      return this.$model.contact.loadMode;
     },
   },
   filters : {
