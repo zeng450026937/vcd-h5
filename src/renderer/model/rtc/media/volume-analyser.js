@@ -1,45 +1,36 @@
 import Analyser from './analyser';
 
-export const VolumeAnalyzer = Analyser.extend({
+const VolumeAnalyser = Analyser.extend({
   data() {
     return {
-      volume: 0,
+      volume : 0,
     };
   },
 
-  watch: {
-    stream(val) {
-      if (!val) return;
-      // reset stream source
-      this.createStreamSource();
-    },
-  },
-
-  methods: {
+  methods : {
     analyse() {
-      if (!this.context || this.contextAnalyser || this.streamSource) {
-        this.volume = 0;
+      if (this.context && this.contextAnalyser && this.streamSource) {
+        const length = this.contextAnalyser.frequencyBinCount;
+        const array = new Uint8Array(length);
 
-        return;
+        this.contextAnalyser.getByteFrequencyData(array);
+
+        const sum = array.reduce((acc, val) => acc + val, 0);
+
+        this.volume = sum / length;
       }
-      
-      const length = this.contextAnalyser.frequencyBinCount;
-      const array = new Uint8Array(length);
-
-      this.contextAnalyser.getByteFrequencyData(array);
-
-      const sum = array.reduce((acc, val) => acc + val, 0);
-
-      this.volume = sum / length;
+      else {
+        this.volume = 0;
+      }
     },
 
     start() {
-      // lazy create context analyser
       this.createContextAnalyser();
+      this.createStreamSource();
 
       if (!this.streamSource) return;
 
-      Analyser.options.methods.start.call(this, val);
+      Analyser.options.methods.start.call(this);
     },
 
     stop() {
@@ -50,7 +41,21 @@ export const VolumeAnalyzer = Analyser.extend({
 
       this.volume = 0;
 
-      Analyser.options.methods.stop.call(this, val);
+      Analyser.options.methods.stop.call(this);
+    },
+
+    createContextAnalyser() {
+      if (this.context && this.contextAnalyser) return;
+      if (!window.AudioContext) {
+        console.warn('cannot context analyser');
+
+        return;
+      }
+
+      this.context = new AudioContext();
+      this.contextAnalyser = this.context.createAnalyser();
+      this.contextAnalyser.fftSize = 1024;
+      this.contextAnalyser.smoothingTimeConstant = 0.5;
     },
 
     createStreamSource() {
@@ -70,30 +75,15 @@ export const VolumeAnalyzer = Analyser.extend({
         }
       }
     },
-
-    createContextAnalyser() {
-      if (this.context && this.contextAnalyser) return;
-
-      if (!window.AudioContext) {
-        console.warn('cannot context analyser');
-
-        return;
-      }
-
-      this.context = new AudioContext();
-      this.contextAnalyser = this.context.createAnalyser();
-      this.contextAnalyser.fftSize = 1024;
-      this.contextAnalyser.smoothingTimeConstant = 0.5;
-    },
   },
 
   created() {
-    this.streamSource = null;
     this.context = null;
     this.contextAnalyser = null;
+    this.streamSource = null;
   },
 
-  destroyed() {
+  beforeDestroy() {
     if (this.contextAnalyser) {
       this.contextAnalyser.disconnect();
       this.contextAnalyser = null;
@@ -104,3 +94,5 @@ export const VolumeAnalyzer = Analyser.extend({
     }
   },
 });
+
+export default VolumeAnalyser;

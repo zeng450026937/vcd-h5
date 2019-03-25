@@ -1,105 +1,94 @@
-import axios from 'axios';
-import crypto from 'crypto';
 import Vuem from '../vuem';
-import { PhoneBook } from './phonebook';
-import { Favorite } from './favorite';
+import rtc from '../../rtc';
+import localContact from './local-contact';
+import { formatContact as formatPhoneBook } from './Contact';
+import { formatFavorite } from './favorite-contact';
 
 const model = new Vuem();
 
+model.mount('local', localContact);
 model.provide({
   data() {
     return {
-      negotiateUrl           : null,
-      favoriteContactsEnable : false,
-      phonebookLastUpdated   : null,
-      favoriteLastUpdated    : null,
+      formattedPhoneBook : null,
+      formattedFavorite  : null,
+      currentContact     : null,
     };
   },
+  computed : {
+    username() {
+      return rtc.account.username;
+    },
+    loginStatus : () => rtc.account.status,
+    loadMode() {
+      return rtc.contact.loadMode;
+    },
+    rawFavorite() {
+      return rtc.contact.favorite.tree || [];
+    },
+    rawPhoneBook() {
+      const { phonebook } = rtc.contact;
 
+      return this.loadMode === 'SPLIT' ? phonebook.org.tree || {}
+        : phonebook.tree || phonebook.org.tree || {};
+    },
+    phoneBook() {
+      return this.formattedPhoneBook;
+    },
+    favorite() {
+      return this.formattedFavorite;
+    },
+  },
   methods : {
-    async negotiate(url = this.negotiateUrl) {
-      if (!url) throw new Error('negotiate url is required');
-      if (!this.account) throw new Error('not ready');
-      if (!this.account.registered) throw new Error('not available');
+    async findContacts(val) {
+      return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
+        .map((c) => {
+          if (c.attributes.number === this.username) {
+            c.attributes.isSelf = true;
+          }
 
-      const { data } = await axios.post(
-        url,
-        { phoneBookAcceptVersion: this.phoneBookVersion }
-      );
-
-      if (data.ret <= 0) throw new Error(data.error);
-
-      const config = data.data;
-
-      const { phonebook, favorite } = this;
-
-      phonebook.init(config);
-      favorite.init(config);
-
-      const auth = {
-        dataVersion       : 0, // force full update
-        permissionVersion : 0, // force full update
-        username          : this.account.username,
-        password          : this.genAES(this.account.password),
-      };
-
-      phonebook.auth = auth;
-      favorite.auth = auth;
-
-      this.favoriteContactsEnable = config.favoriteContactsEnable;
+          return Object.assign({
+            parent : { isUser: true },
+            nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
+              ? RegExp.$1.substr(-2, 2)
+              : c.attributes.name.substr(-2, 2),
+          }, c.attributes, c.node);
+        }));
     },
-
-    genAES(input) {
-      const cipher = crypto.createCipheriv('aes-128-ecb', '1105_VCCloud_Key', '');
-      const cipherChunks = [];
-
-      cipherChunks.push(cipher.update(input, 'utf8', 'base64'));
-      cipherChunks.push(cipher.final('base64'));
-
-      return cipherChunks.join('');
+    phoneBookFormat(val) {
+      return formatPhoneBook(val, this.loadMode);
     },
   },
+  watch : {
+    rawPhoneBook(val) {
+      this.formattedPhoneBook = formatPhoneBook(val, this.loadMode);
+    },
+    rawFavorite(val) {
+      this.formattedFavorite = formatFavorite(val);
+    },
+    loginStatus(val) {
+      if (val === 'disconnected') {
+        this.formattedPhoneBook = null;
+        this.formattedFavorite = null;
+      }
+    },
 
-  async created() {
-    this.phonebook = new PhoneBook();
-    this.favorite = new Favorite();
-    this.phonebookList = [];
-    this.phonebookList._isVue = true;
-    this.favoriteList = [];
-    this.favoriteList._isVue = true;
+    loadMode(val) {
+      if (val === 'SPLIT') {
+        this.findContacts(this.username).then((result) => {
+          result.every((contact) => {
+            if (contact.number === this.username) {
+              this.currentContact = contact;
+            }
 
-    await this.$nextTick();
-
-    const account = this.$getVM('account');
-
-    account.$on('negotiateUrlUpdated', async(url) => {
-      this.negotiateUrl = url;
-      await this.negotiate();
-
-      this.phonebookList = await this.phonebook.sync();
-      this.phonebookLastUpdated = Date.now();
-
-      this.favoriteList = await this.favorite.sync();
-      this.favoriteLastUpdated = Date.now();
-    });
-    account.$on('phonebookUpdateUpdated', async() => {
-      this.phonebookList = await this.phonebook.sync();
-      this.phonebookLastUpdated = Date.now();
-
-      this.favoriteList = await this.favorite.sync();
-      this.favoriteLastUpdated = Date.now();
-    });
-
-    this.account = account;
-  },
-
-  beforeDestroy() {
-    this.phonebook = null;
-    this.favorite = null;
-
-    this.phonebookList = null;
-    this.favoriteList = null;
+            return contact.number !== this.username;
+          });
+        });
+      }
+    },
   },
 });
+
+// model.use(() => {});
 
 export default model;

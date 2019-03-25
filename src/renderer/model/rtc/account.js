@@ -1,7 +1,8 @@
+import { UA, Utils } from 'apollosip';
 import Vuem from '../vuem';
-import { UA, Utils, MediaChannel } from 'apollosip';
-import { defer } from '@/renderer/lib/defer';
-import { setupEventHandlers, removeEventHandlers } from '@/renderer/lib/event-handler';
+import { defer } from '../../lib/defer';
+import { setupEventHandlers, removeEventHandlers } from '../../lib/event-handler';
+import { resolveSipDomain } from '../../lib/resolve-sip-domain';
 
 const SIP_PROTOCOL = {
   WSS : 'wss',
@@ -27,6 +28,8 @@ const SIP_PORT = {
   },
 };
 
+export { SIP_PROTOCOL, ACCOUNT_TYPE, SIP_PORT };
+
 const model = new Vuem();
 
 model.provide({
@@ -48,8 +51,6 @@ model.provide({
       status       : 'disconnected',
       error        : null,
       reason       : null,
-      newChannel   : [],
-      newMessage   : [],
     };
   },
 
@@ -68,16 +69,6 @@ model.provide({
         this.username = username;
         this.domain = domain;
       },
-    },
-
-    server() {
-      const hasOutbound = !!this.outbound;
-
-      if (hasOutbound) {
-        return `${this.protocol}://${this.outbound}:${this.outboundPort || this.defaultPort}`;
-      }
-
-      return `${this.protocol}://${this.domain}:${this.defaultPort}`;
     },
 
     connecting() {
@@ -114,16 +105,11 @@ model.provide({
   },
 
   watch : {
-    ua(val, oldVal) {
-      removeEventHandlers(oldVal, this.handlers);
-      setupEventHandlers(val, this.handlers);
-
-      if (oldVal) {
-        oldVal.stop();
-        this.status = 'disconnected';
-      }
+    ua(val) {
+      if (!val) this.status = 'disconnected';
 
       if (val) {
+        setupEventHandlers(val, this.handlers);
         this.status = val.isRegistered()
           ? 'registered'
           : val.isConnected()
@@ -132,31 +118,61 @@ model.provide({
         val.start();
       }
     },
+  },
 
-    registered(val) {
-      if (!this.d) return;
-      if (val) {
-        this.d.resolve();
-        this.d = null;
-      }
+  middleware : {
+    async signin(ctx, next) {
+      await next();
+
+      const {
+        username = '',
+        password = '',
+        domain = 'yealinkvc.com',
+        outbound = '',
+        outboundPort = '',
+        displayName = '',
+      } = ctx.payload;
+
+      this.username = username;
+      this.password = password;
+      this.domain = domain;
+      this.outbound = outbound;
+      this.outboundPort = outboundPort;
+      this.displayName = displayName;
+
+      await this.signin();
     },
 
-    unregistered(val) {
-      if (!this.d) return;
-      if (val) {
-        this.d.reject(this.error);
-        this.d = null;
-      }
+    async signout(ctx, next) {
+      await next();
+
+      this.signout();
     },
   },
 
   methods : {
-    signin() {
+    async signin() {
+      let servers;
+
+      if (!this.outbound) {
+        servers = await resolveSipDomain(this.domain);
+      }
+      else {
+        const [ address, port = this.outboundPort ] = this.outbound.split(':');
+
+        servers = [ { address, port } ];
+      }
+
+      servers = servers.map((s) => ({
+        url    : `${this.protocol}://${s.address}:${s.port || this.defaultPort}`,
+        weight : s.weight || s.priority,
+      }));
+
       const ua = new UA({
         uri           : this.uri,
         password      : this.password,
-        servers       : this.servers,
-        display_name  : this.displayName,
+        servers,
+        display_name  : this.displayName || this.username,
         socketOptions : {
           type               : this.protocol,
           mode               : 'direct',
@@ -170,25 +186,39 @@ model.provide({
         rtcpMuxPolicy        : 'negotiate',
       });
 
-      ua._isVue = true;
+      ua._isVue = true; // prevent to be observed
 
-      this.ua = ua;
+      this.signinDefer = defer(5000);
 
-      this.d = defer(5000);
+      const listeners = {
+        registered : () => {
+          this.signinDefer.resolve();
+          removeEventHandlers(ua, listeners);
+        },
+        registrationFailed : (e) => {
+          this.signinDefer.reject(e);
+          removeEventHandlers(ua, listeners);
+          this.signout();
+        },
+      };
 
-      return this.d.promise;
+      setupEventHandlers(ua, listeners);
+
+      this.ua = ua; // start ua
+
+      await this.signinDefer.promise;
     },
 
     signout() {
       if (this.ua) {
-        this.ua.stop();
         this.ua.removeAllListeners();
+        this.ua.stop();
         this.ua = null;
       }
     },
 
-    sendVerificationCode() {
-      const ua = new UA({
+    async sendVerificationCode() {
+      let ua = new UA({
         uri      : this.uri,
         password : this.password,
         servers  : this.server,
@@ -196,11 +226,12 @@ model.provide({
         debug    : true,
       });
 
-      ua._isVue = true;
+      const d = defer(5000, null, () => {
+        ua.removeAllListeners();
+        ua.stop();
+        ua = null;
+      });
 
-      const d = defer(60000);
-
-      ua.start();
       ua.once('connected', () => {
         ua.sendService(
           'anoymous@anoymous.com', // target is not required
@@ -212,10 +243,10 @@ model.provide({
               succeeded : (data) => {
                 const response = Utils.objectify(data.response.body);
 
-                this.smsId = response.Result.code_uid;
-                this.smsRetryAfter = response.Result.retry_interval;
+                const smsId = response.Result.code_uid;
+                const smsRetryAfter = response.Result.retry_interval;
 
-                d.resolve();
+                d.resolve({ smsId, smsRetryAfter });
               },
               failed : (data) => {
                 d.reject(data);
@@ -225,12 +256,16 @@ model.provide({
         );
       });
 
-      return d.promise;
+      ua.start();
+
+      const ret = await d.promise;
+
+      return ret;
     },
   },
 
   created() {
-    this.d = null;
+    this.signinPromise = null;
     this.handlers = null;
 
     this.handlers = {
@@ -253,48 +288,33 @@ model.provide({
       registrationFailed : (data) => {
         this.status = 'registrationFailed';
         this.error = data;
-        this.ua = null;
+        this.signout();
       },
       newMessage : (data) => {
-        if (data.originator !== 'remote') return;
+        if (data.originator === 'local') return;
 
-        this.newMessage.push(data.message);
+        this.$emit('newMessage', data.message);
       },
       newRTCSession : (data) => {
-        if (data.originator !== 'remote') return;
+        if (data.originator === 'local') return;
 
-        const channel = new MediaChannel(this.ua);
-
-        channel._isVue = true;
-        channel.session = data.session;
-        this.newChannel.push(channel);
-
-        const listeners = {
-          finished : () => {
-            const index = this.newChannel.indexOf(channel);
-
-            this.newChannel.splice(index, 1);
-            removeEventHandlers(channel, listeners);
-          },
-          failed : () => {
-            const index = this.newChannel.indexOf(channel);
-
-            this.newChannel.splice(index, 1);
-            removeEventHandlers(channel, listeners);
-          },
-        };
-
-        setupEventHandlers(channel, listeners);
+        this.$emit('newRTCSession', data.session);
+      },
+      bookConferenceUpdated : (data) => {
+        this.$emit('bookConferenceUpdated', data);
+      },
+      phonebookUpdateUpdated : (data) => {
+        this.$emit('phonebookUpdateUpdated', data);
+      },
+      negotiateUrlUpdated : (data) => {
+        this.$emit('negotiateUrlUpdated', data);
       },
     };
   },
 
   beforeDestroy() {
-    if (this.ua) {
-      this.ua.stop();
-      this.ua.removeAllListeners();
-      this.ua = null;
-    }
+    this.signout();
+
     this.handlers = null;
     this.d = null;
   },

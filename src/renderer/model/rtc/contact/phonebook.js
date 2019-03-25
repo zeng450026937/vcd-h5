@@ -66,7 +66,7 @@ export class PhoneBook extends BaseContact {
     };
     
     const res = await axios.get(URL.format(url));
-    const data = this.throwIfError(res);
+    const data = this.checkRespones(res);
 
     return data.dataList;
   }
@@ -89,7 +89,7 @@ export class PhoneBook extends BaseContact {
     };
     
     const res = await axios.get(URL.format(url));
-    const data = this.throwIfError(res);
+    const data = this.checkRespones(res);
 
     return this.loadmode === BaseContact.LOAD_MODE.SPLIT ? data.data : data;
   }

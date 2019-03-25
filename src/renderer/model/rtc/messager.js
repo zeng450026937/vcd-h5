@@ -1,5 +1,5 @@
-import Vuem from './vuem';
-import { defer } from '../lib/defer';
+import Vuem from '../vuem';
+import { defer } from '../../lib/defer';
 
 const model = new Vuem();
 

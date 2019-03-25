@@ -7,7 +7,6 @@ import {
   fixConference,
   fixTemplate,
 } from './fix-info';
-import rtc from '../../rtc';
 
 const C = ConferenceManager.Command;
 
@@ -16,8 +15,6 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      lastUpdated       : 0,
-      selectedDate      : new Date(),
       currentDateEvents : [],
       currentEvent      : {},
     };
@@ -185,18 +182,6 @@ model.provide({
 
     await this.$nextTick();
 
-    rtc.account.$on('bookConferenceUpdated', this.bookConferenceUpdated);
-
-    rtc.account.$watch('ua', (val) => {
-      this.cm.ua = val;
-    });
-
-    rtc.account.$watch('registered', (val) => {
-      if (!val) return; 
-      this.fetch();
-    });
-
-    /*
     const account = this.$getVM('account');
 
     account.$on('bookConferenceUpdated', this.bookConferenceUpdated);
@@ -209,7 +194,6 @@ model.provide({
       if (!val) return; 
       this.fetch();
     });
-    */
   },
 
   beforeDestroy() {
