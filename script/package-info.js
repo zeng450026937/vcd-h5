@@ -39,7 +39,8 @@ module.exports = async function(context) {
 
   const hash = crypto.createHmac('sha512', 'yealink');
 
-  hash.update(JSON.stringify(packageInfo));
+  // outputJSON() will add an EOL('\n') to the file end
+  hash.update(`${JSON.stringify(packageInfo)}\n`);
 
   packageInfo.sign = {
     algorithm : 'sha512',
