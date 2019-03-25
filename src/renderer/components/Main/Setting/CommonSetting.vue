@@ -118,6 +118,16 @@ export default {
     this.defaultProtocol = 'http';
     this.defaultPort = '9301';
   },
+
+  watch : {
+    ytmsHostAddress() {
+      this.form.updateFields({
+        ytmsHostAddress : this.$form.createFormField({
+          value : this.ytmsHostAddress,
+        }),
+      });
+    },
+  },
   
   deactivated() {
     this.$dispatch('setting.save');
