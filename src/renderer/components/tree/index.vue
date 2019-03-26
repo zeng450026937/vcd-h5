@@ -114,7 +114,7 @@ export default {
     },
     createGroupRow(row) {
       const styles = {
-        'padding-left' : `${10 + row.level * 15}px`,
+        'padding-left' : `${20 + row.level * 15}px`,
       };
 
       const inputStyles = {
@@ -145,7 +145,7 @@ export default {
     },
     createEntityRow(row) {
       const styles = {
-        'padding-left' : `${24 + row.level * 15}px`,
+        'padding-left' : `${34 + row.level * 15}px`,
       };
 
       return `<div class="entity-node" node-pid="${row.node.parentId}" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
@@ -232,7 +232,7 @@ export default {
   outline: none;
   height: 100%;
   width: max-content;
-  padding: 10px 20px;
+  padding: 10px 0;
   &:focus {
     outline: none;
     border:none
