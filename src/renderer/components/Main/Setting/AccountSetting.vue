@@ -54,7 +54,7 @@
       <div class="mt-20">
         <!-- <a-button type="primary">{{$t('setting.account.switchEnterprise')}}</a-button>
         <a-button class="ml-4">{{$t('setting.account.edit')}}</a-button> -->
-        <a-button>{{$t('setting.account.logout')}}</a-button>
+        <a-button @click="onSignOutClicked">{{$t('setting.account.logout')}}</a-button>
       </div>
     </div>
     <div v-else class="h-full flex items-center justify-center">
@@ -129,6 +129,10 @@ export default {
     handleOk() {
     },
     clickOk() {
+    },
+
+    onSignOutClicked() {
+      this.$dispatch('account.logout');
     },
   },
   filters : {
