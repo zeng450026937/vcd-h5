@@ -78,12 +78,14 @@ export default {
           }, 10000);
           setTimeout(() => {
             this.$message.destroy();
-            this.$message.info('对方长时间未接听，请稍后重试！', 0);
-            this.step2Timer = setTimeout(() => {
-              if (!this.$rtc.call.connected) {
-                this.$rtc.call.disconnect();
-              }
-            }, 2000);
+            if (this.isConnecting) {
+              this.$message.info('对方长时间未接听，请稍后重试！', 0);
+              this.step2Timer = setTimeout(() => {
+                if (!this.$rtc.call.connected) {
+                  this.$rtc.call.disconnect();
+                }
+              }, 2000);
+            }
           }, 20000);
         }
         else {

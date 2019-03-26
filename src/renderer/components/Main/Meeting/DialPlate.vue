@@ -11,7 +11,7 @@
                      defaultValue="号码"
                      :value="callNumber"
                      @input="inputNumber"
-                     @keyup.enter="audioCall">
+                     @keyup.enter="videoCall">
               <a-iconfont v-show="!!callNumber"
                           title="清空"
                           slot="suffix"

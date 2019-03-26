@@ -121,6 +121,9 @@ export default {
           if (this.$rtc.conference.connected) {
             this.$rtc.conference.mediaChannel.channel.replaceLocalStream(this.staticStream);
           }
+          else if (this.$rtc.call.connected) {
+            this.$rtc.call.channel.replaceLocalStream(this.staticStream);
+          }
         });
       }
       else if (this.videoElement && this.videoElement.srcObject !== stream) {

@@ -15,9 +15,6 @@ export default new Vuem().provide({
     serverType() {
       return this.$parent.account.serverType;
     },
-    staticStream() {
-      return this.$parent.conference.staticStream;
-    },
     loginType() {
       return this.$parent.account.loginType;
     },
@@ -42,7 +39,6 @@ export default new Vuem().provide({
       return conference.join({
         initialVideo,
         initialAudio,
-        stream : this.staticStream
       }).then(() => {
         storage.insert(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`, this.meetingRecord);
       });
