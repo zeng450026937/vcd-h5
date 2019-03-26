@@ -24,6 +24,8 @@ export default class TreeStore {
     this.checkedMap = {};
     this.asyncMap = {};
     this.genTree();
+    this.correctDefaultChecked();
+
     console.timeEnd('generate Tree model cost time');
   }
 
@@ -264,6 +266,10 @@ export default class TreeStore {
     return this.getChecked();
   }
 
+  correctDefaultChecked() {
+    if (this.defaultChecked) this.correctParentChecked({ id: this.defaultChecked, checked: true });
+  }
+
   correctMultiple(id, checked) {
     const multiple = this.getNodeInMultiple(id); // 一个成员在多个不同的分组下
 
@@ -473,6 +479,7 @@ export default class TreeStore {
       n.checked = false;
       n.halfChecked = false;
     });
+    this.correctDefaultChecked();
     console.timeEnd('clear all checked cost time');
   }
 
