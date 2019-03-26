@@ -5,8 +5,8 @@
       <slot name="content"></slot>
       <div class="flex flex-grow"></div>
       <div class="select-none">
-        <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2">
-          <common-header class="text-grey-dark mr-4"/>
+        <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer">
+          <common-header class="text-grey-dark"/>
         </div>
       </div>
     </div>

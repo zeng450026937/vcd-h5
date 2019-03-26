@@ -11,8 +11,8 @@
               </div>
             </div>
             <div class="flex flex-grow"></div>
-            <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer mt-2">
-              <app-header class="text-grey-dark mr-4"/>
+            <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer">
+              <app-header class="text-grey-dark"/>
             </div>
           </div>
           <div>
