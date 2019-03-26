@@ -64,7 +64,7 @@
       </div>
     </div>
     <div>
-      <local-contact-drawer ref="contactDrawer"/>
+      <local-contact-drawer ref="contactDrawer" type="add-as"/>
     </div>
   </a-layout>
 </template>
@@ -130,7 +130,7 @@ export default {
   },
   computed : {
     localContacts() {
-      return this.$model.storage.localContactGroup.items;
+      return this.$model.contact.local.localContactGroup.items;
     },
   },
   methods : {

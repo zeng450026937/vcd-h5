@@ -61,6 +61,7 @@ model.provide({
         if (this.rmbPassword) {
           loginData.pin = pin;
         }
+        this.loginData = loginData;
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
         storage.update('CURRENT_ACCOUNT', loginData);
         this.storeConfig(); // 登录成功之后保存登录前的状态

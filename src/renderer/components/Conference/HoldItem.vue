@@ -16,10 +16,10 @@
         </div>
         <a-iconfont type="icon-huifu"
                     title="恢复通话"
-                    class="text-white ml-4 text-base cursor-pointer" @click="unhold"/>
+                    class="hold-item-btn" @click="unhold"/>
         <a-iconfont type="icon-guaduan"
                     title="挂断通话"
-                    class="text-white ml-4 text-base cursor-pointer" @click="decline"/>
+                    class="hold-item-btn" @click="decline"/>
       </div>
     </draggable-element>
   <!--</div>-->
@@ -94,5 +94,8 @@ export default {
     height: 48px;
     background: rgba(0,0,0,0.65);
     box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);
+    .hold-item-btn {
+      @apply text-white ml-4 text-base cursor-pointer;
+    }
   }
 </style>

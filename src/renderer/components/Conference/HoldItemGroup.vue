@@ -50,9 +50,11 @@ export default {
   watch : {
     updateHoldPosition(val) {
       if (val) {
-        this.$refs.hold.forEach((element) => {
-          element.$refs.draggableElement.updatePosition();
-        });
+        if (this.$refs.hold) {
+          this.$refs.hold.forEach((element) => {
+            element.$refs.draggableElement.updatePosition();
+          });
+        }
       }
       this.updateHoldPosition = false;
     },

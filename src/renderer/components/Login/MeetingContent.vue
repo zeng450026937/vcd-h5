@@ -366,7 +366,7 @@ export default {
       .display-icon {
         opacity: 0.4;
         color: white;
-        font-size: 84px;
+        font-size: 96px;
       }
     }
     #tab-setting-media {

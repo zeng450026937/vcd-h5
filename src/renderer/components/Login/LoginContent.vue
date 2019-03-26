@@ -9,10 +9,7 @@
 
       <div class="flex mt-4 items-center">
         <p class="text-xs flex text-center leading-tight text-white">
-          点击登录则代表您同意
-          <span class="text-indigo-light cursor-pointer">《用户协议》</span>
-          和
-          <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
+          Copyright © 2018 Yealink Inc. All rights reserved.
         </p>
       </div>
     </div>

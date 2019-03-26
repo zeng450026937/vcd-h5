@@ -107,6 +107,16 @@
         </a-badge>
         <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
       </div>
+
+      <div class="flex mt-5 items-center">
+        <p class="text-xs flex text-center leading-tight text-black9">
+          点击登录则代表您同意
+          <span class="text-indigo-light cursor-pointer">《用户协议》</span>
+          和
+          <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
+        </p>
+      </div>
+
     </div>
   </div>
 </template>

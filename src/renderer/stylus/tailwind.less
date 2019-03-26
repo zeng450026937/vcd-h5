@@ -29,23 +29,25 @@
 
 *{
   &::-webkit-scrollbar {
-    width: 4px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.08);
+    position: absolute;
+    background-color: transparent;
     border-left: none;
   }
-  &::-webkit-scrollbar-track:hover {
-    background: rgba(0, 0, 0, 0.08);
-    border-left: none;
-  }
+  //&::-webkit-scrollbar-track:hover {
+  //  background: rgba(0, 0, 0, 0.08);
+  //  border-left: none;
+  //}
   &::-webkit-scrollbar-thumb {
-    border: none;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.15);
-    min-height: 100px;
+    position: absolute;
+    padding-right: 4px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.14);
+    min-height: 200px;
   }
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.2);

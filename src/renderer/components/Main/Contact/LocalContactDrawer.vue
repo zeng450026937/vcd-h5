@@ -1,14 +1,19 @@
 <template>
   <a-drawer
-      :title="drawerTitle"
       placement="right"
-      :width="357"
+      :width="360"
       :closable="false"
       @close="visible = false"
       :visible="visible"
       wrapClassName="local-contact-drawer"
   >
     <div class="flex flex-col h-full w-full">
+      <div class="ant-drawer-header px-4 items-center">
+        <div class="ant-drawer-title flex flex-grow">{{drawerTitle}}</div>
+        <common-header class="text-black9 no-dragable"
+                       style="transform: translateY(-8px);"/>
+      </div>
+
       <div class="flex flex-col px-5 pt-4 flex-grow overflow-y-auto">
         <a-form class="add-local-contact-form" :form="form">
           <a-form-item
@@ -85,10 +90,15 @@
 </template>
 
 <script>
+import CommonHeader from '../../Shared/CommonHeader.vue';
+
 export default {
-  name  : 'LocalContactDrawer',
+  name       : 'LocalContactDrawer',
+  components : {
+    CommonHeader,
+  },
   props : {
-    type : { // add edit
+    type : { // add edit add-as
       type    : String,
       default : 'add',
     },
@@ -97,15 +107,19 @@ export default {
     return {
       visible         : false,
       form            : this.$form.createForm(this),
-      labelCol        : { span: 4 },
-      wrapperCol      : { span: 20 },
+      labelCol        : { span: 5 },
+      wrapperCol      : { span: 19 },
       newLocalContact : {},
       editedContact   : {},
     };
   },
   computed : {
     drawerTitle() {
-      return this.type === 'add' ? '添加联系人' : '编辑联系人';
+      return {
+        'add-as' : '添加为本地联系人',
+        add      : '添加本地联系人',
+        edit     : '编辑本地联系人',
+      }[this.type];
     },
   },
   methods : {
@@ -151,7 +165,15 @@ export default {
       flex-direction: column;
     }
     .ant-drawer-header {
-      padding: 13px 24px;
+      display: flex;
+      padding: 0;
+      height: 48px;
+      .ant-drawer-title {
+        font-size: 16px;
+        color: #333333;
+        line-height: 24px;
+        font-weight: 600;
+      }
     }
     .ant-drawer-body {
       display: flex;
@@ -163,10 +185,23 @@ export default {
   .add-local-contact-form {
     .ant-form-item-label {
       text-align: center;
+      label {
+        padding-left: 4px;
+        &::before {
+          position: absolute;
+          top: 2px;
+          left: -8px;
+          font-size: 16px;
+          color: #FF5050;
+        }
+        &::after {
+          content: none;
+        }
+      }
     }
 
     .ant-form-item {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
   }
 </style>

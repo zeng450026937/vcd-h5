@@ -47,6 +47,7 @@
           <div class="mt-5 w-full">
             <a-input
                 placeholder='Meeting ID'
+                :class="{'meeting-error': meetingIDError}"
                 :value="meetingInfo.number"
                 @change="onNumberChange"
             >
@@ -66,7 +67,8 @@
           </div>
           <div class="mt-5 w-full">
             <a-input
-                v-model="meetingInfo.server"
+                :value="server"
+                read-only
                 placeholder='Server address'
             >
               <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
@@ -107,6 +109,12 @@ export default {
     VideoView,
   },
   computed : {
+    isCloud() {
+      return this.$model.account.serverType === 'cloud';
+    },
+    server() {
+      return this.$model.account.loginData.server;
+    },
     isConnected() {
       return this.$rtc.conference.connected;
     },
@@ -136,17 +144,22 @@ export default {
   },
   data() {
     return {
-      meetingInfo : this.$model.meeting.meetingRecord, // number pin
-      enterPopup  : null,
-      showSetting : false,
+      meetingInfo    : this.$model.meeting.meetingRecord, // number pin
+      enterPopup     : null,
+      showSetting    : false,
+      meetingIDError : false,
     };
   },
   methods : {
     checkNumber() {
       let errorNotice = '';
 
-      if (!this.meetingInfo.number) errorNotice = '会议ID不能为空';
-      else if (this.meetingInfo.number.length > 64) errorNotice = '会议ID最多为64位';
+      const { length } = this.meetingInfo.number || '';
+
+      if (length === 0) errorNotice = '会议ID不能为空';
+      else if (length > 64) errorNotice = '会议ID最多为64位';
+      else if (!this.isCloud && length !== 5) errorNotice = 'YMS账号会议ID仅支持五位数字输入';
+      else if (this.isCloud && length !== 5 && length !== 10) errorNotice = 'Cloud账号会议ID仅支持5位或者10位数字输入';
       if (errorNotice) this.$message.error(errorNotice);
       
       return !errorNotice;
@@ -170,7 +183,8 @@ export default {
       }
     },
     enterMeeting() {
-      if (this.checkNumber()) {
+      this.meetingIDError = !this.checkNumber();
+      if (!this.meetingIDError) {
         this.$dispatch('meeting.joinMeeting', this.meetingInfo);
       }
     },
@@ -189,6 +203,9 @@ export default {
 
 <style lang="less">
   #enter-meeting {
+    .meeting-error {
+      border-color: red;
+    }
     .controls-content {
       button{
         box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

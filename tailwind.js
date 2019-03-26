@@ -130,7 +130,8 @@ module.exports = {
   screens : {
     normal : '1120px',
     middle : '1366px',
-    max    : '1920px',
+    max    : '1820px',
+    // max    : '1920px',
     // sm : '576px',
     // md : '768px',
     // lg : '992px',
