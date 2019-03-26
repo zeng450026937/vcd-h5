@@ -1,15 +1,25 @@
+import { debounce } from 'lodash';
 import Vuem from '../vuem';
 import { getUserMedia } from '../../lib/get-user-media';
 import MediaDevice from './media-device';
+import rtc from '../../rtc';
+
+function stringifyDevice(device) {
+  return JSON.stringify({
+    kind     : device.kind,
+    deviceId : device.deviceId,
+    groupId  : device.groupId,
+    label    : device.label,
+  });
+}
 
 function stringifyDeviceList(list) {
-  return list.map((d) => JSON.stringify({
-    kind     : d.kind,
-    deviceId : d.deviceId,
-    groupId  : d.groupId,
-    label    : d.label,
-  })).sort()
-    .join('');
+  return list.map((d) => stringifyDevice(d)).sort().join('');
+}
+
+// FIXME: maybe we should only check deviceId & groupId
+function isSameDevice(a, b) {
+  return stringifyDevice(a) === stringifyDevice(b);
 }
 
 const model = new Vuem();
@@ -46,14 +56,47 @@ model.provide({
   },
 
   computed : {
+    // TODO: move audioInputDeviceId to ui or somewhere
+    audioInputDeviceId : {
+      get() {
+        if (!this.audioInputDevice) return null;
+
+        return this.audioInputDevice.deviceId + this.audioInputDevice.groupId;
+      },
+      set(val) {
+        this.audioInputDevice = this.audioInputDevices.find((d) => d.deviceId + d.groupId === val);
+      },
+    },
     audioInputDevices() {
       return this.deviceList.filter((d) => d.kind === 'audioinput');
     },
 
+    // TODO: move audioOutputDeviceId to ui or somewhere
+    audioOutputDeviceId : {
+      get() {
+        if (!this.audioOutputDevice) return null;
+
+        return this.audioOutputDevice.deviceId + this.audioOutputDevice.groupId;
+      },
+      set(val) {
+        this.audioOutputDevice = this.audioOutputDevices.find((d) => d.deviceId + d.groupId === val);
+      },
+    },
     audioOutputDevices() {
       return this.deviceList.filter((d) => d.kind === 'audiooutput');
     },
 
+    // TODO: move videoInputDeviceId to ui or somewhere
+    videoInputDeviceId : {
+      get() {
+        if (!this.videoInputDevice) return null;
+
+        return this.videoInputDevice.deviceId + this.videoInputDevice.groupId;
+      },
+      set(val) {
+        this.videoInputDevice = this.videoInputDevices.find((d) => d.deviceId + d.groupId === val);
+      },
+    },
     videoInputDevices() {
       return this.deviceList.filter((d) => d.kind === 'videoinput');
     },
@@ -63,13 +106,13 @@ model.provide({
     audioInputDevice(device) {
       this.setting.audioInputDevice = device;
       this.localMedia.audioDevice = device;
+      rtc.media.localMedia.audioDevice = rtc.media.toAudioDevice(device);
     },
     audioInputDevices(devices) {
       const [ device ] = devices;
-      const using = this.audioInput;
+      const using = this.audioInputDevice;
 
-      const hasUsing = devices.some((d) => (d.deviceId === using && using.deviceId)
-        && (d.groupId === using && using.groupId));
+      const hasUsing = using && devices.some((d) => isSameDevice(d, using));
       
       // can't find setting device, use the first one
       if (!hasUsing) {
@@ -82,10 +125,9 @@ model.provide({
     },
     audioOutputDevices(devices) {
       const [ device ] = devices;
-      const using = this.videoInput;
+      const using = this.audioOutputDevice;
 
-      const hasUsing = devices.some((d) => (d.deviceId === using && using.deviceId)
-        && (d.groupId === using && using.groupId));
+      const hasUsing = using && devices.some((d) => isSameDevice(d, using));
       
       // can't find setting device, use the first one
       if (!hasUsing) {
@@ -95,13 +137,13 @@ model.provide({
     videoInputDevice(device) {
       this.setting.videoInputDevice = device;
       this.localMedia.videoDevice = device;
+      rtc.media.localMedia.videoDevice = rtc.media.toVideoDevice(device);
     },
     videoInputDevices(devices) {
       const [ device ] = devices;
-      const using = this.videoInput;
+      const using = this.videoInputDevice;
 
-      const hasUsing = devices.some((d) => (d.deviceId === using && using.deviceId)
-        && (d.groupId === using && using.groupId));
+      const hasUsing = using && devices.some((d) => isSameDevice(d, using));
       
       // can't find setting device, use the first one
       if (!hasUsing) {
@@ -145,11 +187,11 @@ model.provide({
   },
 
   methods : {
-    detectDevice() {
+    detectDevice : debounce(function detectDevice() {
       return navigator.mediaDevices.enumerateDevices()
         .then((deviceList) => this.deviceList = deviceList.map((d) => d.toJSON()))
         .catch((error) => logger.warn('enumerate devices error: %s', error));
-    },
+    }, 500),
 
     // get media stream with setting constraints 
     getUserMedia(constraints) {
@@ -275,6 +317,9 @@ model.provide({
           this.videoQuality.width = 1280;
           this.videoQuality.height = 720;
         }
+
+        rtc.media.localMedia.videoQuality.width = this.videoQuality.width;
+        rtc.media.localMedia.videoQuality.height = this.videoQuality.height;
       },
       { immediate: true }
     );
@@ -282,6 +327,7 @@ model.provide({
       'noiseSuppression',
       (val) => {
         this.audioQuality.noiseSuppression = val;
+        rtc.media.localMedia.audioQuality.noiseSuppression = val;
       },
       { immediate: true }
     );

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { debounce } from 'lodash';
 import { getUserMedia } from '../../lib/get-user-media';
 import StreamAnalyser from './stream-analyser';
 
@@ -52,30 +53,38 @@ const MediaDevice = Vue.extend({
 
         if (this.stream) {
           this.stream.close();
-          this.stream = null;
         }
 
         if (this.isAcquiring()) {
           this.stream = stream;
+        }
+        else {
+          stream.close();
+          this.stream = null;
         }
 
         this.error = null;       
       }
       catch (error) {
         logger.warn(`Get user media failed, error: ${error}`);
+
         this.error = error;
         this.stream = null;
+
+        throw error;
       }
 
       return this.stream;
     },
 
-    release() {
+    release(force) {
       if (this.refCount > 0) {
         this.refCount--;
       }
 
-      if (this.refCount === 0 && this.stream) {
+      if (!this.stream) return;
+
+      if (this.refCount === 0 || force) {
         this.stream.close();
         this.stream = null;
       }
@@ -97,16 +106,16 @@ const MediaDevice = Vue.extend({
       });
     },
 
-    async resetStream() {
+    resetStream : debounce(async function resetStream() {
       if (!this.isAcquiring()) return;
-      if (!this.stream) return;
+
+      // must release first, cause audioinput might be same
+      this.release(true);
 
       await this.acquire(true);
+    }, 300),
 
-      this.release();
-    },
-
-    resetAudioQuality() {
+    resetAudioQuality : debounce(function resetAudioQuality() {
       if (!this.isAcquiring()) return;
       if (!this.stream) return;
 
@@ -121,9 +130,9 @@ const MediaDevice = Vue.extend({
             });
         });
       }
-    },
+    }, 300),
 
-    resetVideoQuality() {
+    resetVideoQuality : debounce(function resetVideoQuality() {
       if (!this.isAcquiring()) return;
       if (!this.stream) return;
 
@@ -138,7 +147,7 @@ const MediaDevice = Vue.extend({
             });
         });
       }
-    },
+    }, 300),
 
     genConstraints() {
       const constraints = {};

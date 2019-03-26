@@ -4,10 +4,9 @@
       <div class="flex flex-col">
         <span>摄像头</span>
         <a-select defaultValue="请选择摄像头"
-                  v-model="videoInput" class="mt-2">
-          <a-select-option v-for="videoInput in videoInputList"
-                           :key="videoInput.id"
-                           :value="videoInput.id"
+                  v-model="videoInputDeviceId" class="mt-2">
+          <a-select-option v-for="videoInput in videoInputDevices"
+                           :key="videoInput.deviceId + videoInput.groupId"
           >{{videoInput.label}}
           </a-select-option>
         </a-select>
@@ -19,10 +18,9 @@
       <div class="flex flex-col mt-5">
         <span>麦克风</span>
         <a-select defaultValue="请选择麦克风"
-                  v-model="audioInput" class="mt-2">
-          <a-select-option v-for="audioInput in audioInputList"
-                           :key="audioInput.id"
-                           :value="audioInput.id"
+                  v-model="audioInputDeviceId" class="mt-2">
+          <a-select-option v-for="audioInput in audioInputDevices"
+                           :key="audioInput.deviceId + audioInput.groupId"
           >{{audioInput.label}}
           </a-select-option>
         </a-select>
@@ -34,10 +32,9 @@
         <span>扬声器</span>
 
         <a-select defaultValue="请选择扬声器"
-                  v-model="audioOutput" class="mt-2">
-          <a-select-option v-for="audioOutput in audioOutputList"
-                           :key="audioOutput.id"
-                           :value="audioOutput.id"
+                  v-model="audioOutputDeviceId" class="mt-2">
+          <a-select-option v-for="audioOutput in audioOutputDevices"
+                           :key="audioOutput.deviceId + audioOutput.groupId"
           >{{audioOutput.label}}
           </a-select-option>
         </a-select>
@@ -59,40 +56,16 @@ export default {
   components : {
     VideoView,
   },
-  computed : {
-    videoInput : {
-      get() {
-        return this.$model.setting.device.videoInput;
-      },
-      set(val) {
-        this.$model.setting.device.videoInput = val;
-      },
-    },
-    audioInput : {
-      get() {
-        return this.$model.setting.device.audioInput;
-      },
-      set(val) {
-        this.$model.setting.device.audioInput = val;
-      },
-    },
-    audioOutput : {
-      get() {
-        return this.$model.setting.device.audioOutput;
-      },
-      set(val) {
-        this.$model.setting.device.audioOutput = val;
-      },
-    },
-    videoInputList() { // 摄像头
-      return this.$model.setting.device.videoInputList;
-    },
-    audioInputList() { // 麦克风
-      return this.$model.setting.device.audioInputList;
-    },
-    audioOutputList() { // 扬声器
-      return this.$model.setting.device.audioOutputList;
-    },
+  sketch : {
+    ns    : 'media',
+    props : [ 
+      'audioInputDeviceId',
+      'audioInputDevices',
+      'audioOutputDeviceId',
+      'audioOutputDevices',
+      'videoInputDeviceId',
+      'videoInputDevices',
+    ],
   },
 };
 </script>

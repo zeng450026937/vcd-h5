@@ -24,14 +24,14 @@
             <a-switch size="small" v-model="maximizedWhenRemoteSharing"/>
             <span class="setting-label">{{$t('setting.conference.maxWindowWhenWatchingSharing')}}</span>
           </div>
-          <div class="mt-3">
-            <a-switch size="small" v-model="hardwareAcceleration"/>
+          <!-- <div class="mt-3">
+            <a-switch size="small" v-model="enableGpu"/>
             <span class="setting-label">{{$t('setting.conference.enableGpu')}}</span>
-          </div>
+          </div>-->
           <div class="mt-3">
             <a-switch size="small" v-model="highProfile"/>
             <span class="setting-label">{{$t('setting.conference.preferredPictureFluency')}}</span>
-          </div>
+          </div> 
           <div class="mt-3">
             <a-switch size="small" v-model="shareWithSound"/>
             <span class="setting-label">{{$t('setting.conference.shareComputerSound')}}</span>
@@ -44,12 +44,12 @@
             <span class="border-l-4 border-black h-4"></span>
             <span class="setting-title">{{$t('setting.conference.baseSetting')}}</span>
           </div>
-          <div class="mt-3">
+          <!-- <div class="mt-3">
             <a-switch size="small" v-model="muteAudioWhenJoin"/>
             <span class="setting-label">{{$t('setting.conference.autoSilence')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="noticeTip"/>
+            <a-switch size="small" v-model="showNoticeTip"></a-switch>
             <span class="setting-label">{{$t('setting.conference.noticeWhenLeaving')}}</span> 
             <a-tooltip>
               <template slot='title'>
@@ -57,9 +57,8 @@
               </template>
               <a-iconfont type="icon-tishi" class="ml-3 text-indigo-dark cursor-pointer text-base"/>
             </a-tooltip>
-            
           </div>
-          <!--入会及离会提示音-->
+          
           <div class="flex flex-col ml-10">
             <a-radio-group class="mt-2" v-model="noticeTip" :disabled="!noticeTip">
               <a-radio  :value="1">{{$t('setting.conference.noticeOnlyJoiner')}}</a-radio>
@@ -68,74 +67,34 @@
             </a-radio-group>
           </div>
           <div class="mt-3">
-            <a-form>
-              <a-form-item :validateStatus="showAdvanceTimeError?'error':''" :help="showAdvanceTimeError?advanceTimeErrorText:''">
-                <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTime')}}</span>
-                <a-input class="w-16 mx-4" v-model.number="advanceEntryTime" @blur="checkAdvanceTime"/>
-                <span class="setting-label ml-0">{{$t('setting.conference.advanceEntryTimeUnite')}}</span>
-                <span class="text-black9 setting-label ml-0">{{$t('setting.conference.advanceEntryTimeNotice')}}</span>
-              </a-form-item>
-            </a-form>
-           
-          </div>
-          <div class="mt-3">
             <a-switch size="small" v-model="meetnowPassword"/>
             <span class="setting-label">{{$t('setting.conference.instanceMeetingPassword')}}</span>
           </div>
 
           <div class="mt-3">
-            <a-switch size="small" v-model="bookingPassword"/>
-            <span class="setting-label">{{$t('setting.conference.reserveMeetingPassword')}}</span>
-          </div>
-
-          <div class="mt-1 ml-10">
-            <a-radio-group v-model="isRandomOrCustom" :disabled="!bookingPassword">
-              <a-radio  :value="1">{{$t('setting.conference.randomPassword')}}</a-radio>
-              <a-radio  :value="2">{{$t('setting.conference.customPassword')}}</a-radio>
-            </a-radio-group>
-            <div class="mt-2">
-              <a-form>
-                <a-form-item :validateStatus="showCustomPsdError?'error':''" :help="showCustomPsdError?customPsdErrorText:''">
-                  <a-input class="mx-1" style="width: 140px;" v-model="customPassword" @blur="checkCustomPsd" :disabled="!bookingPassword||isRandomOrCustom===1"/>
-                  <span class="text-black9 setting-label ml-0">{{$t('setting.conference.customPasswordNotice')}}</span>
-                </a-form-item>
-              </a-form>
-            </div>
-              <!-- <div>
-                <a-switch  size="small" v-model="isRandomPassword"></a-switch>
-                <span class="setting-label ml-1" >随机密码</span>
-              </div>
-              <div>
-                <a-switch  size="small" v-model="isCustomPassword" class="mt-3"></a-switch>
-                
-             </div> -->
-          </div>
-
-          <div class="mt-3">
-            <a-switch size="small" v-model="loginSelector"/>
+            <a-switch size="small" v-model="loginOptions"/>
             <span class="setting-label">{{$t('setting.conference.loginSelector')}}</span>
-          </div>
+          </div> -->
           <div class="mt-3">
             <a-switch size="small" v-model="dnd"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
-          </div>
+          </div> 
         </div>
       </div>
       <div>
         <div class="mt-10">
-          <a-button type="primary">
-            <span class="leading-tight px-1" @click="handleAdvancedSetting">{{$t('setting.conference.advancedSetting')}}</span>
+          <a-button type="primary"  @click="handleAdvancedSetting">
+            <span class="leading-tight px-1">{{$t('setting.conference.advancedSetting')}}</span>
           </a-button>
         </div>
       </div>
     </div>
-
   </a-layout>
 </template>
 
 <script>
+import {shell} from 'electron'
 import AppHeader from '../MainHeader.vue';
-
 export default {
   name : 'ConferenceSetting',
 
@@ -145,32 +104,59 @@ export default {
   
   data() {
     return {
-      advanceEntryTimeRange : [ 5, 180 ],
-      showAdvanceTimeError  : false,
-      advanceTimeErrorText  : '',
-      showCustomPsdError    : false,
-      customPsdErrorText    : '',
+      // advanceEntryTimeRange : [ 5, 180 ],
+      // showAdvanceTimeError  : false,
+      // advanceTimeErrorText  : '',
+      // customPasswordInput   : '',
+      // showCustomPsdError    : false,
+      // customPsdErrorText    : '',
       // settings not supported yet
-      advanceEntryTime      : 5,
-      isRandomOrCustom      : false,
+      // advanceEntryTime      : 5,
+      // isRandomOrCustom      : false,
+      // showNoticeTip         : false,
+      // form                  : this.$form.createForm(this),
+      advancedSettingUrl : 'http://www.yealink.com',
     };
   },
-
-  sketch : {
-    ns    : 'setting',
-    props : [ 
-      'minimizedWhenLocalSharing',
-      'maximizedWhenRemoteSharing',
-      'hardwareAcceleration',
-      'shareWithSound',
-      'highProfile',
-      'muteAudioWhenJoin',
-      'noticeTip',
-      'meetnowPassword',
-      'bookingPassword',
-      'dnd',
-    ],
+  computed : {
+    // showNoticeTip : {
+    //   set(val) {
+    //     if (val) {
+    //       this.noticeTip = 1;
+    //     }
+    //     else {
+    //       this.noticeTip = 0;
+    //     }
+    //   },
+    //   get() {
+    //     return this.noticeTip > 0;
+    //   },
+    // },
   },
+  mounted() {
+    // this.customPasswordInput = this.customPassword;
+  },
+  sketch : [
+    {
+      ns    : 'setting',
+      props : [ 
+        'minimizedWhenLocalSharing',
+        'maximizedWhenRemoteSharing',
+        // 'enableGpu',
+        'shareWithSound',
+        // 'muteAudioWhenJoin',
+        // 'noticeTip',
+        // 'muteVideoWhenJoin',
+        // 'customPassword',
+        // 'meetnowPassword',
+        // 'bookingPassword',
+        // 'noticeSound',
+        // 'loginOptions',
+        'highProfile',
+        'dnd',
+      ],
+    },
+  ],
 
   deactivated() {
     this.$dispatch('setting.save');
@@ -196,22 +182,23 @@ export default {
       }
     },
 
-    checkCustomPsd() {
-      if (!/^\d{6}$/.test(this.customPassword)) {
-        this.showCustomPsdError = true;
-        this.customPsdErrorText = '您输入的自定义密码不合法！';
+    // checkCustomPsd() {
+    //   if (!/^\d{6}$/.test(this.customPasswordInput)) {
+    //     this.showCustomPsdError = true;
+    //     this.customPsdErrorText = '您输入的自定义密码不合法！';
         
-        return false;
-      }
-      else {
-        this.showCustomPsdError = false;
+    //     return false;
+    //   }
+    //   else {
+    //     this.showCustomPsdError = false;
+    //     this.customPassword = this.customPasswordInput;
         
-        return true;
-      }
-    },
+    //     return true;
+    //   }
+    // },
 
     handleAdvancedSetting() {
-      this.$message.warning('高级设置还没做好哦');
+      shell.openExternal(this.advancedSettingUrl);
     },
   },
 };

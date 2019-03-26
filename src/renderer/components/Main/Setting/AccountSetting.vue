@@ -3,7 +3,7 @@
   <div class="h-14 border-b">
     <div class="flex bg-white dragable h-full">
       <div class="flex items-center h-full px-4 text-base">
-        <span>个人资料</span>
+        <span>{{$t('setting.account.personalData')}}</span>
       </div>
       <div class="flex flex-grow"></div>
       <app-header/>
@@ -17,7 +17,7 @@
             {{userInfo.name}}
           </div>
           <div class="mt-2 text-xs leading-tight whitespace-normal">
-            这里是个性签名，限制最多50个字，字太多可以显示两行，保证两行能显示50个字
+            {{$t('setting.account.signature')}}
           </div>
         </div>
         <a-iconfont type="icon-bianji" class="mt-3 ml-3 text-indigo cursor-pointer text-base"/>
@@ -29,61 +29,60 @@
       </div>
       <a-divider class="my-0"/>
       <div class="mt-5 leading-normal">
-        <span class="text-black6">账号</span>
+        <span class="text-black6">{{$t('setting.account.username')}}</span>
         <span class="ml-3">{{userInfo.number}}</span>
       </div>
       <div v-if="userInfo.phone" class="mt-5 leading-normal">
-        <span class="text-black6">手机</span>
+        <span class="text-black6">{{$t('setting.account.phone')}}</span>
         <span class="ml-3">{{userInfo.phone}}</span>
       </div>
       <div v-if="userInfo.email" class="mt-5 leading-normal">
-        <span class="text-black6">邮箱</span>
+        <span class="text-black6">{{$t('setting.account.email')}}</span>
         <span class="ml-3">{{userInfo.email}}</span>
       </div>
       <template v-if="userInfo.parent.fullPath && userInfo.parent.fullPath.length > 0">
         <div class="mt-5 flex items-start leading-normal">
-          <span class="whitespace-no-wrap text-black6">分组</span>
+          <span class="whitespace-no-wrap text-black6">{{$t('setting.account.group')}}</span>
           <span class="ml-3">{{userInfo.parent.fullPath | fullName}}</span>
         </div>
 
         <div class="mt-5 leading-normal">
-          <span class="text-black6">企业</span>
+          <span class="text-black6">{{$t('setting.account.enterprise')}}</span>
           <span class="ml-3">{{userInfo.parent.fullPath[0].text}}</span>
         </div>
       </template>
       <div class="mt-20">
-        <a-button type="primary">切换企业</a-button>
-        <a-button class="ml-4">编辑</a-button>
-        <a-button class="ml-4">注销</a-button>
+        <a-button type="primary">{{$t('setting.account.switchEnterprise')}}</a-button>
+        <a-button class="ml-4">{{$t('setting.account.edit')}}</a-button>
+        <a-button class="ml-4">{{$t('setting.account.logout')}}</a-button>
       </div>
     </div>
     <div v-else class="h-full flex items-center justify-center">
-      <common-empty text="暂时无法获取当前用户信息"/>
+      <common-empty :text="$t('setting.account.getDataFailNotice')"/>
     </div>
     <div>
       <a-modal
-          title="修改密码"
+          :title="$t('setting.account.editPsd')"
           v-model="updatePasswordVisible"
-          okText="确认"
-          cancelText="取消"
+          :okText="$t('setting.account.confirm')"
+          :cancelText="$t('setting.account.cancel')"
           centered
           :width="400"
           @ok="handleOk"
       >
         <div class="flex flex-col px-4">
           <div>
-            <span>原密码</span>
-            <a-input placeholder="若包含字母，请注意大小写"/>
+            <span>{{$t('setting.account.originPsd')}}</span>
+            <a-input :placeholder="$t('setting.account.originPsdPlaceHolder')"/>
           </div>
           <div class="mt-2">
-            <span>新密码</span>
-            <a-input placeholder="输入6-16位密码" type="password"/>
+            <span>{{$t('setting.account.newPsd')}}</span>
+            <a-input :placeholder="$t('setting.account.newPsdPlaceHolder')" type="password"/>
           </div>
           <div class="mt-2">
-            <span>确认密码</span>
-            <a-input placeholder="再次输入密码" type="password"/>
+            <span>{{$t('setting.account.repeatPsd')}}</span>
+            <a-input :placeholder="$t('setting.account.repeatPsdPlaceHolder')" type="password"/>
           </div>
-
         </div>
       </a-modal>
     </div>

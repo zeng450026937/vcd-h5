@@ -9,30 +9,31 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5">
+    <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-auto">
       <div class="" style="width: 320px;">
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.audio.audioInput')}}</span>
-          <a-select :defaultValue="$t('setting.audio.inputPlaceHolder')"
-                    v-model="audioInputDevice.deviceId" class="mt-2">
+          <a-select :placeholder="$t('setting.audio.inputPlaceHolder')"
+                    v-model="audioInputDeviceId" class="mt-2">
             <a-select-option v-for="audioInput in audioInputDevices"
-                             :key="audioInput.deviceId"
-                             :value="audioInput.deviceId"
+                             :key="audioInput.deviceId + audioInput.groupId"
             >{{audioInput.label}}
             </a-select-option>
           </a-select>
           <volume-progress />
           <span class="test-mic-text leading-tight text-xs text-black6">{{$t('setting.audio.microphoneTest')}}</span>
         </div>
-
+        <div class="mt-5">
+          <a-switch size="small" v-model="noiseSuppression"/>
+          <span class="ml-5">{{$t('setting.audio.clearNoise')}}</span>
+        </div>
         <div class="flex flex-col mt-5">
           <span class="leading-normal">{{$t('setting.audio.audioOutput')}}</span>
 
-          <a-select :defaultValue="$t('setting.audio.outputPlaceHolder')"
-                    v-model="audioOutputDevice.deviceId" class="mt-2">
+          <a-select :placeholder="$t('setting.audio.outputPlaceHolder')"
+                    v-model="audioOutputDeviceId" class="mt-2">
             <a-select-option v-for="audioOutput in audioOutputDevices"
-                             :key="audioOutput.deviceId"
-                             :value="audioOutput.deviceId"
+                             :key="audioOutput.deviceId + audioOutput.groupId"
             >{{audioOutput.label}}
             </a-select-option>
           </a-select>
@@ -68,17 +69,21 @@ export default {
   },
   destroyed() {
     this.$rtc.media.localMedia.releaseStream();
-    // TODO:device初始化失败
-    // this.$model.setting.save('device'); // 页面不显示的时候保存设置
+    this.$dispatch('setting.save');
   },
   sketch : [
     {
       ns    : 'setting',
-      props : [ 'audioInputDevice', 'audioOutputDevice' ],
+      props : [ 'noiseSuppression' ],
     },
     {
       ns    : 'media',
-      props : [ 'audioInputDevices', 'audioOutputDevices' ],
+      props : [ 
+        'audioInputDeviceId',
+        'audioInputDevices',
+        'audioOutputDeviceId',
+        'audioOutputDevices',
+      ],
     },
   ],
   methods : {
@@ -90,6 +95,5 @@ export default {
 </script>
 
 <style lang="less">
-#audio-setting {
-}
+
 </style>

@@ -19,6 +19,7 @@ model.provide({
       autoUpdate                 : true,
       updateChannel              : 'stable',
       hideWhenClose              : true,
+      tags                       : [],
       // ytms
       ytmsHostAddress            : '',
       // account
@@ -94,6 +95,11 @@ model.provide({
       catch (error) {
         logger.error('save setting failed, error: %s', error);
       }
+    },
+
+    // reset all setting to default
+    reset() {
+      // TODO
     },
   },
   

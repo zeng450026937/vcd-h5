@@ -9,17 +9,16 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5">
+    <div class=" border h-full m-4 bg-white p-5 overflow-y-auto">
       <div class="flex flex-col">
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.video.camera')}}</span>
           <div class="flex items-center mt-2">
             <a-select :placeholder="$t('setting.video.cameraPlaceHolder')"
-                      v-model="videoInputDevice.deviceId"
+                      v-model="videoInputDeviceId"
                       style="width: 320px;">
               <a-select-option v-for="videoInput in videoInputDevices"
-                               :key="videoInput.deviceId"
-                               :value="videoInput.deviceId"
+                               :key="videoInput.deviceId + videoInput.groupId"
               >{{videoInput.label}}
               </a-select-option>
             </a-select>
@@ -36,7 +35,11 @@
                   <a-divider></a-divider>
                   <div class="text-xs mt-1 leading-tight">
                     {{$t('setting.video.questionNotice')}}
-                    <span class="text-indigo cursor-pointer">{{$t('setting.video.techniqueCenter')}}</span>。
+                    <span 
+                      class="text-indigo cursor-pointer" 
+                      @click="handleTechCenter">
+                      {{$t('setting.video.techniqueCenter')}}
+                    </span>。
                   </div>
                 </div>
                 <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>
@@ -75,6 +78,7 @@
 </template>
 
 <script>
+import { shell } from 'electron';
 import AppHeader from '../MainHeader.vue';
 import VideoView from '../../Common/VideoView.vue';
 
@@ -86,11 +90,6 @@ export default {
     VideoView,
   },
 
-  data() {
-    return {
-    };
-  },
-
   sketch : [ 
     {
       ns    : 'setting',
@@ -99,18 +98,25 @@ export default {
         'hardwareAcceleration',
         'muteVideoWhenJoin',
         'horizontalMirroring',
-        'videoInputDevice',
       ],
     },
     {
       ns    : 'media',
-      props : [ 'videoInputDevices' ],
+      props : [ 'videoInputDevices', 'videoInputDeviceId' ],
     },
   ],
 
-  created() {
+  data() {
+    return {
+      techSupportUrl : 'http://www.yealink.com',
+    };
   },
 
+  methods : {
+    handleTechCenter() {
+      shell.openExternal(this.techSupportUrl);
+    },
+  },
   deactivated() {
     this.$dispatch('setting.save');
   },
