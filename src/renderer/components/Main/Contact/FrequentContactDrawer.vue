@@ -17,7 +17,7 @@
         </div>
 
         <div class="transfer-model-content pb-5  mt-5">
-          <transfer ref="transfer"></transfer>
+          <transfer :max-checked="100" :get-child="getAsyncChildNodes" :load-mode="loadMode" ref="transfer"></transfer>
         </div>
 
         <div class="w-full flex h-12 border-t justify-center items-center pt-5">
@@ -36,7 +36,7 @@
 
 <script>
 /* eslint-disable no-loop-func */
-import Transfer from '../../transfer/index.vue'
+import Transfer from '../../transfer/index.vue';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 
 export default {
@@ -68,6 +68,9 @@ export default {
     },
     store() {
       return this.$model.contact.phoneBookStore;
+    },
+    loadMode() {
+      return this.$model.contact.loadMode;
     },
     contacts() {
       return this.$model.contact.phoneBookStore.originTree;
@@ -111,6 +114,9 @@ export default {
         maxChecked : 100,
       });
       this.$refs.transfer.setCheckers(this.checkedKeys);
+    },
+    getAsyncChildNodes(id) {
+      return this.$model.contact.getAsyncChildNodes(id);
     },
     reset() {
       this.checkedKeys = [];

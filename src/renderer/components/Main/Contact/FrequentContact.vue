@@ -35,14 +35,26 @@
               enable-keyboard
               :audio-icon="false"
               @toGroup="goBack"
-              @clickItem="clickItem">
+              @check="handleCheck">
             <a-dropdown slot-scope="{item}"
                         slot="more"
                         :trigger="['click']">
-              <a-iconfont type="icon-gengduo1"
-                          title="更多"
-                      class="mr-2 text-indigo cursor-pointer text-sm"
-                      @click.stop="moreOption(item)"></a-iconfont>
+
+              <a-iconfont
+                  v-if="item.isGroup"
+                  @click.stop=""
+                  type="icon-gengduo1"
+                  title="更多"
+                  class="mr-2 text-indigo cursor-pointer text-sm">
+              </a-iconfont>
+
+              <a-iconfont
+                  v-else
+                  type="icon-gengduo1"
+                  title="更多"
+                  class="mr-2 text-indigo cursor-pointer text-sm">
+              </a-iconfont>
+
               <a-menu slot="overlay" v-if="item.isGroup">
                 <a-menu-item @click="editGroup(item)">
                   编辑分组
@@ -140,6 +152,10 @@ export default {
     currentGroupName() {
       if (this.currentGroup === 'rootNode') return this.rootNode.name;
 
+      const currentGroup = this.store.getNode(this.currentGroup);
+
+      if (!currentGroup) return '';
+
       return this.store.getNode(this.currentGroup).name;
     },
     frequentContacts() {
@@ -197,14 +213,11 @@ export default {
         });
       }, () => {});
     },
-    moreOption(item) {
-      console.warn(item);
-    },
     goBack() {
       this.currentGroup = 'rootNode';
       this.currentUser = {};
     },
-    clickItem(contact) {
+    handleCheck(contact) {
       if (contact.isGroup) {
         this.currentGroup = contact.id;
       }
@@ -217,25 +230,34 @@ export default {
         type        : contact.type,
         contactsId  : contact.id,
         categoryIds : [ group.id ],
-      }).then(() => {
+      }).then(async() => {
+        const currentGroup = this.store.getNode(contact.parentId);
+
+        await this.deleteContact(contact, currentGroup);
+
         this.$rtc.contact.favorite.doSync().then(() => {
           this.$message.success('移动成功');
         });
       }).catch(() => {
-        this.$message.error('移动失败，请重试');
+        this.$message.error('移动失败，可能目标分组已经存在此联系人，请重试');
       });
     },
+
+    deleteContact(contact, group) {
+      return this.$rtc.contact.favorite.delete({
+        relations : [ {
+          categoryId : group.id,
+          contacts   : [ { contactsId: contact.id, type: contact.type } ],
+        } ],
+      });
+    },
+
     removeContact(contact) {
-      const group = contact.parent;
+      const group = this.store.getNode(contact.parentId);
 
       this.genEnsurePopup('确认删除当前常用联系人?', () => {
         // 删除当前联系人
-        this.$rtc.contact.favorite.delete({
-          relations : [ {
-            categoryId : group.id,
-            contacts   : [ { contactsId: contact.id, type: contact.type } ],
-          } ],
-        }).then(() => {
+        this.deleteContact(contact, group).then(() => {
           this.$rtc.contact.favorite.doSync().then(() => {
             this.$message.success('删除成功');
           });

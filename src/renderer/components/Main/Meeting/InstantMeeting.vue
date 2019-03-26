@@ -7,7 +7,7 @@
 
       <a-divider class="my-0"/>
         <div class="flex flex-col h-full m-4">
-          <transfer :getChild="getAsyncChildNodes" :loadMode="loadMode" ref="transfer"></transfer>
+          <transfer :max-checked="100"  :getChild="getAsyncChildNodes" :loadMode="loadMode" ref="transfer"></transfer>
         </div>
         <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
@@ -108,7 +108,6 @@ export default {
         this.$refs.transfer.create({
           data           : this.contacts,
           defaultChecked : this.currentUser,
-          maxChecked     : 100,
         });
       });
     },

@@ -11,7 +11,7 @@ module.exports = {
         email                : '邮箱',
         group                : '分组',
         enterprise           : '企业',
-        switchEnterPrize     : '切换企业',
+        switchEnterprise     : '切换企业',
         edit                 : '编辑',
         logout               : '注销',
         getDataFailNotice    : '暂时无法获取当前用户信息',

@@ -105,12 +105,12 @@ export default {
         this.$refs.checkedList.update(checkers);
       });
     },
-    create({ data, defaultChecked, maxChecked }) {
+    create({ data, defaultChecked }) {
       this.defaultChecked = defaultChecked;
       this.$refs.tree.createTree({
         data,
         defaultChecked : defaultChecked ? defaultChecked.id : null,
-        maxChecked,
+        maxChecked     : this.maxChecked,
       });
     },
   },

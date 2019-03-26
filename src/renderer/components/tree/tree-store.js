@@ -34,10 +34,11 @@ export default class TreeStore {
   }
 
   genTree() {
-    const { nodeMap, parentMap } = this.genTreeMap();
+    const { nodeMap, parentMap, multiple } = this.genTreeMap();
 
     this.nodeMap = nodeMap;
     this.parentMap = parentMap;
+    this.multiple = multiple;
     this.offspringMap = {};
     this.rootNode.level = 0;
     this.tree.push(this.rootNode);
@@ -58,6 +59,7 @@ export default class TreeStore {
   genTreeMap({ reset = true } = {}) {
     const nodeMap = {};
     const parentMap = {};
+    const multiple = {};
     
     this.originTree.forEach((node) => {
       try {
@@ -73,7 +75,7 @@ export default class TreeStore {
           this.checkedMap[id] = true;
         }
 
-        this.addNodeMap(nodeMap, node);
+        this.addNodeMap(nodeMap, multiple, node);
         this.addParentMap(parentMap, node);
       }
       catch (e) {
@@ -84,10 +86,11 @@ export default class TreeStore {
     return {
       nodeMap,
       parentMap,
+      multiple,
     };
   }
 
-  addNodeMap(map, node) {
+  addNodeMap(map, multiple, node) {
     const id = this.getNodeId(node);
     const pid = this.getParentId(node);
 
@@ -98,6 +101,7 @@ export default class TreeStore {
     }
     else { // yms 一个节点可能存在多个分组下，后端返回多个相同 id，不同pid的节点
       map[`${id}-${pid}`] = node;
+      multiple[`${id}-${pid}`] = node;
     }
   }
 
@@ -122,8 +126,8 @@ export default class TreeStore {
     return this.parentMap[id];
   }
 
-  getNode(id) {
-    return this.nodeMap[id];
+  getNode(id, parentId) {
+    return this.nodeMap[`${id}-${parentId}`] || this.nodeMap[id];
   }
 
   getNodeId(node) {
@@ -157,10 +161,11 @@ export default class TreeStore {
 
     // this.originTree.push(...data);  树数据 是引用关系 已经添加了新成员
 
-    const { nodeMap, parentMap } = this.genTreeMap({ reset: false });
+    const { nodeMap, parentMap, multiple } = this.genTreeMap({ reset: false });
 
     this.nodeMap = nodeMap;
     this.parentMap = parentMap;
+    this.multiple = multiple;
 
     this.asyncMap[nodeId] = data;
   }
@@ -232,21 +237,20 @@ export default class TreeStore {
     }
   }
 
-  findBranch(id, branch = []) {
-    const node = this.getNode(id);
-    const parent = this.findParentNode(id);
+  getNodeInMultiple(id) {
+    const result = [];
 
-    branch.push(node);
+    Object.keys(this.multiple).forEach((key) => {
+      if (key.indexOf(id) > -1) result.push(this.multiple[key]);
+    });
 
-    if (parent == null) return branch;
-
-    return this.findBranch(parent, branch);
+    return result;
   }
 
-  isGroupAllChecked(id) {
-    const groupNode = this.findGroupNode(id);
+  getCheckedMultiple(id) {
+    const multiple = this.getNodeInMultiple(id);
 
-    return groupNode.every((n) => n.checked);
+    return multiple.filter((n) => n.checked);
   }
 
   async checkNode(id, checked) {
@@ -258,10 +262,22 @@ export default class TreeStore {
 
     this.getNode(id).checked = checked;
     this.checkedMap[id] = checked;
-
-    this.correctParentChecked(id, checked);
+    this.correctParentChecked({ id, checked });
+    this.correctMultiple(id, checked);
 
     return this.getChecked();
+  }
+
+  correctMultiple(id, checked) {
+    const multiple = this.getNodeInMultiple(id); // 一个成员在多个不同的分组下
+
+    multiple.forEach((n) => {
+      n.checked = checked;
+      this.correctParentChecked({
+        parentId : n.parentId,
+        checked,
+      });
+    });
   }
 
   setCheckers(data) {
@@ -278,46 +294,12 @@ export default class TreeStore {
     return this.genOffspring().filter((n) => !n.isGroup);
   }
 
-  async checkGroupChild(id, checked) {
-    const checkedNodes = this.getChecked();
+  findParent({ id, parentId }) { // 可以提供一个 节点 或者 提供 id 或者 parentId
+    if (parentId) return this.getNode(parentId);
 
-    if (checkedNodes.length >= this.maxChecked) return checkedNodes;
-
-    const childes = this.getChild(id);
-
-    this.getNode(id).checked = checked;
-    childes.forEach((node) => {
-      const nodeId = this.getNodeId(node);
-
-      if (!this.isORG(node)) {
-        node.checked = checked;
-        this.checkedMap[nodeId] = checked;
-      }
-    });
-
-    return this.getChecked();
-  }
-
-  getCheckedNum() {
-    return this.getChecked().length;
-  }
-
-  findParentNode(id) {
     const node = this.getNode(id);
 
     return this.getNode(this.getParentId(node));
-  }
-
-  findBrotherNode(id) {
-    const groupNode = this.findGroupNode(id);
-
-    return groupNode.filter((n) => this.getNodeId(n) !== id);
-  }
-
-  findGroupNode(id) {
-    const parentNode = this.findParentNode(id);
-
-    return this.getChild(this.getNodeId(parentNode)) || [];
   }
 
   async checkOffspring(id, checked) {
@@ -327,7 +309,6 @@ export default class TreeStore {
     if (checked && checkedNodes.length >= this.maxChecked) return checkedNodes;
 
     const offspring = this.genOffspring(id);
-
 
     if (checked) {
       parent.halfChecked = false;
@@ -343,7 +324,8 @@ export default class TreeStore {
         checkedNum++;
       }
 
-      if (checked && checkedNum > this.maxChecked) {
+      if (checked && checkedNum > (this.maxChecked - this.getCheckedMultiple(this.getNodeId(node)).length)) {
+        // 设置 当前勾选的分组 选中状态
         parent.checked = false;
         parent.halfChecked = true;
 
@@ -354,6 +336,7 @@ export default class TreeStore {
 
       if (!this.isORG(node)) {
         this.checkedMap[nodeId] = checked;
+        this.correctMultiple(node.id, checked);
       }
 
       if (checked && this.isORG(node)) {
@@ -361,25 +344,13 @@ export default class TreeStore {
       }
     });
 
-    this.correctParentChecked(id, checked);
+    this.correctParentChecked({ id, checked }); // 此处 勾选的是 分组 所以只传分组 的 id 就可以准确 校正 父分组的勾选状态
 
     const checkers = this.getChecked();
 
     if (checkers.length === this.maxChecked) this.correctChildChecked(id);
 
     return checkers;
-  }
-
-  hasUncheckedBrother(id) {
-    const brotherNode = this.findBrotherNode(id);
-
-    return brotherNode.some((n) => !n.checked);
-  }
-
-  hasCheckedBrother(id) {
-    const brotherNode = this.findBrotherNode(id);
-
-    return brotherNode.some((n) => n.checked);
   }
 
   hasCheckedOffspring(id) {
@@ -394,13 +365,16 @@ export default class TreeStore {
     return offspring.every((n) => n.checked);
   }
 
-  isUncheckedAllOffspring() {
-    return !this.isCheckedAllOffspring();
-  }
 
-  correctParentChecked(id, checked) {
-    const parent = this.findParentNode(id);
-    const parentId = this.getNodeId(parent);
+  /*
+  *  提供 id 或者 parentId 找到父节点， 如果勾选的是 节点 需要提供 parentId， 如果是分组则随意;
+  *
+  *  因为 一个节点 可能在不同的分组下 即相同的id 不同的 parentId， 必须提供parentId 才能找到准确的父节点。
+  * */
+  correctParentChecked({ id, parentId, checked }) {
+    const parent = !parentId ? this.findParent({ id }) : this.getNode(parentId);
+
+    if (!parentId) parentId = this.getNodeId(parent);
 
     if (parent == null) return;
 
@@ -410,13 +384,13 @@ export default class TreeStore {
       parent.checked = isCheckAllOffspring;
       parent.halfChecked = !isCheckAllOffspring;
 
-      this.correctParentChecked(parentId, true);
+      this.correctParentChecked({ id: parentId, checked: true });
     }
     else {
       parent.halfChecked = this.hasCheckedOffspring(parentId);
       parent.checked = false;
 
-      this.correctParentChecked(parentId, false);
+      this.correctParentChecked({ id: parentId, checked: false });
     }
   }
 
@@ -494,7 +468,12 @@ export default class TreeStore {
 
     node.checked = false;
     this.checkedMap[id] = false;
-    this.correctParentChecked(id, false);
+    this.correctParentChecked({
+      id,
+      checked : false,
+    });
+
+    this.correctMultiple(id, false);
   }
 
   search(text) {
