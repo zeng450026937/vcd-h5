@@ -35,6 +35,7 @@ model.provide({
           interval : '12:00:03',
         },
       ],
+      staticStream : null,
     };
   },
   computed : {

@@ -15,6 +15,9 @@ export default new Vuem().provide({
     serverType() {
       return this.$parent.account.serverType;
     },
+    staticStream() {
+      return this.$parent.conference.staticStream;
+    },
     loginType() {
       return this.$parent.account.loginType;
     },
@@ -39,8 +42,9 @@ export default new Vuem().provide({
       return conference.join({
         initialVideo,
         initialAudio,
+        stream : this.staticStream
       }).then(() => {
-        storage.insert('MEETING_INFO_RECORD', this.meetingRecord);
+        storage.insert(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`, this.meetingRecord);
       });
     },
     async anonymousJoin(ctx, next) {
@@ -101,7 +105,7 @@ export default new Vuem().provide({
   },
   watch : {
     isRegistered(val) {
-      this.meetingRecord = storage.query('MEETING_INFO_RECORD');
+      this.meetingRecord = storage.query(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`);
       if (!this.meetingRecord || !this.meetingRecord.number) {
         this.meetingRecord = {
           number       : '',
