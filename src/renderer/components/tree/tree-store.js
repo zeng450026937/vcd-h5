@@ -9,8 +9,10 @@ const LOAD_MODE = {
   SPLIT   : 'SPLIT',
 };
 
+const DEFAULT_MAX_CHECK = 50 * 10000;
+
 export default class TreeStore {
-  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000, defaultChecked, loadMode = LOAD_MODE.OVERALL }) {
+  constructor({ data, expandLevel = 2, maxChecked = DEFAULT_MAX_CHECK, defaultChecked, loadMode = LOAD_MODE.OVERALL }) {
     if (!Array.isArray(data)) return;
     console.time('generate Tree model cost time');
     this.loadMode = loadMode;
@@ -247,12 +249,6 @@ export default class TreeStore {
     return result;
   }
 
-  getCheckedMultiple(id) {
-    const multiple = this.getNodeInMultiple(id);
-
-    return multiple.filter((n) => n.checked);
-  }
-
   async checkNode(id, checked) {
     if (id === this.defaultChecked) return;
 
@@ -278,6 +274,18 @@ export default class TreeStore {
         checked,
       });
     });
+  }
+
+  isSetMaxCheck() {
+    return this.maxChecked !== DEFAULT_MAX_CHECK;
+  }
+
+  isMultipleNode(id) {
+    return Object.keys(this.multiple).find((i) => i.indexOf(id) > -1) != null;
+  }
+
+  getCheckedMultiple() {
+    return Object.values(this.multiple).filter((i) => i.checked);
   }
 
   setCheckers(data) {
@@ -315,33 +323,38 @@ export default class TreeStore {
     }
     parent.checked = checked;
 
-    let checkedNum = checkedNodes.length;
+    const inMultiple = [];
 
-    offspring.forEach((node) => {
-      const nodeId = this.getNodeId(node);
+    for (let i = 0; i < offspring.length; i++) {
+      const nodeId = this.getNodeId(offspring[i]);
 
-      if (!this.isORG(node)) { // TODO 如果大于 maxChecked 需要break
-        checkedNum++;
+      if (nodeId === this.defaultChecked) continue;
+
+      if (this.isSetMaxCheck()) {
+        const checkedNum = this.getChecked().length;
+
+        if (checked && (checkedNum >= this.maxChecked)) {
+          parent.checked = false;
+          parent.halfChecked = true;
+
+          break;
+        }
       }
+      offspring[i].checked = checked;
 
-      if (checked && checkedNum > (this.maxChecked - this.getCheckedMultiple(this.getNodeId(node)).length)) {
-        // 设置 当前勾选的分组 选中状态
-        parent.checked = false;
-        parent.halfChecked = true;
+      if (this.isMultipleNode(nodeId)) inMultiple.push(offspring[i]);
 
-        return;
-      }
-
-      node.checked = checked;
-
-      if (!this.isORG(node)) {
+      if (!this.isORG(offspring[i])) {
         this.checkedMap[nodeId] = checked;
-        this.correctMultiple(node.id, checked);
       }
 
-      if (checked && this.isORG(node)) {
-        node.halfChecked = false;
+      if (checked && this.isORG(offspring[i])) {
+        offspring[i].halfChecked = false;
       }
+    }
+
+    inMultiple.forEach((n) => {
+      this.correctMultiple(this.getNodeId(n), n.checked);
     });
 
     this.correctParentChecked({ id, checked }); // 此处 勾选的是 分组 所以只传分组 的 id 就可以准确 校正 父分组的勾选状态
