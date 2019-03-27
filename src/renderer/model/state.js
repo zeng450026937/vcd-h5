@@ -99,15 +99,30 @@ model.provide({
 
       window.open('ringing.html', 'ringing', option);
     },
-    openNotifyWindow() {
-      const width = 320;
-      const height = window.screen.availHeight;
-      const offsetLeft = window.screen.width - width;
-      const offsetTop = 0;
+    requestPermission() {
+      const permission = Notification.permission;
 
-      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
+      if (permission === 'denied' || permission === 'default') {
+        return Notification.requestPermission();
+      }
 
-      window.open('schedule.html', 'schedule', option);
+      return Promise.resolve();
+    },
+    notify(info) {
+      this.requestPermission().then(() => {
+        const notification = new Notification(info.subject, {
+          body : '请加入会议',
+        });
+
+        notification.onclick = () => {
+          this.$dispatch('meeting.joinMeeting', {
+            number       : info['conference-number'],
+            pin          : info['presenter-pin'],
+            initialVideo : true,
+            initialAudio : true,
+          });
+        };
+      });
     },
   },
   watch : {
@@ -130,7 +145,7 @@ model.provide({
     const schedule = this.$getVM('schedule');
 
     schedule.$on('schedule-event', (info) => {
-      this.openNotifyWindow();
+      this.notify(info);
     });
   },
 });
