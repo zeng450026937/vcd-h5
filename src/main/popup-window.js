@@ -39,6 +39,10 @@ export class PopupWindow extends BaseWindow {
         webSecurity             : false,
       },
     };
+    
+    if (process.platform === 'win32') {
+      windowOptions.type = 'toolbar';
+    }
 
     super(windowOptions);
   }

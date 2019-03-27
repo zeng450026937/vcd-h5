@@ -1,6 +1,6 @@
 import axios from 'axios';
 import crypto from 'crypto';
-import Vuem from '../vuem';
+import Vuem from '../../vuem';
 import { PhoneBook } from './phonebook';
 import { Favorite } from './favorite';
 
@@ -58,6 +58,16 @@ model.provide({
 
       return cipherChunks.join('');
     },
+
+    async sync() {
+      this.phonebookList = await this.phonebook.sync();
+      this.phonebookLastUpdated = Date.now();
+
+      if (this.favoriteContactsEnable) {
+        this.favoriteList = await this.favorite.sync();
+        this.favoriteLastUpdated = Date.now();
+      }
+    },
   },
 
   async created() {
@@ -75,20 +85,9 @@ model.provide({
     account.$on('negotiateUrlUpdated', async(url) => {
       this.negotiateUrl = url;
       await this.negotiate();
-
-      this.phonebookList = await this.phonebook.sync();
-      this.phonebookLastUpdated = Date.now();
-
-      this.favoriteList = await this.favorite.sync();
-      this.favoriteLastUpdated = Date.now();
+      await this.sync();
     });
-    account.$on('phonebookUpdateUpdated', async() => {
-      this.phonebookList = await this.phonebook.sync();
-      this.phonebookLastUpdated = Date.now();
-
-      this.favoriteList = await this.favorite.sync();
-      this.favoriteLastUpdated = Date.now();
-    });
+    account.$on('phonebookUpdateUpdated', this.sync);
 
     this.account = account;
   },

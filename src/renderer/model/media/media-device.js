@@ -43,7 +43,7 @@ const MediaDevice = Vue.extend({
       return !!this.refCount;
     },
 
-    async acquire(force = false) {
+    async acquireStream(force = false) {
       this.refCount++;
 
       if (this.stream && !force) return Promise.resolve(this.stream);
@@ -77,7 +77,11 @@ const MediaDevice = Vue.extend({
       return this.stream;
     },
 
-    release(force) {
+    async releaseStream(force) {
+      // waiting for a moment can avoid re-acquire stream,
+      // when acquireStream/releaseStream is invoked really fast(in short time)
+      await this.$nextTick();
+
       if (this.refCount > 0) {
         this.refCount--;
       }
@@ -109,9 +113,9 @@ const MediaDevice = Vue.extend({
     resetStream : debounce(async function resetStream() {
       if (!this.isAcquiring()) return;
 
-      // must release first, cause audioinput might be same
-      this.release(true);
-
+      // must release first, cause audioinput's deviceId might be same,
+      // while they are actually different device as groupId is changed.
+      await this.release(true);
       await this.acquire(true);
     }, 300),
 
