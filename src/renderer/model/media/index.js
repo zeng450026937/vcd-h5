@@ -178,9 +178,9 @@ model.provide({
     async getDisplayMedia(ctx, next) {
       await next();
 
-      const { sourceId } = ctx.payload;
+      const { sourceId, audio } = ctx.payload;
 
-      const stream = await this.getDisplayMedia(sourceId);
+      const stream = await this.getDisplayMedia(sourceId, audio);
 
       return stream;
     },
@@ -195,17 +195,17 @@ model.provide({
 
     // get media stream with setting constraints 
     getUserMedia(constraints) {
-      return getUserMedia(constraints || this.genConstraints());
+      return getUserMedia(constraints || this.genUserConstraints());
     },
 
-    genConstraints() {
+    genUserConstraints() {
       const constraints = {};
 
       if (this.audioInputDevice) {
-        constraints.audio = Object.assign({}, this.audioInputDevice);
+        constraints.audio = { ...this.audioInputDevice };
       }
       if (this.videoInputDevice) {
-        constraints.video = Object.assign({}, this.videoInputDevice);
+        constraints.video = { ...this.videoInputDevice };
       }
       if (constraints.audio && this.audioQuality) {
         Object.assign(constraints.audio, this.audioQuality);
@@ -217,45 +217,66 @@ model.provide({
       return constraints;
     },
 
-    getDisplayMedia(sourceId) {
-      const constraints = {
-        audio : false,
-        video : this.toScreenConstraints({
-          sourceId,
-          ...this.screenQuality,
-        }), 
-      };
+    getDisplayMedia(sourceId, audio = false) {
+      let constraints;
+
+      if (typeof sourceId === 'object') {
+        constraints = sourceId;
+      }
+      else {
+        constraints = this.genDisplayConstraints(sourceId, audio);
+      }
 
       return this.getUserMedia(constraints);
     },
 
-    toScreenConstraints(constraints) {
-      const mandatory = {
-        // desktop for chrome & screen for firefox
-        chromeMediaSource   : 'desktop',
-        chromeMediaSourceId : constraints.deviceId || constraints.sourceId,
-        // minWidth            : constraints.width,
-        maxWidth            : constraints.width,
-        // minHeight           : constraints.height,
-        maxHeight           : constraints.height,
-        minFrameRate        : constraints.frameRate,
-        maxFrameRate        : constraints.frameRate,
-      };
-      const optional = [
-        { googTemporalLayeredScreencast: true },
-      ];
+    genDisplayConstraints(sourceId, audio = false) {
+      return this.toDisplayConstraints({
+        audio,
+        video : { sourceId, ...this.screenQuality },
+      });
+    },
 
-      return {
-        mandatory,
-        optional,
-      };
+    getDisplayAudio() {
+      return this.getUserMedia(this.toDisplayConstraints({ audio: true }));
+    },
 
-      /* for firefox
-      return {
-        mozMediaSource : 'screen',
-        mediaSource    : 'screen',
-      };
-      */
+    getDisplayVideo(constraints) {
+      return this.getUserMedia(this.toDisplayConstraints({ video: constraints }));
+    },
+
+    toDisplayConstraints(constraints = {}) {
+      const { audio, video } = constraints;
+
+      const displayConstraints = { audio: false, video: false };
+
+      if (audio) {
+        const mandatory = { chromeMediaSource: 'desktop' };
+
+        displayConstraints.audio = { mandatory };
+      }
+
+      if (video) {
+        const mandatory = {
+          // desktop for chrome & screen for firefox
+          chromeMediaSource   : 'desktop',
+          chromeMediaSourceId : video.deviceId || video.sourceId,
+          // minWidth            : constraints.width,
+          maxWidth            : video.width,
+          // minHeight           : constraints.height,
+          maxHeight           : video.height,
+          minFrameRate        : video.frameRate,
+          maxFrameRate        : video.frameRate,
+        };
+        
+        const optional = [
+          { googTemporalLayeredScreencast: true },
+        ];
+
+        displayConstraints.audio = { mandatory, optional };
+      }
+
+      return displayConstraints;
     },
   },
 

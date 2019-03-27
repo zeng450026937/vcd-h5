@@ -170,6 +170,16 @@ model.provide({
 
       return list;
     },
+
+    async getEnterpriseId() {
+      /*
+      const res = await this.cm[C.GET_SYSTEM_CONFIG]();
+      const data = res.data.list[0];
+      const config = data.data;
+
+      this.enterpriseId = data.enterpriseId;
+      */
+    },
   },
 
   async created() {
@@ -194,6 +204,7 @@ model.provide({
     rtc.account.$watch('registered', (val) => {
       if (!val) return; 
       this.fetch();
+      // this.getEnterpriseId();
     });
 
     /*
