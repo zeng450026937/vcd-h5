@@ -112,7 +112,7 @@ export default {
       checkedKeys     : [],
       selectedContact : [],
       showCopySuccess : false,
-      protocols       : [ 'SIP', 'H.323', 'rtmp', 'SfB(Lync)' ],
+      protocols       : [ 'SIP', 'H.323', 'RTMP', 'SFB(Lync)' ],
       protocol        : 'H.323',
       address         : '',
       currentTab      : 'inviteUser', // inviteUser inviteOther
@@ -129,17 +129,17 @@ export default {
       }
     },
     numberTitle() {
-      return this.protocol === 'rtmp' ? '地址' : '号码';
+      return this.protocol === 'RTMP' ? '地址' : '号码';
     },
     inputPlaceholder() {
       switch (this.protocol) {
         case 'SIP':
         case 'H.323':
           return '请输入IP地址或者URI';
-        case 'rtmp':
+        case 'RTMP':
           return '地址以rtmp://或rtmps://开头';
-        case 'SfB(Lync)':
-          return '请输入SfB(Lync)账号信息';
+        case 'SFB(Lync)':
+          return '请输入SFB(Lync)账号信息';
         default:
           return '';
       }

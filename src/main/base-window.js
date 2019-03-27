@@ -90,7 +90,14 @@ export class BaseWindow extends EventEmitter {
       if (input.type === 'keyDown') {
         switch (input.key) {
           case 'F12':
-            this.window.webContents.toggleDevTools();
+            if (input.control) {
+              const child = new BrowserWindow({ show: true });
+
+              child.loadURL('chrome://webrtc-internals');
+            }
+            else {
+              this.window.webContents.toggleDevTools();
+            }
             break;
           default:
             break;
