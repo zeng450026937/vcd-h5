@@ -84,6 +84,7 @@ export default {
     },
     updateTreeViews() {
       this.cluster.update(this.createRow(treeStore.tree));
+      this.cluster.refresh();
     },
     createStyleString(styles) {
       let result = '';
@@ -202,6 +203,8 @@ export default {
         contentId : 'tree-content-area',
       });
 
+      cluster.refresh();
+
       this.$refs['tree-content'].removeAttribute('tabindex');
 
       cluster._isVue = true;
@@ -232,7 +235,6 @@ export default {
   outline: none;
   height: 100%;
   width: max-content;
-  padding: 10px 0;
   &:focus {
     outline: none;
     border:none

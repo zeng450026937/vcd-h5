@@ -99,6 +99,16 @@ model.provide({
 
       window.open('ringing.html', 'ringing', option);
     },
+    openNotifyWindow() {
+      const width = 320;
+      const height = window.screen.availHeight;
+      const offsetLeft = window.screen.width - width;
+      const offsetTop = 0;
+
+      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
+
+      window.open('schedule.html', 'schedule', option);
+    },
   },
   watch : {
     loginStatus : {
@@ -113,6 +123,15 @@ model.provide({
       handler   : 'handleCall',
       immediate : true,
     },
+  },
+  async created() {
+    await this.$nextTick();
+
+    const schedule = this.$getVM('schedule');
+
+    schedule.$on('schedule-event', (info) => {
+      this.openNotifyWindow();
+    });
   },
 });
 

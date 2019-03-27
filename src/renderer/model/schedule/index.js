@@ -1,4 +1,5 @@
 import { ConferenceManager } from 'apollosip';
+import { sortBy } from 'lodash';
 import Vuem from '../vuem';
 import { ScheduleDatabse } from '../../database/schedule-database';
 import { arrayify } from '../../lib/arrayify';
@@ -8,6 +9,7 @@ import {
   fixTemplate,
 } from './fix-info';
 import rtc from '../../rtc';
+
 
 const C = ConferenceManager.Command;
 
@@ -51,7 +53,7 @@ model.provide({
       }
       if (!to) {
         to = new Date();
-        to.setHours(-7 * 24);
+        to.setHours(7 * 24);
       }
 
       this.conferences = Object.create(null);
@@ -170,6 +172,53 @@ model.provide({
 
       return list;
     },
+
+    checkAndNotify(start = 0) {
+      if (this.notifyTimer) {
+        clearTimeout(this.notifyTimer);
+        this.notifyTimer = null;
+      }
+
+      const sorted = sortBy(this.merged, (n) => n['start-time'].valueOf());
+
+      let index = start;
+
+      while (index < sorted.length) {
+
+        const schedule = sorted[index];
+        const isHosting = schedule['expiry-time'].valueOf() - Date.now() > 0;
+
+        if (!isHosting || this.notified.has(schedule['@plan-id'])) {
+          index++;
+          /* eslint-disable no-continue */
+          continue;
+          /* eslint-enable no-continue */
+        }
+
+        const deltaTime = schedule['start-time'].valueOf() - Date.now();
+        const remindEarly = (schedule['remind-early'] || 5) * 60 * 1000;
+        const waitingTime = deltaTime - remindEarly;
+
+        if (deltaTime < remindEarly) {
+          this.$emit('schedule-event', schedule);
+          this.notified.add(schedule['@plan-id']);
+        }
+        else {
+          /* eslint-disable no-loop-func */
+          this.notifyTimer = setTimeout(() => this.checkAndNotify(index + 1), waitingTime);
+          /* eslint-enable no-loop-func */
+
+          break;
+        }
+
+        index++;
+      }
+    },
+  },
+  watch : {
+    list() {
+      this.checkAndNotify();
+    },
   },
 
   async created() {
@@ -183,6 +232,8 @@ model.provide({
     this.merged = [];
     this.merged._isVue = true;
 
+    this.notified = new Set();
+
     await this.$nextTick();
 
     rtc.account.$on('bookConferenceUpdated', this.bookConferenceUpdated);
@@ -192,7 +243,8 @@ model.provide({
     });
 
     rtc.account.$watch('registered', (val) => {
-      if (!val) return; 
+      if (!val) return;
+      this.notified.clear();
       this.fetch();
     });
 

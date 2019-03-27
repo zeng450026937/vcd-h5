@@ -115,12 +115,12 @@ export function formatCalendar(data) {
   data.forEach((cal) => {
     if (!cal['start-time']) return;
 
-    cal.startMoment = moment(new Date(`${cal['start-time']} GMT`), 'YYYYMMDD');
-    cal['start-time'] = cal.startMoment.format('YYYY-MM-DD HH:mm');
-    cal.expiryMoment = moment(new Date(`${cal['expiry-time']} GMT`), 'YYYYMMDD');
-    cal['expiry-time'] = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
+    cal.startMoment = moment(cal['start-time']);
+    cal.startTime = cal.startMoment.format('YYYY-MM-DD HH:mm');
+    cal.expiryMoment = moment(cal['expiry-time']);
+    cal.expiryTime = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
 
-    cal.status = genMeetingStatus(cal['start-time'], cal['expiry-time']);
+    cal.status = genMeetingStatus(cal.startTime, cal.expiryTime);
 
     const plainCalendar = {};
 

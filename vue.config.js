@@ -18,6 +18,12 @@ module.exports = {
       title    : 'ringing',
       filename : 'ringing.html',
     },
+    schedule : {
+      entry    : 'src/renderer/window/schedule.js',
+      template : 'public/schedule.html',
+      title    : 'schedule',
+      filename : 'schedule.html',
+    },
   },
 
   css : {

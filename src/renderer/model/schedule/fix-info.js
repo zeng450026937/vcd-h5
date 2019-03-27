@@ -37,7 +37,7 @@ export function fixTimestamp(val) {
     const timestamp = val[key];
 
     if (timestamp) {
-      val[key] = toUTC(Utils.parseDate(timestamp));
+      val[key] = new Date(`${timestamp} GMT`);
     }
   });
 }
