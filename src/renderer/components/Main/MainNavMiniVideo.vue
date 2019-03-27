@@ -65,6 +65,7 @@
         </div>
       </div>
       <video-view class="nav-mini-video bg-white cursor-pointer h-full"
+                  :class="{'video-mirroring': horizontalMirroring}"
                   title="双击回到视频会议界面"
                   :source="isShareInCenter ? 'screen': 'remote'"
                   object-fit="cover"
@@ -110,6 +111,9 @@ export default {
     },
   ],
   computed : {
+    horizontalMirroring() {
+      return this.$model.setting.horizontalMirroring;
+    },
     confStatus() {
       return this.$rtc.conference.status;
     },
@@ -196,6 +200,11 @@ export default {
     text-align: center;
     line-height: 24px;
     margin-top: 10px;
+  }
+  .video-mirroring {
+    .video-content {
+      transform: rotateY(180deg);
+    }
   }
   .nav-mini-video {
 

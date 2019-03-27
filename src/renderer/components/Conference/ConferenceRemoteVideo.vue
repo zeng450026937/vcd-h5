@@ -37,6 +37,9 @@ export default {
     props : [ 'hideControls', 'showMorePanel', 'isInConferenceMain', 'isVideoConference' ],
   },
   computed : {
+    horizontalMirroring() {
+      return this.$model.setting.horizontalMirroring;
+    },
     controlsClasses() {
       return {
         [this.isInConferenceMain || !this.isVideoConference ? 'controls-bottom' : 'controls-normal'] : true,
@@ -47,7 +50,7 @@ export default {
       return {
         [`remote-video-content-${this.isInConferenceMain ? 'normal' : 'shrink'}`] : true,
         'h-full'                                                                  : !this.isVideoConference,
-        // 'remote-video-content-normal-auto'                                        : this.isInConferenceMain && this.isVideoConference,
+        'video-mirroring'                                                         : this.horizontalMirroring,
       };
     },
   },
@@ -100,6 +103,11 @@ export default {
     .button-content {
       opacity: 0;
       transition: opacity ease-out .5s;
+    }
+  }
+  .video-mirroring{
+    .video-content {
+      transform: rotateY(180deg);
     }
   }
   .remote-video-content-shrink {

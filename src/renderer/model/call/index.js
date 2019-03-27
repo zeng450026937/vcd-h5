@@ -21,8 +21,6 @@ model.provide({
   },
   middleware : {
     call(ctx) {
-      console.warn(ctx);
-      console.warn(this);
       let { number } = ctx.payload;
       // 判断是否为IP 直播 10.81.45.13 or 10*86*5*3
 

@@ -187,13 +187,15 @@ export default {
       return Object.keys(this.currentEvent).length > 0;
     },
     enterpriseId() {
-      return this.$model.account.enterpriseId || '';
+      return this.$rtc.account.enterpriseId;
     },
     liveQRCode() {
       return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
     },
     shareUrl() {
-      return `http://${this.$model.account.proxy}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+      const domain = this.$model.account.proxy || this.$model.account.loginData.server;
+
+      return `http://${domain}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
     },
     shareQRCode() {
       return jrQrcode.getQrBase64(this.shareUrl);
