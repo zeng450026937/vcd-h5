@@ -17,7 +17,13 @@
         </div>
 
         <div class="transfer-model-content pb-5  mt-5">
-          <transfer :max-checked="100" :get-child="getAsyncChildNodes" :load-mode="loadMode" ref="transfer"></transfer>
+          <transfer
+              :search="searchContact"
+              :max-checked="100"
+              :get-child="getAsyncChildNodes"
+              :load-mode="loadMode"
+              ref="transfer">
+          </transfer>
         </div>
 
         <div class="w-full flex h-12 border-t justify-center items-center pt-5">
@@ -55,11 +61,14 @@ export default {
     return {
       visible     : false,
       groupName   : '',
-      checkedKeys : [],
+      checkedList : [],
       editedGroup : {},
     };
   },
   computed : {
+    checkedKeys() {
+      return this.checkedList.map((n) => n.id);
+    },
     modalTitle() {
       return this.modalType === 'add' ? '添加分组' : '更新分组';
     },
@@ -113,13 +122,16 @@ export default {
         data       : this.contacts,
         maxChecked : 100,
       });
-      this.$refs.transfer.setCheckers(this.checkedKeys);
+      this.$refs.transfer.setCheckedList(this.checkedList);
     },
     getAsyncChildNodes(id) {
       return this.$model.contact.getAsyncChildNodes(id);
     },
+    searchContact(val) {
+      return this.$model.contact.findContacts(val);
+    },
     reset() {
-      this.checkedKeys = [];
+      this.checkedList = [];
     },
   },
   watch : {

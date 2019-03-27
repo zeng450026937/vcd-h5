@@ -188,6 +188,9 @@ export default {
     search(text) {
       return treeStore.search(text);
     },
+    getAsyncCheckedNode(id) {
+      return treeStore.getAsyncCheckedNode(id)
+    },
     cancelChecked(id) {
       treeStore.cancelChecked(id);
       this.updateTreeViews();
@@ -195,11 +198,11 @@ export default {
     getNode(id) {
       return treeStore.getNode(id);
     },
-    setCheckers(ids) {
-      return treeStore.setCheckers(ids).then((checkers) => {
+    setCheckedList(checkedList) {
+      return treeStore.setCheckedList(checkedList).then((checked) => {
         this.updateTreeViews();
 
-        return checkers;
+        return checked;
       });
     },
     createTreeViews(store) {

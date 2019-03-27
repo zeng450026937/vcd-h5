@@ -23,6 +23,7 @@ export default class TreeStore {
     this.originTree = data;
     this.checkedMap = {};
     this.asyncMap = {};
+    this.asyncChecked = [];
     this.genTree();
     this.correctDefaultChecked();
 
@@ -172,6 +173,18 @@ export default class TreeStore {
     this.multiple = multiple;
 
     this.asyncMap[nodeId] = data;
+
+    const checkedList = this.asyncChecked.map((n) => this.getNodeId(n));
+
+    data.forEach((n) => {
+      if (checkedList.indexOf(this.getNodeId(n))) {
+        n.checked = true;
+      }
+    });
+  }
+
+  getAsyncCheckedNode(id) {
+    return this.asyncChecked.find((n) => this.getNodeId(n) === id);
   }
 
   async expand(id, getChildAsync, useAsync = false) {
@@ -254,9 +267,9 @@ export default class TreeStore {
   async checkNode(id, checked) {
     if (id === this.defaultChecked) return;
 
-    const checkers = this.getChecked();
+    const checkeds = this.getChecked();
 
-    if (checked && checkers.length >= this.maxChecked) return checkers;
+    if (checked && checkeds.length >= this.maxChecked) return checkeds;
 
     this.getNode(id).checked = checked;
     this.checkedMap[id] = checked;
@@ -294,11 +307,22 @@ export default class TreeStore {
     return Object.values(this.multiple).filter((i) => i.checked);
   }
 
-  setCheckers(data) {
+  setCheckedList(data) {
+    this.asyncChecked = data;
+
     return new Promise((resolve) => {
-      data.forEach((id) => {
-        this.checkNode(id, true).then(() => {});
+      data.forEach((n) => {
+        if (this.loadMode === LOAD_MODE.SPLIT) {
+          n.checked = true;
+        }
+        else {
+          this.checkNode(this.getNodeId(n), true).then(() => {});
+        }
       });
+
+      if (this.loadMode === LOAD_MODE.SPLIT) {
+        resolve([ ...this.getChecked(), ...data ]);
+      }
 
       return resolve(this.getChecked());
     });
@@ -365,11 +389,11 @@ export default class TreeStore {
 
     this.correctParentChecked({ id, checked }); // 此处 勾选的是 分组 所以只传分组 的 id 就可以准确 校正 父分组的勾选状态
 
-    const checkers = this.getChecked();
+    const checkeds = this.getChecked();
 
-    if (checkers.length === this.maxChecked) this.correctChildChecked(id);
+    if (checkeds.length === this.maxChecked) this.correctChildChecked(id);
 
-    return checkers;
+    return checkeds;
   }
 
   hasCheckedOffspring(id) {
@@ -486,14 +510,24 @@ export default class TreeStore {
   cancelChecked(id) {
     const node = this.getNode(id);
 
-    node.checked = false;
-    this.checkedMap[id] = false;
-    this.correctParentChecked({
-      id,
-      checked : false,
-    });
+    if (this.loadMode === LOAD_MODE.SPLIT) {
+      this.asyncChecked = this.asyncChecked.filter((n) => n.id !== id);
 
-    this.correctMultiple(id, false);
+      if (node) {
+        node.checked = false;
+        this.checkedMap[id] = false;
+      }
+    }
+    else {
+      node.checked = false;
+      this.checkedMap[id] = false;
+      this.correctParentChecked({
+        id,
+        checked : false,
+      });
+
+      this.correctMultiple(id, false);
+    }
   }
 
   search(text) {

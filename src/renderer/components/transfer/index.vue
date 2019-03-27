@@ -97,8 +97,8 @@ export default {
     },
     correctChecked(data) {
       data.forEach((n) => {
-        const node = this.$refs.tree.getNode(n.id);
-
+        let node = this.$refs.tree.getNode(n.id) || this.$refs.tree.getAsyncCheckedNode(n.id);
+        
         if (node) n.checked = node.checked;
       });
     },
@@ -121,9 +121,9 @@ export default {
     getChecked() {
       return this.$refs.tree.getChecked();
     },
-    setCheckers(ids) {
-      return this.$refs.tree.setCheckers(ids).then((checkers) => {
-        this.$refs.checkedList.update(checkers);
+    setCheckedList(checkedList) {
+      return this.$refs.tree.setCheckedList(checkedList).then((checked) => {
+        this.$refs.checkedList.update(checked);
       });
     },
     create({ data, defaultChecked }) {
