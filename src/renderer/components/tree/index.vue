@@ -75,6 +75,9 @@ export default {
         this.$emit('change', nodes);
       });
     },
+    check(id, checked) {
+      return this.checkEntity(id, checked);
+    },
     checkGroup(id, checked) {
       treeStore.checkOffspring(id, checked).then((nodes) => {
         this.updateTreeViews();
@@ -188,6 +191,9 @@ export default {
     cancelChecked(id) {
       treeStore.cancelChecked(id);
       this.updateTreeViews();
+    },
+    getNode(id) {
+      return treeStore.getNode(id);
     },
     setCheckers(ids) {
       return treeStore.setCheckers(ids).then((checkers) => {

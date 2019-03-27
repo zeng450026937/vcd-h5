@@ -1,31 +1,15 @@
 <template>
-  <div class="search-result-content">
-    <recycle-scroller
-        :items="list"
-        :buffer="20"
-        :page-mode="false"
-        key-field="id"
-        class="scroll-area overflow-y-auto overflow-x-hidden"
-    >
-      <template v-slot="{item, index}">
-        <div class="list-item">
-          <!--<a-checkbox v-model="item.checked"></a-checkbox>-->
-          <div class="avatar">
-            {{/^(.*)\(.*\)$/.test(item.name) ? RegExp.$1.substr(-2, 2) : item.name.substr(-2, 2)}}
-          </div>
-          <div class="name-content">
-            <span class="name">{{item.name}}</span>
-            <span v-if="item.number" class="number">{{item.number}}</span>
-          </div>
-        </div>
-      </template>
-    </recycle-scroller>
+  <div id="search-result-scroll-area">
+    <div ref="search-list" id="search-result-content" @click="handleClick">
+      <div class="clusterize-no-data"></div>
+    </div>
   </div>
 
 </template>
 
 <script>
 import { RecycleScroller } from 'vue-virtual-scroller';
+import Clusterize from 'clusterize.js';
 
 export default {
   name       : 'searchList',
@@ -34,75 +18,179 @@ export default {
   },
   data() {
     return {
-      list       : [],
+      list : [],
     };
   },
   methods : {
+    createRow(row) {
+      return `
+        <div class="search-result-row" node-id="${row.id}">
+          <input ${row.checked ? 'checked' : ''} id="${row.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
+          <label
+              check-box
+              node-id="${row.id}"
+              class="tree-checkbox-label"
+              for="${row.id}">
+          </label>
+
+          <div class="avatar" node-id="${row.id}">
+            ${/^(.*)\\\\(.*\\\\)$/.test(row.name) ? RegExp.$1.substr(-2, 2) : row.name.substr(-2, 2)}
+          </div>
+          <div class="name-content" node-id="${row.id}">
+            <span node-id="${row.id}" class="name">${row.name}</span>
+            <span node-id="${row.id}" v-if="item.number" class="number">${row.number}</span>
+          </div>
+        </div>
+      `;
+    },
+    createTemplates(data) {
+      return data.map((i) => this.createRow(i));
+    },
+    createSearchList(data) {
+      const cluster = new Clusterize({
+        rows         : this.createTemplates(data),
+        scrollId     : 'search-result-scroll-area',
+        contentId    : 'search-result-content',
+        no_data_text : '',
+      });
+
+      cluster._isVue = true;
+
+      this.cluster = cluster;
+    },
+    updateSearchList(data) {
+      this.cluster.update(this.createTemplates(data));
+    },
     update(data) {
+      data._isVue = true;
+
       data.forEach((n) => {
         n.size = 56;
       });
-      data._isVue = true;
+
+      if (this.cluster) {
+        this.updateSearchList(data);
+      }
+      else {
+        this.createSearchList(data);
+      }
+      this.$refs['search-list'].removeAttribute('tabindex');
+
       this.list = data;
     },
-    handleCheck(id) {
-      debugger;
+    handleClick(e) {
+      e.preventDefault();
+      const id = e.target.getAttribute('node-id');
+      const checkItem = this.list.find((n) => n.id === id);
+
+      checkItem.checked = !checkItem.checked;
+      this.updateSearchList(this.list);
+
+      this.$emit('check', { id, checked: checkItem.checked });
     },
   },
 };
 </script>
 
-<style lang="less" scoped>
-  .search-result-content {
-    height: calc( 100% - 40px );
+<style lang="less" >
+  #search-result-scroll-area {
+    height: calc(100% - 40px);
     overflow-y: auto;
+
     .scroll-area {
       height: 100%;
     }
   }
-  .list-item{
-    height: 56px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-  &:hover{
-     background: #E1E5F2;
-  .delete-btn {
-    display: unset;
-  }
-  }
-  .delete-btn {
-    display: none;
-  }
-  .avatar{
-    height: 32px;
-    width: 32px;
-    background: #55638C;
-    border-radius: 50%;
-    margin: 0 10px;
-    color: #fff;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .name-content{
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: center;
-  .name{
-    font-size: 14px;
-    height: 20px;
-    line-height: 20px;
-  }
-  .number {
-    font-size: 12px;
-    color: #777777;
-    height: 20px;
-    line-height: 20px;
-  }
+
+  #search-result-content {
+
+    .search-result-row {
+      user-select: none;
+      height: 56px;
+      display: flex !important;
+      align-items: center;
+      padding: 0 10px;
+
+      .tree-checkbox {
+        &[type="checkbox"] {
+          clip: rect(0, 0, 0, 0);
+          display: none;
+        }
+
+        &[type="checkbox"]:checked + .tree-checkbox-label::before {
+          content: '\2713';
+          color: #fff;
+          background: #4a5fc4;
+          border-color: #4a5fc4;
+          border-radius: 2px;
+          text-align: center;
+        }
+      }
+
+      .tree-checkbox-label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        line-height: 16px;
+      }
+
+      .tree-checkbox-label::before {
+        content: '\a0';
+        display: inline-block;
+        border: 1px solid silver;
+        width: 18px;
+        height: 18px;
+        font-weight: bold;
+        background: #fff;
+        border-radius: 2px;
+      }
+
+      &:hover {
+        background: #E1E5F2;
+
+        .delete-btn {
+          display: unset;
+        }
+      }
+
+      .delete-btn {
+        display: none;
+      }
+
+      .avatar {
+        height: 32px;
+        width: 32px;
+        background: #55638C;
+        border-radius: 50%;
+        margin: 0 10px;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .name-content {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        justify-content: center;
+
+        .name {
+          font-size: 14px;
+          height: 20px;
+          line-height: 20px;
+        }
+
+        .number {
+          font-size: 12px;
+          color: #777777;
+          height: 20px;
+          line-height: 20px;
+        }
+      }
+
+    }
   }
 
-  }
 </style>

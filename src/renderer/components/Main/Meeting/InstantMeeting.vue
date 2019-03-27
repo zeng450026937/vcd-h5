@@ -7,7 +7,13 @@
 
       <a-divider class="my-0"/>
         <div class="flex flex-col h-full m-4">
-          <transfer :max-checked="100"  :getChild="getAsyncChildNodes" :loadMode="loadMode" ref="transfer"></transfer>
+          <transfer
+              :search="searchContact"
+              :max-checked="100"
+              :getChild="getAsyncChildNodes"
+              :loadMode="loadMode"
+              ref="transfer">
+          </transfer>
         </div>
         <div class="flex flex-grow"></div>
       <a-divider class="my-0"/>
@@ -102,6 +108,9 @@ export default {
     },
     getAsyncChildNodes(id) {
       return this.$model.contact.getAsyncChildNodes(id);
+    },
+    searchContact(val) {
+      return this.$model.contact.findContacts(val);
     },
     create() {
       setTimeout(() => {
