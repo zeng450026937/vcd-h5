@@ -163,7 +163,12 @@ function formatStatistics(data) {
 
   // IP地址
   if (statisticInfo[2].value === DEFAULT_TEXT) {
-    statisticInfo[2].value = hostIp();
+    try {
+      statisticInfo[2].value = data.media.candidate.audio.localCandidate.ip || DEFAULT_TEXT;
+    }
+    catch (e) {
+      statisticInfo[2].value = DEFAULT_TEXT;
+    }
   }
 
   // 协议类型
@@ -200,10 +205,10 @@ function formatStatistics(data) {
   sectionInfo[0].sections[3].recv = result;
 
   // 视频 -- 抖动
-  result = moVideo.googJitterBufferMs;
-  sectionInfo[0].sections[4].send = result || DEFAULT_TEXT;
-  result = miVideo.googJitterBufferMs;
-  sectionInfo[0].sections[4].recv = result || DEFAULT_TEXT;
+  result = moVideo.jitter;
+  sectionInfo[0].sections[4].send = (result || result === 0) ? result : DEFAULT_TEXT;
+  result = miVideo.jitter;
+  sectionInfo[0].sections[4].recv = (result || result === 0) ? result : DEFAULT_TEXT;
 
 
   // 视频 -- 丢包数
@@ -232,11 +237,11 @@ function formatStatistics(data) {
   sectionInfo[2].sections[1].recv = result;
 
 
-  // 视频 -- 抖动
-  result = moAudio.googJitterBufferMs;
-  sectionInfo[2].sections[2].send = result || DEFAULT_TEXT;
-  result = miAudio.googJitterBufferMs;
-  sectionInfo[2].sections[2].recv = result || DEFAULT_TEXT;
+  // 音频 -- 抖动
+  result = moAudio.jitter;
+  sectionInfo[2].sections[2].send = result; // (result || result === 0) ? result : DEFAULT_TEXT;
+  result = miAudio.jitter;
+  sectionInfo[2].sections[2].recv = result; // (result || result === 0) ? result : DEFAULT_TEXT;
 
 
   // 音频 -- 总丢包数
@@ -250,7 +255,6 @@ function formatStatistics(data) {
   sectionInfo[2].sections[4].send = result;
   result = `${Math.round(miAudio.packetsLostRate)}%`;
   sectionInfo[2].sections[4].recv = result;
-
 
   if (share) {
     const { video:siVideo } = share.inbound;
@@ -284,10 +288,10 @@ function formatStatistics(data) {
 
 
     // 视频 -- 抖动
-    result = soVideo.googJitterBufferMs;
-    sectionInfo[2].sections[4].send = result || DEFAULT_TEXT;
-    result = siVideo.googJitterBufferMs;
-    sectionInfo[2].sections[4].recv = result || DEFAULT_TEXT;
+    result = soVideo.jitter;
+    sectionInfo[1].sections[4].send = (result || result === 0) ? result : DEFAULT_TEXT;
+    result = siVideo.jitter;
+    sectionInfo[1].sections[4].recv = (result || result === 0) ? result : DEFAULT_TEXT;
 
     // 视频 -- 丢包数
     result = soVideo.packetsLost;
@@ -349,6 +353,7 @@ function analyzeReport(report = {}, direction = 'inbound') {
       bitrate         : 0,
       packetsLost     : 0,
       packetsLostRate : 0,
+      jitter          : 0,
       codec           : {
         name : '',
       },
@@ -358,6 +363,7 @@ function analyzeReport(report = {}, direction = 'inbound') {
       bitrate         : 0,
       packetsLost     : 0,
       packetsLostRate : 0,
+      jitter          : 0,
       codec           : {
         name : '',
       },
@@ -378,6 +384,7 @@ function analyzeReport(report = {}, direction = 'inbound') {
 
     statsAudio.packetsLost = safeValue(audio.packetsLost, statsAudio.packetsLost);
     statsAudio.packetsLostRate = safeValue(audio.packetsLostRate, statsAudio.packetsLostRate);
+    statsAudio.jitter = safeValue(audio.jitter, statsAudio.jitter);
     statsAudio.codec = safeValue(audio.codec, statsAudio.codec);
     statsAudio.track = safeValue(audio.track, statsAudio.track);
 
@@ -390,6 +397,7 @@ function analyzeReport(report = {}, direction = 'inbound') {
 
     statsVideo.packetsLost = safeValue(video.packetsLost, statsVideo.packetsLost);
     statsVideo.packetsLostRate = safeValue(video.packetsLostRate, statsVideo.packetsLostRate);
+    statsVideo.jitter = safeValue(video.jitter, statsVideo.jitter);
     statsVideo.codec = safeValue(video.codec, statsVideo.codec);
     statsVideo.track = safeValue(video.track, statsVideo.track);
 
@@ -483,29 +491,6 @@ function getTotalIncomingBitrate(signalData) {
   }
 
   return total;
-}
-
-function hostIp() {
-  let IPv4 = '';
-
-  if (process.platform === 'darwin') {
-    interfaces.en0.forEach((en) => {
-      if (en.family === 'IPv4') {
-        IPv4 = en.address;
-      }
-    });
-  }
-  else if (process.platform === 'win32') {
-    Object.values(interfaces).forEach((inters) => {
-      inters.forEach((inter) => {
-        if (inter.family === 'IPv4' && inter.address !== '127.0.0.1' && !inter.internal) {
-          IPv4 = inter.address;
-        }
-      });
-    });
-  }
-
-  return IPv4;
 }
 
 statistics.provide({

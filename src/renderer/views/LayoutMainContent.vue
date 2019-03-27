@@ -50,8 +50,9 @@ export default {
   },
   mounted() {
   },
+  methods : {
+  },
   watch : {
-
     $route : {
       handler(val) {
         this.hideNav = val.path === MAIN.CALENDAR_RESERVE;

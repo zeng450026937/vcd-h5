@@ -45,7 +45,7 @@ model.provide({
       bookingPassword            : false,
       noticeTip                  : false,
       noticeSound                : false,
-      enableLocalVideo           : false,
+      enableLocalVideo           : true,
       // p2p
       dnd                        : false,
     };

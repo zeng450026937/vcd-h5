@@ -101,10 +101,11 @@ export default {
       return this.store.getAmount(id);
     },
     enterMeeting() {
-      const checked = this.$refs.transfer.getChecked()
+      const users = this.$refs.transfer.getChecked()
         .map((item) => ({ requestUri: item.number }));
 
-      this.$rtc.conference.meetnow(checked, { subject: `${this.$rtc.account.username} 的视频会议` });
+      this.$dispatch('meeting.meetnow', { users });
+      // this.$rtc.conference.meetnow(checked, { subject: `${this.$rtc.account.username} 的视频会议` });
     },
     getAsyncChildNodes(id) {
       return this.$model.contact.getAsyncChildNodes(id);
