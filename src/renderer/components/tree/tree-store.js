@@ -174,11 +174,13 @@ export default class TreeStore {
 
     this.asyncMap[nodeId] = data;
 
-    const checkedList = this.asyncChecked.map((n) => this.getNodeId(n));
+    this.asyncChecked.forEach((n) => {
+      const id = this.getNodeId(n);
+      const node = this.getNode(id);
 
-    data.forEach((n) => {
-      if (checkedList.indexOf(this.getNodeId(n))) {
-        n.checked = true;
+      if (node) {
+        node.checked = true;
+        this.checkedMap[id] = true;
       }
     });
   }
@@ -503,6 +505,8 @@ export default class TreeStore {
       n.checked = false;
       n.halfChecked = false;
     });
+
+    this.asyncChecked = [];
     this.correctDefaultChecked();
     console.timeEnd('clear all checked cost time');
   }

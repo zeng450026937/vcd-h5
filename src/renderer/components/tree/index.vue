@@ -189,7 +189,7 @@ export default {
       return treeStore.search(text);
     },
     getAsyncCheckedNode(id) {
-      return treeStore.getAsyncCheckedNode(id)
+      return treeStore.getAsyncCheckedNode(id);
     },
     cancelChecked(id) {
       treeStore.cancelChecked(id);

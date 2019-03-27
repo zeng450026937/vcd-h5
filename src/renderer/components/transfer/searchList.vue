@@ -18,7 +18,8 @@ export default {
   },
   data() {
     return {
-      list : [],
+      list           : [],
+      defaultChecked : '',
     };
   },
   methods : {
@@ -78,10 +79,22 @@ export default {
 
       this.list = data;
     },
+    cancelChecked(id) {
+      if (id === this.defaultChecked) return;
+
+      const checkItem = this.list.find((n) => n.id === id);
+
+      checkItem.checked = !checkItem.checked;
+      this.updateSearchList(this.list);
+    },
+
     handleClick(e) {
       e.preventDefault();
       const id = e.target.getAttribute('node-id');
+
       const checkItem = this.list.find((n) => n.id === id);
+
+      if (this.defaultChecked && id === this.defaultChecked.id && checkItem.checked) return;
 
       checkItem.checked = !checkItem.checked;
       this.updateSearchList(this.list);

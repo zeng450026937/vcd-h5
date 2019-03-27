@@ -31,37 +31,14 @@
       <a-tab-pane tab="邀请联系人" key="inviteUser">
         <div style="height: 420px;">
           <div class="flex h-full p-5">
-
-            <div class="w-1/2 bg-white overflow-hidden">
-              <contact-tree ref="contactTree"
-                            :checked="checkedKeys"
-                            @onCheck="onCheck"
-                            @onPush="onPush"
-                            @onPop="onPop"></contact-tree>
-            </div>
-            <div class="flex mx-3 justify-center items-center">
-              <a-iconfont type="right" class="text-grey text-2xl cursor-pointer"/>
-            </div>
-            <div class="flex w-1/2 bg-white overflow-hidden">
-              <div class="w-full flex flex-col border">
-                <div class="border-b">
-                  <div class="flex flex-col">
-                    <div class="flex h-10 items-center px-3">
-                      <span class="flex flex-grow text-sm">{{selectedContact.length || 0}}/100</span>
-                      <span v-if="selectedContact.length > 0"
-                            class="flex text-indigo text-xs cursor-pointer"
-                            @click="clearAll">全部清空</span>
-                    </div>
-                  </div>
-                </div>
-                <contact-list :contactList="selectedContact"
-                              :video-icon="false"
-                              :audio-icon="false"
-                              delete-icon highlightSelected
-                              @deleteContact="deleteContact"
-                ></contact-list>
-              </div>
-            </div>
+            <transfer
+                @change="handleChange"
+                :search="searchContact"
+                :max-checked="100"
+                :getChild="getAsyncChildNodes"
+                :loadMode="loadMode"
+                ref="transfer">
+            </transfer>
           </div>
         </div>
       </a-tab-pane>
@@ -96,14 +73,12 @@
 <script>
 /* eslint-disable no-loop-func */
 import copy from 'clipboard-copy';
-import ContactTree from '../Main/Contact/ContactTree.vue';
-import ContactList from '../Main/Contact/ContactList.vue';
+import transfer from '../transfer/index.vue';
 
 export default {
   name       : 'ConferenceInvitingModal',
   components : {
-    ContactTree,
-    ContactList,
+    transfer,
   },
   data() {
     return {
@@ -120,6 +95,18 @@ export default {
     };
   },
   computed : {
+    dataLoaded() {
+      return this.$model.contact.phoneBookLoaded;
+    },
+    loadMode() {
+      return this.$model.contact.loadMode;
+    },
+    store() {
+      return this.$model.phoneBookStore;
+    },
+    contacts() {
+      return this.$model.contact.phoneBookStore.originTree;
+    },
     isInviteDisabled() {
       if (this.currentTab === 'inviteUser') {
         return this.selectedContact.length <= 0;
@@ -146,6 +133,21 @@ export default {
     },
   },
   methods : {
+    getAsyncChildNodes(id) {
+      return this.$model.contact.getAsyncChildNodes(id);
+    },
+    searchContact(val) {
+      return this.$model.contact.findContacts(val);
+    },
+    create() {
+      this.$refs.transfer.create({
+        data : this.contacts,
+      });
+    },
+    handleChange(data) {
+      data._isVue = true;
+      this.selectedContact = data;
+    },
     handleOk() {
       if (this.confirmLoading) return;
       this.confirmLoading = true;
@@ -191,39 +193,8 @@ export default {
     handleCancel() {
       this.visible = false;
     },
-    deleteContact(contact) {
-      const { checkedKeys, unCheckSearchResult } = this.$refs.contactTree;
 
-      let parent = contact;
-      const i = this.selectedContact.findIndex((c) => c.id === contact.id);
 
-      if (i >= 0) this.selectedContact.splice(i, 1);
-
-      while (parent) {
-        const index = checkedKeys.findIndex((c) => c === parent.id);
-
-        if (index >= 0) checkedKeys.splice(index, 1);
-        parent = parent.parent;
-      }
-      // 取消勾选搜索结果
-      unCheckSearchResult(contact);
-    },
-    onCheck(selectedContact) {
-      this.selectedContact = selectedContact;
-    },
-    onPush(contact) {
-      this.selectedContact.push(contact);
-    },
-    onPop(contact) {
-      const index = this.selectedContact.findIndex((c) => c.id === contact.id);
-
-      if (index > -1) this.selectedContact.splice(index, 1);
-    },
-    clearAll() {
-      this.selectedContact = [];
-      this.$refs.contactTree.checkedKeys = [];
-      this.$refs.contactTree.unCheckSearchResult();
-    },
     copyConferenceInfo() {
       const { description } = this.$rtc.conference.information;
       const meetingInfo = {
@@ -241,6 +212,20 @@ export default {
     },
   },
   watch : {
+    dataLoaded(val) {
+      if (val) {
+        this.$nextTick(() => {
+          this.create();
+        });
+      }
+    },
+    visible(val) {
+      if (val && this.dataLoaded) {
+        this.$nextTick(() => {
+          this.create();
+        });
+      }
+    },
     async currentTab(val) {
       if (val === 'inviteOther') {
         await this.$nextTick();

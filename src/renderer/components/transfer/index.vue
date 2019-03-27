@@ -97,14 +97,15 @@ export default {
     },
     correctChecked(data) {
       data.forEach((n) => {
-        let node = this.$refs.tree.getNode(n.id) || this.$refs.tree.getAsyncCheckedNode(n.id);
-        
+        const node = this.$refs.tree.getNode(n.id) || this.$refs.tree.getAsyncCheckedNode(n.id);
+
         if (node) n.checked = node.checked;
       });
     },
     handleChange(checked) {
       console.log('transfer:', checked);
       this.$refs.checkedList.update(checked);
+      this.$emit('change', checked);
     },
     handleCheck({ id, checked }) {
       this.$refs.tree.check(id, checked);
@@ -114,9 +115,11 @@ export default {
     },
     handleClear() {
       this.$refs.tree.clear();
+      this.$refs.searchList.update([]);
     },
     handleCancelChecked(id) {
       this.$refs.tree.cancelChecked(id);
+      this.$refs.searchList.cancelChecked(id);
     },
     getChecked() {
       return this.$refs.tree.getChecked();
@@ -133,6 +136,7 @@ export default {
         defaultChecked : defaultChecked ? defaultChecked.id : null,
         maxChecked     : this.maxChecked,
       });
+      this.$refs.searchList.defaultChecked = defaultChecked;
     },
   },
 };
