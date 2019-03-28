@@ -9,8 +9,10 @@ const LOAD_MODE = {
   SPLIT   : 'SPLIT',
 };
 
+const DEFAULT_MAX_CHECK = 50 * 10000;
+
 export default class TreeStore {
-  constructor({ data, expandLevel = 2, maxChecked = 50 * 10000, defaultChecked, loadMode = LOAD_MODE.OVERALL }) {
+  constructor({ data, expandLevel = 2, maxChecked = DEFAULT_MAX_CHECK, defaultChecked, loadMode = LOAD_MODE.OVERALL }) {
     if (!Array.isArray(data)) return;
     console.time('generate Tree model cost time');
     this.loadMode = loadMode;
@@ -21,7 +23,10 @@ export default class TreeStore {
     this.originTree = data;
     this.checkedMap = {};
     this.asyncMap = {};
+    this.asyncChecked = [];
     this.genTree();
+    this.correctDefaultChecked();
+
     console.timeEnd('generate Tree model cost time');
   }
 
@@ -168,6 +173,20 @@ export default class TreeStore {
     this.multiple = multiple;
 
     this.asyncMap[nodeId] = data;
+
+    this.asyncChecked.forEach((n) => {
+      const id = this.getNodeId(n);
+      const node = this.getNode(id);
+
+      if (node) {
+        node.checked = true;
+        this.checkedMap[id] = true;
+      }
+    });
+  }
+
+  getAsyncCheckedNode(id) {
+    return this.asyncChecked.find((n) => this.getNodeId(n) === id);
   }
 
   async expand(id, getChildAsync, useAsync = false) {
@@ -247,18 +266,12 @@ export default class TreeStore {
     return result;
   }
 
-  getCheckedMultiple(id) {
-    const multiple = this.getNodeInMultiple(id);
-
-    return multiple.filter((n) => n.checked);
-  }
-
   async checkNode(id, checked) {
     if (id === this.defaultChecked) return;
 
-    const checkers = this.getChecked();
+    const checkeds = this.getChecked();
 
-    if (checked && checkers.length >= this.maxChecked) return checkers;
+    if (checked && checkeds.length >= this.maxChecked) return checkeds;
 
     this.getNode(id).checked = checked;
     this.checkedMap[id] = checked;
@@ -266,6 +279,10 @@ export default class TreeStore {
     this.correctMultiple(id, checked);
 
     return this.getChecked();
+  }
+
+  correctDefaultChecked() {
+    if (this.defaultChecked) this.correctParentChecked({ id: this.defaultChecked, checked: true });
   }
 
   correctMultiple(id, checked) {
@@ -280,11 +297,34 @@ export default class TreeStore {
     });
   }
 
-  setCheckers(data) {
+  isSetMaxCheck() {
+    return this.maxChecked !== DEFAULT_MAX_CHECK;
+  }
+
+  isMultipleNode(id) {
+    return Object.keys(this.multiple).find((i) => i.indexOf(id) > -1) != null;
+  }
+
+  getCheckedMultiple() {
+    return Object.values(this.multiple).filter((i) => i.checked);
+  }
+
+  setCheckedList(data) {
+    this.asyncChecked = data;
+
     return new Promise((resolve) => {
-      data.forEach((id) => {
-        this.checkNode(id, true).then(() => {});
+      data.forEach((n) => {
+        if (this.loadMode === LOAD_MODE.SPLIT) {
+          n.checked = true;
+        }
+        else {
+          this.checkNode(this.getNodeId(n), true).then(() => {});
+        }
       });
+
+      if (this.loadMode === LOAD_MODE.SPLIT) {
+        resolve([ ...this.getChecked(), ...data ]);
+      }
 
       return resolve(this.getChecked());
     });
@@ -315,42 +355,47 @@ export default class TreeStore {
     }
     parent.checked = checked;
 
-    let checkedNum = checkedNodes.length;
+    const inMultiple = [];
 
-    offspring.forEach((node) => {
-      const nodeId = this.getNodeId(node);
+    for (let i = 0; i < offspring.length; i++) {
+      const nodeId = this.getNodeId(offspring[i]);
 
-      if (!this.isORG(node)) { // TODO 如果大于 maxChecked 需要break
-        checkedNum++;
+      if (nodeId === this.defaultChecked) continue;
+
+      if (this.isSetMaxCheck()) {
+        const checkedNum = this.getChecked().length;
+
+        if (checked && (checkedNum >= this.maxChecked)) {
+          parent.checked = false;
+          parent.halfChecked = true;
+
+          break;
+        }
       }
+      offspring[i].checked = checked;
 
-      if (checked && checkedNum > (this.maxChecked - this.getCheckedMultiple(this.getNodeId(node)).length)) {
-        // 设置 当前勾选的分组 选中状态
-        parent.checked = false;
-        parent.halfChecked = true;
+      if (this.isMultipleNode(nodeId)) inMultiple.push(offspring[i]);
 
-        return;
-      }
-
-      node.checked = checked;
-
-      if (!this.isORG(node)) {
+      if (!this.isORG(offspring[i])) {
         this.checkedMap[nodeId] = checked;
-        this.correctMultiple(node.id, checked);
       }
 
-      if (checked && this.isORG(node)) {
-        node.halfChecked = false;
+      if (checked && this.isORG(offspring[i])) {
+        offspring[i].halfChecked = false;
       }
+    }
+
+    inMultiple.forEach((n) => {
+      this.correctMultiple(this.getNodeId(n), n.checked);
     });
 
     this.correctParentChecked({ id, checked }); // 此处 勾选的是 分组 所以只传分组 的 id 就可以准确 校正 父分组的勾选状态
 
-    const checkers = this.getChecked();
+    const checkeds = this.getChecked();
 
-    if (checkers.length === this.maxChecked) this.correctChildChecked(id);
+    if (checkeds.length === this.maxChecked) this.correctChildChecked(id);
 
-    return checkers;
+    return checkeds;
   }
 
   hasCheckedOffspring(id) {
@@ -460,20 +505,33 @@ export default class TreeStore {
       n.checked = false;
       n.halfChecked = false;
     });
+
+    this.asyncChecked = [];
+    this.correctDefaultChecked();
     console.timeEnd('clear all checked cost time');
   }
 
   cancelChecked(id) {
     const node = this.getNode(id);
 
-    node.checked = false;
-    this.checkedMap[id] = false;
-    this.correctParentChecked({
-      id,
-      checked : false,
-    });
+    if (this.loadMode === LOAD_MODE.SPLIT) {
+      this.asyncChecked = this.asyncChecked.filter((n) => n.id !== id);
 
-    this.correctMultiple(id, false);
+      if (node) {
+        node.checked = false;
+        this.checkedMap[id] = false;
+      }
+    }
+    else {
+      node.checked = false;
+      this.checkedMap[id] = false;
+      this.correctParentChecked({
+        id,
+        checked : false,
+      });
+
+      this.correctMultiple(id, false);
+    }
   }
 
   search(text) {

@@ -75,6 +75,9 @@ export default {
         this.$emit('change', nodes);
       });
     },
+    check(id, checked) {
+      return this.checkEntity(id, checked);
+    },
     checkGroup(id, checked) {
       treeStore.checkOffspring(id, checked).then((nodes) => {
         this.updateTreeViews();
@@ -84,6 +87,7 @@ export default {
     },
     updateTreeViews() {
       this.cluster.update(this.createRow(treeStore.tree));
+      this.cluster.refresh();
     },
     createStyleString(styles) {
       let result = '';
@@ -184,15 +188,21 @@ export default {
     search(text) {
       return treeStore.search(text);
     },
+    getAsyncCheckedNode(id) {
+      return treeStore.getAsyncCheckedNode(id);
+    },
     cancelChecked(id) {
       treeStore.cancelChecked(id);
       this.updateTreeViews();
     },
-    setCheckers(ids) {
-      return treeStore.setCheckers(ids).then((checkers) => {
+    getNode(id) {
+      return treeStore.getNode(id);
+    },
+    setCheckedList(checkedList) {
+      return treeStore.setCheckedList(checkedList).then((checked) => {
         this.updateTreeViews();
 
-        return checkers;
+        return checked;
       });
     },
     createTreeViews(store) {
@@ -201,6 +211,8 @@ export default {
         scrollId  : 'tree-scroll-area',
         contentId : 'tree-content-area',
       });
+
+      cluster.refresh();
 
       this.$refs['tree-content'].removeAttribute('tabindex');
 
@@ -232,7 +244,6 @@ export default {
   outline: none;
   height: 100%;
   width: max-content;
-  padding: 10px 0;
   &:focus {
     outline: none;
     border:none

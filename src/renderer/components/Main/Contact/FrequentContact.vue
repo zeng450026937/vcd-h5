@@ -175,7 +175,7 @@ export default {
       this.modalType = 'edit';
       this.$refs.contactDrawer.updateGroupInfo({
         groupName   : group.name,
-        checkedKeys : this.store.getOffspringNoGroup(group.id).map((n) => n.id),
+        checkedList : this.store.getOffspringNoGroup(group.id),
         editedGroup : group,
       });
 

@@ -30,7 +30,7 @@ export default new Vuem().provide({
         pin,
         initialVideo,
         initialAudio,
-      } = this.meetingRecord;
+      } = ctx.payload.meetingRecord || this.meetingRecord;
       const { conference } = rtc;
 
       conference.number = number;

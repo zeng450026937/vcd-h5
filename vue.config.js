@@ -18,6 +18,12 @@ module.exports = {
       title    : 'ringing',
       filename : 'ringing.html',
     },
+    notification : {
+      entry    : 'src/renderer/window/notification.js',
+      template : 'public/notification.html',
+      title    : 'notification',
+      filename : 'notification.html',
+    },
   },
 
   css : {

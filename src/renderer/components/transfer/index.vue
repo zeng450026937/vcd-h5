@@ -11,7 +11,7 @@
           @change="handleChange"
           class="tree-list">
       </tree>
-      <search-list ref="searchList" v-show="showSearchResult"></search-list>
+      <search-list @check="handleCheck" ref="searchList" v-show="showSearchResult"></search-list>
     </div>
     <div class="arrow">
       <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"></a-iconfont>
@@ -62,6 +62,9 @@ export default {
     getChild : {
       type : Function,
     },
+    search : {
+      type : Function,
+    },
   },
   data() {
     return {
@@ -70,39 +73,60 @@ export default {
     };
   },
   methods : {
-    handleSearch(val) {
+    async handleSearch(val) {
       if (!val) {
         this.showSearchResult = false;
         this.$refs.searchList.update([]);
 
         return;
       }
-      const result = this.$refs.tree.search(val);
+      let result;
+
+      if (this.loadMode === LOAD_MODE.SPLIT) {
+        result = await this.search(val);
+        this.correctChecked(result);
+      }
+      else {
+        result = this.$refs.tree.search(val);
+      }
 
       this.showSearchResult = true;
       this.$nextTick(() => {
         this.$refs.searchList.update(result);
       });
     },
+    correctChecked(data) {
+      data.forEach((n) => {
+        const node = this.$refs.tree.getNode(n.id) || this.$refs.tree.getAsyncCheckedNode(n.id);
+
+        if (node) n.checked = node.checked;
+      });
+    },
     handleChange(checked) {
       console.log('transfer:', checked);
       this.$refs.checkedList.update(checked);
+      this.$emit('change', checked);
+    },
+    handleCheck({ id, checked }) {
+      this.$refs.tree.check(id, checked);
     },
     handleReady() {
       this.$refs.checkedList.update(this.getChecked());
     },
     handleClear() {
       this.$refs.tree.clear();
+      this.$refs.searchList.update([]);
     },
     handleCancelChecked(id) {
       this.$refs.tree.cancelChecked(id);
+      this.$refs.searchList.cancelChecked(id);
     },
     getChecked() {
       return this.$refs.tree.getChecked();
     },
-    setCheckers(ids) {
-      return this.$refs.tree.setCheckers(ids).then((checkers) => {
-        this.$refs.checkedList.update(checkers);
+    setCheckedList(checkedList) {
+      return this.$refs.tree.setCheckedList(checkedList).then((checked) => {
+        this.$refs.checkedList.update(checked);
       });
     },
     create({ data, defaultChecked }) {
@@ -112,6 +136,7 @@ export default {
         defaultChecked : defaultChecked ? defaultChecked.id : null,
         maxChecked     : this.maxChecked,
       });
+      this.$refs.searchList.defaultChecked = defaultChecked;
     },
   },
 };

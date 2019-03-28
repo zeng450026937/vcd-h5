@@ -99,6 +99,31 @@ model.provide({
 
       window.open('ringing.html', 'ringing', option);
     },
+    requestPermission() {
+      const permission = Notification.permission;
+
+      if (permission === 'denied' || permission === 'default') {
+        return Notification.requestPermission();
+      }
+
+      return Promise.resolve();
+    },
+    notify(info) {
+      this.requestPermission().then(() => {
+        const notification = new Notification(info.subject, {
+          body : '请加入会议',
+        });
+
+        notification.onclick = () => {
+          this.$dispatch('meeting.joinMeeting', {
+            number       : info['conference-number'],
+            pin          : info['presenter-pin'],
+            initialVideo : true,
+            initialAudio : true,
+          });
+        };
+      });
+    },
   },
   watch : {
     loginStatus : {
@@ -113,6 +138,15 @@ model.provide({
       handler   : 'handleCall',
       immediate : true,
     },
+  },
+  async created() {
+    await this.$nextTick();
+
+    const schedule = this.$getVM('schedule');
+
+    schedule.$on('schedule-event', (info) => {
+      this.notify(info);
+    });
   },
 });
 
