@@ -57,7 +57,7 @@ export default {
     };
   },
   mounted() {
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.interval = secondsToHms((Date.now() - this.info.date)/1000);
     }, 1000);
   },

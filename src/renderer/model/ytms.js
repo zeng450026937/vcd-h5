@@ -105,6 +105,14 @@ model.provide({
       this.$dispatch('ytms.updateClientInfo', { data });
     });
 
+    setting.$watch('tags', (val) => {
+      const data = {
+        clientRemarks : val,
+      };
+
+      this.$dispatch('ytms.updateClientInfo', { data });
+    });
+
     rtc.account.$watch('ua', (val) => {
       const configuration = val && val.configuration;
 

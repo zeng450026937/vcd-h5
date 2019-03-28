@@ -10,7 +10,6 @@ export class AudioMixer {
     return this.destination.stream;
   }
 
-  // pipe audio track
   connect(stream) {
     const node = this.context.createMediaStreamSource(stream);
 
@@ -21,7 +20,20 @@ export class AudioMixer {
     return this;
   }
 
+  disconnect(stream) {
+    const index = this.sources.findIndex((s) => s.mediaStream === stream);
+
+    if (index === -1) return;
+
+    const source = this.sources[index];
+
+    source.disconnect();
+
+    this.sources.splice(index, 1);
+  }
+
   reset() {
     this.sources.forEach((s) => s.disconnect());
+    this.sources.length = 0;
   }
 }

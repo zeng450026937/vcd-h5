@@ -70,12 +70,9 @@
                       @click="showAddPropetyInput=false" ></a-button>
           </div>
           <div class="mt-2">
-            <a-tooltip v-for="(item,index) in tags" :key="item.id">
-              <template slot="title">
-                <span>{{$t('setting.common.propertyCreateAt')+item.createdAt}}</span>
-              </template>
-              <a-tag closable @close="handleDeleteProperty(index)" color="gray">{{item.label}}</a-tag>
-            </a-tooltip>
+            <template v-for="(tag,index) in tags">
+              <a-tag :key="index" closable @close="handleDeleteProperty(index)" color="gray">{{tag}}</a-tag>
+            </template>
             <a-tag  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
               v-if="tags.length<=20">
                 <span>+ {{$t('setting.common.addProperty')}}</span>
@@ -186,7 +183,7 @@ export default {
     },
 
     handleNoodGuide() {
-      this.$message.warning('新手引导还没做完哦');
+      this.$message.warning('新手引导二期实现');
     },
 
     handleLanguageChange() {
@@ -198,11 +195,7 @@ export default {
       if (this.addPropertyText.trim() !== '') {
         if (this.tags.length < 20) {
           this.showAddPropetyInput = false;
-          this.tags.push({
-            label     : this.addPropertyText,
-            id        : this.getNewPropertyId() + 1,
-            createdAt : (new Date()).toLocaleString(),
-          });
+          this.tags.push(this.addPropertyText);
           this.addPropertyText = '';
           this.$message.success(this.$t('setting.common.addPropertyNotice'));
         }
@@ -215,12 +208,11 @@ export default {
       }
     },
     handleDeleteProperty(index) {
-      const deleteMsg = this.tags.splice(index, 1)[0].label;
+      const tag = this.tags[index];
 
-      this.$message.success(`${deleteMsg} ${this.$t('setting.common.deletePropertyNotice')}`);
-    },
-    getNewPropertyId() {
-      return this.tags.length ? this.tags[this.tags.length - 1].id : 0;
+      this.tags.splice(index, 1);
+
+      this.$message.success(`${tag} ${this.$t('setting.common.deletePropertyNotice')}`);
     },
   },
 };
