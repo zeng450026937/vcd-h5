@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import rtc from '../rtc';
 import Vuem from './vuem';
 
 const storage = window.localStorage;

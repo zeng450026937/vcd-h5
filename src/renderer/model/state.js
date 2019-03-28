@@ -80,10 +80,18 @@ model.provide({
     },
     handleCall(val, once) {
       if (val === 'ringing') { // 来点
+        // 通话中免打扰
+        if (rtc.call.status === 'confirmed' && this.$parent.setting.dnd) {
+          rtc.call.decline();
+          
+          return;
+        }
         this.openCallWindow(); // 打开右下角的小窗口
       }
       else if (val === 'connecting' || (once === 'ringing' && val === 'connected')) { // 拨号 或者 来电接通
-        router.push(CALL.CALL_MAIN);
+        if (!this.isInMiniCall) { // Mini下挂断新的来电
+          router.push(CALL.CALL_MAIN);
+        }
       }
       else if (once && val === 'disconnected') {
         this.isInMiniCall = false;

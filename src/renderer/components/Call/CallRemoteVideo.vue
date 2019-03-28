@@ -3,7 +3,8 @@
     <remote-video
         :class="videoClasses"
         :hide-video="!showVideo"
-        source="call-remote">
+        source="call-remote"
+        @video-dblclick="videoDblClick">
       <div v-if="!showVideo"
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
@@ -69,8 +70,12 @@ export default {
       return {
         [`remote-video-content-${this.isInCallMain ? 'normal' : 'shrink'}`] : true,
         'h-full'                                                            : !this.isVideoCall,
-        'remote-video-content-normal-auto'                                  : this.isInCallMain && this.isVideoCall,
       };
+    },
+  },
+  methods : {
+    videoDblClick() {
+      this.$emit('video-dblclick');
     },
   },
   watch : {

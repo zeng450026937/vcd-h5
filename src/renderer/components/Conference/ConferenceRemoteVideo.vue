@@ -3,7 +3,8 @@
     <remote-video
         :class="videoClasses"
         :source="source"
-        :hide-video="!isVideoConference">
+        :hide-video="!isVideoConference"
+        @video-dblclick="videoDblClick">
       <div v-if="!isVideoConference"
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
@@ -52,6 +53,11 @@ export default {
         'h-full'                                                                  : !this.isVideoConference,
         'video-mirroring'                                                         : this.horizontalMirroring,
       };
+    },
+  },
+  methods : {
+    videoDblClick() {
+      this.$emit('video-dblclick');
     },
   },
   watch : {

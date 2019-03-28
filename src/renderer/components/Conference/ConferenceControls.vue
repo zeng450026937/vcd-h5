@@ -87,6 +87,9 @@ export default {
     props : [ 'isInConferenceMain', 'showMorePanel', 'isVideoConference' ],
   },
   computed : {
+    enableLocalVideo() {
+      return this.$model.setting.enableLocalVideo;
+    },
     shareAvailable() {
       const { currentUser } = this.$rtc.conference.information.users;
 
@@ -118,12 +121,12 @@ export default {
     videoDisabled() {
       const { status } = this.$rtc.media.localMedia;
 
-      return !status.active || !status.video;
+      return (!status.active || !status.video) && !this.enableLocalVideo;
     },
     audioDisabled() {
       const { status } = this.$rtc.media.localMedia;
 
-      return !status.active || !status.audio;
+      return (!status.active || !status.audio) && !this.enableLocalVideo;
     },
   },
   methods : {

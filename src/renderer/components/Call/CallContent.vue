@@ -30,9 +30,10 @@
         </div>
         <div class="flex flex-grow"></div>
       </div>
-      <div :class="remoteVideoClass"
-           @dblclick="maxCallContent">
-        <call-remote-video :source="centerSource"/>
+      <div :class="remoteVideoClass">
+        <call-remote-video
+            :source="centerSource"
+            @video-dblclick="maxCallContent"/>
       </div>
       <div v-show="isVideoCall"
            :class="localVideoClasses">

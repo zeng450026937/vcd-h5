@@ -11,6 +11,7 @@
         v-once
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
+        @dblclick="videoDblClicked"
     ></video>
     <div v-if="!videoStream && !hideVideo"
          class="loading-notice">
@@ -103,6 +104,9 @@ export default {
     videoClicked() {
       this.$emit('video-clicked');
     },
+    videoDblClicked() {
+      this.$emit('video-dblclick');
+    },
     async onVideoStreamChanged(stream) {
       if (!stream) return;
       await this.$nextTick();
@@ -117,6 +121,7 @@ export default {
       if (this.enableLocalVideo) {
         this.videoElement.src = this.localVideoPath;
         this.videoElement.addEventListener('canplay', () => {
+          // TODO 将会导致重协商
           this.staticStream = this.videoElement.captureStream(24);
           if (this.$rtc.conference.connected) {
             this.$rtc.conference.mediaChannel.channel.replaceLocalStream(this.staticStream);

@@ -206,24 +206,26 @@ export default {
       this.$refs.deleteModal.visible = false;
     },
     enterMeeting() {
-      this.isVideoConference = true;
       this.meetingRecord = {
         number       : this.currentEvent.conferenceNumber,
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
       };
-      this.$dispatch('meeting.joinMeeting');
+      this.$dispatch('meeting.joinMeeting').then(() => {
+        this.isVideoConference = true;
+      });
     },
     audioEnter() {
-      this.isVideoConference = false;
       this.meetingRecord = {
         number       : this.currentEvent.conferenceNumber,
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
       };
-      this.$dispatch('meeting.joinMeeting');
+      this.$dispatch('meeting.joinMeeting').then(() => {
+        this.isVideoConference = false;
+      });
     },
     toLiveShareUrl() {
       shell.openExternal(this.currentEvent.liveShareUrl);

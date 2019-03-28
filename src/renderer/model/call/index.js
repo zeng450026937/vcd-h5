@@ -22,7 +22,7 @@ model.provide({
   middleware : {
     call(ctx) {
       let { number } = ctx.payload;
-      // 判断是否为IP 直播 10.81.45.13 or 10*86*5*3
+      // 判断是否为IP 直播 10.81.45.13 or 10*86*5*3isVideoCall
 
       number = number.replace(/\*/g, '.');
 
@@ -42,6 +42,36 @@ model.provide({
     },
     decline() {
       rtc.call.decline().catch(() => {});
+    },
+  },
+  watch : {
+    isVideoCall : {
+      handler(val) {
+        if (!rtc.call.connected) return;
+        if (val) { // 视频通话 -> 关掉音频
+          rtc.call.channel.session.connection.getSenders().forEach((sender) => {
+            if (sender.track.kind === 'video') {
+              sender.track.stop();
+              rtc.call.channel.session.connection.removeTrack(sender);
+            }
+            else {
+
+            }
+          });
+        }
+        else { // 音频通话 -> 关掉视频
+          rtc.call.channel.session.connection.getSenders().forEach((sender) => {
+            if (sender.track.kind === 'video') {
+              sender.track.stop();
+              rtc.call.channel.session.connection.removeTrack(sender);
+            }
+            else {
+
+            }
+          });
+        }
+      },
+      immediate : true,
     },
   },
 });

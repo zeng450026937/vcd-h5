@@ -1,14 +1,13 @@
-import os from 'os';
 import Vuem from '../vuem';
-
-
-const interfaces = os.networkInterfaces();
 
 const statistics = new Vuem();
 
 function formatStatistics(data) {
   // if (!data) return null;
-  if (!data) data = {};
+  if (!data) {
+    console.warn('DATA NULL')
+    data = {};
+  }
   const DEFAULT_TEXT = '--';
 
   const media = getReport(data.media);

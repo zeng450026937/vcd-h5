@@ -26,7 +26,7 @@
                       @visibleChange="handleVisibleChange"
                       @confirm="clickPoint"
                       @cancel="clickAt">
-          <a-icon slot="icon" />
+          <span slot="icon" />
           <a-button class="w-full h-full">
             <div class="flex flex-col justify-center items-center h-full">
               <span class="text-xl">{{n.num}}</span>
