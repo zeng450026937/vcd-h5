@@ -1,6 +1,8 @@
 <template>
   <a-layout id="call-content" class="bg-media h-full">
-    <div class="relative h-full w-full" @mousemove="contentClicked">
+    <div class="relative h-full w-full"
+         @mousemove="contentClicked"
+         @click="contentClicked">
       <div class="flex flex-col h-full">
         <div class="header no-dragable flex flex-col h-10 z-10"
              :class="{'opacity-0': hideControls}">

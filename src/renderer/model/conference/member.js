@@ -20,18 +20,22 @@ member.provide({
       return userList;
     },
     memberList() {
-      const { userList } = rtc.conference.information.users;
+      const { userList, broadcastUserCount } = rtc.conference.information.users;
       // 主持人
       const presenterList = userList.filter((user) => user.isPresenter()
         && (user.displayText.indexOf(this.filterText) > -1
           || user.displayText.indexOf(this.phone) > -1));
       // 访客
       const visitorList = userList.filter((user) => !user.isPresenter()
-        && !user.isOnHold()
+        && !user.isOnHold() && !user.isCastViewer()
         && (user.displayText.indexOf(this.filterText) > -1
           || user.displayText.indexOf(this.phone) > -1));
-
-      const castViewerNum = userList.filter((user) => user.isCastViewer()).length;
+      // 广播方
+      const castViewerList = userList.filter((user) => user.isCurrentUser()
+        && !user.isPresenter()
+        && !user.isOnHold() && user.isCastViewer()
+        && (user.displayText.indexOf(this.filterText) > -1
+          || user.displayText.indexOf(this.phone) > -1));
 
       return [
         {
@@ -42,8 +46,12 @@ member.provide({
         {
           title : `访客 (${visitorList.length})`,
           group : 'visitor',
-          castViewerNum,
           list  : visitorList,
+        },
+        {
+          title : `广播方 (${castViewerList.length === 1 ? 1 : broadcastUserCount})`,
+          group : 'castViewer',
+          list  : castViewerList,
         },
       ];
     },

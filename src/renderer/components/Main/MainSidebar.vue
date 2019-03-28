@@ -112,6 +112,9 @@ export default {
     callStatus() {
       return this.$model.state.callStatus;
     },
+    isCallConfirmed() {
+      return this.$rtc.call.status === 'confirmed';
+    },
   },
   methods : {
     randomAvatar() {
@@ -125,7 +128,7 @@ export default {
         this.isInMiniConference = true;
         this.$router.push(sidebar.currentRoute);
       }
-      if (this.callStatus === 'connected' || this.callStatus === 'connecting') {
+      if (this.isCallConfirmed || this.callStatus === 'connecting') {
         this.isInMiniCall = true;
         this.$router.push(sidebar.currentRoute);
       }

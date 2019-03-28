@@ -1,6 +1,8 @@
 <template>
   <a-layout id="conference-content" class="bg-media h-full">
-    <div class="relative h-full w-full" @mousemove="contentClicked">
+    <div class="relative h-full w-full"
+         @mousemove="contentClicked"
+         @click="contentClicked">
       <div class="flex flex-col h-full">
         <div class="header no-dragable flex flex-col h-10 z-10"
              :class="{'opacity-0': hideControls}">
@@ -207,7 +209,7 @@ export default {
       // 观看他人内容共享时自动最大化VCD窗口
       if (val && this.maximizedWhenRemoteSharing) {
         // this.$refs.maxIcon.click();
-        document.getElementById('layout-conference-content').requestFullscreen();
+        // document.getElementById('layout-conference-content').requestFullscreen();
       }
     },
     isShareWindowOpen(val) {

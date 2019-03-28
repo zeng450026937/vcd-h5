@@ -87,6 +87,7 @@ export default {
         && date1.year() === date2.year();
     },
     selectDate(date) {
+      console.warn(date.raw);
       this.selectedDate = date.raw;
       this.$model.schedule.currentDateEvents = [];
       this.eventList.forEach((e) => {
