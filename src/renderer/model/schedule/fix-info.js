@@ -28,10 +28,6 @@ export function fixTemplate(val) {
   return info;
 }
 
-function toUTC(date) {
-  return new Date(date.toGMTString().slice(0, -4));
-}
-
 export function fixTimestamp(val) {
   TIMESTAMP_KEYS.forEach((key) => {
     const timestamp = val[key];

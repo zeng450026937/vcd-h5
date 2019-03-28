@@ -52,8 +52,14 @@ model.provide({
     await this.$nextTick();
     // model fully initilized
 
+    const application = this.$getVM('application');
     const setting = this.$getVM('setting');
     const account = this.$getVM('account');
+
+    application.$watch('connection', async() => {
+      await ipcProxy.getClientInfo();
+      ipcProxy.updateClientInfo();
+    });
 
     setting.$watch(
       'ytmsHostAddress',

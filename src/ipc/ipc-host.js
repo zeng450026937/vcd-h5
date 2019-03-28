@@ -44,4 +44,8 @@ export const ipcHost = {
 
     return ytms.clientId;
   },
+
+  updateClientInfo() {
+    ytms.updateInfo();
+  },
 };
