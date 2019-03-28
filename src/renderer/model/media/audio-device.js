@@ -79,18 +79,10 @@ const AudioDevice = Vue.extend({
       }
     },
 
-    toggleAudio(enabled = true) {
+    toggle(enabled = true) {
       if (!this.stream) return;
 
       this.stream.getAudioTracks().forEach((track) => {
-        track.enabled = enabled;
-      });
-    },
-
-    toggleVideo(enabled = true) {
-      if (!this.stream) return;
-
-      this.stream.getVideoTracks().forEach((track) => {
         track.enabled = enabled;
       });
     },

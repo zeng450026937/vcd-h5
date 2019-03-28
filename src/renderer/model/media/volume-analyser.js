@@ -47,7 +47,7 @@ const VolumeAnalyser = Analyser.extend({
     createContextAnalyser() {
       if (this.context && this.contextAnalyser) return;
       if (!window.AudioContext) {
-        console.warn('cannot context analyser');
+        console.warn('can not create context analyser');
 
         return;
       }

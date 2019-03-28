@@ -11,7 +11,7 @@
                            :value="option.permission"
           >{{option.label}}</a-select-option>
         </a-select>
-        <a-checkbox class="mt-3" v-model="attendeeLobbyBypass">受邀人员</a-checkbox>
+        <a-checkbox class="mt-3" :checked="attendeeLobbyBypass" @change="attendeeLobbyBypass = !attendeeLobbyBypass">受邀人员</a-checkbox>
       </template>
       <a-button type="primary" class="mt-16"
                 :disabled="!currentIsPresenter"

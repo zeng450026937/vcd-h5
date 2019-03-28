@@ -21,9 +21,10 @@
     "differentialPackage": false
   },
   "protocols": [{
-    "name": "x-yealink-client",
+    "name": "com.ylyun.meeting.vcd",
     "schemes": [
-      "test"
+      "x-yealink-client",
+      "yealink-voip"
     ]
   }],
   "mac": {
@@ -33,7 +34,7 @@
     "category": "public.app-category.video"
   },
   "dmg": {
-    "artifactName": "vc-desktop-${version}.${ext}",
+    "artifactName": "vc-desktop-${version}.${ext}"
   },
   "linux": {
     "target": [
@@ -42,6 +43,6 @@
     "category": "Video"
   },
   "appImage": {
-    "artifactName": "vc-desktop-${version}.${ext}",
+    "artifactName": "vc-desktop-${version}.${ext}"
   }
 }

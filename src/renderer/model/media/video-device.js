@@ -8,31 +8,19 @@ const MediaDevice = Vue.extend({
 
   data() {
     return {
-      audioDevice  : null,
-      videoDevice  : null,
-      audioQuality : null,
-      videoQuality : null,
-      error        : null,
+      device  : null,
+      quality : null,
+      error   : null,
     };
   },
 
   watch : {
-    audioDevice : {
+    device : {
       deep    : true,
       handler : 'resetStream',
     },
 
-    videoDevice : {
-      deep    : true,
-      handler : 'resetStream',
-    },
-
-    audioQuality : {
-      deep    : true,
-      handler : 'resetAudioQuality',
-    },
-
-    videoQuality : {
+    quality : {
       deep    : true,
       handler : 'resetVideoQuality',
     },
@@ -94,15 +82,7 @@ const MediaDevice = Vue.extend({
       }
     },
 
-    toggleAudio(enabled = true) {
-      if (!this.stream) return;
-
-      this.stream.getAudioTracks().forEach((track) => {
-        track.enabled = enabled;
-      });
-    },
-
-    toggleVideo(enabled = true) {
+    toggle(enabled = true) {
       if (!this.stream) return;
 
       this.stream.getVideoTracks().forEach((track) => {
@@ -119,24 +99,7 @@ const MediaDevice = Vue.extend({
       await this.acquire(true);
     }, 300),
 
-    resetAudioQuality : debounce(function resetAudioQuality() {
-      if (!this.isAcquiring()) return;
-      if (!this.stream) return;
-
-      if (!window.MediaStreamTrack.prototype.applyConstraints) {
-        this.resetStream();
-      }
-      else {
-        this.stream.getAudioTracks().forEach((track) => {
-          track.applyConstraints(this.audioQuality)
-            .catch((e) => {
-              logger.warn(`Apply audio constraints failed: ${e}`);
-            });
-        });
-      }
-    }, 300),
-
-    resetVideoQuality : debounce(function resetVideoQuality() {
+    resetQuality : debounce(function resetVideoQuality() {
       if (!this.isAcquiring()) return;
       if (!this.stream) return;
 
@@ -145,7 +108,7 @@ const MediaDevice = Vue.extend({
       }
       else {
         this.stream.getVideoTracks().forEach((track) => {
-          track.applyConstraints(this.videoQuality)
+          track.applyConstraints(this.quality)
             .catch((e) => {
               logger.warn(`Apply video constraints failed: ${e}`);
             });
@@ -156,17 +119,11 @@ const MediaDevice = Vue.extend({
     genConstraints() {
       const constraints = {};
 
-      if (this.audioDevice) {
-        constraints.audio = Object.assign({}, this.audioDevice);
+      if (this.device) {
+        constraints.audio = Object.assign({}, this.device);
       }
-      if (this.videoDevice) {
-        constraints.video = Object.assign({}, this.videoDevice);
-      }
-      if (constraints.audio && this.audioQuality) {
-        Object.assign(constraints.audio, this.audioQuality);
-      }
-      if (constraints.video && this.videoQuality) {
-        Object.assign(constraints.video, this.videoQuality);
+      if (constraints.video && this.quality) {
+        Object.assign(constraints.video, this.quality);
       }
 
       return constraints;
