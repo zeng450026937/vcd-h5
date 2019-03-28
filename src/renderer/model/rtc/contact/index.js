@@ -87,7 +87,7 @@ model.provide({
       await this.negotiate();
       await this.sync();
     });
-    account.$on('phonebookUpdateUpdated', this.sync);
+    account.$on('phonebookUpdated', this.sync);
 
     this.account = account;
   },

@@ -303,8 +303,8 @@ model.provide({
       bookConferenceUpdated : (data) => {
         this.$emit('bookConferenceUpdated', data);
       },
-      phonebookUpdateUpdated : (data) => {
-        this.$emit('phonebookUpdateUpdated', data);
+      phonebookUpdated : (data) => {
+        this.$emit('phonebookUpdated', data);
       },
       negotiateUrlUpdated : (data) => {
         this.$emit('negotiateUrlUpdated', data);

@@ -43,8 +43,8 @@ model.provide({
 
       this.validateForm(ctx.payload);
 
-      const protocol = ctx.payload.protocol || 'wss';
-      const port = this.proxyPort || (this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061);
+      const protocol = ctx.payload.protocol || 'tls';
+      const port = this.proxyPort || (this.serverType === 'cloud' && protocol === 'tls' ? 5061 : 5061);
 
       rtc.account.uri = `${account}@${server}`;
       rtc.account.password = pin;
