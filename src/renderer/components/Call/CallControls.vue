@@ -77,6 +77,11 @@ export default {
     CallPlateModal,
     ScreenShareModal,
   },
+  data() {
+    return {
+      mediaStatus : { audio: false, video: false },
+    };
+  },
   sketch : [
     {
       ns    : 'call',
@@ -88,6 +93,9 @@ export default {
     },
   ],
   computed : {
+    enableLocalVideo() {
+      return this.$model.setting.enableLocalVideo;
+    },
     shareAvailable() {
       // const { currentUser } = this.$rtc.conference.information.users;
       //
@@ -101,11 +109,11 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
         unblock : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
+        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
       };
 
-      return iconMap.unblock;
+      return iconMap[this.mediaStatus.audio ? 'block' : 'unblock'];
     },
     videoIcon() {
       const iconMap = {
@@ -113,17 +121,20 @@ export default {
         block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
       };
 
-      return iconMap.unblock;
+      return iconMap[this.mediaStatus.video ? 'block' : 'unblock'];
+    },
+    isMuted() {
+      return this.$rtc.call.channel.isMuted();
     },
     videoDisabled() {
       const { status } = this.$rtc.media.localMedia;
 
-      return !status.active || !status.video;
+      return (!status.active || !status.video) && !this.enableLocalVideo;
     },
     audioDisabled() {
       const { status } = this.$rtc.media.localMedia;
 
-      return !status.active || !status.audio;
+      return (!status.active || !status.audio) && !this.enableLocalVideo;
     },
   },
   methods : {
@@ -155,10 +166,12 @@ export default {
       this.isVideoCall = !this.isVideoCall;
     },
     onAudioBtnClick() {
-      //
+      this.$rtc.call.toggleAudio(this.$rtc.call.channel.isMuted().audio);
+      this.mediaStatus = this.$rtc.call.channel.isMuted();
     },
     onVideoBtnClick() {
-      //
+      this.$rtc.call.toggleVideo(this.$rtc.call.channel.isMuted().video);
+      this.mediaStatus = this.$rtc.call.channel.isMuted();
     },
   },
 };

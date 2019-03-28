@@ -45,13 +45,17 @@ export default {
       return this.$model.state.isInMiniConference && this.confStatus === 'connected';
     },
     showMiniCall() {
-      return this.$model.state.isInMiniCall && (this.callStatus === 'connected' || this.callStatus === 'connecting');
+      return this.$model.state.isInMiniCall
+        && (this.callStatus === 'connected'
+          || this.callStatus === 'connecting'
+                                                                                                                                                                           || this.$rtc.call.status === 'confirmed');
     },
   },
   mounted() {
   },
+  methods : {
+  },
   watch : {
-
     $route : {
       handler(val) {
         this.hideNav = val.path === MAIN.CALENDAR_RESERVE;

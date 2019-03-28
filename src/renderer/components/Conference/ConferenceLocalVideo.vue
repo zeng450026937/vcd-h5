@@ -36,7 +36,6 @@
 <script>
 import VideoView from '../Common/VideoView.vue';
 import ConferenceMessage from './ConferenceMessage.vue';
-import { CONFERENCE } from '../../router/constants';
 
 export default {
   name       : 'ConferenceLocalVideo',

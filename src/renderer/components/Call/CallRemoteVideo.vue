@@ -3,7 +3,8 @@
     <remote-video
         :class="videoClasses"
         :hide-video="!showVideo"
-        source="call-remote">
+        source="call-remote"
+        @video-dblclick="videoDblClick">
       <div v-if="!showVideo"
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
@@ -42,6 +43,15 @@ export default {
   ],
   destroyed() {
     this.$message.destroy();
+    if (this.step1Timer) {
+      clearTimeout(this.step1Timer);
+    }
+    if (this.step2Timer) {
+      clearTimeout(this.step2Timer);
+    }
+    if (this.step3Timer) {
+      clearTimeout(this.step3Timer);
+    }
   },
   computed : {
     isConnecting() {
@@ -60,8 +70,12 @@ export default {
       return {
         [`remote-video-content-${this.isInCallMain ? 'normal' : 'shrink'}`] : true,
         'h-full'                                                            : !this.isVideoCall,
-        'remote-video-content-normal-auto'                                  : this.isInCallMain && this.isVideoCall,
       };
+    },
+  },
+  methods : {
+    videoDblClick() {
+      this.$emit('video-dblclick');
     },
   },
   watch : {
@@ -76,14 +90,16 @@ export default {
           this.step1Timer = setTimeout(() => {
             this.$message.info('对方可能暂时不在或设备静音，建议稍后再次尝试！', 0);
           }, 10000);
-          setTimeout(() => {
+          this.step2Timer = setTimeout(() => {
             this.$message.destroy();
-            this.$message.info('对方长时间未接听，请稍后重试！', 0);
-            this.step2Timer = setTimeout(() => {
-              if (!this.$rtc.call.connected) {
-                this.$rtc.call.disconnect();
-              }
-            }, 2000);
+            if (this.isConnecting) {
+              this.$message.info('对方长时间未接听，请稍后重试！', 0);
+              this.step3Timer = setTimeout(() => {
+                if (!this.$rtc.call.connected) {
+                  this.$rtc.call.disconnect();
+                }
+              }, 2000);
+            }
           }, 20000);
         }
         else {
@@ -92,6 +108,9 @@ export default {
           }
           if (this.step2Timer) {
             clearTimeout(this.step2Timer);
+          }
+          if (this.step3Timer) {
+            clearTimeout(this.step3Timer);
           }
           this.$message.destroy();
         }

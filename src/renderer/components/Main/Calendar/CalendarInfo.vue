@@ -187,13 +187,15 @@ export default {
       return Object.keys(this.currentEvent).length > 0;
     },
     enterpriseId() {
-      return this.$model.account.enterpriseId || '';
+      return this.$rtc.account.enterpriseId;
     },
     liveQRCode() {
       return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
     },
     shareUrl() {
-      return `http://${this.$model.account.proxy}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+      const domain = this.$model.account.proxy || this.$model.account.loginData.server;
+
+      return `http://${domain}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
     },
     shareQRCode() {
       return jrQrcode.getQrBase64(this.shareUrl);
@@ -204,24 +206,26 @@ export default {
       this.$refs.deleteModal.visible = false;
     },
     enterMeeting() {
-      this.isVideoConference = true;
       this.meetingRecord = {
         number       : this.currentEvent.conferenceNumber,
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
       };
-      this.$dispatch('meeting.joinMeeting');
+      this.$dispatch('meeting.joinMeeting').then(() => {
+        this.isVideoConference = true;
+      });
     },
     audioEnter() {
-      this.isVideoConference = false;
       this.meetingRecord = {
         number       : this.currentEvent.conferenceNumber,
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
       };
-      this.$dispatch('meeting.joinMeeting');
+      this.$dispatch('meeting.joinMeeting').then(() => {
+        this.isVideoConference = false;
+      });
     },
     toLiveShareUrl() {
       shell.openExternal(this.currentEvent.liveShareUrl);

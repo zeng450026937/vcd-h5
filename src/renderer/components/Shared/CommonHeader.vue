@@ -1,13 +1,13 @@
 <template>
-  <div class="flex items-center z-20">
+  <div id="common-header" class="flex items-center z-20 no-dragable">
     <a-iconfont type="icon-zuixiaohua"
                 title="最小化"
-                class="text-base mr-3 hover:text-indigo no-dragable cursor-pointer"
+                class="hover:bg-main-theme hover:text-white header-control"
                 @click="clickMinimize"/>
-    <a-iconfont type="icon-zuidahua" class="text-base mx-1 hover:text-indigo no-dragable cursor-pointer"
+    <a-iconfont type="icon-zuidahua" class="hover:bg-main-theme hover:text-white header-control"
                 title="最大化"
                 @click="clickMaximize"/>
-    <a-iconfont type="icon-guanbi" class="text-base ml-3 hover:text-red no-dragable cursor-pointer"
+    <a-iconfont type="icon-guanbi" class="hover:bg-red-light hover:text-white header-control"
                 title="关闭"
                 @click="clickClose"/>
   </div>
@@ -30,6 +30,10 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="less">
+#common-header {
+  .header-control {
+    @apply text-base w-12 h-9 cursor-pointer flex items-center justify-center;
+  }
+}
 </style>

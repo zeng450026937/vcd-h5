@@ -78,7 +78,11 @@
           <div class="mt-3">
             <a-switch size="small" v-model="dnd"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
-          </div> 
+          </div>
+          <div class="mt-3">
+            <a-switch size="small" v-model="enableLocalVideo"/>
+            <span class="setting-label">启用本地视频</span>
+          </div>
         </div>
       </div>
       <div>
@@ -93,8 +97,9 @@
 </template>
 
 <script>
-import {shell} from 'electron'
+import { shell } from 'electron';
 import AppHeader from '../MainHeader.vue';
+
 export default {
   name : 'ConferenceSetting',
 
@@ -154,6 +159,7 @@ export default {
         // 'loginOptions',
         'highProfile',
         'dnd',
+        'enableLocalVideo',
       ],
     },
   ],

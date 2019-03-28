@@ -1,6 +1,6 @@
 <template>
   <div id="login-header" class="z-10">
-    <div class="px-2 h-9 select-none">
+    <div class="pl-2 h-9 select-none">
       <div class="flex flex-row h-full">
         <div class="flex items-center">
           <img class="ml-2" src="../../assets/login-header-logo.png">
@@ -32,7 +32,7 @@
                     class="ant-dropdown-link mr-8 text-base h-full flex items-center"/>
           </a-dropdown>
 
-          <common-header class="mr-2"/>
+          <common-header/>
         </div>
       </div>
     </div>

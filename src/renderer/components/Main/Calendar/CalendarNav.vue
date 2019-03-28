@@ -20,15 +20,14 @@
         <span class="cursor-pointer" @click="onToday">回到今天</span>
       </div>
     </div>
-    <!--<div class="flex flex-col items-center mt-4 px-3">-->
-      <!--<a-button type="primary" block-->
-                <!--disabled-->
-                <!--class="h-9"-->
-                <!--@click="reserveMeeting">-->
-        <!--<a-iconfont type="icon-yuyuehuiyi" class="text-base"/>-->
-        <!--预约会议-->
-      <!--</a-button>-->
-    <!--</div>-->
+    <div class="flex flex-col items-center mt-4 px-3">
+      <a-button type="primary" block
+                class="h-9"
+                @click="reserveMeeting">
+        <a-iconfont type="icon-yuyuehuiyi" class="text-base"/>
+        预约会议
+      </a-button>
+    </div>
   </a-layout>
 </template>
 

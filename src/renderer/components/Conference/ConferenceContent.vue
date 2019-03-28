@@ -9,7 +9,8 @@
                         title="弹出辅流"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
-            <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
+            <a-iconfont ref="maxIcon"
+                        type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
                         title="最大化/最小化"
                         @click="maxConferenceContent"/>
             <template v-if="isInConferenceMain">
@@ -31,9 +32,11 @@
         </div>
         <div class="flex flex-grow"></div>
       </div>
-      <div :class="remoteVideoClass"
-           @dblclick="maxConferenceContent">
-        <conference-remote-video :source="centerSource"/>
+      <div id="remote-video-wrapper"
+           :class="remoteVideoClass">
+        <conference-remote-video
+            :source="centerSource"
+            @video-dblclick="maxConferenceContent"/>
       </div>
       <div :class="localVideoClasses">
         <conference-local-video/>
@@ -94,6 +97,10 @@ export default {
     {
       ns    : 'conference.chat',
       props : [ 'hasNewMessage' ],
+    },
+    {
+      ns    : 'setting',
+      props : [ 'maximizedWhenRemoteSharing', 'minimizedWhenLocalSharing' ],
     },
   ],
   computed : {
@@ -197,6 +204,11 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = !!val;
+      // 观看他人内容共享时自动最大化VCD窗口
+      if (val && this.maximizedWhenRemoteSharing) {
+        // this.$refs.maxIcon.click();
+        document.getElementById('layout-conference-content').requestFullscreen();
+      }
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;

@@ -198,7 +198,7 @@
       </a-row>
       <div>
         <div class="flex justify-center items-center h-12 border-t bg-white">
-          <a-button class="w-24 mx-3 h-8 bg-indigo text-white">
+          <a-button type="primary" class="w-24 mx-3 h-8">
             确定
           </a-button>
           <a-button class="w-24 mx-3 h-8" @click="clickBack">
@@ -310,6 +310,7 @@ export default {
     },
     deleteContact(contact) {
       const { checkedKeys } = this.$refs.contactTree;
+
       let parent = contact;
       const i = this.selectedContact.findIndex((c) => c.id === contact.id);
 

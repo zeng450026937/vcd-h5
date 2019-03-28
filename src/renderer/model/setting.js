@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import rtc from '../rtc';
 import Vuem from './vuem';
 
 const storage = window.localStorage;
@@ -45,6 +46,7 @@ model.provide({
       bookingPassword            : false,
       noticeTip                  : false,
       noticeSound                : false,
+      enableLocalVideo           : true,
       // p2p
       dnd                        : false,
     };

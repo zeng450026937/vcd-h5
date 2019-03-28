@@ -128,7 +128,7 @@
                           title="视频呼叫"
                           type="icon-shipin"
                           class="mr-3 text-indigo cursor-pointer text-base"
-                          @click.stop="doAudio(item)"></a-iconfont>
+                          @click.stop="doVideo(item)"></a-iconfont>
               <a-iconfont v-if="audioIcon && !item.isGroup"
                           title="音频呼叫"
                           type="icon-yuyin"
@@ -294,31 +294,41 @@ export default {
       this.$emit('deleteContact', item);
     },
     doVideo(item) {
-      const list = [];
+      if (item.isGroup) { // meetnow
+        const list = [];
 
-      if (!item.isGroup) {
-        list.push({
-          requestUri : item.number,
-        });
-      }
-      else {
-        item.items.every((contact) => {
+        this.store.getChild(item.id).every((contact) => {
           if (!contact.isGroup) {
             list.push({ requestUri: contact.number });
           }
 
           return list.length < 100;
         });
+        this.$dispatch('meeting.meetnow', { users: list });
       }
-      this.$rtc.conference.meetnow(list, { subject: `${this.$rtc.account.username} 的视频会议` });
+      else { // call
+        this.$dispatch('call.call', {
+          number  : item.number,
+          options : {
+            audio : true,
+            video : true,
+          },
+        });
+      }
     },
     doAudio(item) {
       if (item.isGroup) {
         this.doVideo(item);
-        
+
         return;
       }
-      this.$dispatch('call.doAudioCall', item.number);
+      this.$dispatch('call.call', {
+        number  : item.number,
+        options : {
+          audio : true,
+          video : true,
+        },
+      });
     },
     switchContact(direction) {
       const index = this.contactList.findIndex((n) => n.id === this.selectedContact.id);

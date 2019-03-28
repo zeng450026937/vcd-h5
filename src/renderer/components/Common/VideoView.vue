@@ -11,6 +11,7 @@
         v-once
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
+        @dblclick="videoDblClicked"
     ></video>
     <div v-if="!videoStream && !hideVideo"
          class="loading-notice">
@@ -25,7 +26,8 @@
 </template>
 
 <script>
-// TODO the code may mass , rebuild next year
+import path from 'path';
+
 export default {
   name  : 'VideoView',
   props : {
@@ -55,6 +57,10 @@ export default {
       videoElement : null,
     };
   },
+  sketch : {
+    ns    : 'conference',
+    props : [ 'staticStream' ],
+  },
   mounted() {
     this.initStream();
   },
@@ -75,6 +81,8 @@ export default {
       return `${this.source}-video-${Date.now()}`;
     },
     videoStream() {
+      if (this.enableLocalVideo) return true;
+
       const streamMap = {
         local  : this.$rtc.media.localMedia.stream,
         remote : this.$rtc.conference.mediaChannel.remoteStream,
@@ -85,10 +93,19 @@ export default {
 
       return streamMap[this.source];
     },
+    enableLocalVideo() {
+      return this.source === 'local' && this.$model.setting.enableLocalVideo;
+    },
+    localVideoPath() {
+      return path.resolve(__static, 'video/default-video.webm');
+    },
   },
   methods : {
     videoClicked() {
       this.$emit('video-clicked');
+    },
+    videoDblClicked() {
+      this.$emit('video-dblclick');
     },
     async onVideoStreamChanged(stream) {
       if (!stream) return;
@@ -101,7 +118,20 @@ export default {
 
         return;
       }
-      if (this.videoElement && this.videoElement.srcObject !== stream) {
+      if (this.enableLocalVideo) {
+        this.videoElement.src = this.localVideoPath;
+        this.videoElement.addEventListener('canplay', () => {
+          // TODO 将会导致重协商
+          this.staticStream = this.videoElement.captureStream(24);
+          if (this.$rtc.conference.connected) {
+            this.$rtc.conference.mediaChannel.channel.replaceLocalStream(this.staticStream);
+          }
+          else if (this.$rtc.call.connected) {
+            this.$rtc.call.channel.replaceLocalStream(this.staticStream);
+          }
+        });
+      }
+      else if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.srcObject = stream;
       }
     },
@@ -109,6 +139,7 @@ export default {
       if (this.videoStream && !this.videoElement) {
         this.onVideoStreamChanged(this.videoStream);
       }
+      if (this.enableLocalVideo) return;
       switch (this.source) {
         case 'local':
           this.$rtc.media.localMedia.acquireStream();

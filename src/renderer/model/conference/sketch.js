@@ -48,15 +48,17 @@ sketch.provide({
       }
     },
     isVideoConference(val) { // TODO 失败了呢? -- 返回值
+      if (this.conferenceStatus === 'disconnected') return;
       rtc.conference.mediaChannel.channel.renegotiate(
         {
           rtcOfferConstraints :
             { offerToReceiveVideo: val, offerToReceiveAudio: true },
+        }, () => {
+          const method = val ? 'unmute' : 'mute';
+
+          rtc.conference.mediaChannel.channel[method]({ video: true });
         }
       );
-      const method = val ? 'unmute' : 'mute';
-
-      rtc.conference.mediaChannel.channel[method]({ video: true });
     },
   },
 });

@@ -56,6 +56,7 @@ export default {
     },
     answerCall() {
       this.kom.dispatch('call.answer');
+      window.close();
     },
     checkStatus() {
       if (!this.rtc.call.ringing) {

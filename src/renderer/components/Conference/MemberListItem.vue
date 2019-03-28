@@ -57,7 +57,7 @@
                 <span class="text-xs">{{setAsPresenterText}}</span>
               </div>
             </a-menu-item>
-            <a-menu-item v-if="currentIsPresenter" key="2" @click="setSpeaker">
+            <a-menu-item v-if="currentIsPresenter && !isDefault" key="1" @click="setSpeaker">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">{{setAsSpeakerText}}</span>
               </div>
@@ -69,13 +69,13 @@
               </div>
             </a-menu-item>
 
-            <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="4" @click="showDeviceInfo">
+            <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="3" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设备详情</span>
               </div>
             </a-menu-item>
 
-            <a-menu-item v-if="currentIsPresenter" key="5" @click="isShowKickOperation = true">
+            <a-menu-item v-if="currentIsPresenter" key="4" @click="isShowKickOperation = true">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">移出会议</span>
               </div>
@@ -209,6 +209,9 @@ export default {
     props : [ 'filterText', 'selectedMember' ],
   },
   computed : {
+    isDefault() { // 默认是讨论模式
+      return this.$model.conference.profile === 'default';
+    },
     isApplyGroup() {
       return this.group === 'waiting' || this.group === 'audioApply';
     },
