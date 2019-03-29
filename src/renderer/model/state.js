@@ -37,6 +37,7 @@ model.provide({
       isInMiniConference  : false, // 记录当前页面是否在会议的小窗口
       isInMiniCall        : false, // 记录当前页面是否在P2P通话的小窗口
       currentConferenceId : null,
+      recordUpdate        : null,
     };
   },
   computed : {
@@ -184,6 +185,7 @@ model.provide({
     rtc.account.$on('call-record', async(info) => {
       console.warn('rtc.account.event', info);
       await createIncomingRecord(info);
+      this.recordUpdate = Date.now();
 
       return true;
     });
@@ -215,6 +217,7 @@ model.provide({
       if (info.pin) record.pin = info.pin;
       console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
+      this.recordUpdate = Date.now();
     });
 
     rtc.conference.$on('call-record', async(info) => {
@@ -236,6 +239,7 @@ model.provide({
       if (info.pin) record.pin = info.pin;
 
       await callRecordDB.updateRecord('id', info.id, record);
+      this.recordUpdate = Date.now();
     });
   },
 });

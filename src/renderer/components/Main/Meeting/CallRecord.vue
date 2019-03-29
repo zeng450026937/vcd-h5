@@ -134,6 +134,14 @@ export default {
 
       if (this.recordType === 'missed') return this.callRecord.filter((record) => !record.connected);
     },
+    recordUpdate() {
+      return this.$model.state.recordUpdate;
+    },
+  },
+  watch : {
+    recordUpdate(val) {
+      this.updateRecord();
+    },
   },
   methods : {
     clickMore(record) {
@@ -157,8 +165,6 @@ export default {
           },
         });
       }
-
-      this.updateRecord();
     },
     doAudio(item) {
       this.doVideo(item);
