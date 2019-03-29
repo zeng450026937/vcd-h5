@@ -3,7 +3,7 @@ import rtc from '../../rtc';
 import storage from '../../storage';
 import { formatServers } from '../utils';
 import { LOGIN_STORAGE } from '../../storage/constants';
-import popup from '../../popup/lib';
+import popup from '../../popup';
 
 const meeting = new Vuem();
 
@@ -42,13 +42,8 @@ meeting.provide({
         initialVideo,
         initialAudio,
       }).then(() => {
-        storage.insert('MEETING_INFO_RECORD', this.meetingRecord);
+        storage.insert(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`, this.meetingRecord);
       });
-    },
-    async meetnow(ctx, next) {
-      await next();
-
-      return rtc.conference.meetnow(ctx.payload.checked, ctx.payload.options);
     },
     async anonymousJoin(ctx, next) {
       await next();
@@ -105,10 +100,15 @@ meeting.provide({
         storage.insertOrUpdate(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, meetingData, 'number');
       });
     },
+    meetnow(ctx, next) {
+      const { users } = ctx.payload;
+
+      rtc.conference.meetnow(users, { subject: `${rtc.account.username} 的视频会议` });
+    },
   },
   watch : {
     isRegistered(val) {
-      this.meetingRecord = storage.query('MEETING_INFO_RECORD');
+      this.meetingRecord = storage.query(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`);
       if (!this.meetingRecord || !this.meetingRecord.number) {
         this.meetingRecord = {
           number       : '',
