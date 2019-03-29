@@ -33,8 +33,10 @@
 
 <script>
 
+import moment from 'moment';
 import plainCalendar from '../../Common/CommonCalendar';
 import { MAIN } from '../../../router/constants';
+import 'moment/locale/zh-cn';
 
 export default {
   name       : 'CalendarNav',
@@ -87,11 +89,11 @@ export default {
         && date1.year() === date2.year();
     },
     selectDate(date) {
-      console.warn(date.raw);
       this.selectedDate = date.raw;
       this.$model.schedule.currentDateEvents = [];
       this.eventList.forEach((e) => {
-        if (e.expiryMoment.toDate() >= date.raw.toDate() || e.startMoment.toDate() >= date.raw.toDate()) {
+        if (e.expiryMoment.toDate() >= this.selectedDate.toDate()
+          || e.startMoment.toDate() >= this.selectedDate.toDate()) {
           this.$model.schedule.currentDateEvents.push(e);
         }
       });

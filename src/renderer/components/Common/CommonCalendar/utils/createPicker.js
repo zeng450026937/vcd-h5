@@ -62,9 +62,11 @@ export default function createPicker(TheCalendar, props) {
         this.setState({ showDate: value });
       },
       handleSelect(value) {
+        const format = (value && value.format(this.format)) || '';
+
         this.$emit('select', {
-          raw    : value,
-          format : (value && value.format(this.format)) || '',
+          raw : moment(`${format} 00:00`),
+          format,
         });
       },
       onToday() {
