@@ -9,7 +9,7 @@
            @long-press-start="onLongPressed(n)"
            @long-press-stop="onLongPressedEnd(n)">
 
-        <div v-if="!n.isStart" class="w-14 h-14">
+        <div v-if="!n.isStart || hideAlpha" class="w-14 h-14">
           <a-button class="w-full h-full">
             <div class="flex flex-col justify-center items-center h-full">
               <span class="text-xl">{{n.num}}</span>
@@ -27,12 +27,14 @@
                       @confirm="clickPoint"
                       @cancel="clickAt">
           <span slot="icon" />
-          <a-button class="w-full h-full">
-            <div class="flex flex-col justify-center items-center h-full">
-              <span class="text-xl">{{n.num}}</span>
-              <span v-if="!hideAlpha" class="text-xs text-black6">{{n.alpha}}</span>
-            </div>
-          </a-button>
+          <div class="w-14 h-14">
+            <a-button class="w-full h-full">
+              <div class="flex flex-col justify-center items-center h-full">
+                <span class="text-xl">{{n.num}}</span>
+                <span v-if="!hideAlpha" class="text-xs text-black6">{{n.alpha}}</span>
+              </div>
+            </a-button>
+          </div>
         </a-popconfirm>
       </div>
     </div>

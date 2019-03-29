@@ -1,8 +1,8 @@
 <template>
   <a-layout id="call-record" class="h-full">
     <div class="flex flex-col h-full">
-      <div class="h-14">
-        <div class="flex bg-white dragable h-full">
+      <app-header>
+        <template slot="content">
           <div class="flex items-center h-full px-4 text-base">
             <span>通话记录（{{callRecord.length}}）</span>
           </div>
@@ -12,10 +12,8 @@
               <a-radio-button value="missed" class="text-xs">未接来电</a-radio-button>
             </a-radio-group>
           </div>
-          <div class="flex flex-grow"></div>
-          <app-header/>
-        </div>
-      </div>
+        </template>
+      </app-header>
 
       <div class="flex m-4 bg-white auto-scroll-y">
         <a-table
