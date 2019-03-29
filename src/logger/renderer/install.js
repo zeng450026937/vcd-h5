@@ -10,14 +10,15 @@ const g = global;
  * details about what transports we set up.
  */
 function log(level, ...args) {
-  ipcRenderer.send(
-    'log',
-    level,
-    ...args,
-  );
-
   if (__DEV__) {
     console[level](...args);
+  }
+  else {
+    ipcRenderer.send(
+      'log',
+      level,
+      ...args,
+    );
   }
 }
 

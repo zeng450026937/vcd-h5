@@ -15,7 +15,9 @@ export default async function errorMessage(ctx, next) {
       }
     }
 
-    ctx.vm.$message.error(ERROR_MAP[key] || error.message);
+    if (ERROR_MAP[key]) {
+      ctx.vm.$message.error(ERROR_MAP[key]);
+    }
     
     throw error;
   }
