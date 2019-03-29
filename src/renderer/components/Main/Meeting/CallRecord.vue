@@ -57,12 +57,16 @@
 
           <div class="flex justify-center text-sm operate-btns" slot="operation" slot-scope="text, record">
 
-            <a-iconfont type='icon-shipin'
-                        class="text-indigo text-base cursor-pointer hover:text-blue">
+            <a-iconfont
+                @click="doVideo(record)"
+                type='icon-shipin'
+                class="text-indigo text-base cursor-pointer hover:text-blue">
             </a-iconfont>
 
-            <a-iconfont type='icon-yuyin'
-                        class="text-indigo text-base cursor-pointer hover:text-blue mx-5">
+            <a-iconfont
+                @click="doAudio(record)"
+                type='icon-yuyin'
+                class="text-indigo text-base cursor-pointer hover:text-blue mx-5">
             </a-iconfont>
 
             <a-iconfont type='icon-right'
@@ -78,7 +82,7 @@
 </template>
 
 <script>
-import { CallRecord, createRecord } from '../../../database/call-record';
+import { CallRecord } from '../../../database/call-record';
 import { genDurationTime, genStartTime } from '../../../utils/date';
 import { callIcon, callType } from '../../../utils/filters';
 import AppHeader from '../MainHeader.vue';
@@ -135,6 +139,35 @@ export default {
     clickMore(record) {
       this.$router.push({ path: MAIN.CALL_RECORD_INFO, query: record });
     },
+    doVideo(item) {
+      if (item.isConference) {
+        this.$dispatch('meeting.joinMeeting', {
+          number       : item.conferenceNumber,
+          pin          : item.pin,
+          initialVideo : true,
+          initialAudio : true,
+        });
+      }
+      else {
+        this.$dispatch('call.call', {
+          number  : item.otherId,
+          options : {
+            audio : true,
+            video : true,
+          },
+        });
+      }
+
+      this.updateRecord();
+    },
+    doAudio(item) {
+      this.doVideo(item);
+    },
+    async updateRecord() {
+      const { account, server } = this.$storage.query('CURRENT_ACCOUNT');
+
+      this.callRecord = await this.callRecordDb.getRecordByRecent([ account, server ], 100);
+    },
   },
   filters : {
     callType,
@@ -147,12 +180,10 @@ export default {
     },
   },
   async beforeCreate() {
-    const callRecordDb = CallRecord.Create();
-    const { account, server } = this.$storage.query('CURRENT_ACCOUNT');
-
-    this.callRecord = await callRecordDb.getRecordByRecent([ account, server ], 100);
+    this.callRecordDb = CallRecord.Create();
   },
   mounted() {
+    this.updateRecord();
   },
   beforeDestroy() {
   },

@@ -182,12 +182,12 @@ model.provide({
     });
 
     rtc.account.$on('call-record', async(info) => {
-      console.warn(info);
+      console.warn('rtc.account.event', info);
       await createIncomingRecord(info);
     });
 
     rtc.call.$on('call-record', async(info) => {
-      console.warn(info);
+      console.warn('rtc.call.event', info);
 
       if (!info.isCall) return;
 
@@ -210,13 +210,13 @@ model.provide({
 
         if (record.connected) record.endTime = Date.now();
       }
-
+      if (info.pin) record.pin = info.pin;
       console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
     });
 
     rtc.conference.$on('call-record', async(info) => {
-      console.warn(info);
+      console.warn('rtc.conference.event', info);
       let record = await callRecordDB.getRecordById(info.id);
 
       if (!record) record = await createConferenceRecord(info);
@@ -230,6 +230,8 @@ model.provide({
       if (info.status === 'disconnected' && record.connected) {
         record.endTime = Date.now();
       }
+
+      if (info.pin) record.pin = info.pin;
 
       console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
@@ -249,9 +251,10 @@ async function createConferenceRecord(info) {
     id               : info.id,
     startTime        : Date.now(),
     endTime          : null,
-    otherId          : '',
+    otherId          : info.number,
     isConference     : true,
     conferenceNumber : info.number,
+    pin              : info.pin,
     account,
     server,
     other            : {
@@ -300,6 +303,7 @@ async function createIncomingRecord(info) {
     endTime      : null,
     otherId      : info.remoteIdentity._display_name,
     isConference : !!(info.focusUri && info.entity),
+    pin          : info.pin,
     account,
     server,
     other        : {

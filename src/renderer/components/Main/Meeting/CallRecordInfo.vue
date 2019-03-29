@@ -118,12 +118,12 @@
         </div>
 
         <div class="flex justify-center py-2 border-t w-full">
-          <a-button class="ml-4"
+          <a-button @click="doVideo(records[0])" class="ml-4"
                     type="primary">
             <a-iconfont type="icon-shipin"/>
             视频通话
           </a-button>
-          <a-button class="ml-4"
+          <a-button @click="doAudio(records[0])" class="ml-4"
                     type="primary">
             <a-iconfont type="icon-yuyin"/>
             音频通话
@@ -183,6 +183,30 @@ export default {
     },
   },
   methods : {
+    doVideo(item) {
+      if (item.isConference) {
+        this.$dispatch('meeting.joinMeeting', {
+          number       : item.conferenceNumber,
+          pin          : item.pin,
+          initialVideo : true,
+          initialAudio : true,
+        });
+      }
+      else {
+        this.$dispatch('call.call', {
+          number  : item.otherId,
+          options : {
+            audio : true,
+            video : true,
+          },
+        });
+      }
+
+      this.updateRecord();
+    },
+    doAudio(item) {
+      this.doVideo(item);
+    },
     goBack() {
       this.$router.back();
     },
