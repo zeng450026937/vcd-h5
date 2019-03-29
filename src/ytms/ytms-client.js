@@ -98,11 +98,12 @@ export class YTMSClient extends EventEmitter {
       await waitFor(wait);
     }
 
-    await this.api.heartbeat();
+    // ignore connect error ...
+    await this.api.heartbeat().catch(() => {});
 
     this.emit('heartbeat');
 
-    this.heartbeat(250 * 1000).catch(() => {});
+    this.heartbeat(250 * 1000);
   }
 
   async getEnterpriseInfo() {
