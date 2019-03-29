@@ -224,6 +224,10 @@ export default class Store {
     return this.parentMap[id];
   }
 
+  getNodeByNumber(number) {
+    this.originTree.find((n) => n.number === number);
+  }
+
   findBranch(node, branch = []) {
     const { id, parentId } = node;
     const parent = this.findParentNode(id, parentId);

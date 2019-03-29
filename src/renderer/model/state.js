@@ -4,16 +4,39 @@ import popup from '../popup';
 import router from '../router';
 import { wait } from '../utils';
 import { LOGIN, MAIN, CONFERENCE, CALL } from '../router/constants';
+import storage from '../storage';
+import { CallRecord } from '../database/call-record';
 
+const { account, server } = storage.query('CURRENT_ACCOUNT');
+const callRecordDB = CallRecord.Create();
 const model = new Vuem();
+
+async function addRecord(info) {
+  await callRecordDB.add('records', {
+    subject   : info.subject,
+    type      : 'outcall',
+    connected : false,
+    media     : info.media,
+    id        : info.id,
+    startTime : Date.now(),
+    endTime   : null,
+    otherId   : info.number,
+    account,
+    server,
+    other     : {
+      name : info.subject,
+    },
+  });
+}
 
 model.provide({
   data() {
     return {
-      loginPopup         : null, // 登录中的 popup 提示
-      enterPopup         : null, // 正在进入会议的 popup 提示
-      isInMiniConference : false, // 记录当前页面是否在会议的小窗口
-      isInMiniCall       : false, // 记录当前页面是否在P2P通话的小窗口
+      loginPopup          : null, // 登录中的 popup 提示
+      enterPopup          : null, // 正在进入会议的 popup 提示
+      isInMiniConference  : false, // 记录当前页面是否在会议的小窗口
+      isInMiniCall        : false, // 记录当前页面是否在P2P通话的小窗口
+      currentConferenceId : null,
     };
   },
   computed : {
@@ -138,10 +161,12 @@ model.provide({
       handler   : 'handleLogin',
       immediate : true,
     },
-    confStatus : {
-      handler   : 'handleEnterMeeting',
-      immediate : true,
-    },
+    confStatus : [
+      {
+        handler   : 'handleEnterMeeting',
+        immediate : true,
+      },
+    ],
     callStatus : {
       handler   : 'handleCall',
       immediate : true,
@@ -155,7 +180,134 @@ model.provide({
     schedule.$on('schedule-event', (info) => {
       this.notify(info);
     });
+
+    rtc.account.$on('call-record', async(info) => {
+      console.warn(info);
+      await createIncomingRecord(info);
+    });
+
+    rtc.call.$on('call-record', async(info) => {
+      console.warn(info);
+
+      if (!info.isCall) return;
+
+      let record = await callRecordDB.getRecordById(info.id);
+
+      if (!record) record = await createCallRecord(info);
+
+      if (info.direction) record.type = info.direction === 'outgoing' ? 'callout' : 'incoming';
+
+      if (info.status === 'confirmed') {
+        record.connected = true;
+      }
+
+      else if (info.status === 'failed') {
+        record.connected = false;
+      }
+
+      else if (info.status === 'finished') {
+        if (record.direction === 'incoming') record.connected = true;
+
+        if (record.connected) record.endTime = Date.now();
+      }
+
+      console.warn(record);
+      await callRecordDB.updateRecord('id', info.id, record);
+    });
+
+    rtc.conference.$on('call-record', async(info) => {
+      console.warn(info);
+      let record = await callRecordDB.getRecordById(info.id);
+
+      if (!record) record = await createConferenceRecord(info);
+
+      if (info.subject) record.subject = info.subject;
+
+      if (info.status === 'connected') {
+        record.connected = true;
+      }
+
+      if (info.status === 'disconnected' && record.connected) {
+        record.endTime = Date.now();
+      }
+
+      console.warn(record);
+      await callRecordDB.updateRecord('id', info.id, record);
+    });
   },
 });
 
 export default model;
+
+async function createConferenceRecord(info) {
+  const params = {
+    subject          : info.subject,
+    type             : 'callout',
+    direction        : 'outgoing',
+    connected        : false,
+    media            : 'video',
+    id               : info.id,
+    startTime        : Date.now(),
+    endTime          : null,
+    otherId          : '',
+    isConference     : true,
+    conferenceNumber : info.number,
+    account,
+    server,
+    other            : {
+      name : '',
+    },
+  };
+
+  await callRecordDB.add('records', params);
+
+  return params;
+}
+
+async function createCallRecord(info) {
+  const params = {
+    subject      : info.target,
+    type         : info.direction === 'outgoing' ? 'callout' : 'incoming',
+    direction    : info.direction,
+    connected    : false,
+    media        : 'video',
+    id           : info.id,
+    startTime    : Date.now(),
+    endTime      : null,
+    otherId      : info.target,
+    isConference : false,
+    account,
+    server,
+    other        : {
+      name : info.target,
+    },
+  };
+
+  await callRecordDB.add('records', params);
+
+  return params;
+}
+
+async function createIncomingRecord(info) {
+  const params = {
+    subject      : info.remoteIdentity._display_name,
+    type         : info.direction,
+    direction    : info.direction,
+    connected    : false,
+    media        : 'video',
+    id           : info.id,
+    startTime    : Date.now(),
+    endTime      : null,
+    otherId      : info.remoteIdentity._display_name,
+    isConference : !!(info.focusUri && info.entity),
+    account,
+    server,
+    other        : {
+      name : info.remoteIdentity._display_name,
+    },
+  };
+
+  await callRecordDB.add('records', params);
+
+  return params;
+}

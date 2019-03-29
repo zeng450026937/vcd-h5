@@ -20,7 +20,7 @@
       <div class="flex m-4 bg-white auto-scroll-y">
         <a-table
             :pagination="false"
-            :rowKey="record => record.callId"
+            :rowKey="record => record.id"
             :columns="recordColumns"
             :dataSource="currentRecords"
             class="bg-white w-full"
@@ -87,7 +87,7 @@ import { MAIN } from '../../../router/constants';
 const recordColumns = [
   {
     title       : '名称',
-    dataIndex   : 'callTitle',
+    dataIndex   : 'subject',
     scopedSlots : { customRender: 'callTitle' },
   },
   {
@@ -141,6 +141,8 @@ export default {
     callIcon,
     genStartTime,
     duration({ startTime, endTime }) {
+      if (!endTime || !startTime) return '';
+
       return genDurationTime(startTime, endTime);
     },
   },
@@ -148,16 +150,7 @@ export default {
     const callRecordDb = CallRecord.Create();
     const { account, server } = this.$storage.query('CURRENT_ACCOUNT');
 
-    this.callRecord = await callRecordDb.getRecordByRecent('records', [ account, server ], 100);
-
-    if (this.callRecord.length > 100) return;
-
-    const newRecord = createRecord();
-
-    newRecord.account = account;
-    newRecord.server = server;
-
-    await callRecordDb.add('records', newRecord);
+    this.callRecord = await callRecordDb.getRecordByRecent([ account, server ], 100);
   },
   mounted() {
   },
@@ -204,6 +197,9 @@ export default {
           height: 56px;
         }
       }
+    }
+    .ant-table-tbody > tr > td {
+      transition: unset;
     }
   }
   .auto-scroll-y{

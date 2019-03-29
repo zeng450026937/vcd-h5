@@ -8,20 +8,29 @@ export class CallRecord extends Base {
 
     return db = new CallRecord(
       'callRecord',
-      { records: '++sn, type, callId, otherId, [account+server]' },
+      { records: '++sn, type, id, otherId, [account+server]' },
       1,
     );
   }
 
-  async getRecordByOtherId(storeName, val) { // otherId 通话过程中 对方的id
-    return this.find(storeName, 'otherId', val).toArray();
+  async getRecordByOtherId(val) { // otherId 通话过程中 对方的id
+    return this.find('records', 'otherId', val)
+      .toArray();
   }
 
-  async getRecordByRecent(storeName, val, num) {
-    return this.find(storeName, '[account+server]', val)
+  async getRecordById(val) {
+    return this.find('records', 'id', val).toArray().then((records) => records.find((r) => r.id === val));
+  }
+
+  async getRecordByRecent(val, num) {
+    return this.find('records', '[account+server]', val)
       .reverse()
       .limit(num)
       .toArray();
+  }
+
+  async updateRecord(key, val, data) {
+    return this.updateByKey('records', key, val, data);
   }
 }
 

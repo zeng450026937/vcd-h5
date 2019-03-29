@@ -1,19 +1,19 @@
 export function callType(record) {
   if (!record.connected) return '未接通';
   if (record.type === 'incoming') return '呼入';
-  if (record.type === 'outcall') return '呼出';
+  if (record.type === 'callout') return '呼出';
 }
 
 export function callIcon(record) {
   const iconMap = {
     audio : {
       base     : 'icon-yuyin',
-      outcall  : 'icon-yuyinhuchu',
+      callout  : 'icon-yuyinhuchu',
       incoming : 'icon-yuyinhuru',
     },
     video : {
       base     : 'icon-shipin',
-      outcall  : 'icon-shipinhuchu',
+      callout  : 'icon-shipinhuchu',
       incoming : 'icon-shipinhuru' },
   };
   const media = iconMap[record.media];
