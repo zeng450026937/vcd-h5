@@ -46,7 +46,7 @@ member.provide({
         {
           title : `访客 (${visitorList.length})`,
           group : 'visitor',
-          list  : [ ...visitorList, ...visitorList, ...visitorList ],
+          list  : visitorList,
         },
       ];
       const broadcastCount = castViewerList.length === 1 ? 1 : broadcastUserCount;
