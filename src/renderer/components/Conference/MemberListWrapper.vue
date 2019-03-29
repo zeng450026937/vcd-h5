@@ -1,5 +1,6 @@
 <template>
-  <a-collapse :bordered="false" :showArrow=false
+  <a-collapse accordion
+              :bordered="false" :showArrow=false
               :class="{'selected-group': isSelected}"
               id="member-list-wrapper"
               v-model="activeGroupKey">

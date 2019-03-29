@@ -3,10 +3,11 @@ import rtc from '../../rtc';
 import storage from '../../storage';
 import { formatServers } from '../utils';
 import { LOGIN_STORAGE } from '../../storage/constants';
+import popup from '../../popup/lib';
 
-const model = new Vuem();
+const meeting = new Vuem();
 
-model.provide({
+meeting.provide({
   data() {
     return {
       meetingRecord : null,
@@ -121,5 +122,42 @@ model.provide({
   },
 });
 
+meeting.use(async(ctx, next) => {
+  if ((ctx.method === 'joinMeeting' || ctx.method === 'meetnow')
+    && (!rtc.call.disconnected
+      || (!rtc.conference.disconnected && !rtc.conference.connectFailed))) {
+    // 当前是否在会议中
+    let content = '';
 
-export default model;
+    let ensureFn = null;
+
+    if (rtc.call.connecting) { // 拨号中加入会议
+      content = '加入会议将终止呼叫，请确认!';
+      ensureFn = rtc.call.disconnect;
+    }
+    else if (rtc.call.connected) { // 通话中加入会议
+      content = '加入会议将终止通话，请确认!';
+      ensureFn = rtc.call.disconnect;
+    }
+    else { // 会议中再次加入会议
+      content = '即将退出当前会议，请确认!';
+      ensureFn = rtc.conference.leave;
+    }
+    const ensurePopup = popup.prepared('ensureModal', { content });
+
+    ensurePopup.display();
+    ensurePopup.vm.$once('cancel', () => {
+      popup.destroy(ensurePopup);
+    });
+    await ensurePopup.vm.$once('ok', async() => {
+      await ensureFn();
+      popup.destroy(ensurePopup);
+      await next();
+    });
+
+    return;
+  }
+  await next();
+});
+
+export default meeting;

@@ -89,10 +89,10 @@ model.provide({
       };
     },
     isConferenceDisConnected() {
-      return rtc.conference.disconnected;
+      return rtc.conference.disconnected || rtc.conference.connectFailed;
     },
     isCallDisConnected() {
-      return rtc.call.disconnected;
+      return rtc.call.disconnected || rtc.call.failed;
     },
   },
   watch : {

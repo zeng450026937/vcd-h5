@@ -61,23 +61,40 @@
       <div class="mt-8 flex align-top">
         <div class="mt-2">{{$t('setting.common.property')}}</div>
         <div class="ml-4 flex-1">
-          <div v-if="showAddPropetyInput" class="mb-2">
-            <a-input v-model="addPropertyText"  maxlength="64"  class="w-60"
-                      @keypress.enter="handleAddProperty"></a-input>
-            <a-button type="primary" class="ml-2" shape="circle" size="small"
-                      icon="check" @click="handleAddProperty"></a-button>
-            <a-button type="danger" class="ml-2" shape="circle" icon="close" size="small"
-                      @click="showAddPropetyInput=false" ></a-button>
-          </div>
-          <div class="mt-2">
-            <template v-for="(tag,index) in tags">
-              <a-tag :key="index" closable @close="handleDeleteProperty(index)" color="gray">{{tag}}</a-tag>
+
+          <div class="mt-2 flex flex-col">
+            <div>
+              <a-tag v-for="(tag,index) in tags"
+                     :key="index"
+                     class="mb-2"
+                     closable
+                     @close="handleDeleteProperty(index)" color="gray">{{tag}}
+              </a-tag>
+            </div>
+            <template v-if="tags.length < 20">
+              <a-tag v-if="!showAddPropetyInput"
+                     class="w-60 h-8 flex items-center justify-center"
+                     style="borderStyle: dashed;"
+                     @click="addPropety">
+                <div>
+                  <a-iconfont type="icon-tianjia"/>
+                  {{$t('setting.common.addProperty')}}
+                </div>
+              </a-tag>
+              <div v-show="showAddPropetyInput"
+                   class="mb-2">
+                <a-input v-model="addPropertyText"
+                         ref="propertyInput"
+                         maxlength="64"
+                         class="w-60"
+                         @keypress.enter="handleAddProperty"></a-input>
+                <a-button type="primary" class="ml-2" shape="circle" size="small"
+                          icon="check" @click="handleAddProperty"></a-button>
+                <a-button type="danger" class="ml-2" shape="circle" icon="close" size="small"
+                          @click="showAddPropetyInput=false;addPropertyText='';"></a-button>
+              </div>
             </template>
-            <a-tag  style="borderStyle: dashed;" @click="showAddPropetyInput=true" 
-              v-if="tags.length<=20">
-                <span>+ {{$t('setting.common.addProperty')}}</span>
-            </a-tag>
-            <a-tag v-else color="gray">
+            <a-tag v-else color="red" class="w-60 h-8 flex items-center justify-center">
               {{$t('setting.common.fullPropertyNotice')}}
             </a-tag>
           </div>
@@ -168,6 +185,11 @@ export default {
   },
 
   methods : {
+    async addPropety() {
+      this.showAddPropetyInput = true;
+      await this.$refs.propertyInput.$nextTick();
+      this.$refs.propertyInput.focus();
+    },
     validateAddress(rule, value, callback) {
       if (!value) {
         this.ytmsHostAddress = '';

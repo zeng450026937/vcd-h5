@@ -78,7 +78,8 @@ model.provide({
 
 model.use(async(ctx, next) => {
   if ((ctx.method === 'call' || ctx.method === 'answer')
-    && (!rtc.call.disconnected || !rtc.conference.disconnected)) {
+    && (!rtc.call.disconnected
+      || (!rtc.conference.disconnected && !rtc.conference.connectFailed))) {
     let content = '';
 
     let ensureFn = null;

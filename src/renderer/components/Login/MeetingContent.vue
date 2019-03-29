@@ -69,8 +69,9 @@
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    v-model="meetingInfo.displayName"
                     placeholder='昵称'
+                    :value="meetingInfo.displayName"
+                    @change="onDisplayNameChange"
                 >
                   <a-iconfont slot="prefix" type='icon-ren' class="text-base text-black9"/>
                 </a-input>
@@ -241,6 +242,13 @@ export default {
 
       if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
         this.meetingInfo.pin = value;
+      }
+    },
+    onDisplayNameChange(e) {
+      const { value } = e.target;
+
+      if (value.length <= 64) {
+        this.meetingInfo.displayName = value;
       }
     },
     joinMeeting() {

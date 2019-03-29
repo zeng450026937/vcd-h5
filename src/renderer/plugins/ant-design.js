@@ -4,7 +4,7 @@ import '@/renderer/stylus/tailwind.less';
 import Antd, { Icon } from 'ant-design-vue';
 
 const AIconFont = Icon.createFromIconfontCN({
-  scriptUrl : 'https://at.alicdn.com/t/font_1011898_xzod6zpydjh.js', // 在 iconfont.cn 上生成
+  scriptUrl : 'https://at.alicdn.com/t/font_1011898_j854iw7g9gq.js', // 在 iconfont.cn 上生成
 });
 // Example: -> <a-iconfont slot="prefix" type="icon-bendilianxiren"/>
 

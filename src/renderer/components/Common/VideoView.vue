@@ -65,15 +65,19 @@ export default {
     this.initStream();
   },
   destroyed() {
-    // if (this.videoStream) this.$rtc.media.localMedia.releaseStream();
-    switch (this.source) {
-      case 'local':
-        this.$rtc.media.localMedia.releaseStream();
-        break;
-      case 'remote':
-        break;
-      case 'screen': break;
-      default: break;
+    if (this.enableLocalVideo) {
+      this.videoElement.removeEventListener('canplay', this.captureStream);
+    }
+    else {
+      switch (this.source) {
+        case 'local':
+          this.$rtc.media.localMedia.releaseStream();
+          break;
+        case 'remote':
+          break;
+        case 'screen': break;
+        default: break;
+      }
     }
   },
   computed : {
@@ -101,6 +105,15 @@ export default {
     },
   },
   methods : {
+    captureStream() {
+      this.staticStream = this.videoElement.captureStream();
+      if (this.$rtc.conference.connected) {
+        this.$rtc.conference.mediaChannel.channel.replaceLocalStream(this.staticStream);
+      }
+      else if (this.$rtc.call.connected) {
+        this.$rtc.call.channel.replaceLocalStream(this.staticStream);
+      }
+    },
     videoClicked() {
       this.$emit('video-clicked');
     },
@@ -120,16 +133,7 @@ export default {
       }
       if (this.enableLocalVideo) {
         this.videoElement.src = this.localVideoPath;
-        this.videoElement.addEventListener('canplay', () => {
-          // TODO 将会导致重协商
-          this.staticStream = this.videoElement.captureStream(24);
-          if (this.$rtc.conference.connected) {
-            this.$rtc.conference.mediaChannel.channel.replaceLocalStream(this.staticStream);
-          }
-          else if (this.$rtc.call.connected) {
-            this.$rtc.call.channel.replaceLocalStream(this.staticStream);
-          }
-        });
+        this.videoElement.addEventListener('canplay', this.captureStream);
       }
       else if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.srcObject = stream;

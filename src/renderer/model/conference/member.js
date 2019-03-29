@@ -37,7 +37,7 @@ member.provide({
         && (user.displayText.indexOf(this.filterText) > -1
           || user.displayText.indexOf(this.phone) > -1));
 
-      return [
+      const memberList = [
         {
           title : `主持人 (${presenterList.length})`,
           group : 'presenter',
@@ -46,14 +46,22 @@ member.provide({
         {
           title : `访客 (${visitorList.length})`,
           group : 'visitor',
-          list  : visitorList,
-        },
-        {
-          title : `广播方 (${castViewerList.length === 1 ? 1 : broadcastUserCount})`,
-          group : 'castViewer',
-          list  : castViewerList,
+          list  : [ ...visitorList, ...visitorList, ...visitorList ],
         },
       ];
+      const broadcastCount = castViewerList.length === 1 ? 1 : broadcastUserCount;
+
+      if (broadcastCount > 0) {
+        memberList.push(
+          {
+            title : `广播方 (${broadcastCount})`,
+            group : 'castViewer',
+            list  : castViewerList,
+          }
+        );
+      }
+
+      return memberList;
     },
     waitingList() {
       const { userList } = rtc.conference.information.users;

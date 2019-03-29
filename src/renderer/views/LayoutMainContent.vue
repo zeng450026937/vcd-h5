@@ -48,7 +48,7 @@ export default {
       return this.$model.state.isInMiniCall
         && (this.callStatus === 'connected'
           || this.callStatus === 'connecting'
-                                                                                                                                                                           || this.$rtc.call.status === 'confirmed');
+          || this.$rtc.call.status === 'confirmed');
     },
   },
   mounted() {

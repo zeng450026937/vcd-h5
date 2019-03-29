@@ -13,14 +13,17 @@
         </template>
       </div>
       <div class="flex flex-col flex-grow w-1 ml-3">
-        <span class="item-name truncate">
-          <span v-if="filterText && displayName.indexOf(filterText) > -1" class="flex">
-          {{displayName.substr(0, displayName.indexOf(filterText))}}
-            <span class="text-indigo">{{filterText}}</span>
-            {{displayName.substr(displayName.indexOf(filterText) + filterText.length)}}
+        <div class="item-name flex flex-grow items-center">
+          <span class="truncate">
+            <span v-if="filterText && displayName.indexOf(filterText) > -1" class="flex">
+            {{displayName.substr(0, displayName.indexOf(filterText))}}
+              <span class="text-indigo">{{filterText}}</span>
+              {{displayName.substr(displayName.indexOf(filterText) + filterText.length)}}
+            </span>
+            <span v-else>{{item.displayText}}</span>
           </span>
-          <span v-else>{{displayName}}</span>
-        </span>
+          <span v-if="item.isCurrentUser()">（我）</span>
+        </div>
         <span class="item-phone flex">
           <span v-if="displayPhone.indexOf(filterText) > -1" class="flex">
           {{displayPhone.substr(0, displayPhone.indexOf(filterText))}}
@@ -214,9 +217,6 @@ export default {
     },
     isApplyGroup() {
       return this.group === 'waiting' || this.group === 'audioApply';
-    },
-    displayName() {
-      return this.item.displayText + (this.item.isCurrentUser() ? '（我）' : '');
     },
     displayPhone() {
       return this.item.phone === 'unauth-web-client' ? 'WebRTC' : this.item.phone;

@@ -43,7 +43,7 @@ export default {
   },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'currentLayout', 'showMessage' ],
+    props : [ '', 'showMessage' ],
   },
   computed : {
     isDefault() {
@@ -52,13 +52,12 @@ export default {
     isPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
     },
-  },
-  created() {
-    if (this.isDefault) this.currentLayout = this.$rtc.conference.information.view.getLayout()['video-layout'] || 'SpeechExcitation';
+    currentLayout() {
+      return this.$rtc.conference.videoLayout;
+    },
   },
   methods : {
     selectLayout(layout) {
-      this.currentLayout = layout;
       this.$rtc.conference.information.view.setLayout({
         'video-layout'                : layout,
         'video-max-view'              : 5,

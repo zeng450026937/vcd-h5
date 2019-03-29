@@ -26,7 +26,9 @@ sketch.provide({
   },
   watch : {
     callStatus(val, oldVal) {
-      if (val === 'disconnected' || val === 'finished') { // 退出会议之后重置当前状态
+      if (val === 'disconnected'
+        || val === 'finished'
+        || val === 'failed') { // 退出会议之后重置当前状态
         Object.assign(this, initialDate());
       }
     },

@@ -13,17 +13,16 @@ const initialDate = () => ({
   plateContent        : '', // 会议中拨号盘的内容
   localWindowState    : { current: 1, pre: 1 }, // 0.min 1.shrink 2.mini 3.normal 4.expand
   shareWindowState    : { current: 1, pre: 1 }, // 0.min 1.shrink 2.mini 3.normal 4.expand
-  // 会议中的成员列表
-  selectedGroup       : '',
+  // 会议中的成员列表 已入会的成员默认展开
+  selectedGroup       : '1',
   selectedMember      : '',
   isOpenSearch        : false,
   filterText          : '',
-  activeGroupKey      : [],
+  activeGroupKey      : [ '1' ],
   // 锁定会议
   selectedOptions     : 'closedAuthenticated',
   attendeeLobbyBypass : true,
   // 会议布局
-  currentLayout       : '',
   showMessage         : true, // 入会和离开的提示
   // 是否为视频会议 视频会议 OR 音频会议
   isVideoConference   : true,

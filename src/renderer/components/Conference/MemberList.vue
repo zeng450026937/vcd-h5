@@ -1,7 +1,11 @@
 <template>
   <a-layout id="member-list" class="h-full bg-white">
 
-    <member-list-wrapper :title="`已入会（${memberNum}）`" mkey="1"
+    <member-list-wrapper class="list-panel"
+                         :class="{
+                            [`member-panel-${activeGroupKey === '1' ? 'opened' : 'closed'}`] : true
+                         }"
+                         :title="`已入会（${memberNum}）`" mkey="1"
                          :is-selected="selectedGroup === '1'"
                          @selected="selectGroup">
       <template slot="items">
@@ -28,7 +32,11 @@
       </template>
     </member-list-wrapper>
 
-    <member-list-wrapper :title="`会议大厅（${waitingList.length}）`" mkey="2"
+    <member-list-wrapper class="list-panel"
+                         :class="{
+                            [`waiting-panel-${activeGroupKey === '2' ? 'opened' : 'closed'}`] : true
+                         }"
+                         :title="`会议大厅（${waitingList.length}）`" mkey="2"
                          :is-selected="selectedGroup === '2'"
                          :show-dot="hasNewMeetingApply"
                          @selected="selectGroup">
@@ -51,7 +59,11 @@
       </template>
     </member-list-wrapper>
 
-    <member-list-wrapper :title="`举手发言（${speakApplyList.length}）`" mkey="3"
+    <member-list-wrapper class="list-panel"
+                         :class="{
+                            [`apply-panel-${activeGroupKey === '3' ? 'opened' : 'closed'}`] : true
+                         }"
+                         :title="`举手发言（${speakApplyList.length}）`" mkey="3"
                          :is-selected="selectedGroup === '3'"
                          :show-dot="hasNewSpeakApply"
                          @selected="selectGroup">
@@ -74,7 +86,11 @@
       </template>
     </member-list-wrapper>
 
-    <member-list-wrapper :title="`第三方邀请（${inviteRecordList.length}）`" mkey="4"
+    <member-list-wrapper class="list-panel"
+                         :class="{
+                            [`inviting-panel-${activeGroupKey === '4' ? 'opened' : 'closed'}`] : true
+                         }"
+                         :title="`第三方邀请（${inviteRecordList.length}）`" mkey="4"
                          :is-selected="selectedGroup === '4'"
                          @selected="selectGroup">
       <template slot="items">
@@ -124,6 +140,9 @@ export default {
     },
   ],
   computed : {
+    activeGroupKey() {
+      return this.$model.conference.sketch.activeGroupKey;
+    },
     memberList() {
       return this.$model.conference.member.memberList;
     },
@@ -227,6 +246,61 @@ export default {
 #member-list{
   .ant-collapse-content-box {
     padding: 0 !important;
+  }
+
+  .list-panel {
+    /*height: 40px;*/
+    overflow-y: overlay;
+    transition: all ease-in-out;
+    > .ant-collapse-item {
+      height: 100%;
+      > .ant-collapse-header {
+        /*position: fixed;*/
+        width: 100%;
+        z-index: 10;
+      }
+      > .ant-collapse-content {
+        /*padding-top: 40px;*/
+        height: calc( 100% - 40px );
+        overflow-y: overlay;
+      }
+    }
+  }
+  .member-panel {
+    &-opened {
+      max-height: calc(100% - 120px);
+    }
+    &-closed {
+      max-height: calc(100% - 120px);
+      overflow: hidden;
+    }
+  }
+  .waiting-panel {
+    &-opened {
+      max-height: calc(100% - 120px);
+    }
+    &-closed {
+      max-height: calc(100% - 120px);
+      overflow: hidden;
+    }
+  }
+  .apply-panel {
+    &-opened {
+      max-height: calc(100% - 120px);
+    }
+    &-closed {
+      max-height: calc(100% - 120px);
+      overflow: hidden;
+    }
+  }
+  .inviting-panel {
+    &-opened {
+      max-height: calc(100% - 120px);
+    }
+    &-closed {
+      max-height: calc(100% - 120px);
+      overflow: hidden;
+    }
   }
 }
 </style>
