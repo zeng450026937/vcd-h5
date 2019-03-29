@@ -136,9 +136,14 @@ export default {
         'remote-video-content absolute h-full w-full pin-t pin-r' : true,
       };
     },
+    hasRemoteScreenStream() {
+      return !!this.$rtc.conference.shareChannel.remoteStream;
+    },
+    hasLocalScreenStream() {
+      return !!this.$rtc.conference.shareChannel.localStream;
+    },
     hasScreenStream() {
-      return this.$rtc.conference.shareChannel.remoteStream
-        || this.$rtc.conference.shareChannel.localStream;
+      return this.hasRemoteScreenStream || this.hasLocalScreenStream;
     },
   },
   mounted() {
@@ -206,12 +211,19 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = !!val;
+    },
+    hasRemoteScreenStream(val) {
       // 观看他人内容共享时自动最大化VCD窗口
       if (val && this.maximizedWhenRemoteSharing) {
-        // this.$refs.maxIcon.click();
-        // document.getElementById('layout-conference-content').requestFullscreen();
+        this.$dispatch('application.maximize');
       }
     },
+    // hasLocalScreenStream(val) {
+    //   // 自己发辅流最小化VCD窗口
+    //   if (val && this.minimizedWhenLocalSharing) {
+    //     this.$dispatch('application.minimize');
+    //   }
+    // },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
     },

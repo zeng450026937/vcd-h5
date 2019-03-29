@@ -42,7 +42,7 @@ meeting.provide({
         initialVideo,
         initialAudio,
       }).then(() => {
-        storage.insert(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`, this.meetingRecord);
+        storage.insert(`MEETING_INFO_RECORD_${rtc.account.username}`, this.meetingRecord);
       });
     },
     async anonymousJoin(ctx, next) {
@@ -108,7 +108,7 @@ meeting.provide({
   },
   watch : {
     isRegistered(val) {
-      this.meetingRecord = storage.query(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`);
+      this.meetingRecord = storage.query(`MEETING_INFO_RECORD_${rtc.account.username}`);
       if (!this.meetingRecord || !this.meetingRecord.number) {
         this.meetingRecord = {
           number       : '',
