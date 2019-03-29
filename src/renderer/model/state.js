@@ -37,6 +37,7 @@ model.provide({
       isInMiniConference  : false, // 记录当前页面是否在会议的小窗口
       isInMiniCall        : false, // 记录当前页面是否在P2P通话的小窗口
       currentConferenceId : null,
+      recordUpdate        : null,
     };
   },
   computed : {
@@ -182,12 +183,15 @@ model.provide({
     });
 
     rtc.account.$on('call-record', async(info) => {
-      console.warn(info);
+      console.warn('rtc.account.event', info);
       await createIncomingRecord(info);
+      this.recordUpdate = Date.now();
+
+      return true;
     });
 
     rtc.call.$on('call-record', async(info) => {
-      console.warn(info);
+      console.warn('rtc.call.event', info);
 
       if (!info.isCall) return;
 
@@ -210,13 +214,14 @@ model.provide({
 
         if (record.connected) record.endTime = Date.now();
       }
-
+      if (info.pin) record.pin = info.pin;
       console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
+      this.recordUpdate = Date.now();
     });
 
     rtc.conference.$on('call-record', async(info) => {
-      console.warn(info);
+      console.warn('rtc.conference.event', info);
       let record = await callRecordDB.getRecordById(info.id);
 
       if (!record) record = await createConferenceRecord(info);
@@ -231,8 +236,10 @@ model.provide({
         record.endTime = Date.now();
       }
 
-      console.warn(record);
+      if (info.pin) record.pin = info.pin;
+
       await callRecordDB.updateRecord('id', info.id, record);
+      this.recordUpdate = Date.now();
     });
   },
 });
@@ -249,9 +256,10 @@ async function createConferenceRecord(info) {
     id               : info.id,
     startTime        : Date.now(),
     endTime          : null,
-    otherId          : '',
+    otherId          : info.number,
     isConference     : true,
     conferenceNumber : info.number,
+    pin              : info.pin,
     account,
     server,
     other            : {
@@ -267,7 +275,7 @@ async function createConferenceRecord(info) {
 async function createCallRecord(info) {
   const params = {
     subject      : info.target,
-    type         : info.direction === 'outgoing' ? 'callout' : 'incoming',
+    type         : info.direction === 'incoming' ? 'incoming' : 'callout',
     direction    : info.direction,
     connected    : false,
     media        : 'video',
@@ -300,6 +308,7 @@ async function createIncomingRecord(info) {
     endTime      : null,
     otherId      : info.remoteIdentity._display_name,
     isConference : !!(info.focusUri && info.entity),
+    pin          : info.pin,
     account,
     server,
     other        : {
