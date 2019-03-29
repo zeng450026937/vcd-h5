@@ -72,7 +72,7 @@
                       <a-col :span="8">{{contact.phone}}</a-col>
                       <a-col :span="2">部门</a-col>
                       <a-col :span="8" class="text-indigo cursor-pointer"
-                             @click="addLocalContact">{{contact.parentNode}}
+                             @click="addLocalContact">{{contact.parentNode}}（添加本地联系人）
                       </a-col>
                     </a-row>
                   </a-col>

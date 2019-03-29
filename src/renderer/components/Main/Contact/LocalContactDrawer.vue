@@ -10,8 +10,6 @@
     <div class="flex flex-col h-full w-full">
       <div class="ant-drawer-header px-4 items-center">
         <div class="ant-drawer-title flex flex-grow">{{drawerTitle}}</div>
-        <common-header class="text-black9 no-dragable"
-                       style="transform: translateY(-8px);"/>
       </div>
 
       <div class="flex flex-col px-5 pt-4 flex-grow overflow-y-auto">

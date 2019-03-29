@@ -184,6 +184,8 @@ model.provide({
     rtc.account.$on('call-record', async(info) => {
       console.warn('rtc.account.event', info);
       await createIncomingRecord(info);
+
+      return true;
     });
 
     rtc.call.$on('call-record', async(info) => {
@@ -233,7 +235,6 @@ model.provide({
 
       if (info.pin) record.pin = info.pin;
 
-      console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
     });
   },
@@ -270,7 +271,7 @@ async function createConferenceRecord(info) {
 async function createCallRecord(info) {
   const params = {
     subject      : info.target,
-    type         : info.direction === 'outgoing' ? 'callout' : 'incoming',
+    type         : info.direction === 'incoming' ? 'incoming' : 'callout',
     direction    : info.direction,
     connected    : false,
     media        : 'video',
