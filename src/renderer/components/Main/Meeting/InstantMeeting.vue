@@ -115,8 +115,7 @@ export default {
     create() {
       setTimeout(() => {
         this.$refs.transfer.create({
-          data           : this.contacts,
-          defaultChecked : this.currentUser,
+          data : this.contacts,
         });
       });
     },

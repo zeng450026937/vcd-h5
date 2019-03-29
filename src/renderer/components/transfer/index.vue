@@ -97,7 +97,7 @@ export default {
     },
     correctChecked(data) {
       data.forEach((n) => {
-        const node = this.$refs.tree.getNode(n.id) || this.$refs.tree.getAsyncCheckedNode(n.id);
+        const node = this.$refs.tree.getAsyncCheckedNode(n.id) || this.$refs.tree.getNode(n.id);
 
         if (node) n.checked = node.checked;
       });
@@ -115,7 +115,7 @@ export default {
     },
     handleClear() {
       this.$refs.tree.clear();
-      this.$refs.searchList.update([]);
+      this.$refs.searchList.clearChecked();
     },
     handleCancelChecked(id) {
       this.$refs.tree.cancelChecked(id);

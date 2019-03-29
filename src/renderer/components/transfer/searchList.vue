@@ -79,6 +79,12 @@ export default {
 
       this.list = data;
     },
+    clearChecked() {
+      this.list.forEach((n) => {
+        n.checked = false;
+      });
+      this.updateSearchList(this.list);
+    },
     cancelChecked(id) {
       if (id === this.defaultChecked) return;
 
