@@ -5,7 +5,7 @@
          @click="selectMember">
       <div class="relative">
         <a-avatar>
-          {{item.displayText.substr(-2, 2)}}
+          {{displayName}}
         </a-avatar>
         <template v-if="item.isSharing()">
           <div class="circle-inner"></div>
@@ -217,6 +217,11 @@ export default {
     },
     isApplyGroup() {
       return this.group === 'waiting' || this.group === 'audioApply';
+    },
+    displayName() {
+      const { displayText } = this.item;
+
+      return /^(.*)['(', '（'].*[')', '）']|（$/.test(displayText) ? RegExp.$1.substr(-2, 2) : displayText.substr(-2, 2);
     },
     displayPhone() {
       return this.item.phone === 'unauth-web-client' ? 'WebRTC' : this.item.phone;
