@@ -65,10 +65,11 @@
           <div class="mt-2 flex flex-col">
             <div>
               <a-tag v-for="(tag,index) in tags"
-                     :key="index"
-                     class="mb-2"
-                     closable
-                     @close="handleDeleteProperty(index)" color="gray">{{tag}}
+                  :key="tag"
+                  class="mb-2"
+                  color="lightslategray"
+                  closable
+                  @close="handleDeleteProperty(index)">{{tag}}
               </a-tag>
             </div>
             <template v-if="tags.length < 20">
@@ -214,22 +215,19 @@ export default {
     },
     
     handleAddProperty() {
-      if (this.addPropertyText.trim() !== '') {
-        if (this.tags.length < 20) {
-          this.showAddPropetyInput = false;
-          this.tags.push(this.addPropertyText);
-          this.addPropertyText = '';
-          this.$message.success(this.$t('setting.common.addPropertyNotice'));
-        }
-        else {
-          this.$message.error(this.$t('setting.common.fullPropertyNotice'));
-        }
-      }
-      else {
-        this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
-      }
+      if (this.addPropertyText.trim() === '') return this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
+
+      if (this.tags.length >= 20) return this.$message.error(this.$t('setting.common.fullPropertyNotice'));
+
+      if (this.tags.indexOf(this.addPropertyText) !== -1) return this.$message.error('已存在该标签');
+
+      this.showAddPropetyInput = false;
+      this.tags.push(this.addPropertyText);
+      this.addPropertyText = '';
+      this.$message.success(this.$t('setting.common.addPropertyNotice'));
     },
     handleDeleteProperty(index) {
+      console.warn('handleDeleteProperty', index);
       const tag = this.tags[index];
 
       this.tags.splice(index, 1);
