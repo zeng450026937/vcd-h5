@@ -5,15 +5,15 @@ import { sendWillQuitSync } from '../proxy/main-process-proxy';
 const USE_SQUIRREL = process.env.VUE_APP_USE_SQUIRREL && process.env.VUE_APP_USE_SQUIRREL === 'true';
 const autoUpdater = window.autoUpdater = remote.getGlobal('autoUpdater');
 
-const UDPATE_STATE = {};
+const UPDATE_STATE = {};
 
-UDPATE_STATE[UDPATE_STATE.CHECKING = 0] = 'checking';
-UDPATE_STATE[UDPATE_STATE.AVAILABLE = 1] = 'available';
-UDPATE_STATE[UDPATE_STATE.INVALID = 2] = 'invalid';
-UDPATE_STATE[UDPATE_STATE.READY = 3] = 'ready';
-UDPATE_STATE[UDPATE_STATE.DOWNLOADING = 4] = 'downloading';
+UPDATE_STATE[UPDATE_STATE.CHECKING = 0] = 'checking';
+UPDATE_STATE[UPDATE_STATE.AVAILABLE = 1] = 'available';
+UPDATE_STATE[UPDATE_STATE.INVALID = 2] = 'invalid';
+UPDATE_STATE[UPDATE_STATE.READY = 3] = 'ready';
+UPDATE_STATE[UPDATE_STATE.DOWNLOADING = 4] = 'downloading';
 
-export { UDPATE_STATE };
+export { UPDATE_STATE };
 
 const model = new Vuem();
 
@@ -24,7 +24,7 @@ model.provide({
       autoDownload         : autoUpdater.autoDownload,
       autoInstallOnAppQuit : autoUpdater.autoInstallOnAppQuit,
       allowDowngrade       : autoUpdater.allowDowngrade,
-      status               : UDPATE_STATE.INVALID,
+      status               : UPDATE_STATE.INVALID,
       progress             : null,
       lastSuccessfulCheck  : null,
       error                : null,
@@ -90,7 +90,10 @@ model.provide({
     },
 
     checkForUpdates() {
-      if (this.status === UDPATE_STATE.READY) return;
+      if (
+        this.status === UPDATE_STATE.READY
+        || this.status === UPDATE_STATE.DOWNLOADING
+      ) return;
 
       try {      
         if (USE_SQUIRREL) {
@@ -112,7 +115,7 @@ model.provide({
     },
 
     quitAndInstallUpdate() {
-      if (this.status !== UDPATE_STATE.READY) return;
+      if (this.status !== UPDATE_STATE.READY) return;
       
       sendWillQuitSync();
       autoUpdater.quitAndInstall();
@@ -120,28 +123,28 @@ model.provide({
 
     updateError(e) {
       this.error = e;
-      this.status = UDPATE_STATE.INVALID;
+      this.status = UPDATE_STATE.INVALID;
     },
 
     updateChecking() {
-      this.status = UDPATE_STATE.CHECKING;
+      this.status = UPDATE_STATE.CHECKING;
     },
 
     updateAvailable() {
-      this.status = UDPATE_STATE.AVAILABLE;
+      this.status = UPDATE_STATE.AVAILABLE;
       this.lastSuccessfulCheck = Date.now();
     },
 
     updateNotAvailable() {
-      this.status = UDPATE_STATE.INVALID;
+      this.status = UPDATE_STATE.INVALID;
     },
 
     updateDownloaded() {
-      this.status = UDPATE_STATE.READY;
+      this.status = UPDATE_STATE.READY;
     },
 
     updateDownloading(progress) {
-      this.status = UDPATE_STATE.DOWNLOADING;
+      this.status = UPDATE_STATE.DOWNLOADING;
       this.progress = progress;
     },
   },
@@ -153,6 +156,9 @@ model.provide({
     autoUpdater.on('update-not-available', this.updateNotAvailable);
     autoUpdater.on('downloaded', this.updateDownloaded);
     autoUpdater.on('download-progress', this.updateDownloading);
+
+    this.checkInterval = 3600 * 1000; // one hour
+    this.checkTimer = null;
 
     // model hasn't be fully initilized when created() invoked
     await this.$nextTick();
@@ -174,6 +180,8 @@ model.provide({
       },
       { immediate: true }
     );
+
+    this.checkTimer = setInterval(this.checkForUpdates, this.checkInterval);
   },
 
   beforeDestroy() {
@@ -183,6 +191,11 @@ model.provide({
     autoUpdater.removeListener('update-not-available', this.updateNotAvailable);
     autoUpdater.removeListener('update-downloaded', this.updateDownloaded);
     autoUpdater.removeListener('download-progress', this.updateDownloading);
+
+    if (this.checkTimer) {
+      clearInterval(this.checkTimer);
+      this.checkTimer = null;
+    }
   },
 });
 

@@ -111,8 +111,6 @@ export default {
   },
 
   mounted() {
-    if (this.status === 4) return; // 如果 更新下载中 则不检查更新
-
     this.checkUpdate();
   },
 };
