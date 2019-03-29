@@ -273,12 +273,34 @@ export default class TreeStore {
 
     if (checked && checkeds.length >= this.maxChecked) return checkeds;
 
-    this.getNode(id).checked = checked;
-    this.checkedMap[id] = checked;
-    this.correctParentChecked({ id, checked });
-    this.correctMultiple(id, checked);
+    const node = this.getNode(id);
 
-    return this.getChecked();
+    if (this.loadMode === LOAD_MODE.SPLIT) {
+      if (node) {
+        node.checked = checked;
+        this.checkedMap[id] = checked;
+      }
+
+      if (!checked) this.asyncChecked = this.asyncChecked.filter((n) => this.getNodeId(n) !== id);
+
+      const checkedList = {};
+
+      [ ...this.getChecked(), ...this.asyncChecked ].forEach((n) => {
+        checkedList[this.getNodeId(n)] = n;
+      });
+
+      return Object.values(checkedList);
+    }
+    else {
+      node.checked = checked;
+      this.checkedMap[id] = checked;
+      this.correctParentChecked({ id, checked });
+      this.correctMultiple(id, checked);
+
+      return this.getChecked();
+    }
+
+
   }
 
   correctDefaultChecked() {

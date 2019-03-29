@@ -3,11 +3,10 @@ import rtc from '../../rtc';
 import storage from '../../storage';
 import { formatServers } from '../utils';
 import { LOGIN_STORAGE } from '../../storage/constants';
-import popup from '../../popup';
 
-const meeting = new Vuem();
+const model = new Vuem();
 
-meeting.provide({
+model.provide({
   data() {
     return {
       meetingRecord : null,
@@ -32,7 +31,7 @@ meeting.provide({
         pin,
         initialVideo,
         initialAudio,
-      } = ctx.payload.meetingRecord || this.meetingRecord;
+      } = ctx.payload || this.meetingRecord;
       const { conference } = rtc;
 
       conference.number = number;
@@ -42,8 +41,13 @@ meeting.provide({
         initialVideo,
         initialAudio,
       }).then(() => {
-        storage.insert(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`, this.meetingRecord);
+        storage.insert('MEETING_INFO_RECORD', this.meetingRecord);
       });
+    },
+    async meetnow(ctx, next) {
+      await next();
+
+      return rtc.conference.meetnow(ctx.payload.checked, ctx.payload.options);
     },
     async anonymousJoin(ctx, next) {
       await next();
@@ -100,15 +104,10 @@ meeting.provide({
         storage.insertOrUpdate(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, meetingData, 'number');
       });
     },
-    meetnow(ctx, next) {
-      const { users } = ctx.payload;
-
-      rtc.conference.meetnow(users, { subject: `${rtc.account.username} 的视频会议` });
-    },
   },
   watch : {
     isRegistered(val) {
-      this.meetingRecord = storage.query(`MEETING_INFO_RECORD_${this.serverType.toUpperCase()}`);
+      this.meetingRecord = storage.query('MEETING_INFO_RECORD');
       if (!this.meetingRecord || !this.meetingRecord.number) {
         this.meetingRecord = {
           number       : '',
@@ -122,41 +121,5 @@ meeting.provide({
   },
 });
 
-meeting.use(async(ctx, next) => {
-  if ((ctx.method === 'joinMeeting' || ctx.method === 'meetnow')
-    && (!rtc.call.disconnected || !rtc.conference.disconnected)) {
-    // 当前是否在会议中
-    let content = '';
 
-    let ensureFn = null;
-
-    if (rtc.call.connecting) { // 拨号中加入会议
-      content = '加入会议将终止呼叫，请确认!';
-      ensureFn = rtc.call.disconnect;
-    }
-    else if (rtc.call.connected) { // 通话中加入会议
-      content = '加入会议将终止通话，请确认!';
-      ensureFn = rtc.call.disconnect;
-    }
-    else { // 会议中再次加入会议
-      content = '即将退出当前会议，请确认!';
-      ensureFn = rtc.conference.leave;
-    }
-    const ensurePopup = popup.prepared('ensureModal', { content });
-
-    ensurePopup.display();
-    ensurePopup.vm.$once('cancel', () => {
-      popup.destroy(ensurePopup);
-    });
-    await ensurePopup.vm.$once('ok', async() => {
-      await ensureFn();
-      popup.destroy(ensurePopup);
-      await next();
-    });
-
-    return;
-  }
-  await next();
-});
-
-export default meeting;
+export default model;

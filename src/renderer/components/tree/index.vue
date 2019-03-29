@@ -226,6 +226,7 @@ export default {
       // TODO api 接口
       options.loadMode = this.loadMode;
       treeStore = new TreeStore(options);
+      window.treeStore = treeStore;
       this.createTreeViews(treeStore);
     },
   },

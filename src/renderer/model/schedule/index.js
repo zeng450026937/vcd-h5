@@ -253,8 +253,15 @@ model.provide({
     });
 
     rtc.account.$watch('registered', (val) => {
-      if (!val) return;
-      this.notified.clear();
+      if (!val) {
+        if (this.notifyTimer) {
+          clearTimeout(this.notifyTimer);
+          this.notifyTimer = null;
+        }
+
+        return;
+      }
+      // this.notified.clear();
       this.fetch();
       // this.getEnterpriseId();
     });

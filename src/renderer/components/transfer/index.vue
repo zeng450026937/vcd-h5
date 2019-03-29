@@ -1,7 +1,7 @@
 <template>
   <div class="transfer-content">
     <div class="tree-content">
-      <search-bar @search="handleSearch"></search-bar>
+      <search-bar ref="searchBar" @search="handleSearch"></search-bar>
       <tree
           :getChild="getChild"
           :loadMode="loadMode"
@@ -129,7 +129,12 @@ export default {
         this.$refs.checkedList.update(checked);
       });
     },
+    reset() {
+      this.showSearchResult = false;
+      this.$refs.searchBar.text = '';
+    },
     create({ data, defaultChecked }) {
+      this.reset();
       this.defaultChecked = defaultChecked;
       this.$refs.tree.createTree({
         data,
