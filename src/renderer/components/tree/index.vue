@@ -123,12 +123,12 @@ export default {
     },
     createGroupRow(row) {
       const styles = {
-        'padding-left' : `${20 + row.level * 15}px`,
+        'padding-left' : `${12 + row.level * 15}px`,
       };
 
       const inputStyles = {
         display        : row.halfChecked ? 'none' : 'inline-block',
-        'margin-right' : '6px',
+        'margin-right' : '10px',
       };
 
       const input = `
@@ -154,7 +154,7 @@ export default {
     },
     createEntityRow(row) {
       const styles = {
-        'padding-left' : `${34 + row.level * 15}px`,
+        'padding-left' : `${30 + row.level * 15}px`,
       };
 
       return `<div class="entity-node" node-pid="${row.node.parentId}" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
@@ -329,7 +329,7 @@ export default {
   height: 16px;
   width: 16px;
   border: 1px solid silver;
-  margin-right: 6px;
+  margin-right: 10px;
   text-align: center;
   vertical-align: middle;
   background-color: #fff;
@@ -382,7 +382,7 @@ export default {
   border-top: 4px solid transparent;
   border-left: 6px solid #999999;
   border-bottom: 4px solid transparent;
-  margin-right: 8px;
+  margin-right: 12px;
 }
 .triangle-down {
   width: 0;
@@ -390,6 +390,6 @@ export default {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 6px solid #999999;
-  margin-right: 6px;
+  margin-right: 10px;
 }
 </style>
