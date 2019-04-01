@@ -208,6 +208,11 @@ export default {
       this.modifiedAccounts = this.rawAccounts
         .filter((account) => account.type === this.serverType)
         .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
+      const otherAccounts = this.rawAccounts.filter((account) => account.type !== this.serverType);
+
+      if (this.modifiedAccounts.length > 10 || otherAccounts.length > 10) {
+        this.$storage.insert(LOGIN_STORAGE.ACCOUNT_LIST, [ ...this.modifiedAccounts.slice(0, 10), ...otherAccounts ]);
+      }
       this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
       this.updateForm(this.modifiedAccounts[0]);
       this.dSearch();
