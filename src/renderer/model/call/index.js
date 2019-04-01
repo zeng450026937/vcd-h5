@@ -44,6 +44,11 @@ model.provide({
       rtc.call.decline().catch(() => {});
     },
   },
+  computed : {
+    hasRemoteStream() {
+      return rtc.call.remoteStream;
+    },
+  },
   watch : {
     isVideoCall : {
       handler(val) {
@@ -72,6 +77,9 @@ model.provide({
         }
       },
       immediate : true,
+    },
+    hasRemoteStream(val) {
+      this.isVideoCall = val && val.getVideoTracks().length > 0;
     },
   },
 });

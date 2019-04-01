@@ -14,7 +14,7 @@
       </div>
       <div class="flex flex-col flex-grow w-1 ml-3">
         <div class="item-name flex flex-grow items-center">
-          <span class="truncate">
+          <span class="truncate" :title="item.displayText">
             <span v-if="filterText && item.displayText.indexOf(filterText) > -1" class="flex">
             {{item.displayText.substr(0, item.displayText.indexOf(filterText))}}
               <span class="text-indigo">{{filterText}}</span>

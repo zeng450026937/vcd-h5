@@ -23,8 +23,7 @@
         <a-iconfont :type="audioIcon.icon"/>
       </a-button>
       <!--分享辅流-->
-      <a-button v-if="isVideoConference"
-                :disabled="!shareAvailable"
+      <a-button v-if="isVideoConference && shareAvailable"
                 shape="circle"
                 class="control-btn"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
