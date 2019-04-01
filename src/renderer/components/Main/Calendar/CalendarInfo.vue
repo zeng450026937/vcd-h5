@@ -54,7 +54,7 @@
                   <div>
                     <div class="w-20 text-black9">会议室</div>
                   </div>
-                  <span>{{currentEvent.locations.location.join('、')}}</span>
+                  <span style="word-break: break-all">{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
@@ -84,7 +84,7 @@
                   <div>
                     <div class="w-20 text-black9">备注</div>
                   </div>
-                  <span>{{currentEvent.note || '当前会议的备注信息为空'}}</span>
+                  <span style="word-break: break-all">{{currentEvent.note || '当前会议的备注信息为空'}}</span>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
                     <recycle-scroller
                         style="height: 100%"
                         :items="currentEvent.invitees.invitee"
-                        :buffer="5"
+                        :buffer="20"
                         :item-size="32"
                         :page-mode="false"
                         key-field="display-text"
@@ -107,8 +107,10 @@
                                     :class="{'bg-host': item.role === 'organizer'}">
                             <a-iconfont type="icon-ren"/>
                           </a-avatar>
-                          <span class="ml-1 leading-tight">{{item['display-text']}}</span>
-                          <span class="ml-1 leading-tight">({{item['display-text']}})</span>
+                          <div class="flex flex-grow w-1">
+                            <span class="ml-1 truncate leading-tight">{{item['display-text']}}</span>
+                          </div>
+                          <!--<span class="ml-1 leading-tight">({{item['display-text']}})</span>-->
                         </div>
                       </template>
                     </recycle-scroller>
@@ -122,15 +124,15 @@
       <a-divider class="m-0"/>
       <div class="my-2 flex justify-center items-center">
         <a-button class="w-1/3 mx-2" type="primary"
-                  :disabled="!status.isRunning"
-                  :title="status.isRunning ? '视频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
+                  :disabled="!status.isReady"
+                  :title="status.isReady ? '视频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
                   @click="enterMeeting">
           <a-iconfont type="icon-shipin"/>
           视频加入
         </a-button>
         <a-button class="w-1/3 mx-2" type="primary"
-                  :disabled="!status.isRunning"
-                  :title="status.isRunning ? '音频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
+                  :disabled="!status.isReady"
+                  :title="status.isReady ? '音频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
                   @click="audioEnter">
           <a-iconfont type="icon-yuyin"/>
           音频加入

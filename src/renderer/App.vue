@@ -10,24 +10,16 @@
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 
 export default {
-  name       : 'App',
+  name : 'App',
   data() {
     return {
       locale : zhCN,
     };
   },
   computed : {
-    // isOnLine() {
-    //   return this.$model.state.isOnLine;
-    // },
   },
   methods : {},
   watch   : {
-    // isOnLine(val) {
-    //   if (!val) {
-    //     this.$message.error('网络不可用，请检查你的网络设置');
-    //   }
-    // },
   },
 };
 </script>
