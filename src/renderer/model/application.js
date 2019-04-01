@@ -2,6 +2,19 @@ import { remote, ipcRenderer } from 'electron';
 import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 
+function dumpConnection() {
+  const connection = navigator;
+
+  return {
+    downlink      : connection.downlink,
+    downlinkMax   : connection.downlinkMax,
+    effectiveType : connection.effectiveType,
+    rtt           : connection.rtt,
+    saveData      : connection.saveData,
+    type          : connection.type,
+  };
+}
+
 const model = new Vuem();
 
 model.provide({
@@ -14,8 +27,8 @@ model.provide({
       category   : process.env.VUE_APP_CATEGORY,
       customId   : process.env.VUE_APP_CUSTOMID,
       //
-      onLine     : false,
-      connection : null,
+      onLine     : navigator.onLine,
+      connection : dumpConnection(),
     };
   },
 
@@ -75,16 +88,7 @@ model.provide({
     },
 
     connectionChanged() {
-      const connection = navigator;
-
-      this.connection = {
-        downlink      : connection.downlink,
-        downlinkMax   : connection.downlinkMax,
-        effectiveType : connection.effectiveType,
-        rtt           : connection.rtt,
-        saveData      : connection.saveData,
-        type          : connection.type,
-      };
+      this.connection = dumpConnection();
     },
   },
 
