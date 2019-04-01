@@ -47,6 +47,8 @@ export default {
       const isCheckboxElm = e.target.getAttribute('check-box') != null;
       const isHalfCheck = e.target.getAttribute('half-check') != null;
 
+      console.log(e.target.getAttribute('node-type'));
+
       if (type == null) return;
 
       const isOrg = type.indexOf('ORG') > -1;
@@ -64,19 +66,22 @@ export default {
         }
       }
       else {
-        const checked = !e.target.parentElement.querySelector('input').checked;
-
-        this.checkEntity(id, checked); // 选中节点
+        this.checkEntity(id); // 选中节点
       }
     },
-    checkEntity(id, checked) {
-      treeStore.checkNode(id, checked).then((nodes) => {
+    checkEntity(id) {
+      const node = treeStore.getNode(id);
+
+      treeStore.checkNode(id, !node.checked).then((nodes) => {
         this.updateTreeViews();
         this.$emit('change', nodes);
       });
     },
     check(id, checked) {
-      return this.checkEntity(id, checked);
+      return treeStore.checkNode(id, checked).then((nodes) => {
+        this.updateTreeViews();
+        this.$emit('change', nodes);
+      });
     },
     checkGroup(id, checked) {
       treeStore.checkOffspring(id, checked).then((nodes) => {
@@ -127,7 +132,7 @@ export default {
       };
 
       const input = `
-        <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
+        <input id="${row.node.id}" node-id="${row.node.id}" node-type="${row.node.type}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
         <label
            style="${this.createStyleString(inputStyles)}"
            check-box
@@ -153,16 +158,16 @@ export default {
       };
 
       return `<div class="entity-node" node-pid="${row.node.parentId}" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
-                <div>
+                <div node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">
                   <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
                   <label check-box node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}" class="tree-checkbox-label" for="${row.node.id}">
-                     <div class="avatar">
-                     ${this.getAvatar(row)}
-                      </div>
-                     <div class="name-content">
-                        <span class="name">${row.name}</span>
-                        <span class="number">${row.number}</span>
-                      </div>
+                    <div class="avatar" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">
+                       ${this.getAvatar(row)}
+                    </div>
+                    <div class="name-content" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">
+                       <span class="name" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">${row.name}</span>
+                       <span class="number" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">${row.number}</span>
+                     </div>
                   </label>
                 </div>
               </div>`;
@@ -289,7 +294,7 @@ export default {
     width: 32px;
     background: #55638C;
     border-radius: 50%;
-    margin: 0 5px;
+    margin: 0 10px;
     color: #fff;
     font-size: 12px;
     display: flex;
@@ -316,20 +321,23 @@ export default {
 }
 .tree-half-checkbox::before{
   content: '';
-  border: 5px #4a5fc4 solid;
+  border: 4px #4a5fc4 solid;
   display: inline-block;
   border-radius: 2px;
 }
 .tree-half-checkbox {
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 16px;
   border: 1px solid silver;
   margin-right: 6px;
   text-align: center;
   vertical-align: middle;
   background-color: #fff;
   border-radius: 2px;
-  line-height: 16px;
+  line-height: 12px;
+  &:hover {
+    border: 1px solid #4a5fc4;
+  }
 }
 .tree-checkbox {
   &[type="checkbox"] {
@@ -349,24 +357,30 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  line-height: 16px;
+  line-height: 14px;
 }
 .tree-checkbox-label::before {
   content: '\a0';
   display: inline-block;
   border: 1px solid silver;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   font-weight: bold;
   background: #fff;
   border-radius: 2px;
+  font-size: 10px;
+}
+.tree-checkbox-label:hover {
+  &::before {
+    border: 1px solid #4a5fc4;
+  }
 }
 
 .triangle-right {
   width: 0;
   height: 0;
   border-top: 4px solid transparent;
-  border-left: 6px solid #000000a6;
+  border-left: 6px solid #999999;
   border-bottom: 4px solid transparent;
   margin-right: 8px;
 }
@@ -375,7 +389,7 @@ export default {
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 6px solid #000000a6;
+  border-top: 6px solid #999999;
   margin-right: 6px;
 }
 </style>

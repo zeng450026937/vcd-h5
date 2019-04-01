@@ -60,7 +60,7 @@ export default {
       this.cluster = cluster;
     },
     updateSearchList(data) {
-      this.cluster.update(this.createTemplates(data));
+      if (this.cluster) this.cluster.update(this.createTemplates(data));
     },
     update(data) {
       data._isVue = true;
@@ -90,8 +90,10 @@ export default {
 
       const checkItem = this.list.find((n) => n.id === id);
 
-      checkItem.checked = !checkItem.checked;
-      this.updateSearchList(this.list);
+      if (checkItem) {
+        checkItem.checked = false;
+        this.updateSearchList(this.list);
+      }
     },
 
     handleClick(e) {
@@ -150,18 +152,23 @@ export default {
         cursor: pointer;
         display: flex;
         align-items: center;
-        line-height: 16px;
+        line-height: 14px;
       }
 
       .tree-checkbox-label::before {
         content: '\a0';
         display: inline-block;
         border: 1px solid silver;
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         font-weight: bold;
         background: #fff;
         border-radius: 2px;
+      }
+      .tree-checkbox-label:hover {
+        &::before {
+          border: 1px solid #4a5fc4;
+        }
       }
 
       &:hover {
@@ -189,26 +196,32 @@ export default {
         justify-content: center;
       }
 
-      .name-content {
+      .name-content{
         display: flex;
         flex-grow: 1;
         flex-direction: column;
         justify-content: center;
+        width: 75%;
+        overflow: hidden;
 
-        .name {
+        .name{
           font-size: 14px;
           height: 20px;
           line-height: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 90%;
         }
-
         .number {
           font-size: 12px;
           color: #777777;
           height: 20px;
           line-height: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 90%;
         }
       }
-
     }
   }
 

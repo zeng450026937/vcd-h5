@@ -557,6 +557,6 @@ export default class TreeStore {
   }
 
   search(text) {
-    return this.originTree.filter((n) => n.name.indexOf(text) > -1);
+    return this.originTree.filter((n) => n.name.indexOf(text) > -1 && !n.isGroup);
   }
 }

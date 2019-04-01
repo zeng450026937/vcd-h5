@@ -122,7 +122,9 @@ export default class Store {
     });
 
     if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
-      Object.assign(this.rootNode, groupMap[this.rootNode.attributes.name]);
+      this.originTree.forEach((n) => {
+        Object.assign(n, groupMap[this.rootNode.attributes.name]);
+      });
     }
   }
 

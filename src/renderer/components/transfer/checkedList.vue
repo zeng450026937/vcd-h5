@@ -170,16 +170,25 @@ export default {
         flex-grow: 1;
         flex-direction: column;
         justify-content: center;
+        width: 75%;
+        overflow: hidden;
+
         .name{
           font-size: 14px;
           height: 20px;
           line-height: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 90%;
         }
         .number {
           font-size: 12px;
           color: #777777;
           height: 20px;
           line-height: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 90%;
         }
       }
 

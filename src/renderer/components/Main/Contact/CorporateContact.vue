@@ -136,13 +136,13 @@ export default {
   methods : {
     toGroup(path) {
       this.breadcrumbChange(path);
-      this.selectedContact = {};
     },
     breadcrumbChange(item) {
       const index = this.breadcrumbs.findIndex((b) => b.id === item.id);
 
       this.breadcrumbs = this.breadcrumbs.slice(0, index + 1);
       this.currentGroup = item.id;
+      this.selectedContact = {};
     },
     async handleCheck(item) {
       if (!item.isGroup) {
