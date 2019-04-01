@@ -17,11 +17,13 @@
 
               <div style="height: 76px" class="bg-card w-full rounded-t"></div>
               <div class="mt-12 text-base leading-none">{{userInfo.name}}</div>
-              <div class="mt-2 leading-none text-xs text-black9 text-center"
-                    >{{userInfo.parent && userInfo.parent.fullPath | fullName}}</div>
+              <div class="mt-2 px-2 truncate w-full leading-none text-xs text-black9 text-center"
+                    >
+                <span class="truncate select-none" :title="fullPath">{{fullPath}}</span>
+              </div>
 
               <div class="mt-10">
-                <a-button class="w-24" @click="clickLogout">注销</a-button>
+                <a-button class="w-16" @click="clickLogout">注销</a-button>
               </div>
 
               <div class="text-center absolute mt-10">
@@ -102,9 +104,19 @@ export default {
       return this.$model.main.sidebarItems;
     },
     userInfo() {
-      return this.$model.account.currentContact || {
+      return this.$model.contact.currentContact || {
         name : this.$rtc.account.username,
       };
+    },
+    store() {
+      return this.$model.contact.phoneBookStore;
+    },
+    fullPath() {
+      if (!this.userInfo || !this.store) return '暂无分组';
+
+      const paths = this.store.findBranch(this.userInfo).map((node) => node.name).reverse();
+
+      return paths.length < 1 ? '暂无分组' : paths.slice(-2).join('-');
     },
     confStatus() {
       return this.$rtc.conference.status;
@@ -143,44 +155,12 @@ export default {
     openFeedback() {
       this.$refs.feedbackModal.visible = true;
     },
-    genFullPath() {
-      let { parent } = this.userInfo;
-
-      let fullPath = [];
-
-      while (parent.id) {
-        fullPath = [ {
-          id   : parent.id,
-          text : parent.name,
-        } ].concat(fullPath);
-
-        parent = parent.parent;
-      }
-      this.userInfo.parent.fullPath = fullPath;
-    },
   },
   watch : {
-    userInfo : {
-      handler(val) {
-        if (val && val.parent) {
-          const { fullPath } = this.userInfo.parent;
-
-          if (!fullPath || fullPath.length <= 0) {
-            this.genFullPath();
-          }
-        }
-      },
-      immediate : true,
-    },
     currentSidebar(sidebar) {
       if (sidebar.currentRoute) {
         this.$router.push(sidebar.currentRoute);
       }
-    },
-  },
-  filters : {
-    fullName(fullPath = '') {
-      return fullPath.length < 1 ? '' : fullPath.slice(-2).map((b) => b.text).join('-');
     },
   },
 };

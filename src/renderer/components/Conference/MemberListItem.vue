@@ -15,10 +15,10 @@
       <div class="flex flex-col flex-grow w-1 ml-3">
         <div class="item-name flex flex-grow items-center">
           <span class="truncate">
-            <span v-if="filterText && displayName.indexOf(filterText) > -1" class="flex">
-            {{displayName.substr(0, displayName.indexOf(filterText))}}
+            <span v-if="filterText && item.displayText.indexOf(filterText) > -1" class="flex">
+            {{item.displayText.substr(0, item.displayText.indexOf(filterText))}}
               <span class="text-indigo">{{filterText}}</span>
-              {{displayName.substr(displayName.indexOf(filterText) + filterText.length)}}
+              {{item.displayText.substr(item.displayText.indexOf(filterText) + filterText.length)}}
             </span>
             <span v-else>{{item.displayText}}</span>
           </span>

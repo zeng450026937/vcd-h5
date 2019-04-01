@@ -132,7 +132,7 @@ export default {
   sketch : [
     {
       ns    : 'conference.sketch',
-      props : [ 'filterText', 'selectedGroup', 'isOpenSearch' ],
+      props : [ 'filterText', 'selectedGroup', 'isOpenSearch', 'activeGroupKey' ],
     },
     {
       ns    : 'conference.member',
@@ -140,9 +140,6 @@ export default {
     },
   ],
   computed : {
-    activeGroupKey() {
-      return this.$model.conference.sketch.activeGroupKey;
-    },
     memberList() {
       return this.$model.conference.member.memberList;
     },
@@ -194,7 +191,12 @@ export default {
       });
     },
     openSearch() {
-      this.isOpenSearch = !this.isOpenSearch;
+      if(this.activeGroupKey !== '1') {
+        this.isOpenSearch = true;
+        this.activeGroupKey = '1'
+      }else {
+        this.isOpenSearch = !this.isOpenSearch;
+      }
     },
     muteAll() {
       this.$rtc.conference.conference.view.setDefaultFilter({

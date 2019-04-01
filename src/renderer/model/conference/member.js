@@ -24,18 +24,18 @@ member.provide({
       // 主持人
       const presenterList = userList.filter((user) => user.isPresenter()
         && (user.displayText.indexOf(this.filterText) > -1
-          || user.displayText.indexOf(this.phone) > -1));
+          || user.phone.indexOf(this.filterText) > -1));
       // 访客
       const visitorList = userList.filter((user) => !user.isPresenter()
         && !user.isOnHold() && !user.isCastViewer()
         && (user.displayText.indexOf(this.filterText) > -1
-          || user.displayText.indexOf(this.phone) > -1));
+          || user.phone.indexOf(this.filterText) > -1));
       // 广播方
       const castViewerList = userList.filter((user) => user.isCurrentUser()
         && !user.isPresenter()
         && !user.isOnHold() && user.isCastViewer()
         && (user.displayText.indexOf(this.filterText) > -1
-          || user.displayText.indexOf(this.phone) > -1));
+          || user.phone.indexOf(this.filterText) > -1));
 
       const memberList = [
         {
