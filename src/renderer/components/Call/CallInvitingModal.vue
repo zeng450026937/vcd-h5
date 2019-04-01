@@ -15,7 +15,7 @@
       <a-button key="back" @click="handleCancel" class="ml-4">取消</a-button>
     </template>
     <a-tabs v-model="currentTab" class="inviting-tabs">
-      <a-tab-pane tab="邀请联系人！！！" key="inviteUser">
+      <a-tab-pane tab="邀请联系人" key="inviteUser">
         <div style="height: 420px;">
           <div class="flex h-full p-5">
 
