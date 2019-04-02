@@ -43,7 +43,8 @@
                       </a-select-option>
                     </a-select-opt-group>
                   </template>
-                  <a-input placeholder='会议ID'>
+                  <a-input placeholder='会议ID'
+                           :class="{'meeting-error': meetingIDError}">
                     <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                   </a-input>
                 </a-auto-complete>
@@ -153,6 +154,7 @@ import { cloneDeep, debounce } from 'lodash';
 import TabSettingMedia from '../Conference/TabSettingMedia.vue';
 import VideoView from '../Common/VideoView.vue';
 import { LOGIN_STORAGE } from '../../storage/constants';
+import { debounceNotice } from '../../model/middleware/error-message';
 
 export default {
   name       : 'YMAMeeting',
@@ -183,6 +185,7 @@ export default {
       rawAccounts      : [],
       modifiedAccounts : [],
       searchedAccounts : [],
+      meetingIDError   : false,
     };
   },
   sketch : {
@@ -228,6 +231,19 @@ export default {
     },
   },
   methods : {
+    checkNumber() {
+      let errorNotice = '';
+
+      const { length } = this.meetingInfo.number || '';
+
+      if (length === 0) errorNotice = '会议ID不能为空';
+      else if (length > 64) errorNotice = '会议ID最多为64位';
+      else if (!this.isCloud && length !== 5) errorNotice = 'YMS账号会议ID仅支持五位数字输入';
+      else if (this.isCloud && length !== 5 && length !== 10) errorNotice = 'Cloud账号会议ID仅支持5位或者10位数字输入';
+      if (errorNotice) debounceNotice(this, errorNotice);
+
+      return !errorNotice;
+    },
     onAccountChange(value) {
       const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
 
@@ -260,7 +276,11 @@ export default {
       }
     },
     joinMeeting() {
-      this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
+      // this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
+      this.meetingIDError = !this.checkNumber();
+      if (!this.meetingIDError) {
+        this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
+      }
     },
     returnLogin() {
       this.loginType = 'login';
@@ -334,6 +354,9 @@ export default {
 <style lang="less">
   #meeting-content {
     z-index: 1;
+    .meeting-error {
+      border-color: red;
+    }
     .controls-content {
       button{
         box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

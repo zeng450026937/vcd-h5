@@ -85,12 +85,13 @@ model.provide({
     validateForm(values) {
       let errorText = '';
 
-      if (!values.account) errorText = '账号不能为空';
-      else if (values.account.length > 128) errorText = '无法输入超过128个字符';
-      else if (!values.pin) errorText = '密码不能为空';
-      else if (!values.pin.length > 128) errorText = '无法输入超过128个字符';
-      else if (!values.server) errorText = '服务器地址不能为空';
-      else if (!IP_REG.test(values.server) && !DOMAIN_REG.test(values.server)) errorText = '服务器地址格式错误';
+      if (!values.account) errorText = 'ACCOUNT_NOT_EMPTY';
+      else if (values.account.length > 128) errorText = 'ACCOUNT_TOO_LONG';
+      else if (!values.pin) errorText = 'PASSWORD_NOT_EMPTY';
+      else if (!values.pin.length > 128) errorText = 'PASSWORD_TOO_LONG';
+      else if (!values.server) errorText = 'SERVER_NOT_EMPTY';
+      else if (!IP_REG.test(values.server)
+        && !DOMAIN_REG.test(values.server)) errorText = 'SERVER_FORMAT_ERROR';
 
       if (errorText) throw new Error(errorText);
     },

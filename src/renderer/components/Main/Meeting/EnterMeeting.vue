@@ -100,6 +100,7 @@
 import AppHeader from '../MainHeader.vue';
 import MediaContent from '../../Conference/TabSettingMedia.vue';
 import VideoView from '../../Common/VideoView.vue';
+import { debounceNotice } from '../../../model/middleware/error-message';
 
 export default {
   name       : 'EnterMeeting',
@@ -160,7 +161,7 @@ export default {
       else if (length > 64) errorNotice = '会议ID最多为64位';
       else if (!this.isCloud && length !== 5) errorNotice = 'YMS账号会议ID仅支持五位数字输入';
       else if (this.isCloud && length !== 5 && length !== 10) errorNotice = 'Cloud账号会议ID仅支持5位或者10位数字输入';
-      if (errorNotice) this.$message.error(errorNotice);
+      if (errorNotice) debounceNotice(this, errorNotice);
       
       return !errorNotice;
     },

@@ -106,7 +106,10 @@ model.provide({
     },
     isConferenceDisConnected(val) {
       if (val && this.isCallDisConnected) {
-        router.push(this.isRegistered ? this.currentNav.route : LOGIN.LOGIN_CONTENT);
+        const { loginType } = this.$parent.account;
+        const route = loginType === 'login' ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
+
+        router.push(this.isRegistered ? this.currentNav.route : route);
       }
     },
     isCallDisConnected(val) {

@@ -51,22 +51,6 @@ meeting.provide({
 
       const anonMeetingRecord = ctx.payload;
 
-      let noticeText = '';
-
-      if (!anonMeetingRecord.number) {
-        noticeText = '会议号码不可为空';
-      }
-      else if (!anonMeetingRecord.server) {
-        noticeText = '服务器地址不可为空';
-      }
-      else if (!anonMeetingRecord.displayName) {
-        noticeText = '昵称不可为空';
-      }
-      if (noticeText) {
-        throw new Error(noticeText);
-      }
-
-
       const { number,
         pin,
         server,
