@@ -93,7 +93,7 @@ const genPattern = (decurs, recurrencePattern) => {
   };
 };
 
-const genMeetingStatus = (startTime, expiryTime) => {
+const genMeetingStatus = (startTime, expiryTime, remindEarly) => {
   const currentTime = new Date().getTime();
 
   startTime = new Date(startTime).getTime();
@@ -101,9 +101,10 @@ const genMeetingStatus = (startTime, expiryTime) => {
 
   const isPrepared = currentTime < startTime;
   const isEnded = currentTime >= expiryTime;
+  const isReady = ((startTime - currentTime) - (remindEarly || 5) * 60 * 1000) <= 0; // 正在进行中或者可以提前开始
   const isRunning = !isPrepared && !isEnded;
 
-  return { isPrepared, isEnded, isRunning };
+  return { isPrepared, isEnded, isRunning, isReady };
 };
 
 export function formatCalendar(data) {
@@ -120,13 +121,14 @@ export function formatCalendar(data) {
     cal.expiryMoment = moment(cal['expiry-time']);
     cal.expiryTime = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
 
-    cal.status = genMeetingStatus(cal.startTime, cal.expiryTime);
-
+    cal.status = genMeetingStatus(cal.startTime, cal.expiryTime, cal['remind-early']);
     const plainCalendar = {};
 
     Object.keys(cal).forEach((key) => {
       plainCalendar[camelize(key)] = cal[key];
     });
+
+
     plainCalendar.isLive = !!plainCalendar.rtmpInvitees;
     if (plainCalendar.isLive) {
       // 添加直播地址

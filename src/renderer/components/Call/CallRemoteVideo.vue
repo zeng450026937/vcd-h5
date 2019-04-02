@@ -9,7 +9,7 @@
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5">音频通话</span>
+        <span class="display-name mt-5">{{isVideoCall ? '视频通话' : '音频通话'}}</span>
       </div>
       <call-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>

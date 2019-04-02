@@ -51,7 +51,7 @@
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    placeholder='会议密码(选)'
+                    placeholder='会议密码'
                     type='password'
                     :value="meetingInfo.pin"
                     @change="onPasswordChange"
@@ -62,14 +62,14 @@
               <div class="mt-4 input-with-icon">
                 <a-input
                     v-model="meetingInfo.server"
-                    placeholder='服务器'
+                    placeholder='服务器地址'
                 >
                   <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
                 </a-input>
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    placeholder='昵称'
+                    placeholder='您在会议中的名称'
                     :value="meetingInfo.displayName"
                     @change="onDisplayNameChange"
                 >
@@ -94,7 +94,8 @@
                 >
                 </a-input>
                 <a-input
-                    v-model="meetingInfo.proxyPort"
+                    :value="meetingInfo.proxyPort"
+                    @change="onProxyPortChange"
                     v-number-only
                     placeholder='端口'
                     style="width: 76px;"
@@ -249,6 +250,13 @@ export default {
 
       if (value.length <= 64) {
         this.meetingInfo.displayName = value;
+      }
+    },
+    onProxyPortChange(e) {
+      const { value } = e.target;
+
+      if (value.length <= 5) {
+        this.meetingInfo.proxyPort = value;
       }
     },
     joinMeeting() {

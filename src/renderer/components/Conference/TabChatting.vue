@@ -9,7 +9,7 @@
           <div>
             <div class="flex items-center">
               <span class="whitespace-no-wrap text-xs leading-tight">发给</span>
-              <a-select v-model="target" class="w-full ml-2">
+              <a-select v-model="target" class="w-full ml-2" :disabled="isOnHold">
                 <a-select-option v-for="(user, index) in targetList"
                                  :value="user.entity"
                                  :key="index">{{user.displayText}}</a-select-option>
@@ -18,13 +18,16 @@
           </div>
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
-              <a-textarea v-model="message" placeholder="请输入您将要发送的消息" class="h-full"/>
+              <a-textarea v-model="message"
+                          :placeholder="isOnHold ? '暂无发消息的权限' : '请输入您将要发送的消息'"
+                          :read-only="isOnHold"
+                          class="h-full"/>
             </div>
             <div class="w-1/6 bg-grey-light">
               <a-button type="primary"
                         class="w-full h-full p-0 text-xs"
                         :class="{'bg-disabled': isSendingDisabled}"
-                        :disabled="isSendingDisabled || !message"
+                        :disabled="isSendingDisabled || !message || isOnHold"
                         @click="sendMessage">
                 <span v-if="isSendingDisabled" class="text-base text-white">{{timeout}}</span>
                 <a-iconfont v-else type="icon-fasong" class="text-base"/>
@@ -68,6 +71,9 @@ export default {
         },
         ...this.userList,
       ];
+    },
+    isOnHold() {
+      return this.$model.conference.currentUser.isOnHold();
     },
   },
   methods : {

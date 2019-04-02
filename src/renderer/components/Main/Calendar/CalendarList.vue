@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-if="!currentDateEvents || currentDateEvents.length <= 0" class="h-full flex items-center justify-center">
-        <common-empty class="text-grey" text="暂未选择日程信息"/>
+        <common-empty class="text-grey" text="暂无会议日程"/>
       </div>
     </div>
   </a-layout>

@@ -18,8 +18,8 @@ chat.provide({
     newMessage() {
       return rtc.account.newMessage;
     },
-    isRegistered() {
-      return rtc.account.registered;
+    isConnected() {
+      return rtc.call.connected;
     },
   },
   methods : {
@@ -56,7 +56,7 @@ chat.provide({
 
       this.messageRecordList.push(messageObject);
     },
-    isRegistered() {
+    isConnected() {
       this.messageRecordList = [];
     },
     messageRecordList(val) {

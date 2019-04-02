@@ -27,12 +27,13 @@ meeting.provide({
   middleware : {
     async joinMeeting(ctx, next) {
       await next();
+
       const {
         number,
         pin,
         initialVideo,
         initialAudio,
-      } = ctx.payload || this.meetingRecord;
+      } = ctx.payload.number ? ctx.payload : this.meetingRecord;
       const { conference } = rtc;
 
       conference.number = number;

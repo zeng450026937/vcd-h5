@@ -46,7 +46,7 @@
         <div class="flex flex-col items-center px-24 bg-white">
           <div class="mt-5 w-full">
             <a-input
-                placeholder='Meeting ID'
+                placeholder='会议 ID'
                 :class="{'meeting-error': meetingIDError}"
                 :value="meetingInfo.number"
                 @change="onNumberChange"
@@ -58,7 +58,7 @@
           <div class="mt-5 w-full">
             <a-input
                 :value="meetingInfo.pin"
-                placeholder='Password(Optional)'
+                placeholder='会议密码'
                 type="password"
                 @change="onPasswordChange"
             >
@@ -69,7 +69,7 @@
             <a-input
                 :value="server"
                 read-only
-                placeholder='Server address'
+                lder='服务器地址'
             >
               <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
             </a-input>

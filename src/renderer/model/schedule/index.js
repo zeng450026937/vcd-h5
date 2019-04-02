@@ -234,7 +234,7 @@ model.provide({
   async created() {
     this.db = new ScheduleDatabse('ScheduleDatabse');
     this.cm = new ConferenceManager();
-    
+
     this.conferences = Object.create(null);
     this.conferences._isVue = true; // prevent object to be observed by vue
     this.templates = Object.create(null);
@@ -276,7 +276,7 @@ model.provide({
     });
 
     account.$watch('registered', (val) => {
-      if (!val) return; 
+      if (!val) return;
       this.fetch();
     });
     */
