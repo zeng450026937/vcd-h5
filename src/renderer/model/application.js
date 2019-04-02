@@ -143,7 +143,8 @@ model.use(async(ctx, next) => {
     ctx.method = 'hide';
   }
 
-  await next();
+  // always return next() result
+  return await next();
 });
 
 export default model;

@@ -42,10 +42,12 @@ model.use(async(ctx, next) => {
   const tick = Date.now();
 
   let error;
+  
+  let ret;
 
   // error handler
   try {
-    await next();
+    ret = await next();
   }
   catch (e) {
     error = e;
@@ -57,6 +59,8 @@ model.use(async(ctx, next) => {
 
   // FIXME: maybe we should not throw error here
   if (error) throw error;
+
+  return ret;
 });
 
 model.use(errorMessage);

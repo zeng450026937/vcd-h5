@@ -1,8 +1,10 @@
 import ERROR_MAP from './error-map';
 
 export default async function errorMessage(ctx, next) {
+  let ret;
+
   try {
-    await next();
+    ret = await next();
   }
   catch (error) {
     if (!error) throw new Error('undefined');
@@ -21,4 +23,6 @@ export default async function errorMessage(ctx, next) {
     
     throw error;
   }
+
+  return ret;
 }
