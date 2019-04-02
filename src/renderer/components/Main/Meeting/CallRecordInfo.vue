@@ -61,7 +61,7 @@
                   <a-col :span="24" class="leading-tight">
                     <a-row>
                       <a-col :span="2">账号</a-col>
-                      <a-col :span="8">{{contact.isLocal ? contact.name : contact.extension}}</a-col>
+                      <a-col :span="8">{{contact.number}}</a-col>
                       <a-col :span="2">邮箱</a-col>
                       <a-col :span="8">{{contact.email}}</a-col>
                     </a-row>
@@ -81,7 +81,8 @@
               <div v-else>
                 <div class="text-xs">
                   <div class="leading-tight flex justify-between">
-                    <div :span="2">账号 {{contact.extension}}</div>
+                    <div :span="2">账号<span class="ml-4">{{contact.number}}</span></div>
+
                     <div :span="4" class="text-indigo cursor-pointer"
                          @click="addLocalContact">添加为本地联系人
                     </div>
@@ -159,7 +160,7 @@ export default {
       showEditDrawer : false,
       recordInfo     : null,
       storeName      : null,
-      drawerType     : '',
+      drawerType     : 'add',
       contact        : {},
       ready          : false,
       records        : [],
@@ -208,10 +209,11 @@ export default {
     goBack() {
       this.$router.back();
     },
-    addLocalContact() {
+    async addLocalContact() {
       this.$refs.localContactDrawer.visible = true;
-      this.$refs.localContactDrawer.form.$nextTick(() => {
-        this.drawerType = 'add';
+      await this.$refs.localContactDrawer.$nextTick();
+      this.$refs.localContactDrawer.form.setFieldsValue({
+        number : this.recordInfo.otherId,
       });
     },
     async setCallRecord() {
@@ -231,6 +233,8 @@ export default {
     async setContactInfo(val) {
       let contact = this.store.getNodeByNumber(val);
 
+      this.contact = contact;
+
       if (!contact) {
         const contacts = await this.$model.contact.findContacts(val);
 
@@ -247,13 +251,12 @@ export default {
 
       if (!contact) {
         this.contact = contact = await this.$model.contact.local.search(val);
-        this.contact.isLocal = true;
+        if (contact) this.contact.isLocal = true;
       }
 
       if (!contact) {
         this.contact = { number: val, name: '未知联系人', unknown: true };
       }
-
       this.$nextTick(() => {
         this.ready = true;
       });

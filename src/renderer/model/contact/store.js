@@ -122,9 +122,14 @@ export default class Store {
     });
 
     if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
+      const groupInfo = this.clone(groupMap[this.rootNode.attributes.name]);
+
+      delete groupInfo.name;
+
       this.originTree.forEach((n) => {
-        Object.assign(n, groupMap[this.rootNode.attributes.name]);
+        Object.assign(n, groupInfo);
       });
+      Object.assign(this.rootNode, groupMap[this.rootNode.attributes.name]);
     }
   }
 
@@ -227,7 +232,7 @@ export default class Store {
   }
 
   getNodeByNumber(number) {
-    this.originTree.find((n) => n.number === number);
+    return this.originTree.find((n) => n.number === number);
   }
 
   findBranch(node, branch = []) {
