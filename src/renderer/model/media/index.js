@@ -345,6 +345,26 @@ model.provide({
       { immediate: true }
     );
     setting.$watch(
+      'shareSmoothMode',
+      (val) => {
+        if (val) {
+          this.videoQuality.width = 1920;
+          this.videoQuality.height = 1080;
+          this.videoQuality.frameRate = 5;
+        }
+        else {
+          this.videoQuality.width = 1280;
+          this.videoQuality.height = 720;
+          this.videoQuality.frameRate = 30;
+        }
+
+        rtc.media.screenMedia.videoQuality.width = this.videoQuality.width;
+        rtc.media.screenMedia.videoQuality.height = this.videoQuality.height;
+        rtc.media.screenMedia.videoQuality.frameRate = this.videoQuality.frameRate;
+      },
+      { immediate: true }
+    );
+    setting.$watch(
       'noiseSuppression',
       (val) => {
         this.audioQuality.noiseSuppression = val;

@@ -41,6 +41,7 @@ model.provide({
       maximizedWhenRemoteSharing : true,
       muteAudioWhenJoin          : false,
       muteVideoWhenJoin          : false,
+      shareSmoothMode            : false, 
       shareWithSound             : false,
       meetnowPassword            : false,
       bookingPassword            : false,

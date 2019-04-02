@@ -17,7 +17,7 @@
             </a-checkbox>
           </div>
           <div class="flex items-center mt-1">
-            <a-checkbox class="text-xs" :checked="smoothMode" @change="smoothMode = !smoothMode">
+            <a-checkbox class="text-xs" :checked="shareSmoothMode" @change="shareSmoothMode = !shareSmoothMode">
               视频流畅度优先
             </a-checkbox>
             <a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>
@@ -80,9 +80,13 @@ export default {
       applicationList : [],
       timer           : null,
       selectedWindow  : {},
-      smoothMode      : false,
     };
   },
+  sketch : {
+    ns    : 'setting',
+    props : [ 'shareSmoothMode' ],
+  },
+
   computed : {
     share() {
       return this.$model.conference.share;
@@ -107,7 +111,7 @@ export default {
       if (!this.selectedWindow.id) return;
       // 分享辅流
       this.$rtc.media.selectScreen(
-        this.selectedWindow.id, false /* audio */, this.smoothMode /* smooth mode */
+        this.selectedWindow.id, false /* audio */, this.shareSmoothMode /* smooth mode */
       )
         .then((val) => {
           this.visible = false;
