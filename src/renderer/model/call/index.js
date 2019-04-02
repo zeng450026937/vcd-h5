@@ -43,6 +43,11 @@ model.provide({
     decline() {
       rtc.call.decline().catch(() => {});
     },
+    async upgrade(ctx, next) {
+      await next();
+      
+      return rtc.call.upgrade(ctx.payload, { subject: `${rtc.account.username} 的视频会议` });
+    },
   },
   computed : {
     hasRemoteStream() {
