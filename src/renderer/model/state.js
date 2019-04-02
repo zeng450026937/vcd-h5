@@ -215,7 +215,7 @@ model.provide({
         if (record.connected) record.endTime = Date.now();
       }
       if (info.pin) record.pin = info.pin;
-      console.warn(record);
+      // console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
       this.recordUpdate = Date.now();
     });
