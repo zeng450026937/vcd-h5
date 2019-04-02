@@ -8,6 +8,10 @@
         cancelText="取消"
         @ok="submitFeedBack"
         @cancel="close"
+        :okButtonProps="{props: {
+          disabled : !problemDescribe,
+          loading  : uploading,
+        }}"
     >
       <div class="flex flex-col">
         <div>
@@ -82,6 +86,7 @@ export default {
       problemDescribe : '',
       useUploadImg    : false,
       contactInfo     : '',
+      uploading       : false,
     };
   },
   methods : {
@@ -128,6 +133,7 @@ export default {
     async submitFeedBack() {
       if (!this.check()) return;
 
+      this.uploading = true;
       const formdata = new FormData();
 
       if (this.isUploadLog) {
@@ -154,13 +160,14 @@ export default {
 
       try {
         await this.$dispatch('ytms.doFeedback', { formdata });
+        this.visible = false;
+        this.uploading = false;
+        this.close();
       }
       catch (error) {
         this.$message.info('上报反馈信息失败！');
+        this.uploading = false;
       }
-
-      this.visible = false;
-      this.close();
     },
   },
 };

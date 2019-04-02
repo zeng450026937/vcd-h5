@@ -136,6 +136,7 @@ export default {
         }
         this.visible = false;
         this.$message.success('操作成功');
+        this.$emit('submit-success');
       });
     },
   },

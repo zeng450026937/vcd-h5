@@ -61,7 +61,7 @@
                   <a-col :span="24" class="leading-tight">
                     <a-row>
                       <a-col :span="2">账号</a-col>
-                      <a-col :span="8">{{contact.extension}}</a-col>
+                      <a-col :span="8">{{contact.isLocal ? contact.name : contact.extension}}</a-col>
                       <a-col :span="2">邮箱</a-col>
                       <a-col :span="8">{{contact.email}}</a-col>
                     </a-row>
@@ -72,7 +72,7 @@
                       <a-col :span="8">{{contact.phone}}</a-col>
                       <a-col :span="2">部门</a-col>
                       <a-col :span="8" class="text-indigo cursor-pointer"
-                             @click="addLocalContact">{{contact.parentNode}}（添加本地联系人）
+                             @click="addLocalContact">{{contact.parentNode}}{{contact.isLocal ? '本地联系人' : '（添加本地联系人）'}}
                       </a-col>
                     </a-row>
                   </a-col>
@@ -235,15 +235,22 @@ export default {
         const contacts = await this.$model.contact.findContacts(val);
 
         contact = contacts.find((n) => n.number === val);
-      }
-      if (contact) {
-        this.contact = contact;
 
-        const parentNode = this.store.findParentNode(contact.id, contact.parentId);
+        if (contact) {
+          this.contact = contact;
 
-        this.contact.parentNode = parentNode.name;
+          const parentNode = this.store.findParentNode(contact.id, contact.parentId);
+
+          this.contact.parentNode = parentNode.name;
+        }
       }
-      else {
+
+      if (!contact) {
+        this.contact = contact = await this.$model.contact.local.search(val);
+        this.contact.isLocal = true;
+      }
+
+      if (!contact) {
         this.contact = { number: val, name: '未知联系人', unknown: true };
       }
 
