@@ -18,7 +18,7 @@
                     @click="visible = false"/>
       </div>
       <div style="padding: 0 50px; margin-top: 30px">
-        <a-input ref="numberInput" v-model="plateContent"/>
+        <a-input ref="numberInput" :value="plateContent" @input="inputPlateContent"/>
       </div>
       <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
                      style="padding: 0 50px 18px 50px;"/>
@@ -44,6 +44,12 @@ export default {
     props : [ 'plateContent' ],
   },
   methods : {
+    inputPlateContent(e) {
+      this.plateContent = e.target.value.replace(/[^0-9*#]+/, '');
+      if (/[0-9*#]+/.test(e.data)) {
+        this.$rtc.call.sendDTMF(e.data);
+      }
+    },
     clickNumber(num) {
       this.plateContent = this.plateContent === null ? num : this.plateContent += num;
       this.$rtc.call.sendDTMF(num);

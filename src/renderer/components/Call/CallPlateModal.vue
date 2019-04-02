@@ -11,11 +11,10 @@
   >
     <div class="flex flex-col">
       <div style="padding: 0 50px; margin-top: 30px">
-        <a-input ref="numberInput" v-model="callNumber"/>
+        <a-input ref="numberInput" :value="plateContent" @input="inputPlateContent"/>
       </div>
       <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
                      style="padding: 0 50px 18px 50px;"/>
-      <!--<plate-content @inputNumber="clickNumber" style="margin-top: 10px"/>-->
     </div>
   </a-modal>
 </template>
@@ -45,12 +44,18 @@ export default {
         { num: '0', alpha: '+', isCenter: true },
         { num: '#', alpha: '' },
       ],
-      callNumber : '',
+      plateContent : '',
     };
   },
   methods : {
+    inputPlateContent(e) {
+      this.plateContent = e.target.value.replace(/[^0-9*#]+/, '');
+      if (/[0-9*#]+/.test(e.data)) {
+        this.$rtc.call.sendDTMF(e.data);
+      }
+    },
     clickNumber(num) {
-      this.callNumber = this.callNumber === null ? num : this.callNumber += num;
+      this.plateContent = this.plateContent === null ? num : this.plateContent += num;
       this.$rtc.call.sendDTMF(num);
     },
   },
