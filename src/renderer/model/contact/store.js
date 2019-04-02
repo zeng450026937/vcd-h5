@@ -122,14 +122,13 @@ export default class Store {
     });
 
     if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
-      const groupInfo = this.clone(groupMap[this.rootNode.attributes.name]);
-
-      delete groupInfo.name;
+      const groupInfo = groupMap[this.rootNode.attributes.name];
 
       this.originTree.forEach((n) => {
-        Object.assign(n, groupInfo);
+        n = { ...groupInfo, ...n };
       });
-      Object.assign(this.rootNode, groupMap[this.rootNode.attributes.name]);
+
+      Object.assign(this.rootNode, groupInfo);
     }
   }
 
