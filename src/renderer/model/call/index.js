@@ -26,14 +26,14 @@ model.provide({
 
       number = number.replace(/\*/g, '.');
 
+      this.isVideoCall = ctx.payload.options.video;
+
       if (net.isIP(number)) {
         return rtc.ipcall.connect(number);
       }
       const { call } = rtc;
 
       call.target = number;
-
-      this.isVideoCall = ctx.payload.options.video;
 
       return call.connect('send', ctx.payload.options);
     },
