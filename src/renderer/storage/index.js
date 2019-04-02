@@ -43,6 +43,12 @@ const storage = new VueStorage({
       key     : 'id',
       default : [],
     },
+    { // 本地联系人
+      store   : 'CURRENT_ACCOUNT',
+      type    : Object,
+      key     : 'id',
+      default : {},
+    },
   ],
 });
 
