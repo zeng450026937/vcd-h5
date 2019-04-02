@@ -79,6 +79,11 @@ export default {
         default: break;
       }
     }
+
+    if (this.staticStream) {
+      // TODO: close stream
+      this.staticStream = null;
+    }
   },
   computed : {
     videoId() {
@@ -113,6 +118,7 @@ export default {
       else if (this.$rtc.call.connected) {
         this.$rtc.call.channel.replaceLocalStream(this.staticStream);
       }
+      this.videoElement.remoteEventListener('canplay', this.captureStream);
     },
     videoClicked() {
       this.$emit('video-clicked');

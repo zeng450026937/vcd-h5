@@ -81,6 +81,7 @@ model.provide({
       
         const data = {
           updateChannel : setting.updateChannel,
+          clientRemarks : setting.tags,
         };
 
         const { ua, status } = rtc.account;

@@ -97,6 +97,8 @@ export class YTMSClient extends EventEmitter {
     if (wait) {
       await waitFor(wait);
     }
+    
+    if (this.isStop) return;
 
     // ignore connect error ...
     await this.api.heartbeat().catch(() => {});
