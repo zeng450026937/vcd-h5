@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="ml-10">
-          <a-avatar v-if="!user.isUser"
+          <a-avatar v-if="!user.isUser && !user.isFavorite && !user.isLocal"
                     :size="80"
                     class="text-white">
             <a-iconfont :type="user|icon" class="text-3xl"/>
@@ -57,13 +57,13 @@
       <div class="flex mt-1 h-12 border-t items-center justify-center">
         <a-button type="primary"
                   style="width: 120px;"
-                  @click="clickAudio">
+                  @click="doVideo">
           <a-iconfont type="icon-shipin" class="text-base"/>视频通话
         </a-button>
         <a-button type="primary"
                   class="ml-4"
                   style="width: 120px;"
-                  @click="clickAudio">
+                  @click="doAudio">
           <a-iconfont type="icon-yuyin" class="text-base"/>音频通话
         </a-button>
       </div>
@@ -127,6 +127,18 @@ export default {
     },
     clickAudio() {
       this.$dispatch('call.doAudioCall', this.user.number);
+    },
+    doVideo() {
+      this.$dispatch('call.call', {
+        number  : this.user.number,
+        options : {
+          audio : true,
+          video : true,
+        },
+      });
+    },
+    doAudio() {
+      this.doVideo();
     },
   },
   filters : {

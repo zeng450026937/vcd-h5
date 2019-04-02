@@ -58,7 +58,7 @@
                         </div>
                       </div>
                       <div class="flex justify-center ml-3">
-                        <a-avatar v-if="item.isGroup || !item.isUser"
+                        <a-avatar v-if="item.isGroup || (!item.isUser && !item.isFavorite && !item.isLocal)"
                                   :size="48"
                                   :class="{ 'bg-transparent' : item.isGroup,
                                     [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true}">
@@ -109,7 +109,7 @@
                 <a-checkbox v-if="checkable"
                             :checked="item.checked"
                             class="contact-checkbox"/>
-                <a-avatar v-if="item.isGroup || !item.isUser"
+                <a-avatar v-if="item.isGroup || (!item.isUser && !item.isFavorite && !item.isLocal)"
                           class="text-sm"
                           :class="{'bg-transparent' : item.isGroup,
                                   [`text-${item.isGroup ? 'grey-dark' : 'white'}`]: true,

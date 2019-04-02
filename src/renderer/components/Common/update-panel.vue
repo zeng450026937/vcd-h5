@@ -1,11 +1,7 @@
 <template>
   <div class="flex flex-col h-full items-center">
     <div class="mt-4">
-      <a-avatar class="cursor-pointer rounded-lger hover:shadow yealink-logo-color"
-                shape="square"
-                :size="128">
-        <span class="text-xl">{{$t('setting.about.logoText')}}</span>
-      </a-avatar>
+      <img class="ml-2" src="../../assets/LOGO_VCD_2.png">
     </div>
     <div class="mt-5 text-base leading-loose">
       {{$t('setting.about.aboutName')}}

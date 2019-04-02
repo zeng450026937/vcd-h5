@@ -97,7 +97,11 @@ export default {
   },
   computed : {
     localContacts() {
-      return this.$model.contact.local.localContactGroup.items;
+      const list = this.$model.contact.local.localContactGroup.items;
+
+      list.forEach((n) => n.isLocal = true);
+
+      return list;
     },
     groupInfo() {
       return {

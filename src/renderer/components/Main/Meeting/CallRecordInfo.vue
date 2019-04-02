@@ -201,8 +201,6 @@ export default {
           },
         });
       }
-
-      this.updateRecord();
     },
     doAudio(item) {
       this.doVideo(item);
