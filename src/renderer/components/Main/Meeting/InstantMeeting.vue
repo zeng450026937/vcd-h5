@@ -6,7 +6,7 @@
       <app-header :title="`${rootNode.name || ''} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
 
       <a-divider class="my-0"/>
-        <div class="flex flex-col h-full m-4">
+        <div class="flex flex-col h-full meeting-transfer-content">
           <transfer
               :search="searchContact"
               :max-checked="100"
@@ -123,6 +123,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
+  .meeting-transfer-content {
+    margin: 16px 64px;
+  }
 
 </style>
