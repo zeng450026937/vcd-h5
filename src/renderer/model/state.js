@@ -7,27 +7,9 @@ import { LOGIN, MAIN, CONFERENCE, CALL } from '../router/constants';
 import storage from '../storage';
 import { CallRecord } from '../database/call-record';
 
-const { account, server } = storage.query('CURRENT_ACCOUNT');
+
 const callRecordDB = CallRecord.Create();
 const model = new Vuem();
-
-async function addRecord(info) {
-  await callRecordDB.add('records', {
-    subject   : info.subject,
-    type      : 'outcall',
-    connected : false,
-    media     : info.media,
-    id        : info.id,
-    startTime : Date.now(),
-    endTime   : null,
-    otherId   : info.number,
-    account,
-    server,
-    other     : {
-      name : info.subject,
-    },
-  });
-}
 
 model.provide({
   data() {
@@ -247,6 +229,7 @@ model.provide({
 export default model;
 
 async function createConferenceRecord(info) {
+  const { account, server } = storage.query('CURRENT_ACCOUNT');
   const params = {
     subject          : info.subject,
     type             : 'callout',
@@ -273,6 +256,7 @@ async function createConferenceRecord(info) {
 }
 
 async function createCallRecord(info) {
+  const { account, server } = storage.query('CURRENT_ACCOUNT');
   const params = {
     subject      : info.target,
     type         : info.direction === 'incoming' ? 'incoming' : 'callout',
@@ -297,6 +281,7 @@ async function createCallRecord(info) {
 }
 
 async function createIncomingRecord(info) {
+  const { account, server } = storage.query('CURRENT_ACCOUNT');
   const params = {
     subject      : info.remoteIdentity._display_name,
     type         : info.direction,
