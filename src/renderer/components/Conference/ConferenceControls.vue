@@ -89,12 +89,13 @@ export default {
     enableLocalVideo() {
       return this.$model.setting.enableLocalVideo;
     },
+    currentUser() {
+      return this.$rtc.conference.information.users.currentUser;
+    },
     shareAvailable() {
-      const { currentUser } = this.$rtc.conference.information.users;
+      if (!this.currentUser) return false;
 
-      if (!currentUser) return false;
-
-      return this.$rtc.conference.information.users.currentUser.isShareAvariable();
+      return this.currentUser.isShareAvariable();
     },
     hasLocalScreenStream() {
       return !!this.$rtc.conference.shareChannel.localStream;
@@ -118,11 +119,13 @@ export default {
       return iconMap[this.$model.conference.videoStatus];
     },
     videoDisabled() {
+      if (this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.video) && !this.enableLocalVideo;
     },
     audioDisabled() {
+      if (this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.audio) && !this.enableLocalVideo;
