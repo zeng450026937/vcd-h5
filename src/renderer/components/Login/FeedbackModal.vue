@@ -133,6 +133,8 @@ export default {
     async submitFeedBack() {
       if (!this.check()) return;
 
+      if (this.uploading) return;
+
       this.uploading = true;
       const formdata = new FormData();
 
