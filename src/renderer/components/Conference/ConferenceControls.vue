@@ -119,13 +119,13 @@ export default {
       return iconMap[this.$model.conference.videoStatus];
     },
     videoDisabled() {
-      if (this.currentUser.isOnHold()) return true;
+      if (this.currentUser && this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.video) && !this.enableLocalVideo;
     },
     audioDisabled() {
-      if (this.currentUser.isOnHold()) return true;
+      if (this.currentUser && this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.audio) && !this.enableLocalVideo;

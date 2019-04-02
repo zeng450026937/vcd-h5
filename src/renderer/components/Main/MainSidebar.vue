@@ -16,7 +16,11 @@
             <div class="flex flex-col items-center">
 
               <div style="height: 76px" class="bg-card w-full rounded-t"></div>
-              <div class="mt-12 text-base leading-none">{{userInfo.name}}</div>
+              <div class="mt-12 text-base leading-none px-2 truncate w-full text-center"
+              >
+                <span class="truncate select-none" :title="userInfo.name">{{userInfo.name}}</span>
+              </div>
+
               <div class="mt-2 px-2 truncate w-full leading-none text-xs text-black9 text-center"
                     >
                 <span class="truncate select-none" :title="fullPath">{{fullPath}}</span>

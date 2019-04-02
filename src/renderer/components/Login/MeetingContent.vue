@@ -142,7 +142,10 @@
         </a-button>
       </div>
     </div>
-    <video-view v-if="meetingInfo.initialVideo" object-fit="cover" muted class="z-0 bg-media"/>
+    <video-view v-if="meetingInfo.initialVideo"
+                object-fit="cover"
+                muted
+                class="z-0 bg-media"/>
     <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
       <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
     </div>

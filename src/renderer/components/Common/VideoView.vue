@@ -98,7 +98,9 @@ export default {
       return streamMap[this.source];
     },
     enableLocalVideo() {
-      return this.source === 'local' && this.$model.setting.enableLocalVideo;
+      return this.$rtc.account.registered
+        && this.source === 'local'
+        && this.$model.setting.enableLocalVideo;
     },
     localVideoPath() {
       return path.resolve(__static, 'video/default-video.webm');
