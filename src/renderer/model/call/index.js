@@ -15,8 +15,9 @@ model.mount('sketch', sketch);
 model.provide({
   data() {
     return {
-      isVideoCall : false,
+      isVideoCall : null,
       callNumber  : '',
+      isSwitching : false,
     };
   },
   middleware : {
@@ -43,6 +44,9 @@ model.provide({
     decline() {
       rtc.call.decline().catch(() => {});
     },
+    isConnected() {
+      return rtc.call.connected;
+    },
     async upgrade(ctx, next) {
       await next();
       
@@ -50,41 +54,29 @@ model.provide({
     },
   },
   computed : {
-    hasRemoteStream() {
+    remoteStream() {
       return rtc.call.remoteStream;
     },
   },
   watch : {
     isVideoCall : {
-      handler(val) {
-        if (!rtc.call.connected) return;
-        if (val) { // 视频通话 -> 关掉音频
-          rtc.call.channel.session.connection.getSenders().forEach((sender) => {
-            if (sender.track.kind === 'video') {
-              sender.track.stop();
-              rtc.call.channel.session.connection.removeTrack(sender);
-            }
-            else {
-
-            }
-          });
-        }
-        else { // 音频通话 -> 关掉视频
-          rtc.call.channel.session.connection.getSenders().forEach((sender) => {
-            if (sender.track.kind === 'video') {
-              sender.track.stop();
-              rtc.call.channel.session.connection.removeTrack(sender);
-            }
-            else {
-
-            }
-          });
-        }
+      async handler(val) {
+        if (!rtc.call.connected || val == null) return;
+        this.isSwitching = true;
+        await rtc.call.localMedia.acquireDetachedStream(true, val)
+          .then((s) => rtc.call.channel.replaceLocalStream(s));
+        this.isSwitching = false;
       },
       immediate : true,
     },
-    hasRemoteStream(val) {
+    remoteStream(val) {
+      if (!this.isConnected) return;
       this.isVideoCall = val && val.getVideoTracks().length > 0;
+    },
+    isConnected(val) {
+      if (!val) {
+        this.isVideoCall = null;
+      }
     },
   },
 });

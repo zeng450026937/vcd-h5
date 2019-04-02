@@ -38,6 +38,7 @@
       >
         <div slot="content" class="popover-content">
           <div class="popover-content-item hover:bg-list-hover"
+               :disabled="isSwitching"
                @click="switchCallType">
             <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
@@ -85,7 +86,7 @@ export default {
   sketch : [
     {
       ns    : 'call',
-      props : [ 'isVideoCall' ],
+      props : [ 'isVideoCall', 'isSwitching' ],
     },
     {
       ns    : 'call.sketch',
@@ -162,6 +163,7 @@ export default {
       this.$refs.plateModal.visible = true;
     },
     switchCallType() {
+      if (this.isSwitching) return;
       this.showMorePanel = false;
       this.isVideoCall = !this.isVideoCall;
     },

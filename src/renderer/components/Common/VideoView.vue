@@ -67,6 +67,7 @@ export default {
   destroyed() {
     if (this.enableLocalVideo) {
       this.videoElement.removeEventListener('canplay', this.captureStream);
+      this.staticStream = null;
     }
     else {
       switch (this.source) {
@@ -115,6 +116,7 @@ export default {
       else if (this.$rtc.call.connected) {
         this.$rtc.call.channel.replaceLocalStream(this.staticStream);
       }
+      this.videoElement.removeEventListener('canplay', this.captureStream);
     },
     videoClicked() {
       this.$emit('video-clicked');

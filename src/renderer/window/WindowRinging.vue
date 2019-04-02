@@ -6,7 +6,7 @@
           <a-avatar :size="48" class="target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
           <div class="flex flex-col ml-5">
             <span class="text-base leading-none font-bold">{{this.displayName}}</span>
-            <span class="text-base leading-none mt-4">邀请您参加语言通话</span>
+            <span class="text-base leading-none mt-4">{{isVideoCall ? '邀请您进行视频通话': '邀请您参加语音通话'}}</span>
           </div>
         </div>
       </div>
@@ -43,6 +43,11 @@ export default {
 
       return (remoteIdentity && (remoteIdentity.display_name
         || remoteIdentity.uri.user)) || '未知用户';
+    },
+    isVideoCall() {
+      const { extraHeaders } = this.rtc.account.newChannel[0]; // 只考虑一路
+
+      return extraHeaders && extraHeaders.video;
     },
   },
   mounted() {
