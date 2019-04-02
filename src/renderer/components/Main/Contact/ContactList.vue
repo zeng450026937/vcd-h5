@@ -326,7 +326,7 @@ export default {
         number  : item.number,
         options : {
           audio : true,
-          video : true,
+          video : false,
         },
       });
     },

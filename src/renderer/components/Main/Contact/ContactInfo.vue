@@ -138,7 +138,13 @@ export default {
       });
     },
     doAudio() {
-      this.doVideo();
+      this.$dispatch('call.call', {
+        number  : this.user.number,
+        options : {
+          audio : true,
+          video : false,
+        },
+      });
     },
   },
   filters : {
