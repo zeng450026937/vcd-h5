@@ -145,7 +145,7 @@ export default {
     clickMore(record) {
       this.$router.push({ path: MAIN.CALL_RECORD_INFO, query: record });
     },
-    doVideo(item) {
+    doVideo(item, video = true, audio = true) {
       if (item.isConference) {
         this.$dispatch('meeting.joinMeeting', {
           number       : item.conferenceNumber,
@@ -158,14 +158,14 @@ export default {
         this.$dispatch('call.call', {
           number  : item.otherId,
           options : {
-            audio : true,
-            video : true,
+            audio,
+            video,
           },
         });
       }
     },
     doAudio(item) {
-      this.doVideo(item);
+      this.doVideo(item, false, true);
     },
     async updateRecord() {
       const { account, server } = this.$storage.query('CURRENT_ACCOUNT');

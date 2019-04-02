@@ -183,7 +183,7 @@ export default {
     },
   },
   methods : {
-    doVideo(item) {
+    doVideo(item, video = true, audio = true) {
       if (item.isConference) {
         this.$dispatch('meeting.joinMeeting', {
           number       : item.conferenceNumber,
@@ -196,14 +196,14 @@ export default {
         this.$dispatch('call.call', {
           number  : item.otherId,
           options : {
-            audio : true,
-            video : true,
+            audio,
+            video,
           },
         });
       }
     },
     doAudio(item) {
-      this.doVideo(item);
+      this.doVideo(item, false, true);
     },
     goBack() {
       this.$router.back();
