@@ -18,6 +18,7 @@
 
         <div class="transfer-model-content pb-5  mt-5">
           <transfer
+              :max-checked="200"
               :load-failed="dataLoadFailed"
               :search="searchContact"
               :get-child="getAsyncChildNodes"
@@ -121,7 +122,8 @@ export default {
     },
     createTree() {
       this.$refs.transfer.create({
-        data : this.contacts,
+        data       : this.contacts,
+        maxChecked : 200,
       });
       this.$refs.transfer.setCheckedList(this.checkedList);
     },

@@ -10,7 +10,7 @@
                         class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
                         @click="goBack"></a-iconfont>
             <span>{{currentGroupName}}</span>
-            <a-iconfont v-if="currentGroup === 'rootNode'"
+            <a-iconfont v-if="currentGroup === 'rootNode' && rootGroup.length<100"
                         title="添加常用联系人分组"
                         class="ml-4 text-indigo cursor-pointer no-dragable"
                         type="icon-tianjiafenzu"
