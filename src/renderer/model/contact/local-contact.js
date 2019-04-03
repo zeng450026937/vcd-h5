@@ -26,8 +26,6 @@ export default new Vuem().provide({
       const { account, server } = this.getCurrentAccount();
       const localContact = await contactDB.getLocalContact([ account, server ]);
 
-      console.log(localContact.find((n) => n.number === number));
-
       return localContact.find((n) => n.number === number);
     },
   },
