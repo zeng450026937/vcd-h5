@@ -45,9 +45,9 @@ export default {
         || remoteIdentity.uri.user)) || '未知用户';
     },
     isVideoCall() {
-      const { extraHeaders } = this.rtc.account.newChannel[0]; // 只考虑一路
+      const { callInfo } = this.rtc.account.newChannel[0]; // 只考虑一路
 
-      return extraHeaders && extraHeaders.video;
+      return callInfo && callInfo.video;
     },
   },
   mounted() {
