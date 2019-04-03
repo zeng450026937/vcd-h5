@@ -66,9 +66,6 @@ export default {
     };
   },
   computed : {
-    checkedKeys() {
-      return this.checkedList.map((n) => n.id);
-    },
     modalTitle() {
       return this.modalType === 'add' ? '添加分组' : '更新分组';
     },
@@ -144,6 +141,9 @@ export default {
       else {
         this.reset();
       }
+    },
+    groupName(name) {
+      if (name.length > 30) this.groupName = this.groupName.slice(0, 30);
     },
   },
 };

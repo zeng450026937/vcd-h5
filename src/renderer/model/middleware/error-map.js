@@ -1,6 +1,6 @@
 const ERROR_MAP = {
   // meeting
-  'Has End'               : '会议号码错误，请重新输入！',
+  'Has End'               : '当前会议已结束！',
   'Unallocated Number'    : '会议号码错误，请重新输入！',
   'Miss Book Info By ID'  : '会议号码错误，请重新输入！',
   'Invalid PIN'           : '密码错误，请重新输入！',
@@ -18,6 +18,14 @@ const ERROR_MAP = {
   // call
   'Not Found'             : '未找到当前号码',
   Canceled                : '当前通话已取消',
+  // 登陆
+  ACCOUNT_NOT_EMPTY       : '账号不能为空',
+  ACCOUNT_TOO_LONG        : '无法输入超过128个字符',
+  PASSWORD_NOT_EMPTY      : '密码不能为空',
+  PASSWORD_TOO_LONG       : '无法输入超过128个字符',
+  SERVER_NOT_EMPTY        : '服务器地址不能为空',
+  SERVER_FORMAT_ERROR     : '服务器地址格式错误',
+  // 会议
 };
 
 export default ERROR_MAP;

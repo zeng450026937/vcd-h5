@@ -103,13 +103,14 @@ model.provide({
       }
     },
     handleCall(val, once) {
-      if (val === 'ringing') { // 来点
+      if (val === 'ringing') { // 来电
         // 通话中免打扰
         if (rtc.call.status === 'confirmed' && this.$parent.setting.dnd) {
           rtc.call.decline();
           
           return;
         }
+
         this.openCallWindow(); // 打开右下角的小窗口
       }
       else if (val === 'connecting' || (once === 'ringing' && val === 'connected')) { // 拨号 或者 来电接通
@@ -122,14 +123,30 @@ model.provide({
       }
     },
     openCallWindow() {
+      const callCount = (window.callCount || 0) + 1;
+
+      if (callCount > 3) {
+        return rtc.call.decline();
+      }
       const width = 320;
       const height = 180;
       const offsetLeft = window.screen.width - width - 10;
-      const offsetTop = window.screen.height - height - 10;
+      const offsetTop = window.screen.height - height * callCount - 10;
 
       const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
 
-      window.open('ringing.html', 'ringing', option);
+      window.callCount = callCount;
+      const newWindow = window.open('ringing.html',
+        'ringing',
+        option);
+
+      newWindow.onunload = function(e) {
+        setTimeout(() => {
+          if (newWindow.closed) {
+            window.callCount--;
+          }
+        }, 200);
+      };
     },
     requestPermission() {
       const permission = Notification.permission;

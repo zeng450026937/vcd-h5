@@ -13,7 +13,9 @@ state.provide({
     };
   },
   computed : {
-    isConnected : () => rtc.call.connected,
+    isConnected() {
+      return rtc.call.connected;
+    },
   },
   methods : {
     initSignal() {

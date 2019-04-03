@@ -106,6 +106,12 @@ export default {
     },
   ],
   computed : {
+    mediaStatus() {
+      return this.$rtc.media.localMedia.status;
+    },
+    deviceException() {
+      return this.mediaStatus.active && (!this.mediaStatus.video || !this.mediaStatus.audio);
+    },
     hasNewApply() {
       return this.hasNewMeetingApply || this.hasNewSpeakApply;
     },
@@ -186,10 +192,15 @@ export default {
       if (!this.hideControls && this.hideControlsTimer) {
         clearTimeout(this.hideControlsTimer);
       }
+
       this.hideControls = false;
 
+      if (this.deviceException) {
+
+        return;
+      }
       this.hideControlsTimer = setTimeout(() => {
-        this.hideControls = true;
+        this.hideControls = !this.deviceException;
       }, 6000);
     },
     shareScreenClicked() {
@@ -224,6 +235,9 @@ export default {
     //     this.$dispatch('application.minimize');
     //   }
     // },
+    deviceException(val) {
+      this.contentClicked();
+    },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
     },

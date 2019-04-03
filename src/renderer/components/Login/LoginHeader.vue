@@ -96,8 +96,9 @@ export default {
       handler   : 'updateRoute',
       immediate : true,
     },
-    loginType() {
-      this.updateRoute();
+    loginType : {
+      handler   : 'updateRoute',
+      immediate : true,
     },
   },
 };

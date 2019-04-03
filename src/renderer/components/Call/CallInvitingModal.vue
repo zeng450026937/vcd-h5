@@ -159,7 +159,7 @@ export default {
         requestUri : `sip:${user.number}`,
       }));
 
-      this.$rtc.call.upgrade(users, { subject: `${this.$rtc.account.username} 的视频会议` })
+      this.$dispatch('call.upgrade', users)
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;
@@ -181,12 +181,13 @@ export default {
         requestUri : _address,
       };
 
-      this.$rtc.call.upgrade(user).then(() => {
-        this.confirmLoading = false;
-        this.visible = false;
-      }).catch(() => {
-        this.confirmLoading = false;
-      });
+      this.$dispatch('call.upgrade', user)
+        .then(() => {
+          this.confirmLoading = false;
+          this.visible = false;
+        }).catch(() => {
+          this.confirmLoading = false;
+        });
     },
     handleCancel() {
       this.confirmLoading = false;

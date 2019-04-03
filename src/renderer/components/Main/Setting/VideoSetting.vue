@@ -14,7 +14,7 @@
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.video.camera')}}</span>
           <div class="flex items-center mt-2">
-            <a-select :placeholder="$t('setting.video.cameraPlaceHolder')"
+            <a-select v-if="videoInputDevices.length > 0"
                       v-model="videoInputDeviceId"
                       style="width: 320px;">
               <a-select-option v-for="videoInput in videoInputDevices"
@@ -22,6 +22,10 @@
               >{{videoInput.label}}
               </a-select-option>
             </a-select>
+            <a-input v-else
+                     value="无设备"
+                     disabled read-only
+                     class="pl-4 mt-2 select-none text-black9 bg-white"/>
             <div class="flex items-end ml-2">
               <span class="text-xs opacity-75">{{$t('setting.video.noneCamera')}}</span>
               <a-popover placement="bottomLeft" trigger="click">

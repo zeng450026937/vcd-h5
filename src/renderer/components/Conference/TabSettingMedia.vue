@@ -3,13 +3,17 @@
     <div class="flex flex-col select-none px-4">
       <div class="flex flex-col">
         <span class="leading-normal">摄像头</span>
-        <a-select defaultValue="请选择摄像头"
+        <a-select v-if="videoInputDevices.length > 0"
                   v-model="videoInputDeviceId" class="mt-2">
           <a-select-option v-for="videoInput in videoInputDevices"
                            :key="videoInput.deviceId + videoInput.groupId"
           >{{videoInput.label}}
           </a-select-option>
         </a-select>
+        <a-input v-else
+                 value="无设备"
+                 disabled read-only
+                 class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <div v-if="showVideo"
              class="video-content mt-2 relative"
              style="height: 140px;">
@@ -22,13 +26,17 @@
 
       <div class="flex flex-col mt-5">
         <span class="leading-normal">麦克风</span>
-        <a-select defaultValue="请选择麦克风"
+        <a-select v-if="audioInputDevices.length > 0"
                   v-model="audioInputDeviceId" class="mt-2">
           <a-select-option v-for="audioInput in audioInputDevices"
                            :key="audioInput.deviceId + audioInput.groupId"
           >{{audioInput.label}}
           </a-select-option>
         </a-select>
+        <a-input v-else
+                 value="无设备"
+                 disabled read-only
+                 class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <volume-progress />
         <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
       </div>
@@ -36,13 +44,17 @@
       <div class="flex flex-col mt-5">
         <span class="leading-normal">扬声器</span>
 
-        <a-select defaultValue="请选择扬声器"
+        <a-select v-if="audioOutputDevices.length > 0"
                   v-model="audioOutputDeviceId" class="mt-2">
           <a-select-option v-for="audioOutput in audioOutputDevices"
                            :key="audioOutput.deviceId + audioOutput.groupId"
           >{{audioOutput.label}}
           </a-select-option>
         </a-select>
+        <a-input v-else
+                 value="无设备"
+                 disabled read-only
+                 class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <div class="mt-2 flex items-center text-indigo">
           <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
                       title="播放测试音频"

@@ -13,13 +13,17 @@
       <div class="" style="width: 320px;">
         <div class="flex flex-col">
           <span class="leading-normal">{{$t('setting.audio.audioInput')}}</span>
-          <a-select :placeholder="$t('setting.audio.inputPlaceHolder')"
+          <a-select v-if="audioInputDevices.length > 0"
                     v-model="audioInputDeviceId" class="mt-2">
             <a-select-option v-for="audioInput in audioInputDevices"
                              :key="audioInput.deviceId + audioInput.groupId"
             >{{audioInput.label}}
             </a-select-option>
           </a-select>
+          <a-input v-else
+                   value="无设备"
+                   disabled read-only
+                   class="pl-4 mt-2 select-none text-black9 bg-white"/>
           <volume-progress />
           <span class="test-mic-text leading-tight text-xs text-black6">{{$t('setting.audio.microphoneTest')}}</span>
         </div>
@@ -30,13 +34,17 @@
         <div class="flex flex-col mt-5">
           <span class="leading-normal">{{$t('setting.audio.audioOutput')}}</span>
 
-          <a-select :placeholder="$t('setting.audio.outputPlaceHolder')"
+          <a-select v-if="audioOutputDevices.length > 0"
                     v-model="audioOutputDeviceId" class="mt-2">
             <a-select-option v-for="audioOutput in audioOutputDevices"
                              :key="audioOutput.deviceId + audioOutput.groupId"
             >{{audioOutput.label}}
             </a-select-option>
           </a-select>
+          <a-input v-else
+                   value="无设备"
+                   disabled read-only
+                   class="pl-4 mt-2 select-none text-black9 bg-white"/>
           <div class="mt-2 flex items-center text-indigo">
             <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
                         class="test-audio-text text-base cursor-pointer"

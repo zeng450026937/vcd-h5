@@ -2,26 +2,42 @@
   <div id="conference-controls" class="flex justify-center py-5 items-center w-full">
     <div class="button-content flex h-12 items-center z-10">
       <!--视频控制-->
-      <a-button v-if="isVideoConference"
-                :disabled="videoDisabled"
-                shape="circle"
-                class="control-btn"
-                :class="{[`bg-${videoIcon.color}`] : true}"
-                :title="videoIcon.title"
-                @click="onVideoBtnClick"
-      >
-        <a-iconfont :type="videoIcon.icon"/>
-      </a-button>
+      <a-popover placement="top"
+                 :visible="videoException">
+        <template slot="content">
+          <p>摄像头异常</p>
+        </template>
+        <template slot="title">
+          <span></span>
+        </template>
+        <a-button v-if="isVideoConference"
+                  :disabled="videoDisabled"
+                  shape="circle"
+                  class="control-btn"
+                  :class="{[`bg-${videoIcon.color}`] : true}"
+                  :title="videoIcon.title"
+                  @click="onVideoBtnClick"
+        >
+          <a-iconfont :type="videoIcon.icon"/>
+        </a-button>
+      </a-popover>
+
       <!--音频-->
-      <a-button :disabled="audioDisabled"
-                shape="circle"
-                class="control-btn"
-                :class="{[`bg-${audioIcon.color}`] : true}"
-                :title="audioIcon.title"
-                @click="onAudioBtnClick"
-      >
-        <a-iconfont :type="audioIcon.icon"/>
-      </a-button>
+      <a-tooltip placement="top"
+                 :visible="audioException">
+        <template slot="title">
+          <p>麦克风异常</p>
+        </template>
+        <a-button :disabled="audioDisabled"
+                  shape="circle"
+                  class="control-btn"
+                  :class="{[`bg-${audioIcon.color}`] : true}"
+                  :title="audioIcon.title"
+                  @click="onAudioBtnClick"
+        >
+          <a-iconfont :type="audioIcon.icon"/>
+        </a-button>
+      </a-tooltip>
       <!--分享辅流-->
       <a-button v-if="isVideoConference && shareAvailable"
                 shape="circle"
@@ -86,15 +102,25 @@ export default {
     props : [ 'isInConferenceMain', 'showMorePanel', 'isVideoConference' ],
   },
   computed : {
+    mediaStatus() {
+      return this.$rtc.media.localMedia.status;
+    },
+    videoException() {
+      return this.mediaStatus.active && !this.mediaStatus.video;
+    },
+    audioException() {
+      return this.mediaStatus.active && !this.mediaStatus.audio;
+    },
     enableLocalVideo() {
       return this.$model.setting.enableLocalVideo;
     },
+    currentUser() {
+      return this.$rtc.conference.information.users.currentUser;
+    },
     shareAvailable() {
-      const { currentUser } = this.$rtc.conference.information.users;
+      if (!this.currentUser) return false;
 
-      if (!currentUser) return false;
-
-      return this.$rtc.conference.information.users.currentUser.isShareAvariable();
+      return this.currentUser.isShareAvariable();
     },
     hasLocalScreenStream() {
       return !!this.$rtc.conference.shareChannel.localStream;
@@ -118,11 +144,13 @@ export default {
       return iconMap[this.$model.conference.videoStatus];
     },
     videoDisabled() {
+      if (this.currentUser && this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.video) && !this.enableLocalVideo;
     },
     audioDisabled() {
+      if (this.currentUser && this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.audio) && !this.enableLocalVideo;
@@ -170,8 +198,13 @@ export default {
       transform: translateX(-100%);
       width: 100%;
     }
-    .control-btn {
-      @apply w-10 h-10 text-lg text-white mx-2 border-transparent;
+    .button-content{
+      .control-btn {
+        @apply w-10 h-10 text-lg text-white border-transparent;
+      }
+      >.control-btn {
+        @apply mx-2;
+      }
     }
     button {
       box-shadow: 0 0 8px 0 rgba(255,255,255,0.30);

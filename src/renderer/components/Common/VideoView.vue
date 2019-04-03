@@ -67,6 +67,7 @@ export default {
   destroyed() {
     if (this.enableLocalVideo) {
       this.videoElement.removeEventListener('canplay', this.captureStream);
+      this.staticStream = null;
     }
     else {
       switch (this.source) {
@@ -78,11 +79,6 @@ export default {
         case 'screen': break;
         default: break;
       }
-    }
-
-    if (this.staticStream) {
-      // TODO: close stream
-      this.staticStream = null;
     }
   },
   computed : {
@@ -103,7 +99,9 @@ export default {
       return streamMap[this.source];
     },
     enableLocalVideo() {
-      return this.source === 'local' && this.$model.setting.enableLocalVideo;
+      return this.$rtc.account.registered
+        && this.source === 'local'
+        && this.$model.setting.enableLocalVideo;
     },
     localVideoPath() {
       return path.resolve(__static, 'video/default-video.webm');
@@ -118,7 +116,7 @@ export default {
       else if (this.$rtc.call.connected) {
         this.$rtc.call.channel.replaceLocalStream(this.staticStream);
       }
-      this.videoElement.remoteEventListener('canplay', this.captureStream);
+      this.videoElement.removeEventListener('canplay', this.captureStream);
     },
     videoClicked() {
       this.$emit('video-clicked');

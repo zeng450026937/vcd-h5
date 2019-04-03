@@ -111,12 +111,12 @@ export default {
     // 初始化本地联系人
     this.$dispatch('contact.local.initData');
   },
-  mounted() {
+  async mounted() {
     this.debounceSearch = debounce((val = '') => {
       if (!val) {
         this.searchResult = [];
         this.localContactExist = false;
-        
+
         return;
       }
       this.$model.contact.findContacts(val).then((r) => {
@@ -127,6 +127,10 @@ export default {
         console.warn(err.message);
       });
     }, 500);
+
+    await this.$nextTick();
+    await this.$refs.numberInput.$nextTick();
+    this.$refs.numberInput.focus();
   },
   computed : {
     localContacts() {
@@ -142,7 +146,7 @@ export default {
     },
     inputNumber(e) {
       if (this.callNumber.length < 64) {
-        this.callNumber = e.target.value;
+        this.callNumber = e.target.value.replace(/[^0-9*#@.+]+/, '');
       }
     },
     clearNumber() {
