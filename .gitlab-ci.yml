@@ -1,49 +1,180 @@
+##########################################################################
+#
+# user modify(please modify the value include example)
+# version: 1.0
+##########################################################################
 variables:
+  #项目名称
+  PROJECT_NAME: web_app
+  #模块名称
+  MODULE_NAME: vcd-h5
+  #生成文件路径(必须具体到文件，支持通配符)
+  PACKAGE_PATH: ./out/setup/{package-info.json,vc-desktop-*}
+  #windows环境下生成文件路径(必须具体到文件，支持通配符)
+  PACKAGE_PATH_WINDOWS: .\out\setup\package-info.json+.\out\setup\vc-desktop-*
+
+  #打包文件名
+  PACKAGE_NAME: vcd-h5
+  #需要缓存的文件或目录(相对路径,若需要缓存多个路径则需要指定多个变量并在job.cache.paths中引用,若不需要请删除整个job.cache)
+  CACHE_PATH: node_modules/
+  
+  #定义文件上传路径(用于打包tar.gz格式的压缩包,该目录在项目中是不存在的)
+  PACKAGE_UPLOAD_PATH:      gitlab_ci_upload
+  #gitlab-ci相关执行脚本路径(文件必须存在,包含build/test/deploy,若不需要则脚本内容只写"echo stage:stage_name"命令,或注释掉对应stage的job.tags)
+  GITLAB_CI_SCRIPT_PATH:    gitlab_ci_script
+  GITLAB_CI_BUILD_IOS:      ./$GITLAB_CI_SCRIPT_PATH/build_ios.sh
+  GITLAB_CI_BUILD_LINUX:    ./$GITLAB_CI_SCRIPT_PATH/build_linux.sh
+  GITLAB_CI_BUILD_MACOS:    ./$GITLAB_CI_SCRIPT_PATH/build_macos.sh
+  GITLAB_CI_BUILD_WINDOWS:  .\%GITLAB_CI_SCRIPT_PATH%\build_windows.bat
+  #Windows环境下上传批处理脚本(windows环境必须,且windows runner环境需安装curl、awk、7-Zip工具)
+  GITLAB_CI_UPLOAD_WINDOWS: .\%GITLAB_CI_SCRIPT_PATH%\upload_windows.bat
+  
+  #nexus仓库地址
+  REPOSITORY_URL: https://nexus.yealinkops.com/repository/packages-manager
+  REPOSITORY_USER: devops
+  REPOSITORY_PASSWORD: UaW9URs9KQlYtFz3
   GIT_SUBMODULE_STRATEGY: recursive
 
+
+##########################################################################
+#
+# gitlab-ci stage
+#
+##########################################################################
+.function: &function |
+  function upload() {
+    echo "############## Begin to execute job:upload ##############"
+    if [ ! -d "$PACKAGE_UPLOAD_PATH" ];then
+      mkdir $PACKAGE_UPLOAD_PATH
+    else
+      rm -rf $PACKAGE_UPLOAD_PATH/*
+    fi
+    git log --graph -n 50  --pretty="[%cd] - <%an> %s" > CHANGELOG.txt
+    cp -a $PACKAGE_PATH gitlab_ci_upload
+    cd $PACKAGE_UPLOAD_PATH
+    tar zcf ../$PACKAGE_NAME.tar.gz *
+    
+    if [ -n "$CI_COMMIT_TAG" ];then
+        TAG_PREFIX=`echo $CI_COMMIT_TAG|awk -F'-' '{print $1}'`
+        VERSION=`echo $CI_COMMIT_TAG|awk -F '-' 'BEGIN{ OFS="-" } {sub(/develop-|release-/,"",$0);print $0}'`
+        curl -v -u $REPOSITORY_USER:$REPOSITORY_PASSWORD -T "{../$PACKAGE_NAME.tar.gz,../CHANGELOG.txt}" $REPOSITORY_URL/$PROJECT_NAME/$MODULE_NAME/$TAG_PREFIX/$VERSION/$1/
+    fi
+    echo "############## End to execute job:upload ##############"
+  }
+
+# gitlab-ci执行的任务(默认包含build、test、upload、deploy,按顺序执行,任意一步失败则任务中断,不需要则需删除stage和与其相关的job)
 stages:
   - build
+  - upload
 
-build_windows:
-  stage: build
-  script:
-    - chcp 65001
-    - yarn build:prod
-    - curl -v --user devops:UaW9URs9KQlYtFz3 -T ./out/setup/{package-info.json,vc-desktop-%CI_COMMIT_TAG%.exe} https://nexus.yealinkops.com/repository/packages-manager/client_module/vcd-h5/%CI_COMMIT_TAG%/windows/
-  only:
-    - tags
-#  artifacts:
-#    name: $CI_JOB_NAME
-#    paths:
-#      - out/setup/
-  cache:
-    paths:
-    - node_modules/
-  tags:
-    - win10_233
-
+##### stage: build
+#job_name(包含linux/macos/windows,若不需要某个环境则需要删除该job)
 build_linux:
+  #job对应的stage,同一stage中的多个job并发执行
   stage: build
-  script:
-    - yarn build:prod
-    - curl -v -u devops:UaW9URs9KQlYtFz3 -T "./out/setup/{package-info.json,vc-desktop-$CI_COMMIT_TAG.AppImage}" https://nexus.yealinkops.com/repository/packages-manager/client_module/vcd-h5/$CI_COMMIT_TAG/linux/
+  #只有合并请求/打标签/以develop或release开头flags结尾的分支或标签才会执行job
+  except:
+    - branches
+    - master
   only:
+    - merge_requests
     - tags
+    - /^develop-[[:digit:]].*/
+    - /^release-[[:digit:]].*/
+  #需要缓存的文件或目录(变量中定义,不需要请删除或注释)
   cache:
     paths:
-    - node_modules/
+    - $CACHE_PATH/
+  #job执行的命令
+  script:
+    - sh $GITLAB_CI_BUILD_LINUX
+  #job运行的环境
   tags:
     - centos7.5_231
 
 build_macos:
   stage: build
-  script:
-    - yarn build:prod
-    - curl -v -u devops:UaW9URs9KQlYtFz3 -T "./out/setup/{package-info.json,vc-desktop-$CI_COMMIT_TAG.dmg}" https://nexus.yealinkops.com/repository/packages-manager/client_module/vcd-h5/$CI_COMMIT_TAG/macos/
+  except:
+    - branches
+    - master
   only:
+    - merge_requests
     - tags
+    - /^develop-[[:digit:]].*/
+    - /^release-[[:digit:]].*/
   cache:
     paths:
-    - node_modules/
+    - $CACHE_PATH/
+  script:
+    - sh $GITLAB_CI_BUILD_MACOS
   tags:
     - macos_232
+
+build_windows:
+  stage: build
+  except:
+    - branches
+    - master
+  only:
+    - merge_requests
+    - tags
+    - /^develop-[[:digit:]].*/
+    - /^release-[[:digit:]].*/
+  cache:
+    paths:
+    - $CACHE_PATH/
+  script:
+    - chcp 65001
+    - call %GITLAB_CI_BUILD_WINDOWS%
+  tags:
+    - win10_233
+
+#stage: upload
+upload_linux:
+  stage: upload
+  variables:
+    GIT_STRATEGY: none
+  except:
+    - branches
+    - master
+  only:
+    - /^develop-[[:digit:]].*/
+    - /^release-[[:digit:]].*/
+    #upload函数可传递1个参数,用于多种平台时指定上传的目录,若不需要可不传递参数
+  script:
+    - *function
+    - upload linux
+  tags:
+    - centos7.5_231
+
+upload_macos:
+  stage: upload
+  variables:
+    GIT_STRATEGY: none
+  except:
+    - branches
+    - master
+  only:
+    - /^develop-[[:digit:]].*/
+    - /^release-[[:digit:]].*/
+  script:
+    - *function
+    - upload macos
+  tags:
+    - macos_232
+
+upload_windows:
+  stage: upload
+  variables:
+    GIT_STRATEGY: none
+  except:
+    - branches
+    - master
+  only:
+    - /^develop-[[:digit:]].*/
+    - /^release-[[:digit:]].*/
+  script:
+    - chcp 65001
+    - call %GITLAB_CI_UPLOAD_WINDOWS% windows
+  tags:
+    - win10_233
