@@ -6,12 +6,13 @@
           :getChild="getChild"
           :loadMode="loadMode"
           @ready="handleReady"
-          v-show="!showSearchResult"
+          v-show="!showSearchResult && !loadFailed"
           ref="tree"
           @change="handleChange"
           class="tree-list">
       </tree>
-      <search-list @check="handleCheck" ref="searchList" v-show="showSearchResult"></search-list>
+      <search-list @check="handleCheck" ref="searchList" v-show="showSearchResult && !loadFailed"></search-list>
+      <Load-failed-panel v-if="loadFailed"></Load-failed-panel>
     </div>
     <div class="arrow">
       <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"></a-iconfont>
@@ -35,6 +36,7 @@ import searchBar from './searchBar.vue';
 import Tree from '../tree/index.vue';
 import CheckedList from './checkedList.vue';
 import SearchList from './searchList.vue';
+import LoadFailedPanel from './loadFailedPanel.vue';
 
 const LOAD_MODE = {
   OVERALL : 'OVERALL',
@@ -50,6 +52,7 @@ export default {
     CommonEmpty,
     CheckedList,
     SearchList,
+    LoadFailedPanel,
   },
   props : {
     maxChecked : {
@@ -64,6 +67,10 @@ export default {
     },
     search : {
       type : Function,
+    },
+    loadFailed : {
+      type    : Boolean,
+      default : false,
     },
   },
   data() {

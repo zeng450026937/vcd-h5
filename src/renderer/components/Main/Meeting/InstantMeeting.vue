@@ -8,6 +8,7 @@
       <a-divider class="my-0"/>
         <div class="flex flex-col h-full meeting-transfer-content">
           <transfer
+              :load-failed="dataLoadFailed"
               :search="searchContact"
               :max-checked="100"
               :getChild="getAsyncChildNodes"
@@ -69,6 +70,9 @@ export default {
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
     },
+    dataLoadFailed() {
+      return this.$model.contact.phoneBookLoadFailed;
+    },
     loadMode() {
       return this.$model.contact.loadMode;
     },
@@ -101,8 +105,16 @@ export default {
       return this.store.getAmount(id);
     },
     enterMeeting() {
-      const users = this.$refs.transfer.getChecked()
-        .map((item) => ({ requestUri: item.number }));
+      let users;
+
+      try {
+        users = this.$refs.transfer.getChecked()
+          .map((item) => ({ requestUri: item.number }));
+      }
+      catch (e) {
+        users = [];
+      }
+
 
       this.$dispatch('meeting.meetnow', { users });
     },

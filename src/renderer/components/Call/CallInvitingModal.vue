@@ -20,6 +20,7 @@
           <div class="flex h-full p-5">
 
             <transfer
+                :load-failed="dataLoadFailed"
                 @change="handleChange"
                 :search="searchContact"
                 :max-checked="100"
@@ -82,6 +83,9 @@ export default {
   computed : {
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
+    },
+    dataLoadFailed() {
+      return this.$model.contact.phoneBookLoadFailed;
     },
     loadMode() {
       return this.$model.contact.loadMode;

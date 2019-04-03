@@ -18,6 +18,7 @@
 
         <div class="transfer-model-content pb-5  mt-5">
           <transfer
+              :load-failed="dataLoadFailed"
               :search="searchContact"
               :get-child="getAsyncChildNodes"
               :load-mode="loadMode"
@@ -70,6 +71,9 @@ export default {
     },
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
+    },
+    dataLoadFailed() {
+      return this.$model.contact.phoneBookLoadFailed;
     },
     store() {
       return this.$model.contact.phoneBookStore;

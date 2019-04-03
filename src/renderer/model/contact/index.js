@@ -41,8 +41,14 @@ model.provide({
     phoneBookLoaded() {
       return rtc.contact.phonebook.dataLoaded;
     },
+    phoneBookLoadFailed() {
+      return rtc.contact.phonebook.loadFailed || false;
+    },
     favoriteLoaded() {
       return rtc.contact.favorite.dataLoaded;
+    },
+    favoriteLoadFailed() {
+      return rtc.contact.favorite.loadFailed;
     },
     phoneBookStore() {
       phoneBookStore = new Store([], this.loadMode);
