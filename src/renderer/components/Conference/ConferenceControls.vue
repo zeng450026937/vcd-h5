@@ -41,7 +41,7 @@
           <div v-if="isVideoConference"
                class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
               @click="switchConferenceType">
-            <a-iconfont type="icon-shipin" class="text-lg text-indigo"/>
+            <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">切换为音频会议</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"

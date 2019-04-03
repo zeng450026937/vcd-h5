@@ -198,7 +198,7 @@ export default {
 
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = true;
-      }, 600000);
+      }, 6000);
     },
     shareScreenClicked() {
       this.isShareInCenter = !this.isShareInCenter;

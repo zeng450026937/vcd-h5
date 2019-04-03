@@ -77,9 +77,7 @@ model.provide({
     },
     remoteStream(val) {
       if (!this.isConnected) return;
-      if (val && val.getVideoTracks().length > 0) {
-        this.isVideoCall = true;
-      }
+      this.isVideoCall = val && val.getVideoTracks().length > 0;
     },
     isConnected(val) {
       if (!val) {
