@@ -9,7 +9,6 @@
         :class="{'force-16-9' : !videoStream}"
         autoplay loop
         :muted="muted"
-        v-once
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
         @dblclick="videoDblClicked"

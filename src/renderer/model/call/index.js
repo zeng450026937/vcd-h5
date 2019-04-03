@@ -17,7 +17,6 @@ model.provide({
     return {
       isVideoCall : null,
       callNumber  : '',
-      isSwitching : false,
     };
   },
   middleware : {
@@ -70,10 +69,8 @@ model.provide({
   watch : {
     async isVideoCall(val) {
       if (!rtc.call.connected || val == null) return;
-      this.isSwitching = true;
       await rtc.call.localMedia.acquireDetachedStream(true, val)
         .then((s) => rtc.call.channel.replaceLocalStream(s));
-      this.isSwitching = false;
     },
     remoteStream(val) {
       if (!this.isConnected) return;
@@ -82,7 +79,6 @@ model.provide({
     isConnected(val) {
       if (!val) {
         this.isVideoCall = null;
-        this.isSwitching = false;
       }
     },
   },

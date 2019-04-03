@@ -40,7 +40,6 @@
         <div slot="content" class="popover-content">
           <div v-if="isVideoCall"
                class="popover-content-item hover:bg-list-hover"
-               :disabled="isSwitching"
                @click="toAudioCall">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">切换为音频通话</span>
@@ -90,7 +89,7 @@ export default {
   sketch : [
     {
       ns    : 'call',
-      props : [ 'isVideoCall', 'isSwitching' ],
+      props : [ 'isVideoCall' ],
     },
     {
       ns    : 'call.sketch',
@@ -173,7 +172,6 @@ export default {
       this.$refs.plateModal.visible = true;
     },
     toAudioCall() {
-      if (this.isSwitching) return;
       this.showMorePanel = false;
       this.isVideoCall = false;
     },

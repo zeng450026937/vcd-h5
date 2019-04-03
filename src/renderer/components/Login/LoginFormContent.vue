@@ -268,5 +268,11 @@ export default {
         line-height: unset;
       }
     }
+    .ant-form-item{
+      margin-bottom: 12px;
+      .ant-input {
+        padding-left: 36px;
+      }
+    }
   }
 </style>
