@@ -200,7 +200,6 @@ export default {
       this.hideControls = false;
 
       if (this.deviceException) {
-
         return;
       }
       this.hideControlsTimer = setTimeout(() => {
@@ -295,7 +294,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 64px;
+        /*height: 64px;*/
         .popover-content-item {
           cursor: pointer;
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {

@@ -31,7 +31,7 @@
 import PlateContent from '../Common/PlateContent.vue';
 
 export default {
-  name       : 'ConferencePlateModal',
+  name  : 'ConferencePlateModal',
   props : {
     getContainer : {
       type : Function,

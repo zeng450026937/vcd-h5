@@ -38,11 +38,12 @@
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
-          <div class="popover-content-item hover:bg-list-hover"
+          <div v-if="isVideoCall"
+               class="popover-content-item hover:bg-list-hover"
                :disabled="isSwitching"
-               @click="switchCallType">
-            <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
+               @click="toAudioCall">
+            <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
+            <span class="ml-3 text-xs">切换为音频通话</span>
           </div>
           <div class="popover-content-item hover:bg-list-hover"
                @click="openPlateModal">
@@ -171,10 +172,10 @@ export default {
       this.showMorePanel = false;
       this.$refs.plateModal.visible = true;
     },
-    switchCallType() {
+    toAudioCall() {
       if (this.isSwitching) return;
       this.showMorePanel = false;
-      this.isVideoCall = !this.isVideoCall;
+      this.isVideoCall = false;
     },
     onAudioBtnClick() {
       this.$rtc.call.toggleAudio(this.$rtc.call.channel.isMuted().audio);
@@ -201,7 +202,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 64px;
+        /*height: 64px;*/
         .popover-content-item {
           @apply h-8 w-full px-3 flex items-center cursor-pointer;
 

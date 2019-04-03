@@ -100,7 +100,11 @@ model.provide({
       async handler(val) {
         this.sidebarItems = val ? initialSidebar() : [];
         this.currentSidebar = val ? this.sidebarItems[0] : {};
-        // router.push(val ? MAIN.MEETING_INSTANCE : LOGIN.LOGIN_CONTENT);
+        if (!val) {
+          this.searchText = '';
+          this.hasLoadMore = false;
+          this.searchResults = [];
+        }
       },
       immediate : true,
     },

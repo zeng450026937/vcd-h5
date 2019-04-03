@@ -15,10 +15,9 @@ model.mount('sketch', sketch);
 model.provide({
   data() {
     return {
-      isVideoCall      : null,
-      isChangeCallType : false,
-      callNumber       : '',
-      isSwitching      : false,
+      isVideoCall : null,
+      callNumber  : '',
+      isSwitching : false,
     };
   },
   middleware : {
@@ -40,15 +39,13 @@ model.provide({
       return call.connect('send', ctx.payload.options);
     },
     answer(ctx) {
-      const { isVideoCall } = ctx.payload;
-
-      this.isChangeCallType = typeof isVideoCall === 'boolean';
+      const { toAudio } = ctx.payload;
 
       // FIXME 音视频切换的时序问题
       rtc.call.answer().then(() => {
         setTimeout(() => {
-          if (typeof isVideoCall === 'boolean') {
-            this.isVideoCall = isVideoCall;
+          if (toAudio) {
+            this.isVideoCall = false;
           }
         }, 500);
       });
@@ -71,26 +68,18 @@ model.provide({
     },
   },
   watch : {
-    isVideoCall : {
-      async handler(val) {
-        if (!rtc.call.connected || val == null) return;
-        this.isSwitching = true;
-        await rtc.call.localMedia.acquireDetachedStream(true, val)
-          .then((s) => rtc.call.channel.replaceLocalStream(s));
-        this.isSwitching = false;
-      },
-      immediate : true,
+    async isVideoCall(val) {
+      if (!rtc.call.connected || val == null) return;
+      this.isSwitching = true;
+      await rtc.call.localMedia.acquireDetachedStream(true, val)
+        .then((s) => rtc.call.channel.replaceLocalStream(s));
+      this.isSwitching = false;
     },
     remoteStream(val) {
       if (!this.isConnected) return;
-      if (this.isChangeCallType) {
-        this.isChangeCallType = false;
-
-        return;
+      if (val && val.getVideoTracks().length > 0) {
+        this.isVideoCall = true;
       }
-      console.warn('RemoteStream Changed');
-      console.warn(`VideoTracks:${val.getVideoTracks().length}`);
-      this.isVideoCall = val && val.getVideoTracks().length > 0;
     },
     isConnected(val) {
       if (!val) {

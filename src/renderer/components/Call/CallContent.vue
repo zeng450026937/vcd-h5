@@ -198,7 +198,7 @@ export default {
 
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = true;
-      }, 6000);
+      }, 600000);
     },
     shareScreenClicked() {
       this.isShareInCenter = !this.isShareInCenter;
@@ -276,7 +276,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 64px;
+        /*height: 64px;*/
         .popover-content-item {
           cursor: pointer;
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {

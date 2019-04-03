@@ -26,6 +26,9 @@ model.provide({
   },
 
   computed : {
+    isRegistered() {
+      return rtc.account.status === 'registered';
+    },
     list() {
       /* eslint-disable no-unused-expressions */ 
       this.lastUpdated;
@@ -194,7 +197,6 @@ model.provide({
       let index = start;
 
       while (index < sorted.length) {
-
         const schedule = sorted[index];
         const isHosting = schedule['expiry-time'].valueOf() - Date.now() > 0;
 
@@ -228,6 +230,13 @@ model.provide({
   watch : {
     list() {
       this.checkAndNotify();
+    },
+    isRegistered(val) {
+      if (!val) {
+        this.selectedDate = new Date();
+        this.currentDateEvents = [];
+        this.currentEvent = {};
+      }
     },
   },
 
