@@ -11,7 +11,14 @@
           @change="handleChange"
           class="tree-list">
       </tree>
-      <search-list @check="handleCheck" ref="searchList" v-show="showSearchResult && !loadFailed"></search-list>
+
+      <search-list
+          @check="handleCheck"
+          :max-checked="maxChecked"
+          ref="searchList"
+          v-show="showSearchResult && !loadFailed">
+      </search-list>
+
       <Load-failed-panel v-if="loadFailed"></Load-failed-panel>
     </div>
     <div class="arrow">
@@ -19,7 +26,7 @@
     </div>
     <div class="list-content">
       <checked-list
-          :maxChecked="maxChecked"
+          :max-checked="maxChecked"
           :defaultChecked="defaultChecked"
           @cancel-checked="handleCancelChecked"
           @clear="handleClear"
@@ -135,6 +142,9 @@ export default {
       return this.$refs.tree.setCheckedList(checkedList).then((checked) => {
         this.$refs.checkedList.update(checked);
       });
+    },
+    checkGroup(id, checked) {
+      return this.$refs.tree.checkGroup(id, checked);
     },
     reset() {
       this.showSearchResult = false;

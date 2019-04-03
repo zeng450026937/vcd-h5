@@ -1,5 +1,6 @@
 <template>
   <a-drawer
+      :destroyOnClose="true"
       :title="modalTitle"
       placement="right"
       :width="728"

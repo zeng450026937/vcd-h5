@@ -128,12 +128,12 @@
                           title="视频呼叫"
                           type="icon-shipin"
                           class="mr-3 text-indigo cursor-pointer text-base"
-                          @click.stop="doVideo(item)"></a-iconfont>
+                          @click.stop="handleMeeting(item, 'video')"></a-iconfont>
               <a-iconfont v-if="audioIcon && !item.isGroup"
                           title="音频呼叫"
                           type="icon-yuyin"
                           class="mr-3 text-indigo cursor-pointer text-base"
-                          @click.stop="doAudio(item)"></a-iconfont>
+                          @click.stop="handleMeeting(item, 'audio')"></a-iconfont>
 
               <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
                           title="更多"
@@ -154,6 +154,7 @@
       <div v-else class="flex items-center justify-center h-full">
         <common-empty class="text-grey" image="empty-contact" text="暂无联系人"/>
       </div>
+      <contact-modal :storeName="storeName" ref="contactModal" @confirm="startMeeting"></contact-modal>
     </div>
   </a-layout>
 </template>
@@ -162,6 +163,7 @@
 import { RecycleScroller } from 'vue-virtual-scroller';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+import ContactModal from './ContactModal.vue';
 
 const LOAD_MODE = {
   AUTO    : 'AUTO',
@@ -209,6 +211,9 @@ export default {
     store : {
       type : Object,
     },
+    storeName : {
+      type : String,
+    },
     loadMode : {
       type    : String,
       default : LOAD_MODE.OVERALL,
@@ -240,6 +245,7 @@ export default {
   components : {
     RecycleScroller,
     CommonEmpty,
+    ContactModal,
   },
   data() {
     return {
@@ -294,34 +300,15 @@ export default {
       this.$emit('deleteContact', item);
     },
     doVideo(item) {
-      if (item.isGroup) { // meetnow
-        const list = [];
-
-        this.store.getChild(item.id).every((contact) => {
-          if (!contact.isGroup) {
-            list.push({ requestUri: contact.number });
-          }
-
-          return list.length < 100;
-        });
-        this.$dispatch('meeting.meetnow', { users: list });
-      }
-      else { // call
-        this.$dispatch('call.call', {
-          number  : item.number,
-          options : {
-            audio : true,
-            video : true,
-          },
-        });
-      }
+      this.$dispatch('call.call', {
+        number  : item.number,
+        options : {
+          audio : true,
+          video : true,
+        },
+      });
     },
     doAudio(item) {
-      if (item.isGroup) {
-        this.doVideo(item);
-
-        return;
-      }
       this.$dispatch('call.call', {
         number  : item.number,
         options : {
@@ -329,6 +316,17 @@ export default {
           video : false,
         },
       });
+    },
+    handleMeeting(item, type) {
+      if (item.isGroup) return this.openContactModal(item);
+
+      if (type === 'video') return this.doVideo(item);
+
+      if (type === 'audio') return this.doAudio(item);
+    },
+
+    startMeeting(checkeds) {
+      this.$dispatch('meeting.meetnow', { users: checkeds.map((n) => ({ requestUri: n.number })) });
     },
     switchContact(direction) {
       const index = this.contactList.findIndex((n) => n.id === this.selectedContact.id);
@@ -351,7 +349,9 @@ export default {
 
       this.switchContact('up');
     },
-
+    openContactModal(checkItem) {
+      this.$refs.contactModal.open(checkItem);
+    },
   },
   watch : {
     currentGroup(val) {

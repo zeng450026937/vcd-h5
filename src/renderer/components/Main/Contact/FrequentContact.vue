@@ -29,6 +29,7 @@
           </div>
           <contact-list
               v-else
+              :storeName="storeName"
               :store="store"
               :currentGroup="currentGroup"
               :contact-list="currents"
@@ -119,6 +120,7 @@ export default {
       selectedGroup : {},
       modalType     : 'add',
       currentGroup  : 'rootNode',
+      storeName     : 'favoriteStore',
     };
   },
   beforeCreate() {

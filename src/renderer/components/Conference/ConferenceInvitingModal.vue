@@ -1,5 +1,6 @@
 <template>
   <a-modal
+      :destroyOnClose="true"
       :visible="visible"
       style="top: 70px;left: 32px"
       :width=728

@@ -16,6 +16,11 @@ export default {
   components : {
     RecycleScroller,
   },
+  props : {
+    maxChecked : {
+      type : Number,
+    },
+  },
   data() {
     return {
       list           : [],
@@ -98,6 +103,11 @@ export default {
 
     handleClick(e) {
       e.preventDefault();
+
+      const checkedItems = this.$parent.getChecked();
+
+      if (this.maxChecked && checkedItems.length >= this.maxChecked) return;
+
       const id = e.target.getAttribute('node-id');
 
       const checkItem = this.list.find((n) => n.id === id);
