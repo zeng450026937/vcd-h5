@@ -80,10 +80,8 @@ export default {
   name  : 'ConferenceInvitingModal',
   props : {
     getContainer : {
-      type : Function,
-      default() {
-        return () => document.body;
-      },
+      type    : Function,
+      default : () => document.body,
     },
   },
   components : {

@@ -38,11 +38,16 @@
                   overlayClassName="mini-more-panel-popover"
               >
                 <div slot="content" class="popover-content">
-                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-select"
-                       @click="switchConferenceType">
-                    <a-iconfont :type="isVideoConference ? 'icon-yuyin' : 'icon-shipin'"
-                                class="text-base text-indigo"/>
-                    <span class="ml-3 text-xs">{{isVideoConference ? '切换为音频会议' : '切换为视频会议'}}</span>
+                  <div v-if="isVideoConference"
+                       class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
+                       @click="toAudioConference">
+                    <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
+                    <span class="ml-3 text-xs">切换为音频会议</span>
+                  </div>
+                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
+                       @click="openPlateModal">
+                    <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
+                    <span class="ml-3 text-xs">拨号盘</span>
                   </div>
                 </div>
                 <a-button shape="circle"
@@ -81,6 +86,7 @@
       </video-view>
     </div>
     <conference-leaving-modal ref="leavingModal"/>
+    <conference-plate-modal ref="plateModal"/>
   </div>
 </template>
 
@@ -88,12 +94,14 @@
 import VideoView from '../Common/VideoView.vue';
 import { CONFERENCE } from '../../router/constants';
 import ConferenceLeavingModal from '../Conference/ConferenceLeavingModal.vue';
+import ConferencePlateModal from '../Conference/ConferencePlateModal.vue';
 
 export default {
   name       : 'MainNavMiniVideo',
   components : {
     VideoView,
     ConferenceLeavingModal,
+    ConferencePlateModal,
   },
   data() {
     return {
@@ -150,9 +158,9 @@ export default {
     },
   },
   methods : {
-    switchConferenceType() {
+    toAudioConference() {
       this.showMorePanel = false;
-      this.isVideoConference = !this.isVideoConference;
+      this.isVideoConference = false;
     },
     showLeaveModal() {
       this.$refs.leavingModal.visible = true;
@@ -167,6 +175,10 @@ export default {
     },
     onVideoBtnClick() {
       this.$dispatch('conference.toggleVideo');
+    },
+    openPlateModal() {
+      this.showMorePanel = false;
+      this.$refs.plateModal.visible = true;
     },
   },
 };
@@ -218,7 +230,6 @@ export default {
     padding: 4px 0;
     .popover-content {
       width: 180px;
-      height: 32px;
       .popover-content-item {
         cursor: pointer;
         .ant-slider-rail, .ant-slider-track,.ant-slider-step {

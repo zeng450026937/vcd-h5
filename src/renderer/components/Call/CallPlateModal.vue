@@ -34,10 +34,8 @@ export default {
   name  : 'CallPlateModal',
   props : {
     getContainer : {
-      type : Function,
-      default() {
-        return () => document.body;
-      },
+      type    : Function,
+      default : () => document.body,
     },
   },
   components : {
@@ -45,7 +43,7 @@ export default {
   },
   data() {
     return {
-      visible   : false,
+      visible      : false,
       plateContent : '',
     };
   },

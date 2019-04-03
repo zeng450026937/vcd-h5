@@ -65,10 +65,8 @@ export default {
   name  : 'CallInvitingModal',
   props : {
     getContainer : {
-      type : Function,
-      default() {
-        return () => document.body;
-      },
+      type    : Function,
+      default : () => document.body,
     },
   },
   components : {

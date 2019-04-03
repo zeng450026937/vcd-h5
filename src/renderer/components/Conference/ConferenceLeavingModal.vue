@@ -25,10 +25,8 @@ export default {
   name  : 'ConferenceLeavingModal',
   props : {
     getContainer : {
-      type : Function,
-      default() {
-        return () => document.body;
-      },
+      type    : Function,
+      default : () => document.body,
     },
   },
   data() {

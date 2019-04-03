@@ -40,7 +40,7 @@
         <div slot="content" class="popover-content">
           <div v-if="isVideoConference"
                class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
-              @click="switchConferenceType">
+              @click="toAudioConference">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
             <span class="ml-3 text-xs">切换为音频会议</span>
           </div>
@@ -143,7 +143,9 @@ export default {
       return iconMap[this.$model.conference.videoStatus];
     },
     videoDisabled() {
-      if (this.currentUser && this.currentUser.isOnHold()) return true;
+      if (this.currentUser
+        && (this.currentUser.isOnHold()
+          || this.currentUser.isCastViewer())) return true;
       const { status } = this.$rtc.media.localMedia;
 
       return (!status.active || !status.video) && !this.enableLocalVideo;
@@ -180,9 +182,9 @@ export default {
       this.showMorePanel = false;
       this.$refs.plateModal.visible = true;
     },
-    switchConferenceType() {
+    toAudioConference() {
       this.showMorePanel = false;
-      this.isVideoConference = !this.isVideoConference;
+      this.isVideoConference = false;
     },
   },
   watch : {

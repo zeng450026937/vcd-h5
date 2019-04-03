@@ -34,10 +34,8 @@ export default {
   name  : 'ConferencePlateModal',
   props : {
     getContainer : {
-      type : Function,
-      default() {
-        return () => document.body;
-      },
+      type    : Function,
+      default : () => document.body,
     },
   },
   components : {

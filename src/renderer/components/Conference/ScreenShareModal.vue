@@ -73,13 +73,11 @@
 <script>
 
 export default {
-  name : 'ScreenShareModal',
+  name  : 'ScreenShareModal',
   props : {
     getContainer : {
-      type : Function,
-      default() {
-        return () => document.body;
-      },
+      type    : Function,
+      default : () => document.body,
     },
   },
   data() {

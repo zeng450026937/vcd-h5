@@ -385,6 +385,9 @@ export default {
         this.deviceInfo.recv.codec = videoInfo.recv.codec;
         this.deviceInfo.send.codec = videoInfo.send.codec;
         this.isUpdating = false;
+      }).catch(() => {
+        this.$message.error('获取失败');
+        this.isUpdating = false;
       });
     },
     selectMember() {
