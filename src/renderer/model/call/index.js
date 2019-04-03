@@ -44,9 +44,6 @@ model.provide({
     decline() {
       rtc.call.decline().catch(() => {});
     },
-    isConnected() {
-      return rtc.call.connected;
-    },
     async upgrade(ctx, next) {
       await next();
       
@@ -56,6 +53,9 @@ model.provide({
   computed : {
     remoteStream() {
       return rtc.call.remoteStream;
+    },
+    isConnected() {
+      return rtc.call.connected;
     },
   },
   watch : {
