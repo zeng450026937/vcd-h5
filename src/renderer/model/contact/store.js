@@ -122,9 +122,13 @@ export default class Store {
     });
 
     if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
+      const groupInfo = groupMap[this.rootNode.attributes.name];
+
       this.originTree.forEach((n) => {
-        Object.assign(n, groupMap[this.rootNode.attributes.name]);
+        n = { ...groupInfo, ...n };
       });
+
+      Object.assign(this.rootNode, groupInfo);
     }
   }
 
@@ -227,7 +231,7 @@ export default class Store {
   }
 
   getNodeByNumber(number) {
-    this.originTree.find((n) => n.number === number);
+    return this.originTree.find((n) => n.number === number);
   }
 
   findBranch(node, branch = []) {

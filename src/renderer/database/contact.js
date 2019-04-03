@@ -55,6 +55,10 @@ class Contact extends Base {
   getLocalContact(val) {
     return this.find('localContact', '[account+server]', val).toArray();
   }
+
+  searchLocalContact(key, val) {
+    return this.find('localContact', key, val).toArray();
+  }
 }
 
 export default new Contact(

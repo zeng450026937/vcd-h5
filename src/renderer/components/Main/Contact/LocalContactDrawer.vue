@@ -127,7 +127,7 @@ export default {
         if (err) return;
         this.newLocalContact = values;
         this.newLocalContact.nick = /^(.*)\(.*\)$/.test(values.name) ? RegExp.$1.substr(-2, 2) : values.name.substr(-2, 2);
-        if (this.type === 'add') {
+        if (this.type === 'add' || this.type === 'add-as') {
           await this.$dispatch('contact.local.insertData', this.newLocalContact);
         }
         else {
@@ -136,6 +136,7 @@ export default {
         }
         this.visible = false;
         this.$message.success('操作成功');
+        this.$emit('submit-success');
       });
     },
   },

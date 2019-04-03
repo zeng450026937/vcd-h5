@@ -207,9 +207,7 @@ export default {
       this.genEnsurePopup('确认删除当前分组?', () => {
         // 删除当前分组
         this.$rtc.contact.favorite.categoryDelete({ id: group.id }).then(() => {
-          this.$rtc.contact.favorite.doSync().then(() => {
-            this.$message.success('删除成功');
-          });
+          this.$message.success('删除成功');
         });
       }, () => {});
     },

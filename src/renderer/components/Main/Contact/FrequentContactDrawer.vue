@@ -13,13 +13,12 @@
       <div class="flex p-5 w-full flex-col">
 
         <div class="w-full">
-          <a-input placeholder="请输入分组名称" v-model="groupName"/>
+          <a-input :maxlength="30" placeholder="请输入分组名称" v-model="groupName"/>
         </div>
 
         <div class="transfer-model-content pb-5  mt-5">
           <transfer
               :search="searchContact"
-              :max-checked="100"
               :get-child="getAsyncChildNodes"
               :load-mode="loadMode"
               ref="transfer">
@@ -93,6 +92,9 @@ export default {
             contactsId : c.id,
             type       : c.type,
           })),
+        }).then(() => {
+          this.$message.success('更新成功');
+          this.visible = false;
         });
       }
       else {
@@ -102,12 +104,11 @@ export default {
             contactsId : c.id,
             type       : c.type,
           })),
+        }).then(() => {
+          this.$message.success('添加成功');
+          this.visible = false;
         });
       }
-      this.$rtc.contact.favorite.doSync().then(() => {
-        this.$message.success(this.modalType === 'edit' ? '更新成功' : '添加成功');
-        this.visible = false;
-      });
     },
     updateGroupInfo(datas) {
       Object.keys(datas).forEach((key) => {
@@ -116,8 +117,7 @@ export default {
     },
     createTree() {
       this.$refs.transfer.create({
-        data       : this.contacts,
-        maxChecked : 100,
+        data : this.contacts,
       });
       this.$refs.transfer.setCheckedList(this.checkedList);
     },

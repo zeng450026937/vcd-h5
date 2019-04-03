@@ -62,7 +62,7 @@
         </div>
 
       </div>
-      <local-contact-drawer ref="localContactDrawer" :type="drawerType"/>
+      <local-contact-drawer @submit-success="handleSubmit" ref="localContactDrawer" :type="drawerType"/>
     </div>
   </a-layout>
 </template>
@@ -126,6 +126,7 @@ export default {
           this.$refs.localContactDrawer.visible = false;
           this.$message.success('删除成功');
           this.ensureModal.hide();
+          this.currentUser = {};
         });
       });
       this.ensureModal.display();
@@ -138,6 +139,15 @@ export default {
     },
     handleCheck(contact) {
       this.currentUser = contact;
+    },
+    handleSubmit() {
+      this.updateCurrentUserInfo();
+    },
+    updateCurrentUserInfo() {
+      const id = this.currentUser.id;
+
+      this.currentUser = this.localContacts.find((n) => n.id === id);
+      console.log(this.currentUser);
     },
   },
 };

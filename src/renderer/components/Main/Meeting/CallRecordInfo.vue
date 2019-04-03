@@ -61,7 +61,7 @@
                   <a-col :span="24" class="leading-tight">
                     <a-row>
                       <a-col :span="2">账号</a-col>
-                      <a-col :span="8">{{contact.extension}}</a-col>
+                      <a-col :span="8">{{contact.number}}</a-col>
                       <a-col :span="2">邮箱</a-col>
                       <a-col :span="8">{{contact.email}}</a-col>
                     </a-row>
@@ -72,7 +72,7 @@
                       <a-col :span="8">{{contact.phone}}</a-col>
                       <a-col :span="2">部门</a-col>
                       <a-col :span="8" class="text-indigo cursor-pointer"
-                             @click="addLocalContact">{{contact.parentNode}}（添加本地联系人）
+                             @click="addLocalContact">{{contact.parentNode}}{{contact.isLocal ? '本地联系人' : '（添加本地联系人）'}}
                       </a-col>
                     </a-row>
                   </a-col>
@@ -81,7 +81,8 @@
               <div v-else>
                 <div class="text-xs">
                   <div class="leading-tight flex justify-between">
-                    <div :span="2">账号 {{contact.extension}}</div>
+                    <div :span="2">账号<span class="ml-4">{{contact.number}}</span></div>
+
                     <div :span="4" class="text-indigo cursor-pointer"
                          @click="addLocalContact">添加为本地联系人
                     </div>
@@ -159,7 +160,7 @@ export default {
       showEditDrawer : false,
       recordInfo     : null,
       storeName      : null,
-      drawerType     : '',
+      drawerType     : 'add',
       contact        : {},
       ready          : false,
       records        : [],
@@ -208,10 +209,11 @@ export default {
     goBack() {
       this.$router.back();
     },
-    addLocalContact() {
+    async addLocalContact() {
       this.$refs.localContactDrawer.visible = true;
-      this.$refs.localContactDrawer.form.$nextTick(() => {
-        this.drawerType = 'add';
+      await this.$refs.localContactDrawer.$nextTick();
+      this.$refs.localContactDrawer.form.setFieldsValue({
+        number : this.recordInfo.otherId,
       });
     },
     async setCallRecord() {
@@ -231,22 +233,30 @@ export default {
     async setContactInfo(val) {
       let contact = this.store.getNodeByNumber(val);
 
+      this.contact = contact;
+
       if (!contact) {
         const contacts = await this.$model.contact.findContacts(val);
 
         contact = contacts.find((n) => n.number === val);
-      }
-      if (contact) {
-        this.contact = contact;
 
-        const parentNode = this.store.findParentNode(contact.id, contact.parentId);
+        if (contact) {
+          this.contact = contact;
 
-        this.contact.parentNode = parentNode.name;
+          const parentNode = this.store.findParentNode(contact.id, contact.parentId);
+
+          this.contact.parentNode = parentNode.name;
+        }
       }
-      else {
+
+      if (!contact) {
+        this.contact = contact = await this.$model.contact.local.search(val);
+        if (contact) this.contact.isLocal = true;
+      }
+
+      if (!contact) {
         this.contact = { number: val, name: '未知联系人', unknown: true };
       }
-
       this.$nextTick(() => {
         this.ready = true;
       });

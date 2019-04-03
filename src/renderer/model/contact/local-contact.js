@@ -19,14 +19,23 @@ export default new Vuem().provide({
       const localContact = await contactDB.getLocalContact([ account, server ]);
 
       localContact.forEach((contact) => contact.parent = this.localContactGroup);
-      this.localContactGroup.items = localContact;
+
+      return this.localContactGroup.items = localContact;
+    },
+    async search(number) {
+      const { account, server } = this.getCurrentAccount();
+      const localContact = await contactDB.getLocalContact([ account, server ]);
+
+      console.log(localContact.find((n) => n.number === number));
+
+      return localContact.find((n) => n.number === number);
     },
   },
   middleware : {
     async initData(ctx, next) {
       await next();
 
-      this.generate();
+      await this.generate();
     },
     async insertData(ctx, next) {
       await next();
@@ -42,7 +51,7 @@ export default new Vuem().provide({
         server,
       });
 
-      this.generate();
+      await this.generate();
     },
     async deleteData(ctx, next) {
       await next();
@@ -50,7 +59,7 @@ export default new Vuem().provide({
       const { account, server } = this.getCurrentAccount();
 
       await contactDB.deleteByKey('localContact', '[account+server+id]', [ account, server, ctx.payload.id ]);
-      this.generate();
+      await this.generate();
     },
     async updateData(ctx, next) {
       await next();
@@ -63,7 +72,7 @@ export default new Vuem().provide({
         [ account, server, ctx.payload.id ],
         ctx.payload
       );
-      this.generate();
+      await this.generate();
     },
   },
 });
