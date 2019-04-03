@@ -42,8 +42,8 @@ state.provide({
               this.$message.warning('当前网络状况不佳，建议切换为音频通话。', this.isConnected ? 0 : 1);
             }
             else {
+              if (isShowSignalWarning) this.$message.destroy();
               isShowSignalWarning = false;
-              this.$message.destroy();
             }
 
             this.signal = quality >= 1 ? quality : '1';

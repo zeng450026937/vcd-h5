@@ -34,6 +34,7 @@
       <a-popover
           trigger="click"
           v-model="showMorePanel"
+          :getPopupContainer="popupContainer"
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
@@ -63,8 +64,10 @@
         <a-iconfont type="icon-guaduan"/>
       </a-button>
     </div>
-    <call-plate-modal ref="plateModal"/>
-    <screen-share-modal ref="shareModal"/>
+    <call-plate-modal ref="plateModal"
+                      :getContainer="modalContainer"/>
+    <screen-share-modal ref="shareModal"
+                        :getContainer="modalContainer"/>
   </div>
 </template>
 
@@ -94,6 +97,12 @@ export default {
     },
   ],
   computed : {
+    popupContainer() {
+      return () => document.getElementById('call-controls');
+    },
+    modalContainer() {
+      return () => document.getElementById('layout-call-content');
+    },
     enableLocalVideo() {
       return this.$model.setting.enableLocalVideo;
     },

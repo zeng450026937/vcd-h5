@@ -49,7 +49,8 @@
             :source="leftSource"
             @video-clicked="shareScreenClicked"/>
       </div>
-      <conference-inviting-modal ref="invitingModal"/>
+      <conference-inviting-modal ref="invitingModal"
+                                 :getContainer="conferenceContent"/>
     </div>
     <hold-item-group/>
   </a-layout>
@@ -106,6 +107,9 @@ export default {
     },
   ],
   computed : {
+    conferenceContent() {
+      return () => document.getElementById('layout-conference-content');
+    },
     mediaStatus() {
       return this.$rtc.media.localMedia.status;
     },
@@ -184,7 +188,7 @@ export default {
     },
     maxConferenceContent() {
       // FIXME DBLCLICK 双击是如果间隔时间过短，则不会响应事件
-      screenfull.toggle(document.getElementById('layout-conference-content')).then(() => {
+      screenfull.toggle(this.conferenceContent()).then(() => {
         this.updateHoldPosition = true;
       });
     },

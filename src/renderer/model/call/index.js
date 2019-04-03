@@ -15,9 +15,10 @@ model.mount('sketch', sketch);
 model.provide({
   data() {
     return {
-      isVideoCall : null,
-      callNumber  : '',
-      isSwitching : false,
+      isVideoCall      : null,
+      isChangeCallType : false,
+      callNumber       : '',
+      isSwitching      : false,
     };
   },
   middleware : {
@@ -38,8 +39,19 @@ model.provide({
 
       return call.connect('send', ctx.payload.options);
     },
-    answer() {
-      rtc.call.answer().catch(() => {});
+    answer(ctx) {
+      const { isVideoCall } = ctx.payload;
+
+      this.isChangeCallType = typeof isVideoCall === 'boolean';
+
+      // FIXME 音视频切换的时序问题
+      rtc.call.answer().then(() => {
+        setTimeout(() => {
+          if (typeof isVideoCall === 'boolean') {
+            this.isVideoCall = isVideoCall;
+          }
+        }, 500);
+      });
     },
     decline() {
       rtc.call.decline().catch(() => {});
@@ -71,11 +83,19 @@ model.provide({
     },
     remoteStream(val) {
       if (!this.isConnected) return;
+      if (this.isChangeCallType) {
+        this.isChangeCallType = false;
+
+        return;
+      }
+      console.warn('RemoteStream Changed');
+      console.warn(`VideoTracks:${val.getVideoTracks().length}`);
       this.isVideoCall = val && val.getVideoTracks().length > 0;
     },
     isConnected(val) {
       if (!val) {
         this.isVideoCall = null;
+        this.isSwitching = false;
       }
     },
   },

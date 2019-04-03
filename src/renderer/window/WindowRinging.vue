@@ -13,7 +13,13 @@
 
       <div class="flex justify-center mt-4 self-end">
         <!--麦克风（接听）-->
-        <a-button class="text-base w-14 text-white border-transparent"
+        <a-button class="text-base w-36"
+                  @click="transferAnswer">
+          <a-iconfont type="icon-qiehuan"/>
+          {{isVideoCall ? '转语音通话' : '转视频通话' }}
+        </a-button>
+        <!--麦克风（接听）-->
+        <a-button class="text-base w-14 ml-3 text-white border-transparent"
                   type="primary"
                   @click="answerCall">
           <a-iconfont type="icon-yuyin"/>
@@ -59,9 +65,17 @@ export default {
     hangUp() {
       this.kom.dispatch('call.decline');
     },
-    answerCall() {
-      this.kom.dispatch('call.answer');
+    answerCall(isVideoCall = this.isVideoCall) {
+      this.kom.dispatch('call.answer', { isVideoCall });
       window.close();
+    },
+    transferAnswer() {
+      if (this.isVideoCall) { // 转音频
+        this.answerCall(false);
+      }
+      else { // 转视频
+        this.answerCall(true);
+      }
     },
     checkStatus() {
       if (!this.rtc.call.ringing) {

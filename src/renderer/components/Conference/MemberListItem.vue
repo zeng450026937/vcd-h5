@@ -47,6 +47,7 @@
                   [`cursor-${hasPermission ? 'pointer' : 'not-allowed'}`] : true,}"
                     @click="onAudioOperation()"/>
         <a-dropdown :trigger="['click']"
+                    :getPopupContainer="conferenceContent"
                     overlayClassName="member-list-popover">
           <a class="ant-dropdown-link" href="#">
             <a-iconfont v-if="hasPermission"
@@ -212,6 +213,9 @@ export default {
     props : [ 'filterText', 'selectedMember' ],
   },
   computed : {
+    conferenceContent() {
+      return () => document.getElementById('layout-conference-content');
+    },
     isDefault() { // 默认是讨论模式
       return this.$model.conference.profile === 'default';
     },

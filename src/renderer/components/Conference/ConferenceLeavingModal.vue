@@ -5,6 +5,7 @@
       centered
       :width=400
       :closable=false
+      :getContainer="getContainer"
       wrapClassName="conference-leaving-modal"
       :footer="null"
   >
@@ -21,7 +22,15 @@
 
 <script>
 export default {
-  name : 'ConferenceLeavingModal',
+  name  : 'ConferenceLeavingModal',
+  props : {
+    getContainer : {
+      type : Function,
+      default() {
+        return () => document.body;
+      },
+    },
+  },
   data() {
     return {
       visible : false,

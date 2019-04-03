@@ -4,7 +4,9 @@
       <div class="flex flex-col">
         <span class="leading-normal">摄像头</span>
         <a-select v-if="videoInputDevices.length > 0"
-                  v-model="videoInputDeviceId" class="mt-2">
+                  v-model="videoInputDeviceId"
+                  :getPopupContainer="selectContainer"
+                  class="mt-2">
           <a-select-option v-for="videoInput in videoInputDevices"
                            :key="videoInput.deviceId + videoInput.groupId"
           >{{videoInput.label}}
@@ -27,7 +29,9 @@
       <div class="flex flex-col mt-5">
         <span class="leading-normal">麦克风</span>
         <a-select v-if="audioInputDevices.length > 0"
-                  v-model="audioInputDeviceId" class="mt-2">
+                  v-model="audioInputDeviceId"
+                  :getPopupContainer="selectContainer"
+                  class="mt-2">
           <a-select-option v-for="audioInput in audioInputDevices"
                            :key="audioInput.deviceId + audioInput.groupId"
           >{{audioInput.label}}
@@ -45,7 +49,9 @@
         <span class="leading-normal">扬声器</span>
 
         <a-select v-if="audioOutputDevices.length > 0"
-                  v-model="audioOutputDeviceId" class="mt-2">
+                  v-model="audioOutputDeviceId"
+                  :getPopupContainer="selectContainer"
+                  class="mt-2">
           <a-select-option v-for="audioOutput in audioOutputDevices"
                            :key="audioOutput.deviceId + audioOutput.groupId"
           >{{audioOutput.label}}
@@ -105,6 +111,11 @@ export default {
       'videoInputDeviceId',
       'videoInputDevices',
     ],
+  },
+  computed : {
+    selectContainer() {
+      return () => this.$el;
+    },
   },
   methods : {
     playTestMusic() {

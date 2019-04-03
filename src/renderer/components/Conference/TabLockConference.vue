@@ -1,17 +1,22 @@
 <template>
-  <a-layout class="bg-white w-full">
+  <a-layout id="lock-conference" class="bg-white w-full">
     <div class="flex flex-col p-5">
       <p class="leading-normal">
       {{isLocked ? '会议解锁后，新的参会成员可以直接进入会议。' : '会议锁定后，以下新的参会成员可直接进入会议，无需在会议大厅中等'}}
       </p>
       <template v-if="!isLocked">
-        <a-select v-model="selectedOptions" class="mt-5">
+        <a-select v-model="selectedOptions"
+                  :getPopupContainer="selectContainer"
+                  class="mt-5">
           <a-select-option v-for="option in allowedOptions"
                            :key="option.permission"
                            :value="option.permission"
           >{{option.label}}</a-select-option>
         </a-select>
-        <a-checkbox class="mt-3" :checked="attendeeLobbyBypass" @change="attendeeLobbyBypass = !attendeeLobbyBypass">受邀人员</a-checkbox>
+        <a-checkbox class="mt-3"
+                    :checked="attendeeLobbyBypass"
+                    @change="attendeeLobbyBypass = !attendeeLobbyBypass"
+        >受邀人员</a-checkbox>
       </template>
       <a-button type="primary" class="mt-16"
                 :disabled="!currentIsPresenter"
@@ -39,6 +44,9 @@ export default {
     props : [ 'selectedOptions', 'attendeeLobbyBypass' ],
   },
   computed : {
+    selectContainer() {
+      return () => this.$el;
+    },
     currentIsPresenter() { // current => the current login user
       return this.$model.conference.isPresenter;
     },

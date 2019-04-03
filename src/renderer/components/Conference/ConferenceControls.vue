@@ -2,42 +2,27 @@
   <div id="conference-controls" class="flex justify-center py-5 items-center w-full">
     <div class="button-content flex h-12 items-center z-10">
       <!--视频控制-->
-      <a-popover placement="top"
-                 :visible="videoException">
-        <template slot="content">
-          <p>摄像头异常</p>
-        </template>
-        <template slot="title">
-          <span></span>
-        </template>
-        <a-button v-if="isVideoConference"
-                  :disabled="videoDisabled"
-                  shape="circle"
-                  class="control-btn"
-                  :class="{[`bg-${videoIcon.color}`] : true}"
-                  :title="videoIcon.title"
-                  @click="onVideoBtnClick"
-        >
-          <a-iconfont :type="videoIcon.icon"/>
-        </a-button>
-      </a-popover>
+      <a-button v-if="isVideoConference"
+                :disabled="videoDisabled"
+                shape="circle"
+                class="control-btn"
+                :class="{[`bg-${videoIcon.color}`] : true}"
+                :title="videoIcon.title"
+                @click="onVideoBtnClick"
+      >
+        <a-iconfont :type="videoIcon.icon"/>
+      </a-button>
 
       <!--音频-->
-      <a-tooltip placement="top"
-                 :visible="audioException">
-        <template slot="title">
-          <p>麦克风异常</p>
-        </template>
-        <a-button :disabled="audioDisabled"
-                  shape="circle"
-                  class="control-btn"
-                  :class="{[`bg-${audioIcon.color}`] : true}"
-                  :title="audioIcon.title"
-                  @click="onAudioBtnClick"
-        >
-          <a-iconfont :type="audioIcon.icon"/>
-        </a-button>
-      </a-tooltip>
+      <a-button :disabled="audioDisabled"
+                shape="circle"
+                class="control-btn"
+                :class="{[`bg-${audioIcon.color}`] : true}"
+                :title="audioIcon.title"
+                @click="onAudioBtnClick"
+      >
+        <a-iconfont :type="audioIcon.icon"/>
+      </a-button>
       <!--分享辅流-->
       <a-button v-if="isVideoConference && shareAvailable"
                 shape="circle"
@@ -50,6 +35,7 @@
           trigger="click"
           v-model="showMorePanel"
           overlayClassName="more-panel-popover"
+          :getPopupContainer="popupContainer"
       >
         <div slot="content" class="popover-content">
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
@@ -76,10 +62,13 @@
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
     </div>
-    <conference-leaving-modal ref="leavingModal"/>
-    <screen-share-modal ref="shareModal"/>
+    <conference-leaving-modal ref="leavingModal"
+                              :getContainer="modalContainer"/>
+    <screen-share-modal ref="shareModal"
+                        :getContainer="modalContainer"/>
     <conference-message v-show="!isInConferenceMain || !isVideoConference" class="conference-message"/>
-    <conference-plate-modal ref="plateModal"/>
+    <conference-plate-modal ref="plateModal"
+                            :getContainer="modalContainer"/>
   </div>
 </template>
 
@@ -102,6 +91,12 @@ export default {
     props : [ 'isInConferenceMain', 'showMorePanel', 'isVideoConference' ],
   },
   computed : {
+    popupContainer() {
+      return () => document.getElementById('conference-controls');
+    },
+    modalContainer() {
+      return () => document.getElementById('layout-conference-content');
+    },
     mediaStatus() {
       return this.$rtc.media.localMedia.status;
     },
@@ -110,6 +105,9 @@ export default {
     },
     audioException() {
       return this.mediaStatus.active && !this.mediaStatus.audio;
+    },
+    hasException() {
+      return this.videoException || this.audioException;
     },
     enableLocalVideo() {
       return this.$model.setting.enableLocalVideo;
@@ -186,6 +184,22 @@ export default {
       this.isVideoConference = !this.isVideoConference;
     },
   },
+  watch : {
+    hasException : {
+      handler(val) {
+        if (val) {
+          const text = this.videoException ? '当前摄像头异常，请检查后重试'
+            : this.audioException ? '当前麦克风异常，请检查后重试' : '当前摄像头和麦克风异常，请检查后重试';
+
+          this.$message.warning(text, 0);
+        }
+        else {
+          this.$message.destroy();
+        }
+      },
+      immediate : true,
+    },
+  },
 };
 </script>
 
@@ -200,10 +214,7 @@ export default {
     }
     .button-content{
       .control-btn {
-        @apply w-10 h-10 text-lg text-white border-transparent;
-      }
-      >.control-btn {
-        @apply mx-2;
+        @apply w-10 h-10 text-lg text-white mx-2 border-transparent;
       }
     }
     button {
