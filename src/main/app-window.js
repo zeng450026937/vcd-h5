@@ -59,6 +59,10 @@ export class AppWindow extends BaseWindow {
           case trayMenu.showAppWindow.id:
             this.restoreWindow();
             break;
+          case trayMenu.quit.id:
+            this.quitting = true;
+            this.close();
+            break;
           case trayMenu.joinConference.id:
           case trayMenu.logout.id:
             this.window.webContents.send('menu-event', event);

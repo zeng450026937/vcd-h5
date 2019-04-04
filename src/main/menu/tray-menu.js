@@ -9,7 +9,7 @@ export const showAppWindow = {
 
 export const quit = {
   label : '退出',
-  role  : 'quit',
+  id    : 'quit',
 };
 
 export const joinConference = {

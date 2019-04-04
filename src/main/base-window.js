@@ -111,6 +111,7 @@ export class BaseWindow extends EventEmitter {
       .method('restore')
       .method('focus')
       .method('show')
+      .method('close')
       .method('destroy');
   }
 
