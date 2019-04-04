@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import TabSetting from './TabSetting.vue';
-import TabChatting from './TabChatting.vue';
+import TabSetting from '../../../components/Call/TabSetting.vue';
+import TabChatting from '../../../components/Call/TabChatting.vue';
 
 export default {
   name       : 'CallDrawer',

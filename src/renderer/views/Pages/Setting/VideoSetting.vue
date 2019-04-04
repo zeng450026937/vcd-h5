@@ -83,8 +83,8 @@
 
 <script>
 import { shell } from 'electron';
-import AppHeader from '../MainHeader.vue';
-import VideoView from '../../Common/VideoView.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import VideoView from '../../../components/Common/VideoView.vue';
 
 export default {
   name : 'VideoSetting',

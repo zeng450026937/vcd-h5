@@ -98,7 +98,7 @@
 
 <script>
 import { shell } from 'electron';
-import AppHeader from '../MainHeader.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
 
 export default {
   name : 'ConferenceSetting',

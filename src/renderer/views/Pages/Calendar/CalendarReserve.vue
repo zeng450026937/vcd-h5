@@ -268,9 +268,9 @@
 /* eslint-disable no-loop-func */
 
 import moment from 'moment';
-import AppHeader from '../MainHeader.vue';
-import ContactTree from '../Contact/ContactTree.vue';
-import ContactList from '../Contact/ContactList.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import ContactTree from '../../../components/Main/Contact/ContactTree.vue';
+import ContactList from '../../../components/Main/Contact/ContactList.vue';
 
 const cycleModes = [
   { mode: 'everyDay', text: '每天' },

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import CallContent from '../components/Call/CallContent.vue';
+import CallContent from '../../components/Call/CallContent.vue';
 
 export default {
   name       : 'LayoutCallContent',

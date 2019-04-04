@@ -74,9 +74,9 @@
 </template>
 
 <script>
-import AppHeader from '../../Shared/CommonHeader.vue';
-import ContactList from './ContactList.vue';
-import ContactInfo from './ContactInfo.vue';
+import AppHeader from '../../../components/Shared/CommonHeader.vue';
+import ContactList from '../../../components/Main/Contact/ContactList.vue';
+import ContactInfo from '../../../components/Main/Contact/ContactInfo.vue';
 
 export default {
   name       : 'CorporateContact',

@@ -110,7 +110,7 @@
 
 <script>
 import { isURL } from 'validator';
-import AppHeader from '../MainHeader.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
 import { langList } from '../../../i18n/config';
 
 export default {

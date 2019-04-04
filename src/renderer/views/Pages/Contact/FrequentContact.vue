@@ -99,11 +99,11 @@
 
 <script>
 /* eslint-disable no-loop-func */
-import AppHeader from '../MainHeader.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
-import ContactInfo from './ContactInfo.vue';
-import FrequentContactDrawer from './FrequentContactDrawer.vue';
-import ContactList from './ContactList.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
+import ContactInfo from '../../../components/Main/Contact/ContactInfo.vue';
+import FrequentContactDrawer from '../../../components/Main/Contact/FrequentContactDrawer.vue';
+import ContactList from '../../../components/Main/Contact/ContactList.vue';
 
 export default {
   name       : 'FrequentContact',

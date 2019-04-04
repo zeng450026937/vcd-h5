@@ -154,8 +154,8 @@
 
 <script>
 import { cloneDeep, debounce } from 'lodash';
-import TabSettingMedia from '../Conference/TabSettingMedia.vue';
-import VideoView from '../Common/VideoView.vue';
+import TabSettingMedia from '../../components/Conference/TabSettingMedia.vue';
+import VideoView from '../../components/Common/VideoView.vue';
 import { LOGIN_STORAGE } from '../../storage/constants';
 import { debounceNotice } from '../../model/middleware/error-message';
 

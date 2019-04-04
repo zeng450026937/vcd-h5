@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import AppHeader from '../MainHeader.vue';
-import updatePanel from '../../Common/update-panel.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import updatePanel from '../../../components/Common/update-panel.vue';
 
 export default {
   name : 'AppAbout',

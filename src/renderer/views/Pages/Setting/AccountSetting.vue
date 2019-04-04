@@ -91,9 +91,9 @@
 </template>
 
 <script>
-import ComplexAvatar from '../../Shared/CommonAvatar.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
-import AppHeader from '../MainHeader.vue';
+import ComplexAvatar from '../../../components/Shared/CommonAvatar.vue';
+import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
 
 export default {
   name       : 'AccountSetting',

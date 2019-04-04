@@ -85,9 +85,9 @@
 import { CallRecord } from '../../../database/call-record';
 import { genDurationTime, genStartTime } from '../../../utils/date';
 import { callIcon, callType } from '../../../utils/filters';
-import AppHeader from '../MainHeader.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
 import { MAIN } from '../../../router/constants';
-import ContactPopover from '../Contact/ContactPopover.vue';
+import ContactPopover from '../../../components/Main/Contact/ContactPopover.vue';
 
 const recordColumns = [
   {

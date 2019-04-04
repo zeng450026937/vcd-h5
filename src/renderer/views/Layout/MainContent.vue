@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import MainNav from '../components/Main/MainNav.vue';
-import MainNavMiniVideo from '../components/Main/MainNavMiniVideo.vue';
-import MainNavMiniCall from '../components/Main/MainNavMiniCall.vue';
-import { MAIN } from '../router/constants';
+import MainNav from '../../components/Main/MainNav.vue';
+import MainNavMiniVideo from '../../components/Main/MainNavMiniVideo.vue';
+import MainNavMiniCall from '../../components/Main/MainNavMiniCall.vue';
+import { MAIN } from '../../router/constants';
 
 export default {
   name       : 'MainContact',

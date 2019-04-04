@@ -299,8 +299,6 @@ export default class TreeStore {
 
       return this.getChecked();
     }
-
-
   }
 
   correctDefaultChecked() {

@@ -97,9 +97,9 @@
 </template>
 
 <script>
-import AppHeader from '../MainHeader.vue';
-import MediaContent from '../../Conference/TabSettingMedia.vue';
-import VideoView from '../../Common/VideoView.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import MediaContent from '../../../components/Conference/TabSettingMedia.vue';
+import VideoView from '../../../components/Common/VideoView.vue';
 import { debounceNotice } from '../../../model/middleware/error-message';
 
 export default {

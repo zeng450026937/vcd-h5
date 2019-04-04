@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import MainHeader from '../MainHeader.vue';
-import CalendarInfo from './CalendarInfo.vue';
-import CalendarList from './CalendarList.vue';
-import CalendarNav from './CalendarNav.vue';
+import MainHeader from '../../../components/Main/MainHeader.vue';
+import CalendarInfo from '../../../components/Main/Calendar/CalendarInfo.vue';
+import CalendarList from '../../../components/Main/Calendar/CalendarList.vue';
+import CalendarNav from '../../../components/Main/Calendar/CalendarNav.vue';
 
 export default {
   name       : 'CalendarView',

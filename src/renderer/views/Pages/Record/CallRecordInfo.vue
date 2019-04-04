@@ -142,11 +142,11 @@
 
 <script>
 import { groupBy } from 'lodash/fp';
-import AppHeader from '../MainHeader.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
 import { CallRecord } from '../../../database/call-record';
 import { getDate, genDateString, genDurationTime, getTime } from '../../../utils/date';
 import { callType, callIcon } from '../../../utils/filters';
-import LocalContactDrawer from '../Contact/LocalContactDrawer.vue';
+import LocalContactDrawer from '../../../components/Main/Contact/LocalContactDrawer.vue';
 
 export default {
   name       : 'CallRecordInfo',

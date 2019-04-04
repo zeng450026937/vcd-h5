@@ -71,11 +71,11 @@
 
 <script>
 import { debounce } from 'lodash';
-import AppHeader from '../MainHeader.vue';
-import LocalContactDrawer from '../Contact/LocalContactDrawer.vue';
-import ContactList from '../Contact/ContactList.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
-import PlateContent from '../../Common/PlateContent.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import LocalContactDrawer from '../../../components/Main/Contact/LocalContactDrawer.vue';
+import ContactList from '../../../components/Main/Contact/ContactList.vue';
+import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
+import PlateContent from '../../../components/Common/PlateContent.vue';
 
 export default {
   name       : 'DialPlate',

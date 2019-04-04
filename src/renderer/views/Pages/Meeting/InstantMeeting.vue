@@ -37,11 +37,11 @@
 <script>
 /* eslint-disable no-loop-func */
 
-import AppHeader from '../MainHeader.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
-import ContactTree from '../Contact/ContactTree.vue';
-import ContactList from '../Contact/ContactList.vue';
-import transfer from '../../transfer/index.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
+import ContactTree from '../../../components/Main/Contact/ContactTree.vue';
+import ContactList from '../../../components/Main/Contact/ContactList.vue';
+import transfer from '../../../components/transfer/index.vue';
 
 export default {
   name       : 'InstantMeeting',

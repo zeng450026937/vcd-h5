@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import ConferenceContent from '../components/Conference/ConferenceContent.vue';
+import ConferenceContent from '../../components/Conference/ConferenceContent.vue';
 
 export default {
   name       : 'LayoutConferenceContent',

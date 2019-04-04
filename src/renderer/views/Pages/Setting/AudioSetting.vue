@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import AppHeader from '../MainHeader.vue';
-import VolumeProgress from '../../Common/VolumeProgress.vue';
+import AppHeader from '../../../components/Main/MainHeader.vue';
+import VolumeProgress from '../../../components/Common/VolumeProgress.vue';
 
 export default {
   name       : 'AudioSetting',

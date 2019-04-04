@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import LoginHeader from '../components/Login/LoginHeader.vue';
+import LoginHeader from '../../components/Login/LoginHeader.vue';
 
 export default {
   name       : 'LayoutLogin',

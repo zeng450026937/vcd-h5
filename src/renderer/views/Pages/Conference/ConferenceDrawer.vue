@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import TabLockConference from './TabLockConference.vue';
-import TabMemberView from './TabMemberView.vue';
-import TabChatting from './TabChatting.vue';
-import TabSetting from './TabSetting.vue';
+import TabLockConference from '../../../components/Conference/TabLockConference.vue';
+import TabMemberView from '../../../components/Conference/TabMemberView.vue';
+import TabChatting from '../../../components/Conference/TabChatting.vue';
+import TabSetting from '../../../components/Conference/TabSetting.vue';
 
 export default {
   name       : 'ConferenceDrawer',

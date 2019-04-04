@@ -42,7 +42,7 @@
 
       </div>
       <div class="flex flex-col items-center text-white text-3xl mt-1 h-full">
-        <template v-for="(sidebar, index) in sidebarItems">
+        <template v-for="(sidebar, index) in sidebarList">
           <div :key="index"
                class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
                :class="{'mt-2':sidebar.isTop,
@@ -104,8 +104,8 @@ export default {
     },
   ],
   computed : {
-    sidebarItems() {
-      return this.$model.main.sidebarItems;
+    sidebarList() {
+      return this.$model.main.sidebarList;
     },
     userInfo() {
       return this.$model.contact.currentContact || {

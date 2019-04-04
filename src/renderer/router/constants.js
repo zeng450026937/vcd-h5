@@ -5,8 +5,8 @@ export const MODULE_NAME = {
   SETTING  : 'setting',
 };
 export const LOGIN = {
-  LOGIN_CONTENT   : '/login/loginContent',
-  MEETING_CONTENT : '/login/meetingContent',
+  LOGIN_CONTENT   : '/login/main',
+  MEETING_CONTENT : '/login/meeting',
 };
 
 export const MAIN = {
