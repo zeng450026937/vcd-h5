@@ -1,5 +1,5 @@
 import archiver from 'archiver';
-import { createWriteStream, ensureDir, copy } from 'fs-extra';
+import { createWriteStream, ensureDir, copy, remove } from 'fs-extra';
 import { resolve as resolvePath } from 'path';
 import { getLogDirectoryPath, getNetLogDirectoryPath } from './get-log-path';
 import { newPlainUUID } from '../shared/uuid';
@@ -9,6 +9,7 @@ export function packLog(filename = newPlainUUID(), format = 'zip', gzip = false)
   const copyDir = resolvePath(dir, '../logs-backup');
 
   return ensureDir(dir)
+    .then(() => remove(copyDir).catch(() => {}))
     .then(() => copy(dir, copyDir))
     .then(() => new Promise((resolve, reject) => {
       const name = `${filename}.${format}${gzip ? '.gz' : ''}`;
