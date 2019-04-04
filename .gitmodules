@@ -16,3 +16,6 @@ url=../third_party/vue-cli-plugin-vuem.git
 [submodule "plugins/vue-cli-plugin-electron"]
 	path = plugins/vue-cli-plugin-electron
 url=../third_party/vue-cli-plugin-electron.git
+[submodule "lib/yui"]
+	path = lib/yui
+	url = http://gitcode.yealink.com/server/client/web_app/third_party/yui.git
