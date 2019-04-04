@@ -18,4 +18,4 @@ url=../third_party/vue-cli-plugin-vuem.git
 url=../third_party/vue-cli-plugin-electron.git
 [submodule "lib/yui"]
 	path = lib/yui
-	url = http://gitcode.yealink.com/server/client/web_app/third_party/yui.git
+url=../third_party/yui.git
