@@ -49,7 +49,8 @@
             :source="leftSource"
             @video-clicked="shareScreenClicked"/>
       </div>
-      <conference-inviting-modal ref="invitingModal"/>
+      <conference-inviting-modal ref="invitingModal"
+                                 :getContainer="conferenceContent"/>
     </div>
     <hold-item-group/>
   </a-layout>
@@ -106,6 +107,9 @@ export default {
     },
   ],
   computed : {
+    conferenceContent() {
+      return () => document.getElementById('layout-conference-content');
+    },
     mediaStatus() {
       return this.$rtc.media.localMedia.status;
     },
@@ -184,7 +188,7 @@ export default {
     },
     maxConferenceContent() {
       // FIXME DBLCLICK 双击是如果间隔时间过短，则不会响应事件
-      screenfull.toggle(document.getElementById('layout-conference-content')).then(() => {
+      screenfull.toggle(this.conferenceContent()).then(() => {
         this.updateHoldPosition = true;
       });
     },
@@ -196,7 +200,6 @@ export default {
       this.hideControls = false;
 
       if (this.deviceException) {
-
         return;
       }
       this.hideControlsTimer = setTimeout(() => {
@@ -291,7 +294,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 64px;
+        /*height: 64px;*/
         .popover-content-item {
           cursor: pointer;
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {

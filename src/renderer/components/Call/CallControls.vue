@@ -34,14 +34,15 @@
       <a-popover
           trigger="click"
           v-model="showMorePanel"
+          :getPopupContainer="popupContainer"
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
-          <div class="popover-content-item hover:bg-list-hover"
-               :disabled="isSwitching"
-               @click="switchCallType">
-            <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
+          <div v-if="isVideoCall"
+               class="popover-content-item hover:bg-list-hover"
+               @click="toAudioCall">
+            <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
+            <span class="ml-3 text-xs">切换为音频通话</span>
           </div>
           <div class="popover-content-item hover:bg-list-hover"
                @click="openPlateModal">
@@ -63,8 +64,10 @@
         <a-iconfont type="icon-guaduan"/>
       </a-button>
     </div>
-    <call-plate-modal ref="plateModal"/>
-    <screen-share-modal ref="shareModal"/>
+    <call-plate-modal ref="plateModal"
+                      :getContainer="modalContainer"/>
+    <screen-share-modal ref="shareModal"
+                        :getContainer="modalContainer"/>
   </div>
 </template>
 
@@ -86,7 +89,7 @@ export default {
   sketch : [
     {
       ns    : 'call',
-      props : [ 'isVideoCall', 'isSwitching' ],
+      props : [ 'isVideoCall' ],
     },
     {
       ns    : 'call.sketch',
@@ -94,6 +97,12 @@ export default {
     },
   ],
   computed : {
+    popupContainer() {
+      return () => document.getElementById('call-controls');
+    },
+    modalContainer() {
+      return () => document.getElementById('layout-call-content');
+    },
     enableLocalVideo() {
       return this.$model.setting.enableLocalVideo;
     },
@@ -162,10 +171,9 @@ export default {
       this.showMorePanel = false;
       this.$refs.plateModal.visible = true;
     },
-    switchCallType() {
-      if (this.isSwitching) return;
+    toAudioCall() {
       this.showMorePanel = false;
-      this.isVideoCall = !this.isVideoCall;
+      this.isVideoCall = false;
     },
     onAudioBtnClick() {
       this.$rtc.call.toggleAudio(this.$rtc.call.channel.isMuted().audio);
@@ -192,7 +200,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 64px;
+        /*height: 64px;*/
         .popover-content-item {
           @apply h-8 w-full px-3 flex items-center cursor-pointer;
 

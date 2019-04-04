@@ -83,6 +83,17 @@ model.provide({
 
       return this.currentUser.rolesEntry.demostate;
     },
+    role() { // 主持人 访客 等待
+      if (!this.currentUser) return null;
+      const user = this.currentUser;
+
+      if (user.isPresenter()) return 'presenter';
+      if (!user.isPresenter()
+        && !user.isOnHold() && !user.isCastViewer()) return 'visitor';
+      if (!user.isPresenter()
+        && !user.isOnHold() && user.isCastViewer()) return 'cast-viewer';
+      else return 'waiting';
+    },
     addedUser() {
       return rtc.conference.addedUser;
     },
@@ -175,6 +186,7 @@ model.provide({
       this.isLocalUnmuteAudio = false;
     },
     onPermissionChanged(permission, oldPri) {
+      console.warn('onPermissionChanged:', permission, oldPri);
       // 参会者状态 organizer：组织者， presenter：主持人，attendee：访客 castviewer: 广播方
       if (!oldPri || this.muteBlockBy === 'client') return;
 
@@ -186,6 +198,8 @@ model.provide({
       }
     },
     onDemostateChanged(role, oldRole) {
+      console.warn('onDemostateChanged:', role, oldRole);
+
       if (this.muteBlockBy === 'client') return;
       // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
       if (role === 'demonstrator' && oldRole === 'audience') {
@@ -194,6 +208,10 @@ model.provide({
       else if (role === 'audience' && oldRole === 'demonstrator') {
         this.$message.info('您被取消演讲权限');
       }
+    },
+    onRoleChanged(role, oldRole) {
+      if (role === 'waiting') this.$message.info('您已被主持人移到会议大厅');
+      if (oldRole === 'waiting') this.$message.info('您已被主持人批准进入会议');
     },
     getUserAudioStatus(user) {
       if (user.isCurrentUser()) {
@@ -216,6 +234,7 @@ model.provide({
     audioStatus : 'onAudioStatusChanged',
     permission  : 'onPermissionChanged',
     demostate   : 'onDemostateChanged',
+    role        : 'onRoleChanged',
     addedUser(val) {
       this.messageTextList.push(`${val.displayText} 加入会议`);
     },

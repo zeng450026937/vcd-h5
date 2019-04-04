@@ -94,11 +94,11 @@
                 <div class="flex flex-col flex-grow">
                   <div class="w-full" v-if="currentEvent.invitees">
                     <recycle-scroller
-                        style="height: 100%"
                         :items="currentEvent.invitees.invitee"
                         :buffer="20"
                         :item-size="32"
                         :page-mode="false"
+                        class="h-full"
                         key-field="display-text"
                     >
                       <template slot-scope="{item}">

@@ -5,6 +5,7 @@
       style="top: 70px;left: 32px"
       :width=728
       :closable=false
+      :getContainer="getContainer"
       @ok="handleOk"
       @cancel="handleCancel"
       wrapClassName="conference-inviting-modal"
@@ -63,7 +64,13 @@
 import transfer from '../transfer/index.vue';
 
 export default {
-  name       : 'CallInvitingModal',
+  name  : 'CallInvitingModal',
+  props : {
+    getContainer : {
+      type    : Function,
+      default : () => document.body,
+    },
+  },
   components : {
     transfer,
   },

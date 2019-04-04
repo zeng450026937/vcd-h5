@@ -6,9 +6,9 @@
     <video
         :id="videoId"
         class="video-content"
+        :class="{'force-16-9' : !videoStream}"
         autoplay loop
         :muted="muted"
-        v-once
         :style="{'object-fit': objectFit}"
         @click="videoClicked"
         @dblclick="videoDblClicked"
@@ -198,6 +198,9 @@ export default {
     }
     .video-content {
       width: 100%;
+    }
+    .force-16-9 {
+       padding-top: 56.25%;
     }
   }
 </style>

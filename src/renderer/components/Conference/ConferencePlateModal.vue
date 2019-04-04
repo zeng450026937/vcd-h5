@@ -4,6 +4,7 @@
       :width=328
       :closable=false
       :footer="null"
+      :getContainer="getContainer"
       centered
       style="left: 32px"
       wrapClassName="conference-plate-modal"
@@ -30,7 +31,13 @@
 import PlateContent from '../Common/PlateContent.vue';
 
 export default {
-  name       : 'ConferencePlateModal',
+  name  : 'ConferencePlateModal',
+  props : {
+    getContainer : {
+      type    : Function,
+      default : () => document.body,
+    },
+  },
   components : {
     PlateContent,
   },

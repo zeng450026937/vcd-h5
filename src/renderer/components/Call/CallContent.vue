@@ -47,7 +47,8 @@
             :source="leftSource"
             @video-clicked="shareScreenClicked"/>
       </div>
-      <call-inviting-modal ref="invitingModal"/>
+      <call-inviting-modal ref="invitingModal"
+                           :getContainer="callContent"/>
     </div>
     <hold-item-group/>
   </a-layout>
@@ -96,6 +97,9 @@ export default {
     },
   ],
   computed : {
+    callContent() {
+      return () => document.getElementById('layout-call-content');
+    },
     isConnected() {
       return this.$rtc.call.connected;
     },
@@ -272,7 +276,7 @@ export default {
       padding: 4px 0;
       .popover-content {
         width: 180px;
-        height: 64px;
+        /*height: 64px;*/
         .popover-content-item {
           cursor: pointer;
           .ant-slider-rail, .ant-slider-track,.ant-slider-step {

@@ -17,7 +17,6 @@ model.provide({
     return {
       isVideoCall : null,
       callNumber  : '',
-      isSwitching : false,
     };
   },
   middleware : {
@@ -38,8 +37,17 @@ model.provide({
 
       return call.connect('send', ctx.payload.options);
     },
-    answer() {
-      rtc.call.answer().catch(() => {});
+    answer(ctx) {
+      const { toAudio } = ctx.payload;
+
+      // FIXME 音视频切换的时序问题
+      rtc.call.answer().then(() => {
+        setTimeout(() => {
+          if (toAudio) {
+            this.isVideoCall = false;
+          }
+        }, 500);
+      });
     },
     decline() {
       rtc.call.decline().catch(() => {});
@@ -59,15 +67,10 @@ model.provide({
     },
   },
   watch : {
-    isVideoCall : {
-      async handler(val) {
-        if (!rtc.call.connected || val == null) return;
-        this.isSwitching = true;
-        await rtc.call.localMedia.acquireDetachedStream(true, val)
-          .then((s) => rtc.call.channel.replaceLocalStream(s));
-        this.isSwitching = false;
-      },
-      immediate : true,
+    async isVideoCall(val) {
+      if (!rtc.call.connected || val == null) return;
+      await rtc.call.localMedia.acquireDetachedStream(true, val)
+        .then((s) => rtc.call.channel.replaceLocalStream(s));
     },
     remoteStream(val) {
       if (!this.isConnected) return;

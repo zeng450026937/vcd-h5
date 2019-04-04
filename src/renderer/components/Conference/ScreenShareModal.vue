@@ -2,6 +2,7 @@
   <a-modal
       :visible="visible"
       style="top: 70px;left: 32px"
+      :getContainer="getContainer"
       :width=780
       :closable=false
       @ok="handleShare"
@@ -72,7 +73,13 @@
 <script>
 
 export default {
-  name : 'ScreenShareModal',
+  name  : 'ScreenShareModal',
+  props : {
+    getContainer : {
+      type    : Function,
+      default : () => document.body,
+    },
+  },
   data() {
     return {
       visible         : false,

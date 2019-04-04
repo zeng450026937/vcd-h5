@@ -17,11 +17,16 @@
                   overlayClassName="mini-more-panel-popover"
               >
                 <div slot="content" class="popover-content">
-                  <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
-                       @click="switchCallType">
-                    <a-iconfont :type="isVideoCall ? 'icon-yuyin' : 'icon-shipin'"
-                                class="text-base text-indigo"/>
-                    <span class="ml-3 text-xs">{{isVideoCall ? '切换为音频通话' : '切换为视频通话'}}</span>
+                  <div v-if="isVideoCall"
+                       class="popover-content-item hover:bg-list-hover"
+                       @click="toAudioCall">
+                    <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
+                    <span class="ml-3 text-xs">切换为音频通话</span>
+                  </div>
+                  <div class="popover-content-item hover:bg-list-hover"
+                       @click="openPlateModal">
+                    <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
+                    <span class="ml-3 text-xs">拨号盘</span>
                   </div>
                 </div>
                 <a-button shape="circle"
@@ -29,6 +34,7 @@
                           @click="showMorePanel = !showMorePanel"
                 ><a-iconfont type="icon-gengduo1"/></a-button>
               </a-popover>
+
               <a-button shape="circle"
                         class="text-white mx-2 bg-red-light border-transparent"
                         @click="hangUp"
@@ -55,10 +61,12 @@
       </video-view>
 
     </div>
+    <call-plate-modal ref="plateModal"/>
   </div>
 </template>
 
 <script>
+import CallPlateModal from '../Call/CallPlateModal.vue';
 import VideoView from '../Common/VideoView.vue';
 import { CALL } from '../../router/constants';
 
@@ -66,6 +74,7 @@ export default {
   name       : 'MainNavMiniCall',
   components : {
     VideoView,
+    CallPlateModal,
   },
   data() {
     return {
@@ -128,9 +137,13 @@ export default {
       this.isInMiniCall = false;
       this.$router.push(CALL.CALL_MAIN);
     },
-    switchCallType() {
+    toAudioCall() {
       this.showMorePanel = false;
-      this.isVideoCall = !this.isVideoCall;
+      this.isVideoCall = false;
+    },
+    openPlateModal() {
+      this.showMorePanel = false;
+      this.$refs.plateModal.visible = true;
     },
   },
   watch : {
@@ -184,6 +197,23 @@ export default {
       color: #FFFFFF;
       text-align: center;
       margin-top: 10px;
+    }
+  }
+  .mini-more-panel-popover {
+    padding: 4px 0;
+    .popover-content {
+      width: 180px;
+      .popover-content-item {
+      @apply h-8 w-full px-3 flex items-center cursor-pointer;
+
+        .ant-slider-rail, .ant-slider-track,.ant-slider-step {
+          height: 2px;
+        }
+        .ant-slider-handle {
+          width: 12px;
+          height: 12px;
+        }
+      }
     }
   }
 

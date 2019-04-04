@@ -4,12 +4,20 @@
       :width=328
       :closable=false
       :footer="null"
+      :getContainer="getContainer"
       centered
       style="left: 32px"
-      wrapClassName="conference-plate-modal"
+      wrapClassName="call-plate-modal"
       @cancel="visible = false"
   >
     <div class="flex flex-col">
+      <div class="flex h-12 border-b justify-center items-center">
+        <span class="text-base">拨号盘</span>
+        <a-iconfont type="icon-guanbi"
+                    class="absolute cursor-pointer hover:text-red"
+                    style="right: 26px"
+                    @click="visible = false"/>
+      </div>
       <div style="padding: 0 50px; margin-top: 30px">
         <a-input ref="numberInput" :value="plateContent" @input="inputPlateContent"/>
       </div>
@@ -23,27 +31,19 @@
 import PlateContent from '../Common/PlateContent.vue';
 
 export default {
-  name       : 'CallPlateModal',
+  name  : 'CallPlateModal',
+  props : {
+    getContainer : {
+      type    : Function,
+      default : () => document.body,
+    },
+  },
   components : {
     PlateContent,
   },
   data() {
     return {
-      visible   : false,
-      dialPanel : [
-        { num: '1', alpha: '' },
-        { num: '2', alpha: 'ABC', isCenter: true },
-        { num: '3', alpha: 'DEF' },
-        { num: '4', alpha: 'GHI' },
-        { num: '5', alpha: 'JKL', isCenter: true },
-        { num: '6', alpha: 'MNO' },
-        { num: '7', alpha: 'PQRS' },
-        { num: '8', alpha: 'TUV', isCenter: true },
-        { num: '9', alpha: 'WXYZ' },
-        { num: '*', alpha: '. @' },
-        { num: '0', alpha: '+', isCenter: true },
-        { num: '#', alpha: '' },
-      ],
+      visible      : false,
       plateContent : '',
     };
   },
@@ -59,12 +59,26 @@ export default {
       this.$rtc.call.sendDTMF(num);
     },
   },
+  watch : {
+    async visible(val) {
+      if (val) {
+        await this.$nextTick();
+        await this.$refs.numberInput.$nextTick();
+        this.$refs.numberInput.focus();
+      }
+    },
+  },
 };
 </script>
 
 <style lang="less">
-.conference-plate-modal {
+.call-plate-modal {
+  .ant-modal-content {
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.20);
+    border-radius: unset;
+  }
   .ant-modal-body {
+    padding: 0 !important;
   }
 }
 </style>
