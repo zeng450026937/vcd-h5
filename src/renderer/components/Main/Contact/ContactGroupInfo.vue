@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="justify-center items-center bg-white">
+  <a-layout class="justify-center items-center bg-white p-10">
     <div v-if="group" class="flex flex-col items-center">
       <div class="text-xl">{{group.company}}</div>
       <div class="text-base mt-4 text-center">{{group.group}}</div>

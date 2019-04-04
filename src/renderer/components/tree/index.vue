@@ -11,7 +11,6 @@ import Clusterize from 'clusterize.js';
 import TreeStore from './tree-store';
 import Loading from './loading.vue';
 
-let treeStore;
 const LOAD_MODE = {
   OVERALL : 'OVERALL',
   SPLIT   : 'SPLIT',
@@ -70,28 +69,33 @@ export default {
       }
     },
     checkEntity(id) {
-      const node = treeStore.getNode(id);
+      const node = this.treeStore.getNode(id);
 
-      treeStore.checkNode(id, !node.checked).then((nodes) => {
+      this.treeStore.checkNode(id, !node.checked).then((nodes) => {
         this.updateTreeViews();
         this.$emit('change', nodes);
       });
     },
     check(id, checked) {
-      return treeStore.checkNode(id, checked).then((nodes) => {
+      return this.treeStore.checkNode(id, checked).then((nodes) => {
         this.updateTreeViews();
         this.$emit('change', nodes);
       });
     },
-    checkGroup(id, checked) {
-      treeStore.checkOffspring(id, checked).then((nodes) => {
+    checkOffspring(id, checked) {
+      return this.treeStore.checkOffspring(id, checked).then((nodes) => {
         this.updateTreeViews();
 
+        return nodes;
+      });
+    },
+    checkGroup(id, checked) {
+      this.checkOffspring(id, checked).then((nodes) => {
         this.$emit('change', nodes);
       });
     },
     updateTreeViews() {
-      this.cluster.update(this.createRow(treeStore.tree));
+      this.cluster.update(this.createRow(this.treeStore.tree));
       this.cluster.refresh();
     },
     createStyleString(styles) {
@@ -179,38 +183,40 @@ export default {
       return node.node.type.indexOf('ORG') > -1;
     },
     toggleGroup(id) {
-      treeStore.toggle(id, this.getChild, true).then(() => {
+      this.treeStore.toggle(id, this.getChild, true).then(() => {
         this.updateTreeViews();
       });
     },
     getChecked() {
-      return treeStore.getChecked();
+      return this.treeStore.getChecked();
     },
     clear() {
-      treeStore.clear();
+      this.treeStore.clear();
       this.updateTreeViews();
     },
     search(text) {
-      return treeStore.search(text);
+      return this.treeStore.search(text);
     },
     getAsyncCheckedNode(id) {
-      return treeStore.getAsyncCheckedNode(id);
+      return this.treeStore.getAsyncCheckedNode(id);
     },
     cancelChecked(id) {
-      treeStore.cancelChecked(id);
+      this.treeStore.cancelChecked(id);
       this.updateTreeViews();
     },
     getNode(id) {
-      return treeStore.getNode(id);
+      return this.treeStore.getNode(id);
     },
     setCheckedList(checkedList) {
-      return treeStore.setCheckedList(checkedList).then((checked) => {
+      return this.treeStore.setCheckedList(checkedList).then((checked) => {
         this.updateTreeViews();
 
         return checked;
       });
     },
     createTreeViews(store) {
+      this.cluster = null;
+
       const cluster = new Clusterize({
         rows      : this.createRow(store.tree),
         scrollId  : 'tree-scroll-area',
@@ -230,10 +236,12 @@ export default {
     createTree(options) {
       // TODO api 接口
       options.loadMode = this.loadMode;
-      treeStore = new TreeStore(options);
-      window.treeStore = treeStore;
-      this.createTreeViews(treeStore);
+      this.treeStore = new TreeStore(options);
+      this.createTreeViews(this.treeStore);
     },
+  },
+  created() {
+    this.treeStore = null;
   },
 };
 </script>

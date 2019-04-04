@@ -1,5 +1,6 @@
 <template>
   <a-modal
+      :destroyOnClose="true"
       :visible="visible"
       style="top: 70px;left: 32px"
       :width=728
@@ -32,6 +33,7 @@
         <div style="height: 420px;">
           <div class="flex h-full p-5">
             <transfer
+                :load-failed="dataLoadFailed"
                 @change="handleChange"
                 :search="searchContact"
                 :max-checked="100"
@@ -95,6 +97,9 @@ export default {
     };
   },
   computed : {
+    dataLoadFailed() {
+      return this.$model.contact.phoneBookLoadFailed;
+    },
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
     },
