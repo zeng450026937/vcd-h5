@@ -160,7 +160,7 @@
                     <div class="flex flex-col p-3">
                       <span>点击头像改变参会者权限</span>
                       <div class="mt-3">
-                        <a-avatar size="small" class="bg-visitor">
+                        <a-avatar size="small" class="bg-attendee">
                           <a-iconfont type="icon-ren" />
                         </a-avatar>
                         <span class="ml-2">访客</span>

@@ -310,8 +310,9 @@ module.exports = {
     'card-border'    : '#E1E5F2',
     'under-painting' : '#F0F2F8',
 
-    host    : '#E79743',
-    visitor : '#BBC3E6',
+    organizer : '#E79743',
+    presenter : '#E79743',
+    attendee  : '#BBC3E6',
 
     success : '#FAAD14',
     error   : '#FAAD14',

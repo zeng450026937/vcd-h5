@@ -36,13 +36,13 @@
               </div>
               <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">时间</span>
+                  <span class="w-20 text-black6">时间</span>
                   <span>{{currentEvent.startTime}} - {{currentEvent.expiryTime}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">周期</span>
+                  <span class="w-20 text-black6">周期</span>
                   <div class="flex flex-col">
                     <span>{{currentEvent.pattern.title}}</span>
                     <span>{{currentEvent.pattern.time}}</span>
@@ -52,26 +52,26 @@
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
-                    <div class="w-20 text-black9">会议室</div>
+                    <div class="w-20 text-black6">会议室</div>
                   </div>
                   <span style="word-break: break-all">{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">会议ID</span>
+                  <span class="w-20 text-black6">会议ID</span>
                   <span>{{currentEvent.conferenceNumber}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">会议密码</span>
+                  <span class="w-20 text-black6">会议密码</span>
                   <span>{{currentEvent.attendeePin}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isLive" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black9">直播链接</span>
+                  <span class="w-20 text-black6">直播链接</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
                     <a class="truncate" @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
@@ -82,7 +82,7 @@
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
-                    <div class="w-20 text-black9">备注</div>
+                    <div class="w-20 text-black6">备注</div>
                   </div>
                   <span style="word-break: break-all">{{currentEvent.note || '当前会议的备注信息为空'}}</span>
                 </div>
@@ -90,30 +90,23 @@
             </div>
             <div class="flex flex-col text-xs my-5">
               <div class="flex w-full leading-tight">
-                <span class="w-20 opacity-75">会议成员</span>
+                <span class="w-20 text-black6">会议成员</span>
                 <div class="flex flex-col flex-grow">
                   <div class="w-full" v-if="currentEvent.invitees">
-                    <recycle-scroller
-                        :items="currentEvent.invitees.invitee"
-                        :buffer="20"
-                        :item-size="32"
-                        :page-mode="false"
-                        class="h-full"
-                        key-field="display-text"
-                    >
-                      <template slot-scope="{item}">
-                        <div class="flex items-center mb-2">
-                          <a-avatar size="small"
-                                    :class="{'bg-host': item.role === 'organizer'}">
-                            <a-iconfont type="icon-ren"/>
-                          </a-avatar>
-                          <div class="flex flex-grow w-1">
-                            <span class="ml-1 truncate leading-tight">{{item['display-text']}}</span>
-                          </div>
-                          <!--<span class="ml-1 leading-tight">({{item['display-text']}})</span>-->
+                    <template v-for="(item, index ) in currentEvent.invitees.invitee">
+                      <div :key="index" class="flex items-center mb-2">
+                        <div class="h-6 w-6 rounded-full flex items-center justify-center"
+                             :class="{[`bg-${item.role}`]: true}">
+                          <a-iconfont type="icon-ren" class="text-white text-base"/>
                         </div>
-                      </template>
-                    </recycle-scroller>
+                        <div class="flex leading-tight flex-grow w-1">
+                          <span class="ml-1 mr-2 truncate">
+                            {{item['display-text']}}
+                          </span>
+                          （<span class="truncate">{{item['display-text']}}</span>）
+                        </div>
+                      </div>
+                    </template>
                   </div>
                 </div>
               </div>
