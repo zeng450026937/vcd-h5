@@ -1,4 +1,7 @@
 import { NSISUpdater } from './nsis-updater';
+import { DMGUpdater } from './dmg-updater';
+import { AppImageUpdater } from './appimage-updater';
+import { AppUpdater } from './app-updater';
 
 let updater;
 
@@ -10,8 +13,13 @@ export function loadPlatformUpdater() {
       updater = new NSISUpdater();
       break;
     case 'darwin':
+      updater = new DMGUpdater();
+      break;
+    case 'linux':
+      updater = new AppImageUpdater();
       break;
     default:
+      updater = new AppUpdater();
       break;
   }
 
