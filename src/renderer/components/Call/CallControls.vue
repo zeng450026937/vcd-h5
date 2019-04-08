@@ -67,6 +67,7 @@
     <call-plate-modal ref="plateModal"
                       :getContainer="modalContainer"/>
     <screen-share-modal ref="shareModal"
+                        source="call"
                         :getContainer="modalContainer"/>
   </div>
 </template>
@@ -112,7 +113,7 @@ export default {
       // if (!currentUser) return false;
       //
       // return this.$rtc.conference.information.users.currentUser.isShareAvariable();
-      return false;
+      return true;
     },
     callStatus() {
       return this.$model.state.callStatus;
@@ -146,18 +147,18 @@ export default {
 
       return (!status.active || !status.audio) && !this.enableLocalVideo;
     },
+    hasLocalScreenStream() {
+      return !!this.$rtc.call.share.localStream;
+    },
   },
   methods : {
     showScreenShareModal() {
       if (this.hasLocalScreenStream) {
-        // this.$rtc.conference.shareChannel.disconnect();
+        this.$rtc.call.share.disconnect();
 
         return;
       }
       this.$refs.shareModal.visible = true;
-    },
-    hasLocalScreenStream() {
-      return false;
     },
     hangUp() {
       if (this.callStatus === 'ringing') {

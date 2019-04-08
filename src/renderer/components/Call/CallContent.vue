@@ -128,10 +128,10 @@ export default {
       return this.displayName || this.targetUser || '未知用户';
     },
     centerSource() {
-      return this.isShareInCenter ? 'screen' : 'call-remote';
+      return this.isShareInCenter ? 'call-screen' : 'call-remote';
     },
     leftSource() {
-      return this.isShareInCenter ? 'call-remote' : 'screen';
+      return this.isShareInCenter ? 'call-remote' : 'call-screen';
     },
     localVideoClasses() {
       const position = this.isInCallMain ? 'right'
@@ -153,8 +153,14 @@ export default {
         'remote-video-content absolute h-full w-full pin-t pin-r' : true,
       };
     },
+    hasRemoteScreenStream() {
+      return !!this.$rtc.call.share.remoteStream;
+    },
+    hasLocalScreenStream() {
+      return !!this.$rtc.call.share.localStream;
+    },
     hasScreenStream() {
-      return false;
+      return this.hasRemoteScreenStream || this.hasLocalScreenStream;
     },
   },
   mounted() {
