@@ -67,7 +67,7 @@ model.provide({
         val = val || process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
 
         if (!/^http[s]*:\/\//.test(val)) {
-          val = `http://${val}`;
+          val = `https://${val}`;
         }
 
         // reset api
