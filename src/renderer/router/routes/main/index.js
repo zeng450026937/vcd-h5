@@ -10,18 +10,18 @@ export default {
   component : () => import('@/renderer/views/Layout/Main.vue'),
   children  : [
     {
-      name       : 'mainContent',
-      path       : '/main/content',
+      path       : '',
       components : {
         sidebar : () => import('@/renderer/components/Main/Sidebar.vue'),
+        nav     : () => import('@/renderer/components/Main/MainNav.vue'),
         default : () => import('@/renderer/views/Layout/MainContent.vue'),
       },
       children : [
         ...contacts,
+        ...meeting,
         ...record,
         ...setting,
         ...calender,
-        ...meeting,
       ],
     },
   ],

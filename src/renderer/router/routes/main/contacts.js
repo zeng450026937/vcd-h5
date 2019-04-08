@@ -1,22 +1,22 @@
-import { MODULE_NAME } from '../../constants';
+import { MAIN, MODULE_NAME } from '../../constants';
 
 export default [
   {
-    name      : 'corporateContact',
-    path      : '/main/content/corporateContact',
-    meta      : { owner: MODULE_NAME.CONTACT },
+    name      : 'corporate',
+    path      : '/main/content/contact/corporate',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Contact/CorporateContact.vue'),
   },
   {
-    name      : 'frequentContact',
-    path      : '/main/content/frequentContact',
-    meta      : { owner: MODULE_NAME.CONTACT },
+    name      : 'frequent',
+    path      : '/main/content/contact/frequent',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Contact/FrequentContact.vue'),
   },
   {
-    name      : 'localContact',
-    path      : '/main/content/localContact',
-    meta      : { owner: MODULE_NAME.CONTACT },
+    name      : 'local',
+    path      : '/main/content/contact/local',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Contact/LocalContact.vue'),
   },
-]
+];

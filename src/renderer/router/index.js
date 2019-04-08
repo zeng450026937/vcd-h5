@@ -19,3 +19,17 @@ if (router.mode === 'abstract') {
 window.router = router;
 
 export default router;
+
+export const findAllRoutes = (routers, result = []) => {
+  const getChild = (i) => (i.children ? i.children : []);
+
+  routers.forEach((route) => {
+    result.push(route);
+
+    const child = getChild(route);
+
+    findAllRoutes(child, result);
+  });
+
+  return result;
+};

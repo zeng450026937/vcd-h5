@@ -1,11 +1,5 @@
 <template>
-  <a-layout-sider
-      :trigger="null"
-      collapsible
-      class="dragable bg-sidebar"
-      :value="true"
-      :width="64"
-  >
+  <div style="min-width: 64px;" class="bg-sidebar">
     <div class="flex flex-col h-full">
       <div class="text-center mt-3 no-dragable">
 
@@ -42,15 +36,15 @@
 
       </div>
       <div class="flex flex-col items-center text-white text-3xl mt-1 h-full">
-        <template v-for="(sidebar, index) in sidebarList">
+        <template v-for="(item, index) in sidebar">
           <div :key="index"
                class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
-               :class="{'mt-2':sidebar.isTop,
-                       'bg-active':currentSidebar === sidebar,
-                       'hover:text-indigo': currentSidebar !== sidebar}"
-               @click="clickMenu(sidebar, index)">
-            <a-iconfont :type="sidebar.icon" class="text-base"/>
-            <span class="text-3xs font-thin mt-2">{{sidebar.text}}</span>
+               :class="{'mt-2':item.isTop,
+                       'bg-active':currentSidebar === item,
+                       'hover:text-indigo': currentSidebar !== item}"
+               @click="clickMenu(item, index)">
+            <a-iconfont :type="item.icon" class="text-base"/>
+            <span class="text-3xs font-thin mt-2">{{item.text}}</span>
           </div>
         </template>
         <div class="flex flex-grow"/>
@@ -63,7 +57,7 @@
       </div>
     </div>
     <Feedback-Modal ref="feedbackModal"/>
-  </a-layout-sider>
+  </div>
 </template>
 
 <script>
@@ -104,8 +98,8 @@ export default {
     },
   ],
   computed : {
-    sidebarList() {
-      return this.$model.main.sidebarList;
+    sidebar() {
+      return this.$model.main.sidebar;
     },
     userInfo() {
       return this.$model.contact.currentContact || {
@@ -140,14 +134,10 @@ export default {
       if (this.currentSidebar !== sidebar) {
         this.currentSidebar = sidebar;
       }
-      if (this.confStatus === 'connected') {
-        this.isInMiniConference = true;
-        this.$router.push(sidebar.currentRoute);
-      }
-      if (this.isCallConfirmed || this.callStatus === 'connecting') {
-        this.isInMiniCall = true;
-        this.$router.push(sidebar.currentRoute);
-      }
+      this.isInMiniConference = this.confStatus === 'connected';
+      this.isInMiniCall = this.isCallConfirmed || this.callStatus === 'connecting';
+
+      this.$router.push(sidebar.currentPath);
     },
     async clickLogout() {
       if (this.confStatus === 'connected') {

@@ -1,40 +1,40 @@
-import { MODULE_NAME } from '../../constants';
+import { MAIN, MODULE_NAME } from '../../constants';
 
 export default [
   {
-    name      : 'accountSetting',
-    path      : '/main/content/accountSetting',
-    meta      : { owner: MODULE_NAME.SETTING },
+    name      : 'account',
+    path      : '/main/content/setting/account',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Setting/AccountSetting.vue'),
   },
   {
-    name      : 'commonSetting',
-    path      : '/main/content/commonSetting',
-    meta      : { owner: MODULE_NAME.SETTING },
+    name      : 'common',
+    path      : '/main/content/setting/common',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Setting/CommonSetting.vue'),
   },
   {
-    name      : 'conferenceSetting',
-    path      : '/main/content/conferenceSetting',
-    meta      : { owner: MODULE_NAME.SETTING },
+    name      : 'confSetting',
+    path      : '/main/content/setting/conference',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Setting/ConferenceSetting.vue'),
   },
   {
-    name      : 'audioSetting',
-    path      : '/main/content/audioSetting',
-    meta      : { owner: MODULE_NAME.SETTING },
+    name      : 'audio',
+    path      : '/main/content/setting/audio',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Setting/AudioSetting.vue'),
   },
   {
-    name      : 'videoSetting',
-    path      : '/main/content/videoSetting',
-    meta      : { owner: MODULE_NAME.SETTING },
+    name      : 'video',
+    path      : '/main/content/setting/video',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Setting/VideoSetting.vue'),
   },
   {
-    name      : 'aboutUs',
-    path      : '/main/content/aboutUs',
-    meta      : { owner: MODULE_NAME.SETTING },
+    name      : 'about',
+    path      : '/main/content/setting/about',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Setting/AppAbout.vue'),
   },
 ];

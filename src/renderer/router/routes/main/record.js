@@ -1,16 +1,16 @@
-import { MODULE_NAME } from '../../constants';
+import { MAIN } from '../../constants';
 
 export default [
   {
-    name      : 'recordInfo',
-    path      : '/main/content/recordInfo',
-    meta      : { owner: MODULE_NAME.MEETING },
+    name      : 'recordDetail',
+    path      : '/main/content/record/detail',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Record/CallRecordInfo.vue'),
   },
   {
-    name      : 'callRecord',
-    path      : '/main/content/callRecord',
-    meta      : { owner: MODULE_NAME.MEETING },
+    name      : 'records',
+    path      : '/main/content/record/list',
+    meta      : {},
     component : () => import('@/renderer/views/Pages/Record/CallRecord.vue'),
   },
-]
+];

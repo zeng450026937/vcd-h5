@@ -1,11 +1,10 @@
 export default {
-  name      : 'login',
-  path      : '/login',
+  path      : '',
   component : () => import('@/renderer/views/Layout/Login.vue'),
   children  : [
     {
-      name       : 'loginContent',
-      path       : '/login/main',
+      name       : 'login',
+      path       : '/login',
       components : {
         default : () => import('@/renderer/views/Pages/Login.vue'),
       },
