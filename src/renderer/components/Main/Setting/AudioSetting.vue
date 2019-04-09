@@ -53,6 +53,10 @@
           </div>
         </div>
       </div>
+      <audio ref="testAudio" @ended="isPlaying = false" @playing="isPlaying = true">
+        <source src="../../../assets/sounds/testspeaker.ogg"
+                type="audio/ogg;codec='vorbis'">
+      </audio>
     </div>
   </a-layout>
 </template>
@@ -96,7 +100,7 @@ export default {
   ],
   methods : {
     playTestMusic() {
-      this.isPlaying = !this.isPlaying;
+      this.$refs.testAudio.play().then(() => {});
     },
   },
 };
