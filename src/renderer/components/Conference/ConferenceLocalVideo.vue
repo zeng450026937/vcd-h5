@@ -7,6 +7,7 @@
     </div>
     <video-view v-show="isVideoConference"
                 source="local"
+                muted
                 object-fit="cover"
                 class="cursor-pointer"
                 :class="{'opacity-0':current === 0}"/>

@@ -18,7 +18,7 @@ const initialDate = () => ({
   selectedMember        : '',
   isOpenSearch          : false,
   filterText            : '',
-  activeGroupKey        : [ '1' ],
+  activeGroupKey        : '1',
   // 锁定会议
   selectedOptions       : 'closedAuthenticated',
   attendeeLobbyBypass   : true,

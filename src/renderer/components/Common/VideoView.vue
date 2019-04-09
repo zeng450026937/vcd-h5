@@ -93,6 +93,7 @@ export default {
         remote : this.$rtc.conference.mediaChannel.remoteStream,
         screen : this.$rtc.conference.shareChannel.remoteStream
           || this.$rtc.conference.shareChannel.localStream,
+        'call-local'  : this.$rtc.call.localStream,
         'call-remote' : this.$rtc.call.remoteStream,
         'call-screen' : this.$rtc.call.share.localStream
           || this.$rtc.call.share.remoteStream,
@@ -102,7 +103,7 @@ export default {
     },
     enableLocalVideo() {
       return this.$rtc.account.registered
-        && this.source === 'local'
+        && this.source.endsWith('local')
         && this.$model.setting.enableLocalVideo;
     },
     localVideoPath() {

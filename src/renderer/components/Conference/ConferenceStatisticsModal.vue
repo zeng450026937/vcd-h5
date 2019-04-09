@@ -81,15 +81,17 @@ export default {
   mounted() {
   },
   methods : {
-    getStats() {
+    async getStats() {
       if (this.content === 'meeting') {
-        this.$rtc.conference.getStats().then((val) => {
+        await this.$rtc.conference.getStats().then((val) => {
           this.statistics = this.$model.conference.statistics.getStatistics(val);
         });
       }
       else if (this.content === 'call') {
-        this.$rtc.call.getStats().then((val) => {
-          this.statistics = this.$model.conference.statistics.getStatistics({ media: val });
+        await this.$rtc.call.getStats().then(async(media) => {
+          await this.$rtc.call.share.channel.getStats().then((share) => {
+            this.statistics = this.$model.conference.statistics.getStatistics({ media, share });
+          });
         });
       }
     },
@@ -97,8 +99,8 @@ export default {
   watch : {
     visible(val) {
       if (val) {
-        this.staticTimer = setInterval(() => {
-          this.getStats();
+        this.staticTimer = setInterval(async() => {
+          await this.getStats();
         }, 1000);
       }
       else if (this.staticTimer) {

@@ -3,6 +3,7 @@
        :class="{[`call-local-video-${videoLayouts[current]}`]: true}">
     <video-view source="local"
                 object-fit="cover"
+                muted
                 class="cursor-pointer"
                 :class="{'opacity-0':current === 0}"/>
     <template v-if="current !== 2">
@@ -52,6 +53,9 @@ export default {
     current() {
       return this.localWindowState.current;
     },
+    isConnected() {
+      return this.$rtc.call.connected;
+    },
   },
   methods : {
     // 变大或者变小
@@ -73,6 +77,14 @@ export default {
         this.localWindowState.current = 2;
       }
     },
+    // isConnected : {
+    //   handler(val) {
+    //     if (val) {
+    //       this.$rtc.call.channel.replaceLocalStream(this.$model.conference.staticStream);
+    //     }
+    //   },
+    //   immediate : true,
+    // },
   },
 };
 </script>

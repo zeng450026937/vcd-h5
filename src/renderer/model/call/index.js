@@ -69,6 +69,9 @@ model.provide({
   watch : {
     async isVideoCall(val) {
       if (!rtc.call.connected || val == null) return;
+      const setting = this.$getVM('setting');
+
+      if (setting.enableLocalVideo) return;
       await rtc.call.localMedia.acquireDetachedStream(true, val)
         .then((s) => rtc.call.channel.replaceLocalStream(s));
     },
