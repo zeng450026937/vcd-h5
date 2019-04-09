@@ -243,6 +243,10 @@ export default {
   created() {
     this.treeStore = null;
   },
+  beforeDestroy() {
+    this.treeStore = null;
+    if (this.cluster) this.cluster.destroy();
+  },
 };
 </script>
 

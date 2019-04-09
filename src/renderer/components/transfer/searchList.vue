@@ -120,6 +120,9 @@ export default {
       this.$emit('check', { id, checked: checkItem.checked });
     },
   },
+  beforeDestroy() {
+    if (this.cluster) this.cluster.destroy();
+  },
 };
 </script>
 
