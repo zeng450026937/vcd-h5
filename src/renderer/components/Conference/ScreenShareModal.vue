@@ -1,8 +1,9 @@
 <template>
   <a-modal
       :visible="visible"
-      style="top: 70px;left: 32px"
+      style="left: 32px"
       :getContainer="getContainer"
+      centered
       :width=780
       :closable=false
       @ok="handleShare"

@@ -2,7 +2,8 @@
   <a-modal
       :destroyOnClose="true"
       :visible="visible"
-      style="top: 70px;left: 32px"
+      style="left: 32px"
+      centered
       :width=728
       :closable=false
       :getContainer="getContainer"
