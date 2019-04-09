@@ -10,6 +10,7 @@ state.provide({
       duration      : '00:00:00',
       signal        : 4,
       durationTimer : null,
+      warningNotice : null,
     };
   },
   computed : {
@@ -39,10 +40,15 @@ state.provide({
 
             if (quality <= 0 && !isShowSignalWarning && this.isConnected) { // 丢包率 > 12% (10%)
               isShowSignalWarning = true;
-              this.$message.warning('当前网络状况不佳，建议切换为音频通话。', this.isConnected ? 0 : 1);
+              this.warningNotice = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', this.isConnected ? 0 : 1);
             }
             else {
-              if (isShowSignalWarning) this.$message.destroy();
+              if (isShowSignalWarning) {
+                if (typeof this.warningNotice === 'function') {
+                  this.warningNotice();
+                  this.warningNotice = null;
+                }
+              }
               isShowSignalWarning = false;
             }
 

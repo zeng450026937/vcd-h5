@@ -87,14 +87,9 @@ export default {
     ConferencePlateModal,
     ConferenceMessage,
   },
-  data() {
-    return {
-      deviceExceptionNotice : null,
-    };
-  },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'isInConferenceMain', 'showMorePanel', 'isVideoConference' ],
+    props : [ 'isInConferenceMain', 'showMorePanel', 'isVideoConference', 'deviceExceptionNotice' ],
   },
   computed : {
     isConnected() {
@@ -165,9 +160,6 @@ export default {
       return (!status.active || !status.audio) && !this.enableLocalVideo;
     },
   },
-  beforeDestroy() {
-    if (!this.isConnected) if (typeof this.deviceExceptionNotice === 'function') this.deviceExceptionNotice();
-  },
   methods : {
     showScreenShareModal() {
       if (this.hasLocalScreenStream) {
@@ -202,26 +194,9 @@ export default {
     hasException : {
       handler(val) {
         if (val) {
-          const h = this.$createElement;
-
-          const text = this.videoException ? '当前摄像头异常，请检查后重试'
-            : this.audioException ? '当前麦克风异常，请检查后重试' : '当前摄像头和麦克风异常，请检查后重试';
-
-          const content = h('div', { class: 'inline-block' }, [
-            h('div', { class: 'inline-block' }, text),
-            h('a-iconfont', {
-              class : 'ml-3 mr-0 cursor-pointer text-black9 hover:text-red-light',
-              props : { type: 'icon-guanbi' },
-              on    : {
-                click : () => { if (typeof this.deviceExceptionNotice === 'function') this.deviceExceptionNotice(); },
-              } }),
-          ]);
-
-          if (typeof this.deviceExceptionNotice !== 'function') {
-            this.deviceExceptionNotice = this.$message.warning(content, 0);
-          }
+          this.deviceExceptionNotice.open(this, this.videoException, this.audioException);
         }
-        else if (typeof this.deviceExceptionNotice === 'function') this.deviceExceptionNotice();
+        else this.deviceExceptionNotice.close();
       },
       immediate : true,
     },

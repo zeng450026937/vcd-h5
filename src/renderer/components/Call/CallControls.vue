@@ -24,7 +24,6 @@
       </a-button>
       <!--分享辅流-->
       <a-button v-if="isVideoCall"
-                :disabled="!shareAvailable"
                 shape="circle"
                 class="control-btn"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
@@ -94,7 +93,7 @@ export default {
     },
     {
       ns    : 'call.sketch',
-      props : [ 'showMorePanel', 'isInCallMain' ],
+      props : [ 'showMorePanel', 'isInCallMain', 'deviceExceptionNotice' ],
     },
   ],
   computed : {
@@ -106,14 +105,6 @@ export default {
     },
     enableLocalVideo() {
       return this.$model.setting.enableLocalVideo;
-    },
-    shareAvailable() {
-      // const { currentUser } = this.$rtc.conference.information.users;
-      //
-      // if (!currentUser) return false;
-      //
-      // return this.$rtc.conference.information.users.currentUser.isShareAvariable();
-      return true;
     },
     callStatus() {
       return this.$model.state.callStatus;
@@ -150,6 +141,18 @@ export default {
     hasLocalScreenStream() {
       return !!this.$rtc.call.share.localStream;
     },
+    localMediaStatus() {
+      return this.$rtc.media.localMedia.status;
+    },
+    videoException() {
+      return this.localMediaStatus.active && !this.localMediaStatus.video;
+    },
+    audioException() {
+      return this.localMediaStatus.active && !this.localMediaStatus.audio;
+    },
+    hasException() {
+      return this.videoException || this.audioException;
+    },
   },
   methods : {
     showScreenShareModal() {
@@ -183,6 +186,17 @@ export default {
     onVideoBtnClick() {
       this.$rtc.call.toggleVideo(this.$rtc.call.channel.isMuted().video);
       this.mediaStatus = this.$rtc.call.channel.isMuted();
+    },
+  },
+  watch : {
+    hasException : {
+      handler(val) {
+        if (val) {
+          this.deviceExceptionNotice.open(this, this.videoException, this.audioException);
+        }
+        else this.deviceExceptionNotice.close();
+      },
+      immediate : true,
     },
   },
 };
