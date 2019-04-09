@@ -265,7 +265,7 @@ model.provide({
   },
 
   created() {
-    this.signinPromise = null;
+    this.signinDefer = null;
     this.handlers = null;
 
     this.handlers = {
@@ -316,7 +316,7 @@ model.provide({
     this.signout();
 
     this.handlers = null;
-    this.d = null;
+    this.signinDefer = null;
   },
 });
 

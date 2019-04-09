@@ -161,6 +161,11 @@ export default {
     CommonEmpty,
     RecycleScroller,
   },
+  data() {
+    return {
+      updateTimer : null,
+    };
+  },
   sketch : [
     {
       ns    : 'meeting',
@@ -171,6 +176,14 @@ export default {
       props : [ 'isVideoConference' ],
     },
   ],
+  beforeDestroy() {
+    if (this.updateTimer) clearInterval(this.updateTimer);
+  },
+  mounted() {
+    this.updateTimer = setInterval(() => {
+      this.currentEvent.updateStatus();
+    }, 1000);
+  },
   computed : {
     currentEvent() {
       return this.$model.schedule.currentEvent || {};

@@ -101,7 +101,7 @@ const genMeetingStatus = (startTime, expiryTime, remindEarly) => {
 
   const isPrepared = currentTime < startTime;
   const isEnded = currentTime >= expiryTime;
-  const isReady = ((startTime - currentTime) - (remindEarly || 5) * 60 * 1000) <= 0; // 正在进行中或者可以提前开始
+  const isReady = !isEnded && ((startTime - currentTime) - (remindEarly || 5) * 60 * 1000) <= 0; // 正在进行中或者可以提前开始
   const isRunning = !isPrepared && !isEnded;
 
   return { isPrepared, isEnded, isRunning, isReady };
@@ -121,7 +121,11 @@ export function formatCalendar(data) {
     cal.expiryMoment = moment(cal['expiry-time']);
     cal.expiryTime = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
 
-    cal.status = genMeetingStatus(cal.startTime, cal.expiryTime, cal['remind-early']);
+    cal.updateStatus = function() {
+      this.status = genMeetingStatus(this.startTime, this.expiryTime, this['remind-early']);
+    };
+    cal.updateStatus();
+
     const plainCalendar = {};
 
     Object.keys(cal).forEach((key) => {
