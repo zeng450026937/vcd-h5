@@ -18,22 +18,8 @@
         </a-input>
       </div>
     </div>
+    <navigation @nav-click="clickNav" :use-calendar="isInCalendar" :navs="sidebar.navs"></navigation>
 
-    <div v-show="!searchText">
-      <!--拆分-->
-      <calendar-nav v-if="isInCalendar"/>
-      <div v-else>
-        <div v-for="(nav, index) in sidebar.navs"
-             class="flex items-center h-12 px-4 cursor-pointer"
-             :class="{'bg-list-select':currentNav === nav,
-             'hover:bg-list-hover': currentNav !== nav}"
-             :key="index"
-             @click="clickNav(nav, index)">
-          <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"></a-iconfont>
-          <span class="ml-3 text-sm">{{nav.text}}</span>
-        </div>
-      </div>
-    </div>
     <div class="flex h-full" v-if="searchText">
       <global-search/>
     </div>
@@ -43,13 +29,13 @@
 
 <script>
 import GlobalSearch from './GlobalSearch.vue';
-import CalendarNav from './Calendar/CalendarNav.vue';
+import navigation from '../Common/navigation.vue';
 
 export default {
   name       : 'MainNav',
   components : {
     GlobalSearch,
-    CalendarNav,
+    navigation,
   },
   sketch : {
     ns    : 'main',
@@ -62,11 +48,6 @@ export default {
       isInCalendar : false,
     };
   },
-  computed : {
-    sidebarMap() {
-      return this.$model.main.sidebarMap;
-    }
-  },
   created() {
     this.initNav();
   },
@@ -78,9 +59,9 @@ export default {
       this.sidebar = this.$model.main.currentSidebar;
       this.currentNav = this.sidebar.navs
         ? this.sidebar.navs.find((n) => n.path === this.currentRoute.path)
-        : this.sidebar.currentRoute;
+        : this.sidebar.currentPath;
     },
-    clickNav(nav, index) {
+    clickNav(nav) {
       this.currentNav = nav;
     },
 
@@ -89,18 +70,13 @@ export default {
     currentNav(val) {
       if (!val) return;
 
-      this.sidebar.currentRoute = this.currentNav.path;
-      this.$router.push(this.sidebar.currentRoute);
+      this.sidebar.currentPath = this.currentNav.path;
+      this.$router.push(this.sidebar.currentPath);
     },
     $route(val) {
       this.initNav();
     },
   },
-  // beforeRouteUpdate(to, from, next) {
-  //   console.warn('update')
-  //   this.initNav();
-  //   next();
-  // },
 };
 </script>
 

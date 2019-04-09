@@ -2,7 +2,7 @@ import Vuem from './vuem';
 import kom from '.';
 import { LOGIN, } from '../router/constants';
 import rtc from '../rtc';
-import { findAllRoutes } from '../router';
+import { findAllRoutes } from '../router/utils';
 import router from '../router';
 
 const model = new Vuem();
@@ -44,7 +44,6 @@ const initialSidebar = () => {
     { icon        : 'icon-huiyi',
       text        : '会议',
       name        : 'meeting',
-      isTop       : true,
       currentPath : sideNavs.instance.path,
       navs        : [
         sideNavs.instance,

@@ -3,10 +3,10 @@ export default {
   component : () => import('@/renderer/views/Layout/Login.vue'),
   children  : [
     {
-      name       : 'login',
-      path       : '/login',
+      name       : 'join',
+      path       : '/join',
       components : {
-        default : () => import('@/renderer/views/Pages/Login.vue'),
+        default : () => import('@/renderer/views/Pages/Meeting.vue'),
       },
     },
   ],

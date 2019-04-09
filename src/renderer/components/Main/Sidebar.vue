@@ -39,19 +39,19 @@
         <template v-for="(item, index) in sidebar">
           <div :key="index"
                class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
-               :class="{'mt-2':item.isTop,
+               :class="{'mt-2':index === 0,
                        'bg-active':currentSidebar === item,
                        'hover:text-indigo': currentSidebar !== item}"
                @click="clickMenu(item, index)">
-            <a-iconfont :type="item.icon" class="text-base"/>
+            <a-iconfont :type="item.icon" class="text-base"></a-iconfont>
             <span class="text-3xs font-thin mt-2">{{item.text}}</span>
           </div>
         </template>
-        <div class="flex flex-grow"/>
+        <div class="flex flex-grow"></div>
         <div  @click="openFeedback" class="no-dragable cursor-pointer
               w-full flex flex-col items-center
               justify-center hover:text-indigo h-12 mb-2">
-          <a-iconfont type="icon-fankui" class="text-base"/>
+          <a-iconfont type="icon-fankui" class="text-base"></a-iconfont>
           <span class="text-3xs font-thin mt-2">反馈</span>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { LOGIN, MODULE_NAME } from './constants';
+import { LOGIN } from './constants';
 import routes from './routes';
 
 Vue.use(Router);
@@ -20,16 +20,4 @@ window.router = router;
 
 export default router;
 
-export const findAllRoutes = (routers, result = []) => {
-  const getChild = (i) => (i.children ? i.children : []);
 
-  routers.forEach((route) => {
-    result.push(route);
-
-    const child = getChild(route);
-
-    findAllRoutes(child, result);
-  });
-
-  return result;
-};

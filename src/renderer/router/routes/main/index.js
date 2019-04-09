@@ -5,8 +5,8 @@ import calender from './calendar';
 import meeting from './meeting';
 
 export default {
-  name      : 'main',
-  path      : '/main',
+  name      : 'home',
+  path      : '/home',
   component : () => import('@/renderer/views/Layout/Main.vue'),
   children  : [
     {
