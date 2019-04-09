@@ -1,13 +1,18 @@
 <template>
   <div id="layout-main" class="h-full flex">
     <router-view name="sidebar"/>
+
     <div class="h-full flex relative layout-main-content">
+
       <router-view v-if="showNav" name="nav"/>
+
       <router-view/>
+
       <div class="flex flex-col bg-under-painting mini-window-content absolute">
         <main-nav-mini-video v-if="showMiniVideo"/>
         <main-nav-mini-call v-if="showMiniCall"/>
       </div>
+
     </div>
 
   </div>
