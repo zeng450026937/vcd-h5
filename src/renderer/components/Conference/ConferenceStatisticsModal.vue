@@ -1,7 +1,8 @@
 <template>
   <a-modal
       :visible="visible"
-      style="top: 70px;left: 32px"
+      style="left: 32px"
+      centered
       :width=820
       :footer="null"
       wrapClassName="conference-statistics-modal"

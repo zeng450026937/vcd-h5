@@ -89,6 +89,16 @@ export default {
       copyBtn         : null,
     };
   },
+  sketch: [
+    {
+      ns: 'conference.sketch',
+      props: ['isVideoConference']
+    },
+    {
+      ns : 'call',
+      props: ['isVideoCall']
+    }
+  ],
   computed : {
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
@@ -176,6 +186,7 @@ export default {
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;
+          this.isVideoConference = this.isVideoCall;
         })
         .catch(() => {
           this.confirmLoading = false;
@@ -198,6 +209,7 @@ export default {
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;
+          this.isVideoConference = this.isVideoCall;
         }).catch(() => {
           this.confirmLoading = false;
         });
