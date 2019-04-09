@@ -14,7 +14,7 @@ const genSidebarNavs = (routes) => {
     join        : { icon: 'icon-jiaruhuiyi', text: '加入会议' },
     records     : { icon: 'icon-tonghuajilu', text: '通话记录' },
     dial        : { icon: 'icon-bohao', text: '拨号' },
-    calendar    : {},
+    schedule    : {},
     corporate   : { icon: 'icon-qiyelianxiren', text: '企业联系人' },
     frequent    : { icon: 'icon-changyonglianxiren', text: '常用联系人' },
     local       : { icon: 'icon-bendilianxiren', text: '本地联系人' },
@@ -54,8 +54,8 @@ const initialSidebar = () => {
     },
     { icon        : 'icon-richeng',
       text        : '日程',
-      name        : 'calendar',
-      currentPath : sideNavs.calendar.path,
+      name        : 'schedule',
+      currentPath : sideNavs.schedule.path,
       navs        : [],
     },
     {
@@ -116,11 +116,11 @@ model.provide({
       return rtc.call.disconnected || rtc.call.failed;
     },
     sidebarMap() {
-      const [ meeting, calendar, contact, setting ] = this.sidebar;
+      const [ meeting, schedule, contact, setting ] = this.sidebar;
 
       return {
         meeting,
-        calendar,
+        schedule,
         contact,
         setting,
       };

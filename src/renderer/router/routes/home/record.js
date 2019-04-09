@@ -1,5 +1,3 @@
-import { MAIN } from '../../constants';
-
 export default [
   {
     name      : 'recordDetail',

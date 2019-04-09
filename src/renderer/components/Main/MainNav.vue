@@ -18,7 +18,7 @@
         </a-input>
       </div>
     </div>
-    <navigation @nav-click="clickNav" :use-calendar="isInCalendar" :navs="sidebar.navs"></navigation>
+    <navigation @nav-click="clickNav" :use-calendar="useSchedule" :navs="sidebar.navs"></navigation>
 
     <div class="flex h-full" v-if="searchText">
       <global-search/>
@@ -45,7 +45,7 @@ export default {
     return {
       sidebar      : {},
       currentRoute : null,
-      isInCalendar : false,
+      useSchedule  : false,
     };
   },
   created() {
@@ -54,7 +54,7 @@ export default {
   methods : {
     initNav() {
       this.currentRoute = this.$router.currentRoute;
-      this.isInCalendar = this.currentRoute.name === 'calendar';
+      this.useSchedule = this.currentRoute.name === 'schedule';
 
       this.sidebar = this.$model.main.currentSidebar;
       this.currentNav = this.sidebar.navs

@@ -1,7 +1,7 @@
 export default [
   {
-    name      : 'calendar',
-    path      : '/home/content/calendar',
+    name      : 'schedule',
+    path      : '/home/content/schedule',
     meta      : {},
     component : () => import('@/renderer/views/Pages/Calendar/CalendarView.vue'),
   },

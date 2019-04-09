@@ -1,6 +1,6 @@
 import login from './login';
 import join from './join';
-import main from './main';
+import main from './home';
 import conference from './conference';
 import call from './call';
 

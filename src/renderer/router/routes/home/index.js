@@ -1,7 +1,7 @@
 import contacts from './contacts';
 import record from './record';
 import setting from './setting';
-import calender from './calendar';
+import schedule from './schedule';
 import meeting from './meeting';
 
 export default {
@@ -10,7 +10,7 @@ export default {
   component : () => import('@/renderer/views/Layout/Main.vue'),
   children  : [
     {
-      path       : '',
+      path       : '/home/content',
       components : {
         sidebar : () => import('@/renderer/components/Main/Sidebar.vue'),
         nav     : () => import('@/renderer/components/Main/MainNav.vue'),
@@ -21,7 +21,7 @@ export default {
         ...meeting,
         ...record,
         ...setting,
-        ...calender,
+        ...schedule,
       ],
     },
   ],
