@@ -34,7 +34,6 @@
       </div>
       <div :class="remoteVideoClass">
         <call-remote-video
-            v-if="isConnected"
             :source="centerSource"
             @video-dblclick="maxCallContent"/>
       </div>
