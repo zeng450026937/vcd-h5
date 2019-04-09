@@ -125,7 +125,10 @@ export default {
           if (this.step3Timer) {
             clearTimeout(this.step3Timer);
           }
-          this.$message.destroy();
+          if (typeof this.connectNotice === 'function') {
+            this.connectNotice();
+            this.connectNotice = null;
+          }
         }
       },
       immediate : true,
