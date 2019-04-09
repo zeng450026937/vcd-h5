@@ -1,6 +1,6 @@
 <template>
-  <div id="conference-share-video" class="relative group"
-       :class="{[`conference-local-video-${videoLayouts[current]}`]: true}">
+  <div id="call-share-video" class="relative group"
+       :class="{[`call-local-video-${videoLayouts[current]}`]: true}">
     <video-view :source="source"
                 object-fit="cover"
                 class="cursor-pointer"
@@ -33,14 +33,14 @@
 import VideoView from '../Common/VideoView.vue';
 
 export default {
-  name       : 'ConferenceShareVideo',
+  name       : 'CallShareVideo',
   components : {
     VideoView,
   },
   props : {
     source : {
       type    : String,
-      default : 'screen',
+      default : 'call-screen',
     },
   },
   data() {
@@ -52,8 +52,8 @@ export default {
     };
   },
   sketch : {
-    ns    : 'conference.sketch',
-    props : [ 'shareWindowState', 'isInConferenceMain' ],
+    ns    : 'call.sketch',
+    props : [ 'shareWindowState', 'isInCallMain' ],
   },
   computed : {
     current() {
@@ -74,7 +74,7 @@ export default {
     },
   },
   watch : {
-    isInConferenceMain : {
+    isInCallMain : {
       handler(val) {
         if (val) {
           this.shareWindowState.current = this.shareWindowState.pre;
@@ -91,7 +91,7 @@ export default {
 </script>
 
 <style lang="less">
-  #conference-share-video {
+  #call-share-video {
     border: 1px solid #1D212F;
     .video-controls {
       position: absolute;
@@ -104,7 +104,7 @@ export default {
       transition: opacity ease-in-out .5s;
     }
   }
-  .conference-local-video { // min shrink normal expand
+  .call-local-video { // min shrink normal expand
     &-min {
       width: 176px;
       height: 32px;
