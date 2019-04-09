@@ -1,37 +1,33 @@
 <template>
-  <a-layout id="instant-meeting" class="h-full w-full">
+  <div id="instant-meeting" class="flex flex-col h-full  w-full">
 
-    <div class="flex flex-col h-full">
+    <app-header :title="`${rootNode.name || ''} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
 
-      <app-header :title="`${rootNode.name || ''} ${rootNode.amount? '('+ rootNode.amount + ')' : '' }`"/>
+    <a-divider class="my-0"/>
+    <div class="flex flex-col h-full meeting-transfer-content">
+      <transfer
+          :load-failed="dataLoadFailed"
+          :search="searchContact"
+          :max-checked="100"
+          :getChild="getAsyncChildNodes"
+          :loadMode="loadMode"
+          ref="transfer">
+      </transfer>
+    </div>
+    <div class="flex flex-grow"></div>
+    <a-divider class="my-0"/>
 
-      <a-divider class="my-0"/>
-        <div class="flex flex-col h-full meeting-transfer-content">
-          <transfer
-              :load-failed="dataLoadFailed"
-              :search="searchContact"
-              :max-checked="100"
-              :getChild="getAsyncChildNodes"
-              :loadMode="loadMode"
-              ref="transfer">
-          </transfer>
-        </div>
-        <div class="flex flex-grow"></div>
-      <a-divider class="my-0"/>
-
-      <div class="h-12">
-        <div class="flex justify-center items-center py-2 bg-white">
-          <a-button large type="primary"
-                    class="w-24 text-sm"
-                    @click="enterMeeting"
-          >开始会议
-          </a-button>
-        </div>
+    <div class="h-12">
+      <div class="flex justify-center items-center py-2 bg-white">
+        <a-button large type="primary"
+                  class="w-24 text-sm"
+                  @click="enterMeeting"
+        >开始会议
+        </a-button>
       </div>
-
     </div>
 
-  </a-layout>
+  </div>
 </template>
 
 <script>
@@ -136,8 +132,10 @@ export default {
 </script>
 
 <style lang="less">
-  .meeting-transfer-content {
-    margin: 16px 64px;
+  #instant-meeting {
+    background: #f0f2f8;
+    .meeting-transfer-content {
+      margin: 16px 64px;
+    }
   }
-
 </style>

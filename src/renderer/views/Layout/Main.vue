@@ -1,7 +1,7 @@
 <template>
   <div id="layout-main" class="h-full flex">
     <router-view name="sidebar"/>
-    <div class="w-full h-full flex relative">
+    <div class="h-full flex relative layout-main-content">
       <router-view v-if="showNav" name="nav"/>
       <router-view/>
       <div class="flex flex-col bg-under-painting mini-window-content absolute">
@@ -56,8 +56,14 @@ export default {
 };
 </script>
 <style lang="less">
-  .mini-window-content {
-    bottom: 0;
-    left: 0;
+  #layout-main{
+    .layout-main-content {
+      width: calc(100% - 64px);
+    }
+    .mini-window-content {
+      bottom: 0;
+      left: 0;
+    }
   }
+
 </style>

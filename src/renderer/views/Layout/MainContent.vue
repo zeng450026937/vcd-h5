@@ -1,11 +1,6 @@
 <template>
-  <div class="h-full w-full">
-    <div class="flex h-full w-full main-layout-contact">
-
-      <div class="flex h-full bg-white w-full">
-        <router-view/>
-      </div>
-    </div>
+  <div class="flex h-full main-layout-content bg-white flex-grow">
+    <router-view/>
   </div>
 </template>
 
@@ -29,7 +24,7 @@ export default {
 };
 </script>
 <style lang="less">
-  .main-layout-contact {
+  .main-layout-content {
     min-width: 816px;
   }
 </style>

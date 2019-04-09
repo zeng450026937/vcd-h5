@@ -19,5 +19,3 @@ if (router.mode === 'abstract') {
 window.router = router;
 
 export default router;
-
-
