@@ -5,6 +5,22 @@ import Store from './store';
 
 const model = new Vuem();
 
+const userType = {
+  STAFF : {
+    isUser : true,
+  },
+  EXTERNAL_CONTACTS : {
+    isExternal : true,
+  },
+  VMR : {
+    isVMR : true,
+  },
+  DEVICE : {
+    isDevice : true,
+  },
+
+};
+
 let phoneBookStore;
 
 let favoriteStore;
@@ -76,8 +92,8 @@ model.provide({
           }
 
           return Object.assign({
-            parent : { isUser: true },
-            nick   : /^(.*)\(.*\)$/.test(c.attributes.name)
+            ...this.getUserType(c.node.type),
+            nick : /^(.*)\(.*\)$/.test(c.attributes.name)
               ? RegExp.$1.substr(-2, 2)
               : c.attributes.name.substr(-2, 2),
           }, c.attributes, c.node);
@@ -91,6 +107,9 @@ model.provide({
       const data = await rtc.contact.phonebook.childNodes(options);
 
       return phoneBookStore.updateAsyncData(options.parentId, data);
+    },
+    getUserType(type) {
+      return userType[type];
     },
   },
   watch : {

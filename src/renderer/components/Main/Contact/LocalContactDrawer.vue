@@ -64,13 +64,13 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入邮箱'
-                     v-decorator="[
-                          'email',
-                          {rules: [
-                              { max: 254, message: '邮箱不能超过254位!' },
-                              { pattern: /^.+@((.+)*\.).+$/, message: '邮箱格式不正确!'}
-                           ]}
-                         ]"/>
+               v-decorator="[
+                'email',
+                {rules: [
+                    { max: 254, message: '邮箱不能超过254位!' },
+                    { pattern: /^.+@((.+)*\.).+$/, message: '邮箱格式不正确!'}
+                 ]}
+               ]"/>
           </a-form-item>
         </a-form>
       </div>
