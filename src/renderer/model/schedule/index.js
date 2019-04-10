@@ -56,7 +56,7 @@ model.provide({
       }
       if (!to) {
         to = new Date();
-        to.setHours(7 * 24);
+        to.setHours(8 * 24);
       }
 
       this.conferences = Object.create(null);
@@ -93,18 +93,23 @@ model.provide({
         // const finded = !!await this.db.templates.where('@plan-id').equals(planId).count();
 
         const finded = !!this.templates[planId];
+        const isPending = this.pendings.has(planId);
 
-        if (!finded) {
-          tasks.push(
-            this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
-              .then(async(result) => {
-                result = fixTemplate(result);
-                // await this.db.templates.put(result);
-                this.templates[planId] = result;
-              })
-              .catch((e) => logger.warn('fetch template failed. error: %s', e))
-          );
-        }
+        if (finded || isPending) return;
+
+        this.pendings.add(planId);
+
+        tasks.push(
+          this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
+            .then(async(result) => {
+              result = fixTemplate(result);
+              // await this.db.templates.put(result);
+              this.templates[planId] = result;
+
+              this.pendings.delete(planId);
+            })
+            .catch((e) => logger.warn('fetch template failed. error: %s', e))
+        );
       });
 
       await Promise.all(tasks);
@@ -168,8 +173,8 @@ model.provide({
         const planId = conferences[recordId]['@plan-id'];
 
         list.push({
+          ...templates[planId], // conference first
           ...conferences[recordId],
-          ...templates[planId],
         });
       });
 
@@ -250,6 +255,8 @@ model.provide({
     this.templates._isVue = true;
     this.merged = [];
     this.merged._isVue = true;
+
+    this.pendings = new Set();
 
     this.notified = new Set();
 
