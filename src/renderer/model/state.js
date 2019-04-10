@@ -2,14 +2,16 @@ import Vuem from './vuem';
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
+import { getPath } from '../router/utils';
 import { wait } from '../utils';
-import { LOGIN, MAIN, CONFERENCE, CALL } from '../router/constants';
+import { LOGIN, CONFERENCE, CALL } from '../router/constants';
 import storage from '../storage';
 import { CallRecord } from '../database/call-record';
 
 
 const callRecordDB = CallRecord.Create();
 const model = new Vuem();
+const routes = router.options.routes;
 
 model.provide({
   data() {
@@ -54,7 +56,7 @@ model.provide({
         if (val === 'registered') { // 登录成功状态
           await wait(1000);
           if (this.loginStatus === 'registered') { // 防止中途退出
-            router.push(MAIN.MEETING_INSTANCE);
+            router.push(getPath('instance', routes));
           }
         }
         else { // 未登录状态

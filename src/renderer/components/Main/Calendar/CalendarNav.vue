@@ -72,7 +72,7 @@ export default {
       this.$refs.calendar.onToday();
     },
     reserveMeeting() {
-      this.$router.push(MAIN.CALENDAR_RESERVE);
+      this.$router.push({ name: 'reservation' });
     },
     getNoticeInfo(value) {
       let noticeInfo;
