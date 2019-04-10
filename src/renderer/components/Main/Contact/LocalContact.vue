@@ -135,6 +135,7 @@ export default {
       this.$refs.localContactDrawer.visible = true;
       this.$refs.localContactDrawer.form.$nextTick(() => {
         this.drawerType = 'add';
+        this.$refs.localContactDrawer.form.setFieldsValue({ number: '', email: '', name: '', phone: '' });
       });
     },
     handleCheck(contact) {
@@ -144,6 +145,8 @@ export default {
       this.updateCurrentUserInfo();
     },
     updateCurrentUserInfo() {
+      if (!this.currentUser) return;
+
       const id = this.currentUser.id;
 
       this.currentUser = this.localContacts.find((n) => n.id === id);
