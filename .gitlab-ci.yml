@@ -55,8 +55,11 @@ variables:
     tar zcf ../$PACKAGE_NAME.tar.gz *
     
     if [ -n "$CI_COMMIT_TAG" ];then
-        TAG_PREFIX=`echo $CI_COMMIT_TAG|awk -F'-' '{print $1}'`
-        VERSION=`echo $CI_COMMIT_TAG|awk -F '-' 'BEGIN{ OFS="-" } {sub(/develop-|release-/,"",$0);print $0}'`
+#        TAG_PREFIX=`echo $CI_COMMIT_TAG|awk -F'-' '{print $1}'`
+        TAG_PREFIX="release"
+#        VERSION=`echo $CI_COMMIT_TAG|awk -F '-' 'BEGIN{ OFS="-" } {sub(/develop-|release-/,"",$0);print $0}'`
+        VERSION=$CI_COMMIT_TAG
+
         curl -v -u $REPOSITORY_USER:$REPOSITORY_PASSWORD -T "{../$PACKAGE_NAME.tar.gz,../CHANGELOG.txt}" $REPOSITORY_URL/$PROJECT_NAME/$MODULE_NAME/$TAG_PREFIX/$VERSION/$1/
     fi
     echo "############## End to execute job:upload ##############"
@@ -138,8 +141,9 @@ upload_linux:
     - branches
     - master
   only:
-    - /^develop-[[:digit:]].*/
-    - /^release-[[:digit:]].*/
+    - tags
+#    - /^develop-[[:digit:]].*/
+#    - /^release-[[:digit:]].*/
     #upload函数可传递1个参数,用于多种平台时指定上传的目录,若不需要可不传递参数
   script:
     - *function
@@ -155,8 +159,9 @@ upload_macos:
     - branches
     - master
   only:
-    - /^develop-[[:digit:]].*/
-    - /^release-[[:digit:]].*/
+    - tags
+#    - /^develop-[[:digit:]].*/
+#    - /^release-[[:digit:]].*/
   script:
     - *function
     - upload macos
@@ -171,8 +176,9 @@ upload_windows:
     - branches
     - master
   only:
-    - /^develop-[[:digit:]].*/
-    - /^release-[[:digit:]].*/
+    - tags
+#    - /^develop-[[:digit:]].*/
+#    - /^release-[[:digit:]].*/
   script:
     - chcp 65001
     - call %GITLAB_CI_UPLOAD_WINDOWS% windows
