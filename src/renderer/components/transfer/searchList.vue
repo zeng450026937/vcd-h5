@@ -28,6 +28,24 @@ export default {
     };
   },
   methods : {
+    getAvatar(node) {
+      if (node.isUser) return `${/^(.*)\\\\\\\\(.*\\\\\\\\)$/.test(node.name) ? RegExp.$1.substr(-2, 2) : node.name.substr(-2, 2)}`;
+
+      const iconType = node.isDevice
+        ? 'icon-huiyishishebei'
+        : node.isExternal
+          ? 'icon-zuzhi'
+          : node.isService
+            ? 'icon-wangluo'
+            : node.isVMR
+              ? 'icon-xunihuiyishi'
+              : 'icon-zuzhi';
+
+      return this.icon(iconType);
+    },
+    icon(type) {
+      return `<svg width="1.5em" height="1.5em" fill="currentColor" aria-hidden="true" focusable="false" class=""><use xlink:href="#${type}"></use></svg>`;
+    },
     createRow(row) {
       return `
         <div class="search-result-row" node-id="${row.id}">
@@ -40,7 +58,7 @@ export default {
           </label>
 
           <div class="avatar" node-id="${row.id}">
-            ${/^(.*)\\\\(.*\\\\)$/.test(row.name) ? RegExp.$1.substr(-2, 2) : row.name.substr(-2, 2)}
+            ${this.getAvatar(row)}
           </div>
           <div class="name-content" node-id="${row.id}">
             <span node-id="${row.id}" class="name">${row.name}</span>
