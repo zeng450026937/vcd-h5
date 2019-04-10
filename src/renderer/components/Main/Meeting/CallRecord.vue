@@ -27,10 +27,10 @@
           <div class="flex items-center" slot="callTitle" slot-scope="text, record">
             <div class="cursor-pointer mr-1">
 
-              <ContactPopover  @redial="handleRedial" :info="record"></ContactPopover>
+              <ContactPopover @update-info="handleUpdateInfo" @call="handleCall" :info="record"></ContactPopover>
 
             </div>
-            <span class="ml-2 text-xs">{{text}}</span>
+            <span class="ml-2 text-xs">{{ record | recordName}}</span>
           </div>
 
           <div
@@ -153,7 +153,7 @@ export default {
     clickMore(record) {
       this.$router.push({ path: MAIN.CALL_RECORD_INFO, query: record });
     },
-    handleRedial({ info, type }) {
+    handleCall({ info, type }) {
       if (type === 'video') {
         return this.doVideo(info);
       }
@@ -194,6 +194,14 @@ export default {
 
       this.ready = true;
     },
+    handleUpdateInfo({ id, contact }) {
+      this.currentRecords.forEach((i) => {
+        if (i.otherId === id) {
+          i.contact = contact;
+        }
+      });
+      this.$forceUpdate();
+    },
   },
   filters : {
     callType,
@@ -206,6 +214,17 @@ export default {
     },
     name(name) {
       return /^(.*)\(.*\)$/.test(name) ? RegExp.$1.substr(-2, 2) : name.substr(-2, 2);
+    },
+    recordName(record) {
+      if (record.isConference) {
+        if (!record.subject) return '未知联系人';
+
+        return record.subject;
+      }
+
+      if (!record.contact) return '';
+
+      return record.contact.name;
     },
   },
   async beforeCreate() {

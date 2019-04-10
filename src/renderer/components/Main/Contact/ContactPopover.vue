@@ -94,15 +94,25 @@ export default {
     store() {
       return this.$model.contact.phoneBookStore;
     },
+    loadMode() {
+      return this.$model.contact.loadMode;
+    },
+  },
+  watch : {
+    info() {
+      this.updateContactInfo();
+    },
   },
   methods : {
     async getContactInfo(val) {
       let contact = this.store.getNodeByNumber(val);
 
       if (!contact) {
-        const contacts = await this.$model.contact.findContacts(val).catch(() => Promise.resolve(null));
+        if (this.loadMode === 'SPLIT') {
+          const contacts = await this.$model.contact.findContacts(val).catch(() => Promise.resolve(null));
 
-        contact = contacts.find((n) => n.number === val);
+          contact = contacts.find((n) => n.number === val);
+        }
 
         if (contact) {
           const parentNode = this.store.findParentNode(contact.id, contact.parentId);
@@ -123,11 +133,15 @@ export default {
       return contact;
     },
     handleMeeting(type) {
-      this.$emit('redial', { info: this.info, type });
+      this.$emit('call', { info: this.info, type });
+    },
+    async updateContactInfo() {
+      this.contact = await this.getContactInfo(this.info.otherId);
+      this.$emit('update-info', { id: this.info.otherId, contact: this.contact });
     },
   },
-  async mounted() {
-    this.contact = await this.getContactInfo(this.info.otherId);
+  mounted() {
+    this.updateContactInfo();
   },
 };
 </script>

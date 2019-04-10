@@ -218,7 +218,9 @@ export default {
     },
     async setCallRecord() {
       const callRecordDb = CallRecord.Create();
-      const records = await callRecordDb.getRecordByOtherId(this.recordInfo.otherId);
+      const records = this.recordInfo.otherId
+        ? await callRecordDb.getRecordByOtherId(this.recordInfo.otherId)
+        : [ this.recordInfo ];
       const groupByTime = groupBy((i) => getDate(i.startTime));
 
       this.records = records;

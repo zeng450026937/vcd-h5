@@ -142,7 +142,7 @@ export default {
   },
   watch : {
     type(val) {
-      if (val === 'add') {
+      if (val === 'add' || val === 'add-as') {
         this.form.setFieldsValue({ number: '', email: '', name: '', phone: '' });
       }
     },

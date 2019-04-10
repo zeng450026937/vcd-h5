@@ -38,6 +38,21 @@ const groupMap = {
   },
 };
 
+const userType = {
+  STAFF : {
+    isUser : true,
+  },
+  EXTERNAL_CONTACTS : {
+    isExternal : true,
+  },
+  VMR : {
+    isVMR : true,
+  },
+  DEVICE : {
+    isDevice : true,
+  },
+};
+
 export default class Store {
   constructor(tree = [], loadMode = LOAD_MODE.OVERALL) {
     this.loadMode = loadMode;
@@ -175,7 +190,9 @@ export default class Store {
     node.parentId = node.node.parentId;
     node.amount = node.attributes.amount || 0;
 
-    return node;
+    const type = userType[node.node.type];
+
+    return Object.assign(node, type);
   }
 
   genTreeMap() {
@@ -317,5 +334,11 @@ export default class Store {
     const type = this.getNodeType(node);
 
     return type.indexOf('ORG') > -1;
+  }
+
+  search(text, max = 200) {
+    return this.originTree
+      .filter((n) => (n.name.indexOf(text) > -1 || n.number.indexOf(text) > -1) && !n.isGroup)
+      .slice(0, max);
   }
 }
