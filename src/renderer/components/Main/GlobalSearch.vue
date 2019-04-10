@@ -40,6 +40,12 @@ export default {
     showLoadMore() {
       return this.searchResults.length > 5;
     },
+    phoneBookLoaded() {
+      return this.$model.contact.phoneBookLoaded;
+    },
+    phoneBookStore() {
+      return this.$model.contact.phoneBookStore;
+    },
   },
   created() {
     this.debounceSearch = debounce((val = '') => {
@@ -48,6 +54,12 @@ export default {
         this.searchResults = result || [];
       }).catch((err) => {
         console.warn(err.message);
+
+        if (!this.phoneBookLoaded) return;
+
+        this.$nextTick(() => {
+          this.searchResults = this.phoneBookStore.search(val);
+        });
       });
     }, 500);
   },

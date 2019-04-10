@@ -335,4 +335,10 @@ export default class Store {
 
     return type.indexOf('ORG') > -1;
   }
+
+  search(text, max = 200) {
+    return this.originTree
+      .filter((n) => (n.name.indexOf(text) > -1 || n.number.indexOf(text) > -1) && !n.isGroup)
+      .slice(0, max);
+  }
 }
