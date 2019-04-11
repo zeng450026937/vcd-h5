@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="h-full">
+  <div id="app" class="h-full w-full">
     <a-locale-provider :locale="locale">
       <router-view />
     </a-locale-provider>
@@ -26,9 +26,6 @@ export default {
 
 <style lang="less">
   #app {
-    background-image: url("./assets/bg_login.png");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-attachment: fixed;
+
   }
 </style>

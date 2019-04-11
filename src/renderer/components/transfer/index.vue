@@ -3,6 +3,7 @@
     <div class="tree-content">
       <search-bar ref="searchBar" @search="handleSearch"></search-bar>
       <tree
+          :disabled="disabled"
           :getChild="getChild"
           :loadMode="loadMode"
           @ready="handleReady"
@@ -13,6 +14,7 @@
       </tree>
 
       <search-list
+          :disabled="disabled"
           @check="handleCheck"
           :max-checked="maxChecked"
           ref="searchList"
@@ -22,7 +24,7 @@
       <Load-failed-panel v-if="loadFailed"></Load-failed-panel>
     </div>
     <div class="arrow">
-      <a-iconfont type="icon-right" class="text-grey text-3xl cursor-pointer"></a-iconfont>
+      <a-iconfont type="icon-right" class="text-3xl cursor-pointer"></a-iconfont>
     </div>
     <div class="list-content">
       <checked-list
@@ -78,6 +80,12 @@ export default {
     loadFailed : {
       type    : Boolean,
       default : false,
+    },
+    disabled : {
+      type : Array,
+      default() {
+        return [];
+      },
     },
   },
   data() {
@@ -175,7 +183,7 @@ export default {
     .tree-content {
       width: 45%;
       height: 100%;
-      border: 1px solid #ccc;
+      border: 1px solid #E0E0E0;
       background: #fff;
       .tree-list {
         height: calc( 100% - 40px ) !important;
@@ -184,6 +192,7 @@ export default {
     .arrow {
       width: 10%;
       text-align: center;
+      color :#cccccc
     }
 
     .list-content {

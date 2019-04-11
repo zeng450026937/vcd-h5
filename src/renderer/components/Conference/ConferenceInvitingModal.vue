@@ -35,6 +35,7 @@
         <div style="height: 420px;">
           <div class="flex h-full p-5">
             <transfer
+                :disabled="disabled"
                 :load-failed="dataLoadFailed"
                 @change="handleChange"
                 :search="searchContact"
@@ -105,6 +106,12 @@ export default {
     };
   },
   computed : {
+    currentUser() {
+      return this.$model.contact.currentUser;
+    },
+    disabled() {
+      return this.currentUser ? [ this.currentUser.id ] : [];
+    },
     dataLoadFailed() {
       return this.$model.contact.phoneBookLoadFailed;
     },

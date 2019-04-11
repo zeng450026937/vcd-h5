@@ -6,6 +6,7 @@
     <a-divider class="my-0"/>
     <div class="flex flex-col h-full meeting-transfer-content">
       <transfer
+          :disabled="disabled"
           :load-failed="dataLoadFailed"
           :search="searchContact"
           :max-checked="100"
@@ -81,6 +82,9 @@ export default {
     currentUser() {
       return this.$model.contact.currentUser;
     },
+    disabled() {
+      return this.currentUser ? [ this.currentUser.id ] : [];
+    },
     rootNode() {
       if (!this.store) {
         return {
@@ -135,7 +139,10 @@ export default {
   #instant-meeting {
     background: #f0f2f8;
     .meeting-transfer-content {
-      margin: 16px 64px;
+      margin: 16px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #E0E0E0;
     }
   }
 </style>

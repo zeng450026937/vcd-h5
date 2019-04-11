@@ -38,13 +38,14 @@
       <div class="flex flex-col items-center text-white text-3xl mt-1 h-full">
         <template v-for="(item, index) in sidebar">
           <div :key="index"
-               class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12"
+               class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12 relative"
                :class="{'mt-2':index === 0,
-                       'bg-active':currentSidebar === item,
+                       'active':currentSidebar === item,
                        'hover:text-indigo': currentSidebar !== item}"
                @click="clickMenu(item, index)">
             <a-iconfont :type="item.icon" class="text-base"></a-iconfont>
             <span class="text-3xs font-thin mt-2">{{item.text}}</span>
+            <div :class="{'active-tag' : currentSidebar === item}"></div>
           </div>
         </template>
         <div class="flex flex-grow"></div>
@@ -172,5 +173,15 @@ export default {
       height: 252px;
       box-shadow: 0 4px 12px 0 rgba(0,0,0,0.20);
     }
+  }
+  .active-tag{
+    position: absolute;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #4A5FC4;
+  }
+  .active {
+    background : #303b6f
   }
 </style>

@@ -86,7 +86,6 @@ import { CallRecord } from '../../../database/call-record';
 import { genDurationTime, genStartTime } from '../../../utils/date';
 import { callIcon, callType } from '../../../utils/filters';
 import AppHeader from '../../../components/Main/MainHeader.vue';
-import { MAIN } from '../../../router/constants';
 import ContactPopover from '../../../components/Main/Contact/ContactPopover.vue';
 
 const recordColumns = [
@@ -151,7 +150,7 @@ export default {
   },
   methods : {
     clickMore(record) {
-      this.$router.push({ path: MAIN.CALL_RECORD_INFO, query: record });
+      this.$router.push({ name: 'recordDetail', query: record });
     },
     handleCall({ info, type }) {
       if (type === 'video') {

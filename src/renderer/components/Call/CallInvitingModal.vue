@@ -23,6 +23,7 @@
           <div class="flex h-full p-5">
 
             <transfer
+                :disabled="disabled"
                 :load-failed="dataLoadFailed"
                 @change="handleChange"
                 :search="searchContact"
@@ -89,17 +90,23 @@ export default {
       copyBtn         : null,
     };
   },
-  sketch: [
+  sketch : [
     {
-      ns: 'conference.sketch',
-      props: ['isVideoConference']
+      ns    : 'conference.sketch',
+      props : [ 'isVideoConference' ],
     },
     {
-      ns : 'call',
-      props: ['isVideoCall']
-    }
+      ns    : 'call',
+      props : [ 'isVideoCall' ],
+    },
   ],
   computed : {
+    currentUser() {
+      return this.$model.contact.currentUser;
+    },
+    disabled() {
+      return this.currentUser ? [ this.currentUser.id ] : [];
+    },
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
     },
