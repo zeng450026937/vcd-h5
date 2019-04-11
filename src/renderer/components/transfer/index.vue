@@ -3,6 +3,7 @@
     <div class="tree-content">
       <search-bar ref="searchBar" @search="handleSearch"></search-bar>
       <tree
+          :disabled="disabled"
           :getChild="getChild"
           :loadMode="loadMode"
           @ready="handleReady"
@@ -13,6 +14,7 @@
       </tree>
 
       <search-list
+          :disabled="disabled"
           @check="handleCheck"
           :max-checked="maxChecked"
           ref="searchList"
@@ -78,6 +80,12 @@ export default {
     loadFailed : {
       type    : Boolean,
       default : false,
+    },
+    disabled : {
+      type : Array,
+      default() {
+        return [];
+      },
     },
   },
   data() {

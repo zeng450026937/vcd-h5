@@ -26,6 +26,12 @@ export default {
     getChild : {
       type : Function,
     },
+    disabled : {
+      type : Array,
+      default() {
+        return [];
+      },
+    },
   },
 
   data() {
@@ -69,6 +75,8 @@ export default {
       }
     },
     checkEntity(id) {
+      if (this.disabled.indexOf(id) > -1) return;
+
       const node = this.treeStore.getNode(id);
 
       this.treeStore.checkNode(id, !node.checked).then((nodes) => {
@@ -164,7 +172,13 @@ export default {
       return `<div class="entity-node" node-pid="${row.node.parentId}" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
                 <div node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">
                   <input id="${row.node.id}" class="tree-checkbox" ${row.checked ? 'checked' : ''} type="checkbox"/>
-                  <label check-box node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}" class="tree-checkbox-label" for="${row.node.id}">
+                  <label
+                    check-box node-id="${row.node.id}"
+                    node-pid="${row.node.parentId}"
+                    node-type="${row.node.type}"
+                    class="${this.disabled.indexOf(row.node.id) > -1 ? 'tree-checkbox-disabled' : 'tree-checkbox-label'}"
+                    for="${row.node.id}">
+
                     <div class="avatar" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">
                        ${this.getAvatar(row)}
                     </div>
@@ -172,6 +186,7 @@ export default {
                        <span class="name" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">${row.name}</span>
                        <span class="number" node-id="${row.node.id}" node-pid="${row.node.parentId}" node-type="${row.node.type}">${row.number}</span>
                      </div>
+
                   </label>
                 </div>
               </div>`;
@@ -236,7 +251,10 @@ export default {
     createTree(options) {
       // TODO api 接口
       options.loadMode = this.loadMode;
+      options.disabled = this.disabled;
+
       this.treeStore = new TreeStore(options);
+
       this.createTreeViews(this.treeStore);
     },
   },
@@ -364,6 +382,13 @@ export default {
     border-radius: 2px;
     text-align: center;
   }
+}
+.tree-checkbox-disabled {
+  cursor: pointer;
+  display: flex;
+  line-height: 14px;
+  align-items: center;
+  margin-left: 16px;
 }
 .tree-checkbox-label {
   cursor: pointer;

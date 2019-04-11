@@ -20,6 +20,12 @@ export default {
     maxChecked : {
       type : Number,
     },
+    disabled : {
+      type : Array,
+      default() {
+        return [];
+      },
+    },
   },
   data() {
     return {
@@ -53,7 +59,7 @@ export default {
           <label
               check-box
               node-id="${row.id}"
-              class="tree-checkbox-label"
+              class="${this.disabled.indexOf(row.id) > -1 ? 'tree-checkbox-label-disabled' : 'tree-checkbox-label'}"
               for="${row.id}">
           </label>
 
@@ -130,6 +136,8 @@ export default {
 
       const checkItem = this.list.find((n) => n.id === id);
 
+      if (this.disabled.indexOf(id) > -1) return;
+
       if (this.defaultChecked && id === this.defaultChecked.id && checkItem.checked) return;
 
       checkItem.checked = !checkItem.checked;
@@ -184,6 +192,10 @@ export default {
         display: flex;
         align-items: center;
         line-height: 14px;
+      }
+      .tree-checkbox-label-disabled{
+        width: 16px;
+        height: 16px;
       }
 
       .tree-checkbox-label::before {

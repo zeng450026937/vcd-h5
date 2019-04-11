@@ -15,6 +15,7 @@
 
         <div class="transfer-model-content pb-5  mt-5">
           <transfer
+              :disabled="disabled"
               :max-checked="maxChecked"
               :load-failed="dataLoadFailed"
               :search="searchContact"
@@ -102,6 +103,12 @@ export default {
     },
     contacts() {
       return this.$model.contact[this.storeName].originTree;
+    },
+    currentUser() {
+      return this.$model.contact.currentUser;
+    },
+    disabled() {
+      return this.currentUser ? [ this.currentUser.id ] : [];
     },
   },
   methods : {

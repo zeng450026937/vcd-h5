@@ -12,7 +12,14 @@ const LOAD_MODE = {
 const DEFAULT_MAX_CHECK = 50 * 10000;
 
 export default class TreeStore {
-  constructor({ data, expandLevel = 2, maxChecked = DEFAULT_MAX_CHECK, defaultChecked, loadMode = LOAD_MODE.OVERALL }) {
+  constructor({
+    data,
+    expandLevel = 2,
+    maxChecked = DEFAULT_MAX_CHECK,
+    defaultChecked,
+    loadMode = LOAD_MODE.OVERALL,
+    disabled = [],
+  }) {
     if (!Array.isArray(data)) return;
     console.time('generate Tree model cost time');
     this.loadMode = loadMode;
@@ -24,6 +31,7 @@ export default class TreeStore {
     this.checkedMap = {};
     this.asyncMap = {};
     this.asyncChecked = [];
+    this.disabled = disabled;
     this.genTree();
     this.correctDefaultChecked();
 
@@ -380,7 +388,9 @@ export default class TreeStore {
     for (let i = 0; i < offspring.length; i++) {
       const nodeId = this.getNodeId(offspring[i]);
 
-      if (nodeId === this.defaultChecked) continue;
+      /* eslint-disable no-continue */
+      if (nodeId === this.defaultChecked || this.disabled.indexOf(nodeId) > -1) continue;
+      /* eslint-enable no-continue */
 
       if (this.isSetMaxCheck()) {
         const checkedNum = this.getChecked().length;
