@@ -93,7 +93,7 @@
                 <span class="w-20 text-black6">会议成员</span>
                 <div class="flex flex-col flex-grow">
                   <div class="w-full" v-if="currentEvent.invitees">
-                    <template v-for="(item, index ) in currentEvent.invitees.invitee">
+                    <template v-for="(item, index ) in sortedInvitee">
                       <div :key="index" class="flex items-center mb-2">
                         <div class="h-6 w-6 rounded-full flex items-center justify-center"
                              :class="{[`bg-${item.role}`]: true}">
@@ -103,7 +103,7 @@
                           <span class="ml-1 mr-2 truncate">
                             {{item['display-text']}}
                           </span>
-                          （<span class="truncate">{{item['display-text']}}</span>）
+                          <!--（<span class="truncate">{{item['display-text']}}</span>）-->
                         </div>
                       </div>
                     </template>
@@ -185,6 +185,15 @@ export default {
     }, 1000);
   },
   computed : {
+    sortedInvitee() {
+      const { invitee } = this.currentEvent.invitees;
+
+      return [
+        ...invitee.filter((i) => i.role === 'organizer'),
+        ...invitee.filter((i) => i.role === 'presenter'),
+        ...invitee.filter((i) => i.role === 'attendee'),
+      ];
+    },
     currentEvent() {
       return this.$model.schedule.currentEvent || {};
     },

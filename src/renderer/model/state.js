@@ -115,7 +115,7 @@ model.provide({
       const width = 320;
       const height = 180;
       const offsetLeft = window.screen.width - width - 10;
-      const offsetTop = window.screen.height - height * callCount - 10;
+      const offsetTop = window.screen.height - height * callCount - 50;
 
       const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
 

@@ -35,7 +35,6 @@
 
 import moment from 'moment';
 import plainCalendar from '../../Common/CommonCalendar';
-import { MAIN } from '../../../router/constants';
 import 'moment/locale/zh-cn';
 
 export default {
@@ -63,6 +62,7 @@ export default {
   },
   methods : {
     disabledStartDate(startValue) {
+      startValue = moment(`${startValue.format('YYYY-MM-DD')} 00:00`)
       const preWeek = new Date().setHours(-7 * 24);
       const afterWeek = new Date().setHours(7 * 24);
 
