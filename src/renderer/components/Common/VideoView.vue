@@ -106,6 +106,9 @@ export default {
         && this.source.endsWith('local')
         && this.$model.setting.enableLocalVideo;
     },
+    isRemoteStream() {
+      return this.source.endsWith('remote');
+    },
     localVideoPath() {
       return path.resolve(__static, 'video/default-video.webm');
     },
@@ -135,8 +138,7 @@ export default {
       }
       if (this.hideVideo) {
         this.videoElement.style.display = 'none';
-
-        return;
+        if (!this.isRemoteStream) return;
       }
       if (this.enableLocalVideo) {
         this.videoElement.src = this.localVideoPath;
@@ -171,11 +173,11 @@ export default {
       async handler(val) {
         await this.$nextTick();
         if (this.videoElement) {
+          this.onVideoStreamChanged(this.videoStream);
           if (val) { // 隐藏
             this.videoElement.style.display = 'none';
           }
           else {
-            this.onVideoStreamChanged(this.videoStream);
             this.videoElement.style.display = 'block';
           }
         }

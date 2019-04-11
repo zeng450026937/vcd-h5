@@ -14,7 +14,7 @@
             <div style="margin-top: 6px;"
                  class="rounded-sm px-2 py-1 bg-chat-others"
                  :class="{'bg-chat-mine': message.type === 'receive'}">
-              <div class="leading-normal">{{message.content}}</div>
+              <div class="leading-normal whitespace-pre-wrap">{{message.content}}</div>
             </div>
           </div>
         </div>
