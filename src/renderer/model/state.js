@@ -215,6 +215,11 @@ model.provide({
 
         if (record.connected) record.endTime = Date.now();
       }
+
+      else if (info.status === 'decline') {
+        if (!record.connected) record.refuse = true;
+      }
+
       if (info.pin) record.pin = info.pin;
       // console.warn(record);
       await callRecordDB.updateRecord('id', info.id, record);
