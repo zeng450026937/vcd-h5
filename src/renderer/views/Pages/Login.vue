@@ -50,6 +50,10 @@ export default {
   #login-content {
     .side {
       width: 50%;
+      background-image: url("../../assets/login-bg.png");
+      background-repeat: no-repeat;
+      background-size: 50% 100%;
+      background-attachment: fixed;
     }
     .main {
       width: 50%;

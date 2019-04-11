@@ -15,7 +15,7 @@
     <div v-if="status===4 || status ===3" class="mt-1 w-1/2">
       <a-progress :percent="percent" size="small" status="active" />
     </div>
-    <div class="mt-5 w-1/2">
+    <div class="mt-5 w-1/2 text-center">
       <a-button
           v-if="status!==3"
           :disabled="status!==2"
