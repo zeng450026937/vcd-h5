@@ -202,8 +202,14 @@ export default {
     },
     shareUrl() {
       const domain = this.$model.account.proxy || this.$model.account.loginData.server;
+      const isCloud = this.$model.account.serverType === 'cloud';
 
-      return `http://${domain}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+      if (isCloud) {
+        return `http://${domain}/meeting/mailDetail?conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+      }
+      else {
+        return `http://${domain}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
+      }
     },
     shareQRCode() {
       return jrQrcode.getQrBase64(this.shareUrl);
