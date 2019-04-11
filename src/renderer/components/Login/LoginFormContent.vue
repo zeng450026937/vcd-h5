@@ -1,11 +1,10 @@
 <template>
-  <div id="login-form-content"
-       class="flex flex-col bg-white shadow"
-       style="width: 480px;height: 538px;">
-    <div class="flex items-center justify-center w-full bg-main-theme" style="height: 160px;">
-      <span class="text-4xl font-semibold text-white">Yealink</span>
-    </div>
-    <div class="flex flex-col pt-10 px-24">
+  <div id="login-form-content" class="flex flex-col bg-white shadow w-full h-full relative">
+
+    <div class="flex flex-col content">
+      <div class="login-title">
+        <span>登录</span>
+      </div>
       <a-form class="login-form" @submit="handleLogin" :form="form">
         <a-form-item class="mb-4">
           <a-auto-complete
@@ -65,7 +64,7 @@
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
         </a-form-item>
-        <div class="flex justify-between">
+        <div class="flex justify-between mt-24px">
           <a-checkbox class="text-xs text-black6"
                       :checked="rmbPassword"
                       @change="rmbPassword = !rmbPassword"
@@ -80,22 +79,22 @@
         <a-form-item class="mt-9 mb-0">
           <div class="flex">
             <div class="w-1/2 mr-2">
-              <a-button @click="toMeeting" block>加入会议</a-button>
+              <a-button type="primary" htmlType="submit" block>登录</a-button>
             </div>
             <div class="w-1/2 ml-2">
-              <a-button type="primary" htmlType="submit" block>登录</a-button>
+              <a-button @click="toMeeting" block>加入会议</a-button>
             </div>
           </div>
         </a-form-item>
       </a-form>
-      <div class="mt-5 text-xs text-center text-black6">
+      <div class="text-xs text-center text-black6 mt-48px h-28px">
         <template v-if="serverType === 'cloud'">
           <span class="cursor-pointer leading-tight"
                 @click="toForget">忘记密码</span>
-          <a-divider type="vertical" class="mx-5 bg-divider"/>
+          <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
           <span class="cursor-pointer leading-tight"
                 @click="toRegister">注册账号</span>
-          <a-divider type="vertical" class="mx-5 bg-divider"/>
+          <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
         </template>
         <a-badge v-if="hasNewVersion">
               <span slot="count"
@@ -105,18 +104,18 @@
               </span>
           <span class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
         </a-badge>
-        <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
+        <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">服务器设置</span>
       </div>
 
-      <div class="flex mt-5 items-center">
-        <p class="text-xs flex text-center leading-tight text-black9">
-          点击登录则代表您同意
-          <span class="text-indigo-light cursor-pointer">《用户协议》</span>
-          和
-          <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
-        </p>
-      </div>
 
+    </div>
+    <div class="login-footer flex  items-center">
+      <p class="text-xs flex text-center leading-tight text-black9">
+        点击登录则代表您同意
+        <span class="text-indigo-light cursor-pointer">《用户协议》</span>
+        和
+        <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
+      </p>
     </div>
   </div>
 </template>
@@ -125,11 +124,15 @@
 import { cloneDeep, debounce } from 'lodash';
 import { LOGIN_STORAGE } from '../../storage';
 import { isCapsLockOn } from '../../utils';
+import LoginHeader from './LoginHeader.vue';
 
 const { shell } = require('electron');
 
 export default {
-  name : 'YMSLoginFormContent',
+  name       : 'YMSLoginFormContent',
+  components : {
+    LoginHeader,
+  },
   data() {
     const dSearch = debounce((val = '') => {
       this.searchedAccounts = this.modifiedAccounts.filter((a) => a.account.indexOf(val) >= 0);
@@ -263,10 +266,46 @@ export default {
 
 <style lang="less">
   #login-form-content{
-    .login-form {
-      .ant-form-item-control {
-        line-height: unset;
+    height: 100%;
+    .mt-48px{
+      margin-top: 48px;
+    }
+    .mt-24px {
+      margin-top: 24px;
+    }
+    .h-28px {
+      height: 28px;
+    }
+    .content {
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      .login-form {
+        width: 55%;
+        .ant-form-item-control {
+          line-height: unset;
+        }
       }
+    }
+    .login-title {
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: flex-end;
+      justify-content: left;
+      width: 55%;
+      padding-bottom: 48px;
+    }
+
+    .login-footer {
+      height: 40px;
+      width: 100%;
+      background: #F0F2F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      bottom: 0;
     }
     .ant-form-item{
       margin-bottom: 12px;

@@ -139,7 +139,10 @@ export default {
   #instant-meeting {
     background: #f0f2f8;
     .meeting-transfer-content {
-      margin: 16px 64px;
+      margin: 16px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #E0E0E0;
     }
   }
 </style>

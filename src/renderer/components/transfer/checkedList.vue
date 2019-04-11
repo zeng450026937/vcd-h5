@@ -108,7 +108,7 @@ export default {
 }
 .content {
   user-select: none;
-  border:1px solid #ccc;
+  border:1px solid #E0E0E0;
   height: 100%;
   width: 100%;
 
@@ -135,7 +135,7 @@ export default {
 
   .operate-bar {
     height: 40px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #E0E0E0;
   }
   .list-scroll-content {
     height: calc( 100% - 40px );

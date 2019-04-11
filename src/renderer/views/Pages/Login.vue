@@ -1,19 +1,20 @@
 <template>
-  <a-layout id="login-content" class="h-full bg-transparent">
-    <div class="flex flex-col items-center justify-center h-full">
-      <div v-show="!isInSettingContent">
-        <login-form-content @openSetting="isInSettingContent = true"/>
-      </div>
-      <login-setting-content v-if="isInSettingContent"
-                                 @closeSetting="isInSettingContent = false"/>
-
-      <div class="flex mt-4 items-center">
-        <p class="text-xs flex text-center leading-tight text-white">
-          Copyright © 2018 Yealink Inc. All rights reserved.
-        </p>
-      </div>
+  <div id="login-content" class="h-full flex">
+    <div class="side">
+      <login-header :useOperationBar="false" />
     </div>
-  </a-layout>
+    <div class="main">
+      <login-header :use-drop-down="!showSetting" :background="'#ffffff'" :use-title="false" />
+      <div class="w-full content" v-show="!showSetting">
+        <login-form-content @openSetting="openSetting"/>
+      </div>
+
+      <div class="w-full content" v-if="showSetting">
+        <login-setting-content  @closeSetting="closeSetting"/>
+      </div>
+
+    </div>
+  </div>
 </template>
 
 <script>
@@ -21,17 +22,43 @@
 
 import LoginFormContent from '../../components/Login/LoginFormContent.vue';
 import LoginSettingContent from '../../components/Login/LoginSettingContent.vue';
+import LoginHeader from '../../components/Login/LoginHeader.vue'
 
 export default {
   name       : 'YMSLoginContent',
   components : {
     LoginFormContent,
     LoginSettingContent,
+    LoginHeader,
   },
   data() {
     return {
-      isInSettingContent : false,
+      showSetting : false,
     };
+  },
+  methods : {
+    openSetting() {
+      this.showSetting = true;
+    },
+    closeSetting() {
+      this.showSetting = false;
+    },
   },
 };
 </script>
+<style lang="less">
+  #login-content {
+    .side {
+      width: 50%;
+    }
+    .main {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .content {
+        height: calc(100% - 36px );
+      }
+    }
+  }
+</style>

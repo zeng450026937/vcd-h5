@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="h-full">
+  <div id="app" class="h-full w-full">
     <a-locale-provider :locale="locale">
       <router-view />
     </a-locale-provider>

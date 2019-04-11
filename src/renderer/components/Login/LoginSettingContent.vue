@@ -1,5 +1,5 @@
 <template>
-  <div id="login-setting-content" class="flex flex-col bg-white shadow" style="width: 480px;height: 538px;">
+  <div id="login-setting-content" class="flex flex-col bg-white shadow w-full">
     <div class="flex flex-grow">
       <a-tabs defaultActiveKey="1" class="w-full">
         <a-tab-pane tab="基本设置" key="1">
@@ -76,6 +76,7 @@ export default {
 
 <style lang="less">
   #login-setting-content {
+    height: 100%;
     .ant-tabs-bar {
       text-align: center;
       margin: 0;

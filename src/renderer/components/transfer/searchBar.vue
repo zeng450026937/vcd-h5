@@ -40,7 +40,7 @@ export default {
 <style lang="less" scoped>
 .content {
   height: 40px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #E0E0E0;
   .search-area{
     width: 100%;
     height: 100%;
