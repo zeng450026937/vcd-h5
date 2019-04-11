@@ -73,5 +73,12 @@ export default {
       });
     },
   },
+  watch : {
+    isLocked(val) {
+      if (!val) {
+        this.$rtc.conference.conference.lobby.allow();
+      }
+    },
+  },
 };
 </script>

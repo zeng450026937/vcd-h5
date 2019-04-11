@@ -199,6 +199,9 @@ export default {
     this.initRawAccounts();
   },
   computed : {
+    isCloud() {
+      return this.$model.account.serverType === 'cloud';
+    },
     serverType() {
       return this.$model.account.serverType;
     },
@@ -248,9 +251,9 @@ export default {
       return !errorNotice;
     },
     onAccountChange(value) {
-      const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+      const reg = /^[0-9]+$/;
 
-      if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
+      if (reg.test(value) || value === '') {
         if (value.length <= 64) {
           this.meetingInfo.number = value;
         }
@@ -258,9 +261,9 @@ export default {
     },
     onPasswordChange(e) {
       const { value } = e.target;
-      const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+      const reg = /^[0-9]+$/;
 
-      if ((!Number.isNaN(value) && reg.test(value)) || value === '') {
+      if (reg.test(value) || value === '') {
         this.meetingInfo.pin = value;
       }
     },

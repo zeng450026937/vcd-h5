@@ -122,7 +122,9 @@ export function formatCalendar(data) {
     cal.expiryTime = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
 
     cal.updateStatus = function() {
-      this.status = genMeetingStatus(this.startTime, this.expiryTime, this['remind-early']);
+      this.status = genMeetingStatus(this.startTime,
+        this.expiryTime,
+        this.remindEarly || this['remind-early']);
     };
     cal.updateStatus();
 

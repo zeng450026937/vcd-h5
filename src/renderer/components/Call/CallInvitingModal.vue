@@ -193,7 +193,7 @@ export default {
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;
-          this.isVideoConference = this.isVideoCall;
+          // this.isVideoConference = this.isVideoCall;
         })
         .catch(() => {
           this.confirmLoading = false;
@@ -216,7 +216,7 @@ export default {
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;
-          this.isVideoConference = this.isVideoCall;
+          // this.isVideoConference = this.isVideoCall;
         }).catch(() => {
           this.confirmLoading = false;
         });

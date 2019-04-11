@@ -66,7 +66,7 @@ export default {
       this.kom.dispatch('call.decline');
     },
     answerCall(toAudio = false) {
-      this.kom.dispatch('call.answer', { toAudio });
+      this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall });
       window.close();
     },
     transferToAudio() {

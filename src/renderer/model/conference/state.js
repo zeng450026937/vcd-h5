@@ -38,9 +38,13 @@ state.provide({
             }
             const { quality } = val.media;
 
-            if (quality <= 0 && !isShowSignalWarning && this.isConnected) { // 丢包率 > 12% (10%)
-              isShowSignalWarning = true;
-              this.warningNotice = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', this.isConnected ? 0 : 1);
+            if (quality <= 0 && !isShowSignalWarning) { // 丢包率 > 12% (10%)
+              setTimeout(() => {
+                if (this.isConnected) {
+                  isShowSignalWarning = true;
+                  this.warningNotice = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+                }
+              }, 500);
             }
             else {
               if (isShowSignalWarning) {
@@ -68,6 +72,10 @@ state.provide({
         clearInterval(this.durationTimer);
         this.duration = '00:00:00';
         this.signal = 4;
+        if (typeof this.warningNotice === 'function') {
+          this.warningNotice();
+          this.warningNotice = null;
+        }
       }
     },
   },

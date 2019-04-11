@@ -21,25 +21,46 @@ model.provide({
   },
   middleware : {
     call(ctx) {
-      let { number } = ctx.payload;
-      // 判断是否为IP 直播 10.81.45.13 or 10*86*5*3isVideoCall
-
-      number = number.replace(/\*/g, '.');
+      const { number } = ctx.payload;
 
       this.isVideoCall = ctx.payload.options.video;
+      let host;
 
-      if (net.isIP(number)) {
-        return rtc.ipcall.connect(number);
+      let target;
+
+      const toIP = (text) => text.replace(/\*/g, '.');
+
+      if (net.isIP(toIP(number))) {
+        target = host = toIP(number);
+      }
+      else if (/(\d+(\*\*\d+)?)@(.+)/.test(number)) {
+        target = RegExp.$1;
+        host = toIP(RegExp.$3 || RegExp.$2);
+      }
+      else if (/(.+)##(\d+(\*\*\d*)?)/.test(number)) {
+        target = RegExp.$2 || RegExp.$3;
+        host = toIP(RegExp.$1);
+      }
+      if (host && target) {
+        return rtc.ipcall.connect({ host, target });
       }
       const { call } = rtc;
 
       call.target = number;
 
-      return call.connect('send', ctx.payload.options);
+      return call.connect('send', ctx.payload.options).then(() => {
+        const setting = this.$getVM('setting');
+
+        if (setting.enableLocalVideo) return;
+        this.switchCallType(this.isVideoCall);
+      });
     },
     answer(ctx) {
-      const { toAudio } = ctx.payload;
+      const { toAudio, isVideoCall } = ctx.payload;
 
+      if (!toAudio) {
+        this.isVideoCall = isVideoCall;
+      }
       // FIXME 音视频切换的时序问题
       rtc.call.answer().then(() => {
         setTimeout(() => {
@@ -66,18 +87,23 @@ model.provide({
       return rtc.call.connected;
     },
   },
-  watch : {
-    async isVideoCall(val) {
-      if (!rtc.call.connected || val == null) return;
-      const setting = this.$getVM('setting');
-
-      if (setting.enableLocalVideo) return;
-      await rtc.call.localMedia.acquireDetachedStream(true, val)
+  methods : {
+    switchCallType(video) {
+      rtc.call.localMedia.acquireDetachedStream(true, video)
         .then((s) => rtc.call.channel.replaceLocalStream(s));
+    },
+  },
+  watch : {
+    isVideoCall(val) {
+      if (val == null) return;
+      this.switchCallType(val);
     },
     remoteStream(val) {
       if (!this.isConnected) return;
-      this.isVideoCall = val && val.getVideoTracks().length > 0;
+      if (!val || val.getVideoTracks().length === 0) {
+        // for to audio
+        this.isVideoCall = false;
+      }
     },
     isConnected(val) {
       if (!val) {

@@ -164,37 +164,33 @@ export default {
       if (key === '2') { // 会议大厅
         this.hasNewMeetingApply = false;
       }
-      else if (key === '3') { // jushoudayan1
+      else if (key === '3') { // 举手发言
         this.hasNewSpeakApply = false;
       }
       this.selectedGroup = key;
     },
     allowAllAttend() { // 允许入会
-      console.warn(this.waitingList);
-      this.waitingList.forEach((user) => {
-        user.allow(true);
-      });
+      this.$rtc.conference.conference.lobby.allow();
     },
     removeAllAttend() { // 拒绝入会
-      this.waitingList.forEach((user) => {
-        user.allow(false);
-      });
+      this.$rtc.conference.conference.lobby.refuse();
     },
     allowAllSpeak() { // 允许全部发言
-      this.speakApplyList.forEach((user) => {
-        this.$dispatch('conference.updateAudioStatus', { user, ingress: true });
-      });
+      const entities = this.speakApplyList.map((speak) => speak.entity);
+
+      this.$rtc.conference.information.users.setAudioFilter(entities, { ingress: false });
     },
     removeAllSpeak() { // 拒绝全部发言
-      this.speakApplyList.forEach((user) => {
-        this.$dispatch('conference.updateAudioStatus', { user, ingress: false });
-      });
+      const entities = this.speakApplyList.map((speak) => speak.entity);
+
+      this.$rtc.conference.information.users.setAudioFilter(entities, { ingress: false });
     },
     openSearch() {
-      if(this.activeGroupKey !== '1') {
+      if (this.activeGroupKey !== '1') {
         this.isOpenSearch = true;
-        this.activeGroupKey = '1'
-      }else {
+        this.activeGroupKey = '1';
+      }
+      else {
         this.isOpenSearch = !this.isOpenSearch;
       }
     },

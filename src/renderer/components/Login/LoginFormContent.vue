@@ -8,7 +8,13 @@
       <a-form class="login-form" @submit="handleLogin" :form="form">
         <a-form-item class="mb-4">
           <a-auto-complete
-              v-decorator="['account']"
+              v-decorator="[
+              'account',
+                {rules: [
+                  { required: true, message:'请输入电话或电子邮件'},
+                  {max: 64 , message:'账号不能超过64位'}
+                ]}
+              ]"
               class="certain-category-search w-full overflow-x-hidden"
               :dropdownMatchSelectWidth="false"
               optionLabelProp="value"
@@ -41,10 +47,16 @@
           </a-auto-complete>
         </a-form-item>
         <a-form-item class="mb-4">
-          <a-input v-decorator="['pin']"
-                   @keypress="passwordInputted"
-                   type="password"
-                   placeholder='密码'>
+          <a-input
+              v-decorator="[
+              'pin',
+                {rules: [
+                  {max: 64 , message:'密码不能超过64位'}
+                ]}
+              ]"
+              @keypress="passwordInputted"
+              type="password"
+              placeholder='密码'>
             <a-tooltip
                 slot="prefix"
                 :visible="isCapsLockOn"
