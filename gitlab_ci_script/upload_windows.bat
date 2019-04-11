@@ -13,9 +13,9 @@ cd %PACKAGE_UPLOAD_PATH%
 7z a ../%PACKAGE_NAME%.tar.gz ../%PACKAGE_NAME%.tar
 
 ::for /f %%i in ('echo %CI_COMMIT_TAG% ^|awk -F"-" "{print $1}"') do set TAG_PREFIX=%%i
-set TAG_PREFIX = "release"
+set TAG_PREFIX=release
 ::for /f %%i in ('echo %CI_COMMIT_TAG% ^|awk -F "-" "BEGIN{ OFS=\"-\" } {sub(/develop-|release-/,\"\",$0);print $0}"') do set VERSION=%%i
-set VERSION = %CI_COMMIT_TAG%
+set VERSION=%CI_COMMIT_TAG%
 
 curl -v -u %REPOSITORY_USER%:%REPOSITORY_PASSWORD% -T {../%PACKAGE_NAME%.tar.gz,../CHANGELOG.txt} %REPOSITORY_URL%/%PROJECT_NAME%/%MODULE_NAME%/%TAG_PREFIX%/%VERSION%/%1/
 ::=============================================================>

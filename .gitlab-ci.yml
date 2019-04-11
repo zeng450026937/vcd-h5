@@ -50,7 +50,7 @@ variables:
       rm -rf $PACKAGE_UPLOAD_PATH/*
     fi
     git log --graph -n 50  --pretty="[%cd] - <%an> %s" > CHANGELOG.txt
-    cp -a $PACKAGE_PATH gitlab_ci_upload
+    echo "cp -a $PACKAGE_PATH gitlab_ci_upload" | bash
     cd $PACKAGE_UPLOAD_PATH
     tar zcf ../$PACKAGE_NAME.tar.gz *
     

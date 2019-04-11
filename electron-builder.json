@@ -12,10 +12,12 @@
   },
   "nsis": {
     "createDesktopShortcut": "always",
-    "displayLanguageSelector": true,
+    "displayLanguageSelector": false,
     "menuCategory": "VC Desktop",
     "shortcutName": "VC Desktop",
     "oneClick": false,
+    "perMachine": true,
+    "allowElevation": true,
     "allowToChangeInstallationDirectory": true,
     "artifactName": "vc-desktop-${version}.${ext}",
     "differentialPackage": false
