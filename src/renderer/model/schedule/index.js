@@ -73,6 +73,7 @@ model.provide({
 
       await this.updateSchedule(booked);
 
+      // vue watcher is always tiggered in next tick.
       this.lastUpdated = Date.now();
 
       return this.toArray();
@@ -93,29 +94,22 @@ model.provide({
         // const finded = !!await this.db.templates.where('@plan-id').equals(planId).count();
 
         const finded = !!this.templates[planId];
-        const isPending = this.pendings.has(planId);
 
-        if (finded || isPending) return;
-
-        this.pendings.add(planId);
+        if (finded) return;
 
         tasks.push(
-          this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
-            .then(async(result) => {
-              result = fixTemplate(result);
-              // await this.db.templates.put(result);
-              this.templates[planId] = result;
-
-              this.pendings.delete(planId);
-            })
-            .catch((e) => logger.warn('fetch template failed. error: %s', e))
+          this.fetchTemplate(planId)
         );
       });
 
       await Promise.all(tasks);
     },
 
-    async bookConferenceUpdated(schedule) {
+    async bookConferenceUpdated(/* schedule */) {
+      // we do a full update currently
+      await this.fetch();
+
+      /*
       const templateUpdated = schedule['template-update'];
       const conferences = arrayify(schedule['conference-info']);
 
@@ -140,45 +134,56 @@ model.provide({
 
             delete this.templates[planId];
           }
-
-          return;
         }
 
         if (templateUpdated) {
           tasks.push(
-            this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
-              .then(async(result) => {
-                result = fixTemplate(result);
-                // await this.db.templates.put(result);
-                this.templates[planId] = result;
-              })
-              .catch((e) => logger.warn('fetch template failed. error: %s', e))
+            this.fetchTemplate(planId)
           );
         }
-
-        tasks.push(
-          this.fetch()
-        );
       });
 
       await Promise.all(tasks);
+
+      // vue watcher is always tiggered in next tick.
+      this.lastUpdated = Date.now();
+      // update schedule list
+      this.toArray();
+      */
+    },
+
+    async fetchTemplate(planId) {
+      const isPending = this.pendings.has(planId);
+
+      if (isPending) return;
+
+      // ignore error
+      const template = await this.cm[C.GET_BOOK_CONFERENCE_TEMPLATE](planId)
+        .catch((e) => logger.warn('fetch template failed. error: %s', e));
+
+      const fixed = fixTemplate(template);
+
+      // await this.db.templates.put(fixed);
+      this.templates[planId] = fixed;
+
+      this.pendings.delete(planId);
     },
     
     toArray() {
-      const { list, conferences, templates } = this;
+      const { merged, conferences, templates } = this;
       
-      list.length = 0;
+      merged.length = 0;
 
       Object.keys(conferences).forEach((recordId) => {
         const planId = conferences[recordId]['@plan-id'];
 
-        list.push({
-          ...templates[planId], // conference first
-          ...conferences[recordId],
+        merged.push({
+          ...templates[planId],
+          ...conferences[recordId], // conference first
         });
       });
 
-      return list;
+      return merged;
     },
 
     async getEnterpriseId() {

@@ -4,6 +4,8 @@ const DESC_KEY = 'conference-description';
 const TIMESTAMP_KEYS = [ 'last-update-time', 'start-time', 'expiry-time' ];
 
 export function fixConference(val) {
+  if (!val) return;
+  
   const desc = val[DESC_KEY];
 
   delete val[DESC_KEY];
@@ -16,6 +18,8 @@ export function fixConference(val) {
 }
 
 export function fixTemplate(val) {
+  if (!val) return;
+
   const info = val['conference-info'];
   const desc = info[DESC_KEY];
 
