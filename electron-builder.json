@@ -4,6 +4,7 @@
   "copyright": "Copyright ©2019 Yealink",
   "generateUpdatesFilesForAllChannels": false,
   "afterAllArtifactBuild": "./script/package-info.js",
+  "publish": null,
   "win": {
     "target": [
       "nsis"
@@ -16,7 +17,7 @@
     "menuCategory": "VC Desktop",
     "shortcutName": "VC Desktop",
     "oneClick": false,
-    "perMachine": true,
+    "perMachine": false,
     "allowElevation": true,
     "allowToChangeInstallationDirectory": true,
     "artifactName": "vc-desktop-${version}.${ext}",
