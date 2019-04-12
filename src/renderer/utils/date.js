@@ -5,11 +5,13 @@ function genDouble(num) {
 }
 
 export function isToday(time) {
-  return new Date().valueOf() - time.valueOf() < 1000 * 60 * 60 * 24;
+  const diff = time.valueOf() - new Date(new Date().toDateString()).valueOf();
+
+  return diff < 1000 * 60 * 60 * 24 && diff > 0;
 }
 
 export function isTomorrow(time) {
-  const diff = new Date(time).valueOf() - new Date(new Date().toDateString()).valueOf();
+  const diff = time.valueOf() - new Date(new Date().toDateString()).valueOf();
 
   
   return 24 * 60 * 60 * 1000 < diff && diff < 24 * 60 * 60 * 1000 * 2;

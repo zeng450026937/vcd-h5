@@ -7,7 +7,7 @@
             <a-iconfont type="icon-left"
                         class="text-grey-dark text-base mr-2 hover:text-purple-dark"
                         @click="goBack"/>
-            <span>通话详情</span>
+            <span>{{recordInfo.isConference ? '会议详情' : '通话详情'}}</span>
           </div>
           <div class="flex flex-grow"></div>
           <app-header/>
@@ -18,7 +18,7 @@
         <div class="flex w-3/4 flex-col h-full">
           <div>
 
-            <div class="flex py-5 items-center w-full border-b" v-if="!records[0].isConference">
+            <div class="flex py-5 items-center w-full border-b" v-if="!this.recordInfo.isConference">
               <div class="flex flex-col truncate">
                 <div class="font-semibold leading-normal text-base items-center truncate">
                   {{contact.name}}
@@ -55,7 +55,7 @@
 
           </div>
           <div>
-            <div class="flex flex-col py-5 border-b" v-if="!records[0].isConference">
+            <div class="flex flex-col py-5 border-b" v-if="!this.recordInfo.isConference">
               <div v-if="!contact.unknown">
                 <a-row class="text-xs">
                   <a-col :span="24" class="leading-tight">
@@ -90,7 +90,7 @@
                 </div>
               </div>
             </div>
-            <div class="flex flex-col py-5 border-b" v-if="records[0].isConference">
+            <div class="flex flex-col py-5 border-b" v-if="this.recordInfo.isConference">
               <div>
                 <div class="text-xs">
                   <div class="leading-tight flex">
@@ -102,9 +102,9 @@
             </div>
           </div>
           <div class="flex flex-col my-1 flex-grow overflow-y-auto">
-            <div v-for="(records, key) in recordGroup" :key="key">
-              <div class="text-semibold mt-3 leading-normal">{{key|genDateString}}</div>
-              <a-row class="mt-3 text-xs leading-tight" v-for="(record, index) in records" :key="index">
+            <div v-for="(group) in recordGroupList" :key="group.time">
+              <div class="text-semibold mt-3 leading-normal">{{group.time|genDateString}}</div>
+              <a-row class="mt-3 text-xs leading-tight" v-for="(record, index) in group.records" :key="index">
                 <a-col :span="6">{{record.startTime|getTime}}</a-col>
                 <a-col :span="13">
                   <div class="flex items-center" :class="{'text-red':!record.connected}">
@@ -119,12 +119,12 @@
         </div>
 
         <div class="flex justify-center py-2 border-t w-full">
-          <a-button @click="doVideo(records[0])" class="ml-4"
+          <a-button @click="doVideo(this.recordInfo)" class="ml-4"
                     type="primary">
             <a-iconfont type="icon-shipin"/>
             视频通话
           </a-button>
-          <a-button @click="doAudio(records[0])" class="ml-4"
+          <a-button @click="doAudio(this.recordInfo)" class="ml-4"
                     type="primary">
             <a-iconfont type="icon-yuyin"/>
             音频通话
@@ -156,14 +156,14 @@ export default {
   },
   data() {
     return {
-      recordGroup    : {},
-      showEditDrawer : false,
-      recordInfo     : null,
-      storeName      : null,
-      drawerType     : 'add',
-      contact        : {},
-      ready          : false,
-      records        : [],
+      recordGroupList : {},
+      showEditDrawer  : false,
+      recordInfo      : {},
+      storeName       : null,
+      drawerType      : 'add',
+      contact         : {},
+      ready           : false,
+      records         : [],
     };
   },
   computed : {
@@ -224,9 +224,20 @@ export default {
       const groupByTime = groupBy((i) => getDate(i.startTime));
 
       this.records = records;
-      this.recordGroup = groupByTime(records);
 
-      if (records[0].isConference) {
+      const recordGroup = groupByTime(records);
+      const recordGroupList = [];
+
+      Object.keys(recordGroup).reverse().forEach((key) => {
+        recordGroupList.push({
+          time    : key,
+          records : recordGroup[key],
+        });
+      });
+
+      this.recordGroupList = recordGroupList;
+      
+      if (this.recordInfo.isConference) {
         return this.ready = true;
       }
 

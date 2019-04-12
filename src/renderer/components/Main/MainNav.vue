@@ -57,9 +57,8 @@ export default {
       this.useSchedule = this.currentRoute.name === 'schedule';
 
       this.sidebar = this.$model.main.currentSidebar;
-      this.currentNav = this.sidebar.navs
-        ? this.sidebar.navs.find((n) => n.path === this.currentRoute.path)
-        : this.sidebar.currentPath;
+
+      this.currentNav = this.sidebar.navs.find((n) => n.path === this.currentRoute.path) || this.currentNav;
     },
     clickNav(nav) {
       this.currentNav = nav;
