@@ -5,13 +5,13 @@
 ##########################################################################
 variables:
   #项目名称
-  PROJECT_NAME: web_app
+  PROJECT_NAME: client
   #模块名称
   MODULE_NAME: vcd-h5
   #生成文件路径(必须具体到文件，支持通配符)
   PACKAGE_PATH: ./out/setup/{package-info.json,vc-desktop-*}
   #windows环境下生成文件路径(必须具体到文件，支持通配符)
-  PACKAGE_PATH_WINDOWS: .\out\setup\package-info.json+.\out\setup\vc-desktop-*
+  PACKAGE_PATH_WINDOWS: .\out\setup\package-info.json .\out\setup\vc-desktop-*
 
   #打包文件名
   PACKAGE_NAME: vcd-h5

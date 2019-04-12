@@ -6,9 +6,14 @@ if exist %PACKAGE_UPLOAD_PATH% (
 ) else (
     mkdir %PACKAGE_UPLOAD_PATH%
 )
+
 git log --graph -n 50  --pretty="[%%cd] - <%%an> %%s" > CHANGELOG.txt
-copy /Y %PACKAGE_PATH_WINDOWS% gitlab_ci_upload
+
+::copy /Y %PACKAGE_PATH_WINDOWS% %PACKAGE_UPLOAD_PATH%
+for %I in (%PACKAGE_PATH_WINDOWS%) do copy /Y %I %PACKAGE_UPLOAD_PATH%
+
 cd %PACKAGE_UPLOAD_PATH%
+
 7z a ../%PACKAGE_NAME%.tar *
 7z a ../%PACKAGE_NAME%.tar.gz ../%PACKAGE_NAME%.tar
 
