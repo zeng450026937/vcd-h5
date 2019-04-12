@@ -21,7 +21,12 @@
             <a-checkbox class="text-xs" :checked="shareSmoothMode" @change="shareSmoothMode = !shareSmoothMode">
               视频流畅度优先
             </a-checkbox>
-            <a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>
+            <a-tooltip placement="right" >
+              <template slot="title">
+                <span>开启后可提升内容共享的视频流畅度，但会增加电脑的性能损耗和带宽</span>
+              </template>
+              <a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>
+            </a-tooltip>
           </div>
         </div>
       </div>

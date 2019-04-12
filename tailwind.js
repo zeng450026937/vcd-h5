@@ -305,6 +305,7 @@ module.exports = {
     media         : '#1D212F',
 
     'list-select'    : '#D6DAEB',
+    'device-tag'     : '#D6DAEB',
     'list-hover'     : '#E1E5F2',
     divider          : '#E1E5F2',
     'card-border'    : '#E1E5F2',
@@ -580,6 +581,7 @@ module.exports = {
   */
 
   maxWidth : {
+    '1/2' : '50%',
     '4/5' : '80%',
     full  : '100%',
   },

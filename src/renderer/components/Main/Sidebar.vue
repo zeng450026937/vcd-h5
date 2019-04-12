@@ -4,7 +4,8 @@
       <div class="text-center mt-3 no-dragable">
 
         <a-popover placement="leftTop"
-                   trigger="click"
+                   :trigger="['hover', 'click']"
+                   :mouseEnterDelay="1"
                    overlayClassName="main-sidebar-popover">
           <template slot="content">
             <div class="flex flex-col items-center">

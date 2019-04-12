@@ -75,13 +75,19 @@ member.provide({
 
       return userList.filter((user) => user.isAudioApplicant()) || [];
     },
+    currentUser() {
+      return rtc.conference.information.users.currentUser;
+    },
+    currentUserIsPresenter() {
+      return this.currentUser && this.currentUser.isPresenter();
+    },
   },
   watch : {
     waitingList(val) {
-      this.hasNewMeetingApply = val && val.length > 0;
+      this.hasNewMeetingApply = this.currentUserIsPresenter && val && val.length > 0;
     },
     speakApplyList(val) {
-      this.hasNewSpeakApply = val && val.length > 0;
+      this.hasNewSpeakApply = this.currentUserIsPresenter && val && val.length > 0;
     },
   },
 });

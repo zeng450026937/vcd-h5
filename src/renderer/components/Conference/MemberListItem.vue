@@ -34,7 +34,8 @@
         </span>
       </div>
       <div v-if="!isApplyGroup">
-        <a-iconfont :type="videoIcon.icon"
+        <a-iconfont v-if="!item.isCastViewer()"
+                    :type="videoIcon.icon"
                     :title="videoIcon.title"
                     class="ml-4 text-base"
                     :class="{[`text-${videoIcon.color}`] : true,
@@ -56,30 +57,30 @@
                         class="ml-4 text-indigo cursor-pointer text-base"/>
           </a>
           <a-menu slot="overlay">
-            <a-menu-item v-if="showSetPresenterItem" key="0" @click="setPresenter">
+            <a-menu-item v-if="hasSetAsPresenter || hasSetAsVisitor" key="0" @click="setPresenter">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">{{setAsPresenterText}}</span>
               </div>
             </a-menu-item>
-            <a-menu-item v-if="currentIsPresenter" key="1" @click="setSpeaker">
+            <a-menu-item v-if="hasSetAsSpeaker" key="1" @click="setSpeaker">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">{{setAsSpeakerText}}</span>
               </div>
             </a-menu-item>
 
-            <a-menu-item v-if="showSetWaitItem" key="2" @click="setWaiting">
+            <a-menu-item v-if="hasSetAsWaiting" key="2" @click="setWaiting">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设为等待</span>
               </div>
             </a-menu-item>
 
-            <a-menu-item v-if="currentIsPresenter || item.isCurrentUser()" key="3" @click="showDeviceInfo">
+            <a-menu-item v-if="hasDeviceInfo" key="3" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">设备详情</span>
               </div>
             </a-menu-item>
 
-            <a-menu-item v-if="currentIsPresenter" key="4" @click="isShowKickOperation = true">
+            <a-menu-item v-if="hasKickConference" key="4" @click="isShowKickOperation = true">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
                 <span class="text-xs">移出会议</span>
               </div>
@@ -213,6 +214,25 @@ export default {
     props : [ 'filterText', 'selectedMember' ],
   },
   computed : {
+    // 几种操作项相应的规则
+    hasSetAsPresenter() { // 设为主持人 当前为主持人且操作对象不是主持人
+      return this.currentIsPresenter && !this.item.isPresenter();
+    },
+    hasSetAsVisitor() { // 设为访客 当前为主持人 且操作对象为非自己的主持人
+      return this.currentIsPresenter && this.item.isPresenter && !this.item.isOrganizer() && !this.item.isCurrentUser();
+    },
+    hasSetAsSpeaker() { // 设为演讲者 当前为主持人 且 当前会议模式是 主席模式
+      return this.currentIsPresenter && !this.isDefault;
+    },
+    hasSetAsWaiting() { // 设为等待 当前为主持人 且 操作对象不是 主持人
+      return this.currentIsPresenter && !this.item.isPresenter();
+    },
+    hasDeviceInfo() { // 设备详情 主持人 和 自己
+      return this.currentIsPresenter || this.item.isCurrentUser();
+    },
+    hasKickConference() { // 移出会议 主持人 对 非自己 以外的 人员
+      return this.currentIsPresenter && !this.item.isCurrentUser() && !this.item.isOrganizer();
+    },
     conferenceContent() {
       return () => document.getElementById('layout-conference-content');
     },
@@ -243,7 +263,7 @@ export default {
       return this.item.isAudioApplicant();
     },
     hasPermission() {
-      return (this.currentIsPresenter && !this.item.isOrganizer()) || this.item.isCurrentUser();
+      return this.currentIsPresenter || this.item.isCurrentUser();
     },
     audioIcon() {
       const iconMap = {
@@ -275,11 +295,7 @@ export default {
       return iconStatus;
     },
     setAsPresenterText() {
-      if (this.item.isPresenter() && !this.item.isOrganizer()) {
-        return '设为访客';
-      }
-
-      return '设为主持人';
+      return this.item.isPresenter() ? '设为访客' : '设为主持人';
     },
     setAsSpeakerText() {
       if (this.item.isDemonstrator()) {
@@ -287,12 +303,6 @@ export default {
       }
 
       return '设为演讲者';
-    },
-    showSetPresenterItem() {
-      return this.currentIsPresenter && !this.item.isOrganizer();
-    },
-    showSetWaitItem() {
-      return this.currentIsPresenter && !this.item.isPresenter();
     },
   },
   methods : {
@@ -357,14 +367,7 @@ export default {
         this.$dispatch('conference.updateAudioStatus', { user: this.item, ingress: status });
       }
       else { //  处理入会申请
-        const { lobby } = this.$rtc.conference.conference;
-
-        if (status) {
-          lobby.allow(this.item.entity);
-        }
-        else {
-          lobby.refuse(this.item.entity);
-        }
+        this.$dispatch('conference.handleMeetingApply', { user: this.item, status });
       }
     },
     showDeviceInfo() { // 显示设备详情

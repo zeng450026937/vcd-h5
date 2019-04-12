@@ -9,69 +9,59 @@
         <app-header/>
       </div>
     </div>
-    <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-hide">
+    <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-auto">
       <div>
-        <a-switch size="small" v-model="autoStart"/>
-        <span class="ml-5">{{$t('setting.common.autoStart')}}</span>
-      </div>
-      <div class="mt-4">
-        <a-switch size="small" v-model="hideWhenClose"/>
-        <span class="ml-5">{{$t('setting.common.forceMinimize')}}</span>
-      </div>
-      <div class="mt-6">
-        <span>{{$t('setting.common.language')}}</span>
-        <a-select v-model="language" class="w-48 ml-4" @change="handleLanguageChange">
-          <a-select-option v-for="(lang, index) in langList" :key="index"
-                            :value="lang.lang"
-          >{{lang.label}}</a-select-option>
-        </a-select>
-      </div>
-      <div class="mt-6">
-        <a-form :form="form">
-          <a-form-item>
-            <span>{{$t('setting.common.address')}}</span>
-            <a-input
-              v-decorator="[ 
-              'ytmsHostAddress',
-              { 
-                validateTrigger: 'blur',
-                rules: [
-                  { 
-                  validator: validateAddress,
-                  message: addressErrorText,
-                  }
-                ] 
-              }
-              ]"
-              class="ml-4 w-48" 
-              :placeholder="$t('setting.common.addressPlaceHolder')"
-            />
-          </a-form-item>
-        </a-form>
-        
-      </div>
-      <div class="mt-2">
-        <span>{{$t('setting.common.updateChannel')}}</span>
-        <a-select v-model="updateChannel" class="w-48 ml-4">
-          <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
-                            :value="channel.value"
-          >{{channel.label}}</a-select-option>
-        </a-select>
-      </div>
-      <div class="mt-8 flex align-top">
+        <div>
+          <a-switch size="small" v-model="autoStart"/>
+          <span class="ml-3">{{$t('setting.common.autoStart')}}</span>
+        </div>
+        <div class="mt-3">
+          <a-switch size="small" v-model="hideWhenClose"/>
+          <span class="ml-3">{{$t('setting.common.forceMinimize')}}</span>
+        </div>
+        <div class="mt-5">
+          <div>{{$t('setting.common.language')}}</div>
+          <a-select v-model="language" class="w-48 mt-3" @change="handleLanguageChange">
+            <a-select-option v-for="(lang, index) in langList" :key="index"
+                             :value="lang.lang"
+            >{{lang.label}}</a-select-option>
+          </a-select>
+        </div>
+        <div class="mt-5">
+          <a-form :form="form">
+            <a-form-item class="mb-0">
+              <div class="leading-none">{{$t('setting.common.address')}}</div>
+              <a-input
+                  v-decorator="[
+                  'ytmsHostAddress',
+                  {
+                    validateTrigger: 'blur',
+                    rules: [
+                      {
+                      validator: validateAddress,
+                      message: addressErrorText,
+                      }
+                    ]
+                  }]"
+                  class="w-48 mt-3"
+                  :placeholder="$t('setting.common.addressPlaceHolder')"
+              />
+            </a-form-item>
+          </a-form>
+        </div>
+        <div class="mt-5">
+          <div>{{$t('setting.common.updateChannel')}}</div>
+          <a-select v-model="updateChannel" class="w-48 mt-3">
+            <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
+                             :value="channel.value"
+            >{{channel.label}}</a-select-option>
+          </a-select>
+        </div>
+        <div class="mt-5 align-top">
         <div class="mt-2">{{$t('setting.common.property')}}</div>
-        <div class="ml-4 flex-1">
+        <div class="flex-1">
 
-          <div class="mt-2 flex flex-col">
-            <div>
-              <a-tag v-for="(tag,index) in tags"
-                  :key="tag"
-                  class="mb-2"
-                  color="lightslategray"
-                  closable
-                  @close="handleDeleteProperty(index)">{{tag}}
-              </a-tag>
-            </div>
+          <div class="mt-3 flex flex-col">
             <template v-if="tags.length < 20">
               <a-tag v-if="!showAddPropetyInput"
                      class="w-60 h-8 flex items-center justify-center"
@@ -82,8 +72,7 @@
                   {{$t('setting.common.addProperty')}}
                 </div>
               </a-tag>
-              <div v-show="showAddPropetyInput"
-                   class="mb-2">
+              <div v-show="showAddPropetyInput">
                 <a-input v-model="addPropertyText"
                          ref="propertyInput"
                          maxlength="64"
@@ -98,11 +87,20 @@
             <a-tag v-else color="red" class="w-60 h-8 flex items-center justify-center">
               {{$t('setting.common.fullPropertyNotice')}}
             </a-tag>
+            <div class="flex flex-wrap mt-3">
+              <template v-for="(tag,index) in tags">
+                <div class="h-8 mb-2 flex items-center justify-center bg-device-tag mr-3 px-4 rounded"
+                     :key="index">
+                  <span>{{tag}}</span>
+                  <a-iconfont type="icon-guanbi"
+                              @click="handleDeleteProperty(index)"
+                              class="ml-3 text-black6 hover:text-red cursor-pointer"/>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </div>
-      <div class="mt-10">
-        <a-button type="primary" class="w-32" @click="handleNoodGuide">{{$t('setting.common.noobGuide')}}</a-button>
       </div>
     </div>
   </a-layout>

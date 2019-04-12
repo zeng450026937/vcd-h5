@@ -147,6 +147,21 @@ model.provide({
 
       user.setVideoFilter({ ingress });
     },
+
+    async handleMeetingApply(ctx, next) {
+      const { user, status } = ctx.payload;
+
+      const { lobby } = rtc.conference.conference;
+
+      if (status) {
+        lobby.allow(user.entity).then(() => {
+          this.messageTextList.push(`${user.displayText} 加入会议`);
+        });
+      }
+      else {
+        lobby.refuse(user.entity);
+      }
+    },
   },
   methods : {
     onAudioStatusChanged(status, oldStatus) {
@@ -207,8 +222,9 @@ model.provide({
       }
     },
     onRoleChanged(role, oldRole) {
-      if (role === 'waiting') this.$message.info('您已被主持人移到会议大厅');
-      else if (oldRole === 'waiting') this.$message.info('您已被主持人批准进入会议');
+      console.warn(role, oldRole);
+      if (oldRole && role === 'waiting') this.$message.info('您已被主持人移到会议大厅');
+      else if (role && oldRole === 'waiting') this.$message.info('您已被主持人批准进入会议');
     },
     getUserAudioStatus(user) {
       if (user.isCurrentUser()) {
@@ -232,7 +248,9 @@ model.provide({
     permission  : 'onPermissionChanged',
     demostate   : 'onDemostateChanged',
     role        : 'onRoleChanged',
-    addedUser(val) {
+    async addedUser(val) {
+      await Promise.resolve();
+      if (val.isOnHold()) return;
       this.messageTextList.push(`${val.displayText} 加入会议`);
     },
     deletedUser(val) {

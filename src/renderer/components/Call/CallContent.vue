@@ -16,16 +16,16 @@
                         @click="maxCallContent"/>
             <template v-if="isInCallMain">
               <template v-if="isConnected">
-                <a-iconfont type="icon-tianjialianxiren" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo text-base"
                             @click="showInviteModal"/>
                 <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
                          class="shadow-none"
                          :dot="hasNewMessage">
-                  <a-iconfont type="icon-liaotian" class="ml-5 cursor-pointer hover:text-indigo text-base"
+                  <a-iconfont type="icon-liaotian" class="ml-4 cursor-pointer hover:text-indigo text-base"
                               @click="openDrawer('TabChatting')"/>
                 </a-badge>
               </template>
-              <a-iconfont type="icon-kongzhi" class="ml-5 cursor-pointer hover:text-indigo text-base"
+              <a-iconfont type="icon-kongzhi" class="ml-4 cursor-pointer hover:text-indigo text-base"
                           @click="openDrawer('TabSetting')"/>
             </template>
           </div>

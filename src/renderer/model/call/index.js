@@ -97,6 +97,13 @@ model.provide({
     isVideoCall(val) {
       if (val == null) return;
       this.switchCallType(val);
+      if (!val) { // 不是视频通话 有辅流则关闭辅流
+        const shareChannel = rtc.call.share.channel;
+
+        if (shareChannel.localStream || shareChannel.remoteStream) {
+          shareChannel.disconnect();
+        }
+      }
     },
     remoteStream(val) {
       if (!this.isConnected) return;

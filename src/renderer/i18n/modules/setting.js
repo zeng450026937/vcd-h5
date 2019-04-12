@@ -50,7 +50,7 @@ module.exports = {
         noneCamera        : '看不到任何视频',
         questionNotice    : '如仍有问题，请访问我们的',
         techniqueCenter   : '支持中心',
-        enableHDVideo     : '启用高清视频',
+        enableHDVideo     : '启用超清视频',
         enableHWSpeed     : '启用硬件加速',
         enableMirroring   : '启用视频镜像效果',
         disableVideo      : '加入会议时不开启摄像头',

@@ -65,7 +65,8 @@
               <span class="leading-normal">{{numberTitle}}</span>
               <a-input :placeholder="inputPlaceholder"
                        ref="numberInput"
-                       v-model="address"
+                       v-model.trim="address"
+                       @keyup.enter="handleOk"
                        style="width: 280px;" class="ml-5"/>
             </div>
           </div>
@@ -142,11 +143,11 @@ export default {
       switch (this.protocol) {
         case 'SIP':
         case 'H.323':
-          return '请输入IP地址或者URI';
+          return '请输入IP地址或URI';
         case 'RTMP':
-          return '地址以rtmp://或rtmps://开头';
+          return '请输入RTMP地址';
         case 'SFB(Lync)':
-          return '请输入SFB(Lync)账号信息';
+          return '请输入SfB (Lync)账号';
         default:
           return '';
       }
@@ -169,6 +170,7 @@ export default {
       this.selectedContact = data;
     },
     handleOk() {
+      if (!this.address) return;
       if (this.confirmLoading) return;
       this.confirmLoading = true;
 
@@ -191,7 +193,7 @@ export default {
 
       this.$rtc.conference.conference.addUserBatch(users)
         .then(() => {
-          this.$message.info('邀请发送成功');
+          this.$message.info('已邀请');
           this.confirmLoading = false;
           this.visible = false;
         })
@@ -201,10 +203,17 @@ export default {
         });
     },
     inviteOther() {
+      if (this.$rtc.conference.information.users.user.findIndex((user) => user.phone === this.address) >= 0) {
+        this.$message.info('该成员已在会议中');
+        this.confirmLoading = false;
+        
+        return;
+      }
+      this.$message.info('已邀请');
       this.$dispatch('conference.invite.invite', { protocol: this.protocol, address: this.address }).then(() => {
         this.$message.info('邀请成功');
         this.confirmLoading = false;
-        this.visible = false;
+        this.address = '';
       }).catch((err) => {
         this.$message.info('邀请失败,请重试!');
         this.confirmLoading = false;

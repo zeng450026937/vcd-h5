@@ -37,8 +37,23 @@ export default {
       return (window.opener && window.opener.rtc) || window.rtc;
     },
     shareStream() {
-      return this.rtc.conference.shareChannel.remoteStream
-      || this.rtc.conference.shareChannel.localStream;
+      if (this.conferenceConnected) {
+        return this.rtc.conference.shareChannel.remoteStream
+        || this.rtc.conference.shareChannel.localStream;
+      }
+      else if (this.callConnected) {
+        return this.rtc.call.share.channel.remoteStream
+          || this.rtc.call.share.channel.localStream;
+      }
+      else {
+        return this.closeWindow();
+      }
+    },
+    conferenceConnected() {
+      return this.rtc.conference.connected;
+    },
+    callConnected() {
+      return this.rtc.call.connected;
     },
   },
   methods : {

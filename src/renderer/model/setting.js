@@ -19,7 +19,7 @@ model.provide({
       autoStart                  : false,
       autoUpdate                 : true,
       updateChannel              : 'stable',
-      hideWhenClose              : true,
+      hideWhenClose              : false,
       tags                       : [],
       // ytms
       ytmsHostAddress            : '',

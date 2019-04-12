@@ -23,7 +23,7 @@
         <a-iconfont :type="audioIcon.icon"/>
       </a-button>
       <!--分享辅流-->
-      <a-button v-if="isVideoCall"
+      <a-button v-if="isVideoCall && isConnected"
                 shape="circle"
                 class="control-btn"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
@@ -37,7 +37,7 @@
           overlayClassName="more-panel-popover"
       >
         <div slot="content" class="popover-content">
-          <div v-if="isVideoCall"
+          <div v-if="isVideoCall && isConnected"
                class="popover-content-item hover:bg-list-hover"
                @click="toAudioCall">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
@@ -108,6 +108,9 @@ export default {
     },
     callStatus() {
       return this.$model.state.callStatus;
+    },
+    isConnected() {
+      return this.callStatus === 'connected';
     },
     audioIcon() {
       const iconMap = {

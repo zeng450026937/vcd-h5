@@ -5,7 +5,6 @@ const statistics = new Vuem();
 function formatStatistics(data) {
   // if (!data) return null;
   if (!data) {
-    console.warn('DATA NULL')
     data = {};
   }
   const DEFAULT_TEXT = '--';
@@ -430,24 +429,24 @@ function getTotalOutgoingBitrate(signalData) {
     const { audio, video } = media.outbound;
 
     if (audio) {
-      total += audio.transport
-        ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
+      total += audio.outgoingBitrate;
+      // audio.transport ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
     }
     if (video) {
-      total += video.transport
-        ? video.transport.outgoingBitrate : video.outgoingBitrate;
+      total += video.outgoingBitrate;
+      // video.transport ? video.transport.outgoingBitrate : video.outgoingBitrate;
     }
   }
   if (share && share.outbound) {
     const { audio, video } = share.outbound;
 
     if (audio) {
-      total += audio.transport
-        ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
+      total += audio.outgoingBitrate;
+      // audio.transport ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
     }
     if (video) {
-      total += video.transport
-        ? video.transport.outgoingBitrate : video.outgoingBitrate;
+      total += video.outgoingBitrate;
+      // video.transport ? video.transport.outgoingBitrate : video.outgoingBitrate;
     }
   }
 
@@ -468,24 +467,24 @@ function getTotalIncomingBitrate(signalData) {
     const { audio, video } = media.inbound;
 
     if (audio) {
-      total += audio.transport
-        ? audio.transport.incomingBitrate : audio.incomingBitrate;
+      total += audio.incomingBitrate;
+      // audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
     }
     if (video) {
-      total += video.transport
-        ? video.transport.incomingBitrate : video.incomingBitrate;
+      total += video.incomingBitrate;
+      // video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
     }
   }
   if (share && share.inbound) {
     const { audio, video } = share.inbound;
 
     if (audio) {
-      total += audio.transport
-        ? audio.transport.incomingBitrate : audio.incomingBitrate;
+      total += audio.incomingBitrate;
+      // audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
     }
     if (video) {
-      total += video.transport
-        ? video.transport.incomingBitrate : video.incomingBitrate;
+      total += video.incomingBitrate;
+      // video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
     }
   }
 
