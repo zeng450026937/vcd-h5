@@ -124,7 +124,7 @@ export function formatCalendar(data) {
     cal.updateStatus = function() {
       this.status = genMeetingStatus(this.startTime,
         this.expiryTime,
-        this.remindEarly || this['remind-early']);
+        this.createEarly || this['create-early']);
     };
     cal.updateStatus();
 
