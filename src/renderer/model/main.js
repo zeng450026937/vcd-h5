@@ -56,7 +56,7 @@ const initialSidebar = () => {
       text        : '日程',
       name        : 'schedule',
       currentPath : sideNavs.schedule.path,
-      navs        : [],
+      navs        : [ sideNavs.schedule ],
     },
     {
       icon        : 'icon-lianxiren',
