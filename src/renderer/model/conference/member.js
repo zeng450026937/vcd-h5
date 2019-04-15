@@ -67,7 +67,7 @@ member.provide({
       const { userList } = rtc.conference.information.users;
       // 等待大厅
 
-      return userList.filter((user) => user.isOnHold());
+      return userList.filter((user) => user.isOnHold()).reverse();
     },
     speakApplyList() {
       const { userList } = rtc.conference.information.users;
