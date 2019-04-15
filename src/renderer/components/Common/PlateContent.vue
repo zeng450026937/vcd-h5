@@ -10,7 +10,7 @@
            @long-press-stop="onLongPressedEnd(n)">
 
         <div v-if="!n.isStart || hideAlpha" class="w-14 h-14">
-          <a-button class="w-full h-full">
+          <a-button :id="`plate-${n.num}`" class="w-full h-full">
             <div class="flex flex-col justify-center items-center h-full">
               <span class="text-xl">{{n.num}}</span>
               <span v-if="!hideAlpha" class="text-xs text-black6">{{n.alpha}}</span>
@@ -28,7 +28,8 @@
                       @cancel="clickAt">
           <span slot="icon" />
           <div class="w-14 h-14">
-            <a-button class="w-full h-full">
+            <a-button :id="`plate-${n.num}`"
+                      class="w-full h-full">
               <div class="flex flex-col justify-center items-center h-full">
                 <span class="text-xl">{{n.num}}</span>
                 <span v-if="!hideAlpha" class="text-xs text-black6">{{n.alpha}}</span>
@@ -77,6 +78,11 @@ export default {
     };
   },
   methods : {
+    showClickAnimation(val) {
+      const ele = document.getElementById(`plate-${val}`);
+
+      if (ele) document.getElementById(`plate-${val}`).click();
+    },
     clickPoint() {
       this.$emit('inputNumber', '.');
       this.showStarSwitch = false;

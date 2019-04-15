@@ -11,6 +11,7 @@ meeting.provide({
   data() {
     return {
       meetingRecord : null,
+      enterDisabled : false,
     };
   },
   computed : {
@@ -26,6 +27,8 @@ meeting.provide({
   },
   middleware : {
     async joinMeeting(ctx, next) {
+      if (this.enterDisabled) return;
+      this.enterDisabled = true;
       await next();
 
       const {
@@ -44,9 +47,15 @@ meeting.provide({
         initialAudio,
       }).then(() => {
         storage.insert(`MEETING_INFO_RECORD_${rtc.account.username}`, this.meetingRecord);
+        this.enterDisabled = false;
+      }).catch((e) => {
+        this.enterDisabled = false;
+        throw e;
       });
     },
     async anonymousJoin(ctx, next) {
+      if (this.enterDisabled) return;
+      this.enterDisabled = true;
       await next();
 
       const anonMeetingRecord = ctx.payload;
@@ -70,6 +79,8 @@ meeting.provide({
 
       const servers = await formatServers({ server, protocol, proxy, port });
 
+      await rtc.conference.leave();
+      
       return rtc.conference.anonymousJoin({
         domain       : server,
         display_name : displayName,
@@ -83,6 +94,9 @@ meeting.provide({
         }, anonMeetingRecord);
 
         storage.insertOrUpdate(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, meetingData, 'number');
+        this.enterDisabled = false;
+      }).catch(() => {
+        this.enterDisabled = false;
       });
     },
     meetnow(ctx, next) {

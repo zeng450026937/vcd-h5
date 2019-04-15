@@ -281,11 +281,10 @@ export default {
         this.meetingInfo.proxyPort = value;
       }
     },
-    joinMeeting() {
-      // this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
+    async joinMeeting() {
       this.meetingIDError = !this.checkNumber();
       if (!this.meetingIDError) {
-        this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
+        await this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
       }
     },
     returnLogin() {

@@ -30,7 +30,9 @@
                 @click="showAddLocalContact"
           >添加为本地联系人</span>
 
-          <plate-content :class="{'mt-10': localContactExist}" @inputNumber="clickNumber"/>
+          <plate-content ref="plateContent"
+                         :class="{'mt-10': localContactExist}"
+                         @inputNumber="clickNumber"/>
           <div class="flex mt-8 w-full">
             <a-button type="primary" class="w-1/2" :disabled="!callNumber"
                       @click="videoCall">
@@ -145,6 +147,11 @@ export default {
       this.$refs.numberInput.focus();
     },
     inputNumber(e) {
+      const { value } = e.target;
+
+      if (value.length - this.callNumber.length === 1) {
+        this.$refs.plateContent.showClickAnimation(value[value.length - 1]);
+      }
       if (this.callNumber.length < 64) {
         this.callNumber = e.target.value; // .value.replace(/[^0-9*#@.+]+/, '');
       }
