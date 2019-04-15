@@ -17,6 +17,7 @@
         <div>
           <div class="feedback-subtitle">问题描述 （必填）</div>
           <a-textarea
+              maxlength="300"
               v-model="problemDescribe"
               placeholder="请输入详细的问题描述"
               :autosize="{ minRows: 4, maxRows: 6 }"
@@ -61,7 +62,7 @@
             官方网站：www.yealink.com.cn
           </div>
           <div class="support">
-            如需技术支持，请访问<a href="javascript:">帮助中心</a>
+            如需技术支持，请访问<a href="javascript:" @click="goHelp">帮助中心</a>
           </div>
         </div>
       </div>
@@ -90,6 +91,9 @@ export default {
     };
   },
   methods : {
+    goHelp() {
+      this.$dispatch('application.openExternal', { path: 'http://support.yealink.com' });
+    },
     handleOk() {},
     close() {
       this.reset();

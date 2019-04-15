@@ -74,7 +74,7 @@
                         <span>{{item.number}}</span>
                         <div class="flex flex-grow"></div>
                         <a-iconfont type="icon-shipin"
-                                    @click.stop="doAudio(item)"
+                                    @click.stop="doVideo(item)"
                                     class="mr-4 text-indigo cursor-pointer text-base"></a-iconfont>
                         <a-iconfont type="icon-yuyin"
                                     @click.stop="doAudio(item)"

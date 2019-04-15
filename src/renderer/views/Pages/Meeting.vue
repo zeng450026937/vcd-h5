@@ -1,6 +1,8 @@
 <template>
   <a-layout id="meeting-content" class="bg-media h-full absolute w-full">
+
     <div class="h-full z-10 flex flex-col">
+      <login-header :color="'white'"></login-header>
       <div class="flex h-full flex-col justify-center absolute pin-t w-full">
         <div v-if="!isInSetting" class="enter-meeting-content mr-5 self-end rounded-sm">
           <div class="flex justify-end">
@@ -155,6 +157,7 @@
 <script>
 import { cloneDeep, debounce } from 'lodash';
 import TabSettingMedia from '../../components/Conference/TabSettingMedia.vue';
+import LoginHeader from '../../components/Login/LoginHeader.vue';
 import VideoView from '../../components/Common/VideoView.vue';
 import { LOGIN_STORAGE } from '../../storage/constants';
 import { debounceNotice } from '../../model/middleware/error-message';
@@ -164,6 +167,7 @@ export default {
   components : {
     TabSettingMedia,
     VideoView,
+    LoginHeader,
   },
   data() {
     const dSearch = debounce((val = '') => {

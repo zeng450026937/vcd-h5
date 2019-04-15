@@ -22,7 +22,7 @@
 
 import LoginFormContent from '../../components/Login/LoginFormContent.vue';
 import LoginSettingContent from '../../components/Login/LoginSettingContent.vue';
-import LoginHeader from '../../components/Login/LoginHeader.vue'
+import LoginHeader from '../../components/Login/LoginHeader.vue';
 
 export default {
   name       : 'YMSLoginContent',

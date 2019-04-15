@@ -1,4 +1,4 @@
-import { remote, ipcRenderer } from 'electron';
+import { remote, ipcRenderer, shell } from 'electron';
 import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 
@@ -39,6 +39,11 @@ model.provide({
   },
 
   middleware : {
+    async openExternal(ctx, next) {
+      await next();
+
+      shell.openExternal(ctx.payload.path);
+    },
     async maximize(ctx, next) {
       await next();
 

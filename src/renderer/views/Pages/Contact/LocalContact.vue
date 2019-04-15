@@ -6,6 +6,7 @@
           <div class="flex items-center h-full px-4 text-base">
             <span>本地联系人</span>
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
+                        v-if="localContacts.length<200"
                         title="添加本地联系人"
                         type="icon-tianjialianxiren"
                         @click="addLocalContact"></a-iconfont>

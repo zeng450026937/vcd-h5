@@ -20,6 +20,7 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入姓名'
+                     maxlength="64"
                      v-decorator="[
                           'name',
                           {rules: [
@@ -35,6 +36,7 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入账号'
+                     maxlength="20"
                      v-decorator="[
                           'number',
                           {rules: [
@@ -49,6 +51,7 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入手机号'
+                     maxlength="11"
                      v-number-only
                      v-decorator="[
                           'phone',
@@ -64,6 +67,7 @@
               :wrapperCol="wrapperCol"
           >
             <a-input placeholder='请输入邮箱'
+               maxlength="64"
                v-decorator="[
                 'email',
                 {rules: [

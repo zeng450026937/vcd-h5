@@ -10,7 +10,7 @@
 
         <div class="flex-grow dragable my-1"></div>
 
-        <div v-if="useOperationBar" class="flex items-center mr-4 gray text-xs">
+        <div v-if="useOperationBar" class="flex items-center mr-4 text-xs" :class="color">
           <a-dropdown v-if="useDropDown" v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
               <a-menu-item key="cloud" class="py-2 text-xs">云服务版</a-menu-item>
@@ -23,7 +23,7 @@
             </span>
           </a-dropdown>
         </div>
-        <div v-if="useOperationBar" class="flex flex-row flex-no-grow items-center cursor-pointer gray">
+        <div v-if="useOperationBar" class="flex flex-row flex-no-grow items-center cursor-pointer" :class="color">
 
           <a-dropdown v-if="useDropDown" v-model="helpStatus" :trigger="['click']">
             <a-menu slot="overlay" @click.self="handleHelpClick">
@@ -70,6 +70,10 @@ export default {
     background : {
       type    : String,
       default : '#ffffff00',
+    },
+    color : {
+      type    : String,
+      default : 'gray',
     },
   },
   data() {
@@ -129,6 +133,9 @@ export default {
   #login-header {
     .gray {
       color: #333333;
+    }
+    .white {
+      color : #ffffff;
     }
   }
 </style>
