@@ -119,6 +119,9 @@ export default {
     },
   ],
   computed : {
+    currentUser() {
+      return this.$rtc.conference.information.users.currentUser;
+    },
     horizontalMirroring() {
       return this.$model.setting.horizontalMirroring;
     },
@@ -128,15 +131,22 @@ export default {
     conferenceTitle() {
       return this.$rtc.conference.information.description.subject;
     },
+    enableLocalVideo() {
+      return this.$model.setting.enableLocalVideo;
+    },
     videoDisabled() {
+      if (this.currentUser
+        && (this.currentUser.isOnHold()
+          || this.currentUser.isCastViewer())) return true;
       const { status } = this.$rtc.media.localMedia;
 
-      return !status.active || !status.video;
+      return (!status.active || !status.video) && !this.enableLocalVideo;
     },
     audioDisabled() {
+      if (this.currentUser && this.currentUser.isOnHold()) return true;
       const { status } = this.$rtc.media.localMedia;
 
-      return !status.active || !status.audio;
+      return (!status.active || !status.audio) && !this.enableLocalVideo;
     },
     audioIcon() {
       const iconMap = {
@@ -166,7 +176,6 @@ export default {
       this.$refs.leavingModal.visible = true;
     },
     expandVideoContent() {
-      this.$model.state.isInMiniConference = false;
       this.isInMiniConference = false;
       this.$router.push(CONFERENCE.CONFERENCE_MAIN);
     },

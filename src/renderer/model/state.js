@@ -86,12 +86,12 @@ model.provide({
         if (this.enterPopup) popup.destroy(this.enterPopup);
       }
     },
-    handleCall(val, once) {
+    async handleCall(val, once) {
       if (val === 'ringing') { // 来电
         // 通话中免打扰
         if (rtc.call.status === 'confirmed' && this.$parent.setting.dnd) {
           rtc.call.decline();
-          
+
           return;
         }
 
@@ -101,9 +101,16 @@ model.provide({
         if (!this.isInMiniCall) { // Mini下挂断新的来电
           router.push(CALL.CALL_MAIN);
         }
+        if (val === 'connected') {
+          await rtc.media.localMedia.acquireStream();
+        }
+      }
+      else if (val === 'connected') {
+        await rtc.media.localMedia.acquireStream();
       }
       else if (once && val === 'disconnected') {
         this.isInMiniCall = false;
+        await rtc.media.localMedia.releaseStream();
       }
     },
     openCallWindow() {
@@ -172,6 +179,23 @@ model.provide({
     callStatus : {
       handler   : 'handleCall',
       immediate : true,
+    },
+    async isInMiniConference(val) {
+      if (val && rtc.conference.connected) {
+        await rtc.media.localMedia.acquireStream();
+      }
+      else {
+        await rtc.media.localMedia.releaseStream();
+      }
+    },
+    async isInMiniCall(val) {
+      if (val && rtc.call.connected) {
+        await rtc.media.localMedia.acquireStream();
+      }
+      else {
+        // 未连接时候缩小视频区域
+        await rtc.media.localMedia.releaseStream();
+      }
     },
   },
   async created() {

@@ -222,7 +222,6 @@ model.provide({
       }
     },
     onRoleChanged(role, oldRole) {
-      console.warn(role, oldRole);
       if (oldRole && role === 'waiting') this.$message.info('您已被主持人移到会议大厅');
       else if (role && oldRole === 'waiting') this.$message.info('您已被主持人批准进入会议');
     },

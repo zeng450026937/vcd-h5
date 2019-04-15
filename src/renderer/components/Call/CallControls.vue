@@ -96,6 +96,9 @@ export default {
       props : [ 'showMorePanel', 'isInCallMain', 'deviceExceptionNotice' ],
     },
   ],
+  created() {
+    this.mediaStatus = this.$rtc.call.channel.isMuted();
+  },
   computed : {
     popupContainer() {
       return () => document.getElementById('call-controls');

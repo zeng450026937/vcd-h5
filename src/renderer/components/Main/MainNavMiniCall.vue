@@ -7,9 +7,26 @@
           <div class="flex flex-grow"></div>
           <div class="flex justify-center py-3 items-center">
             <div class="button-content flex h-8 items-center z-10">
-              <a-button shape="circle"
+              <a-button v-if="isVideoCall"
+                        :disabled="videoDisabled"
+                        shape="circle"
                         class="text-white mx-2 border-transparent"
-              ><a-iconfont type="icon-maikefeng"/></a-button>
+                        :class="{[`bg-${videoIcon.color}`] : true}"
+                        :title="videoIcon.title"
+                        @click="onVideoBtnClick"
+              >
+                <a-iconfont :type="videoIcon.icon"/>
+              </a-button>
+              <!--音频-->
+              <a-button :disabled="audioDisabled"
+                        shape="circle"
+                        class="text-white mx-2 border-transparent"
+                        :class="{[`bg-${audioIcon.color}`] : true}"
+                        :title="audioIcon.title"
+                        @click="onAudioBtnClick"
+              >
+                <a-iconfont :type="audioIcon.icon"/>
+              </a-button>
 
               <a-popover
                   trigger="click"
@@ -79,6 +96,7 @@ export default {
   data() {
     return {
       showMorePanel : false,
+      mediaStatus   : { audio: false, video: false },
     };
   },
   sketch : [
@@ -91,6 +109,9 @@ export default {
       props : [ 'isVideoCall' ],
     },
   ],
+  created() {
+    this.mediaStatus = this.$rtc.call.channel.isMuted();
+  },
   computed : {
     callText() {
       const titleMap = {
@@ -122,6 +143,35 @@ export default {
     isConnected() {
       return this.$rtc.call.connected;
     },
+    audioIcon() {
+      const iconMap = {
+        unblock : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
+        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
+      };
+
+      return iconMap[this.mediaStatus.audio ? 'block' : 'unblock'];
+    },
+    videoIcon() {
+      const iconMap = {
+        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
+      };
+
+      return iconMap[this.mediaStatus.video ? 'block' : 'unblock'];
+    },
+    enableLocalVideo() {
+      return this.$model.setting.enableLocalVideo;
+    },
+    videoDisabled() {
+      const { status } = this.$rtc.media.localMedia;
+
+      return (!status.active || !status.video) && !this.enableLocalVideo;
+    },
+    audioDisabled() {
+      const { status } = this.$rtc.media.localMedia;
+
+      return (!status.active || !status.audio) && !this.enableLocalVideo;
+    },
   },
   methods : {
     hangUp() {
@@ -144,6 +194,14 @@ export default {
     openPlateModal() {
       this.showMorePanel = false;
       this.$refs.plateModal.visible = true;
+    },
+    onAudioBtnClick() {
+      this.$rtc.call.toggleAudio(this.$rtc.call.channel.isMuted().audio);
+      this.mediaStatus = this.$rtc.call.channel.isMuted();
+    },
+    onVideoBtnClick() {
+      this.$rtc.call.toggleVideo(this.$rtc.call.channel.isMuted().video);
+      this.mediaStatus = this.$rtc.call.channel.isMuted();
     },
   },
   watch : {
