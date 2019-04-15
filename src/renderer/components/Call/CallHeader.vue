@@ -13,10 +13,10 @@
           <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         </template>
         <div class="text-white max-w-4/5 text-xs leading-tight truncate">
-          <span>与 </span>
-          <span class="truncate">{{this.userName}}</span>
+          <span>与</span>
+          <span class="truncate"> {{this.userName}} </span>
         </div>
-        <span class="text-white text-xs leading-tight"> 通话中</span>
+        <span class="text-white text-xs leading-tight">通话中</span>
       </div>
       <common-header class="text-white"/>
     </div>

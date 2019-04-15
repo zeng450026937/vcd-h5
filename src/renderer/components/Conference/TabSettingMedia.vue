@@ -9,7 +9,7 @@
                   class="mt-2">
           <a-select-option v-for="videoInput in videoInputDevices"
                            :key="videoInput.deviceId + videoInput.groupId"
-          >{{videoInput.label}}
+          >{{videoInput.label | filterLabel}}
           </a-select-option>
         </a-select>
         <a-input v-else
@@ -120,6 +120,11 @@ export default {
   methods : {
     playTestMusic() {
       this.$refs.testAudio.play().then(() => {});
+    },
+  },
+  filters : {
+    filterLabel(val) {
+      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1 : val;
     },
   },
 };
