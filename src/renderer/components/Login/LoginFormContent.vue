@@ -5,16 +5,11 @@
       <div class="login-title">
         <span>登录</span>
       </div>
-      <a-form class="login-form" @submit="handleLogin" :form="form">
-        <a-form-item class="mb-4">
+
+      <div class="login-form flex flex-col">
+        <div class="mb-4">
           <a-auto-complete
-              v-decorator="[
-              'account',
-                {rules: [
-                  { required: true, message:'请输入电话或电子邮件'},
-                  {max: 64 , message:'账号不能超过64位'}
-                ]}
-              ]"
+              :value="loginData.account"
               class="certain-category-search w-full overflow-x-hidden"
               :dropdownMatchSelectWidth="false"
               optionLabelProp="value"
@@ -41,41 +36,41 @@
                 </a-select-option>
               </a-select-opt-group>
             </template>
-            <a-input placeholder='电话或电子邮件'>
+            <a-input placeholder='电话或电子邮件' @change="onAccountChange">
               <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
             </a-input>
           </a-auto-complete>
-        </a-form-item>
-        <a-form-item class="mb-4">
+        </div>
+
+        <div class="mb-4">
           <a-input
-              v-decorator="[
-              'pin',
-                {rules: [
-                  {max: 64 , message:'密码不能超过64位'}
-                ]}
-              ]"
+              :value="loginData.pin"
+              @change="onPinChange"
               @keypress="passwordInputted"
               type="password"
               placeholder='密码'>
-            <a-tooltip
-                slot="prefix"
-                :visible="isCapsLockOn"
-                trigger="focus"
-                placement="bottomLeft">
-              <template slot="title">
-                <span>大写锁定已打开</span>
-              </template>
-              <a-iconfont type='icon-mima' class="text-base text-black9"/>
-            </a-tooltip>
+            <div slot="prefix">
+              <a-tooltip
+                  :visible="isCapsLockOn"
+                  trigger="focus"
+                  placement="bottomLeft">
+                <template slot="title">
+                  <span>大写锁定已打开</span>
+                </template>
+                <a-iconfont type='icon-mima' class="text-base text-black9"/>
+              </a-tooltip>
+            </div>
           </a-input>
-        </a-form-item>
-        <a-form-item class="mb-2">
-          <!--:read-only="serverType === 'cloud'"-->
-          <a-input v-decorator="['server']"
+        </div>
+
+        <div class="mb-2">
+          <a-input :value="loginData.server"
+                   @change="onServerChange"
                    placeholder='服务器地址'>
             <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
           </a-input>
-        </a-form-item>
+        </div>
+
         <div class="flex justify-between mt-24px">
           <a-checkbox class="text-xs text-black6"
                       :checked="rmbPassword"
@@ -88,17 +83,20 @@
           >自动登录
           </a-checkbox>
         </div>
-        <a-form-item class="mt-9 mb-0">
+
+        <div class="mt-9">
           <div class="flex">
             <div class="w-1/2 mr-2">
-              <a-button type="primary" htmlType="submit" block>登录</a-button>
+              <a-button type="primary" block @click="handleLogin">登录</a-button>
             </div>
             <div class="w-1/2 ml-2">
               <a-button @click="toMeeting" block>加入会议</a-button>
             </div>
           </div>
-        </a-form-item>
-      </a-form>
+        </div>
+
+      </div>
+
       <div class="text-xs text-center text-black6 mt-48px h-28px">
         <template v-if="serverType === 'cloud'">
           <span class="cursor-pointer leading-tight"
@@ -152,12 +150,16 @@ export default {
 
     return {
       dSearch,
-      form             : this.$form.createForm(this),
       isCapsLockOn     : false,
       preRmbPassword   : true,
       rawAccounts      : [],
       modifiedAccounts : [],
       searchedAccounts : [],
+      loginData        : {
+        account : '',
+        pin     : '',
+        server  : '',
+      },
     };
   },
   async mounted() {
@@ -179,17 +181,30 @@ export default {
     },
   },
   methods : {
+    onAccountChange(e) {
+      const { value } = e.target;
 
+      if (value.length <= 64) {
+        this.loginData.account = value;
+      }
+    },
+    onPinChange(e) {
+      const { value } = e.target;
+
+      if (value.length <= 64) {
+        this.loginData.pin = value;
+      }
+    },
+    onServerChange(e) {
+      const { value } = e.target;
+
+      if (value.length <= 64) {
+        this.loginData.server = value;
+      }
+    },
     handleLogin(e) {
-      if (e) e.preventDefault();
-      this.form.validateFields([ 'account', 'pin', 'server' ],
-        { force: true },
-        (err, values) => {
-          if (!err) {
-            this.$dispatch('account.login', values);
-            this.autoLoginDisabled = true;
-          }
-        });
+      this.$dispatch('account.login', this.loginData);
+      this.autoLoginDisabled = true;
     },
     toForget() { // 跳转到忘记密码页面
       shell.openExternal('https://meeting.ylyun.com/meeting/forget');
@@ -234,11 +249,11 @@ export default {
     },
     updateForm(data) {
       if (!data) data = {};
-      this.form.setFieldsValue({
+      this.loginData = {
         account : data.account,
         pin     : data.pin,
         server  : this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server,
-      });
+      };
       this.$model.account.proxy = data.proxy;
       this.$model.account.proxyPort = data.proxyPort;
     },
