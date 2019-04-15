@@ -58,18 +58,19 @@ export default {
   },
   computed : {
     displayName() {
-      const remoteIdentity = this.$model.state.callStatus !== 'disconnected'
+      return this.remoteIdentity && (this.remoteIdentity.display_name
+        || this.remoteIdentity.uri.user);
+    },
+    remoteIdentity() {
+      return this.$model.state.callStatus !== 'disconnected'
         ? this.$rtc.call.remoteIdentity
         || this.$rtc.call.incoming[0].remoteIdentity : null;
-
-      return remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user);
     },
   },
   methods : {
     sendMessage() {
       if (this.isSendingDisabled || !this.message) return;
-      this.$model.call.chat.sendMessage('我', this.displayName, this.message, 'send');
+      this.$model.call.chat.sendMessage('我', this.remoteIdentity.uri.user, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {
