@@ -8,6 +8,7 @@ export default new Vuem().provide({
       // 先执行 getSources
       screenList      : [], // 屏幕列表
       applicationList : [], // 应用列表
+      selectedWindow  : {},
     };
   },
   computed : {

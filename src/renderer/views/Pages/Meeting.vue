@@ -188,7 +188,7 @@ export default {
       rawAccounts      : [],
       modifiedAccounts : [],
       searchedAccounts : [],
-      meetingIDError   : false,
+      meetingInfoError : false,
     };
   },
   sketch : {
@@ -237,7 +237,7 @@ export default {
     },
   },
   methods : {
-    checkNumber() {
+    checkMeetingInfo() {
       let errorNotice = '';
 
       const { length } = this.meetingInfo.number || '';
@@ -246,6 +246,7 @@ export default {
       else if (length > 64) errorNotice = '会议ID最多为64位';
       else if (!this.isCloud && length !== 5) errorNotice = 'YMS账号会议ID仅支持五位数字输入';
       else if (this.isCloud && length !== 5 && length !== 10) errorNotice = 'Cloud账号会议ID仅支持5位或者10位数字输入';
+      else if (!this.meetingInfo.server) errorNotice = '服务器地址不能未空';
       if (errorNotice) debounceNotice(this, errorNotice);
 
       return !errorNotice;
@@ -282,8 +283,8 @@ export default {
       }
     },
     async joinMeeting() {
-      this.meetingIDError = !this.checkNumber();
-      if (!this.meetingIDError) {
+      this.meetingInfoError = !this.checkMeetingInfo();
+      if (!this.meetingInfoError) {
         await this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
       }
     },

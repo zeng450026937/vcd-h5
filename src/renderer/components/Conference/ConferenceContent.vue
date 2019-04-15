@@ -146,14 +146,19 @@ export default {
         'remote-video-content absolute h-full w-full pin-t pin-r' : true,
       };
     },
-    hasRemoteScreenStream() {
-      return !!this.$rtc.conference.shareChannel.remoteStream;
+    remoteScreenStream() {
+      return this.$rtc.conference.shareChannel.remoteStream;
     },
-    hasLocalScreenStream() {
-      return !!this.$rtc.conference.shareChannel.localStream;
+    localScreenStream() {
+      return this.$rtc.conference.shareChannel.localStream;
     },
     hasScreenStream() {
-      return this.hasRemoteScreenStream || this.hasLocalScreenStream;
+      return !!this.remoteScreenStream || !!this.localScreenStream;
+    },
+    shareStreamStatus() {
+      if (!this.hasScreenStream) return false;
+      
+      return this.remoteScreenStream ? this.remoteScreenStream.active : this.localScreenStream.active;
     },
   },
   mounted() {
@@ -226,23 +231,27 @@ export default {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = !!val;
     },
-    hasRemoteScreenStream(val) {
+    remoteScreenStream(val) {
       // 观看他人内容共享时自动最大化VCD窗口
       if (val && this.maximizedWhenRemoteSharing) {
         this.$dispatch('application.maximize');
       }
     },
-    // hasLocalScreenStream(val) {
-    //   // 自己发辅流最小化VCD窗口
-    //   if (val && this.minimizedWhenLocalSharing) {
-    //     this.$dispatch('application.minimize');
-    //   }
-    // },
+    localScreenStream(val) {
+      console.warn('UPDATE')
+      // // 自己发辅流最小化VCD窗口
+      // if (val && this.minimizedWhenLocalSharing) {
+      //   this.$dispatch('application.minimize');
+      // }
+    },
     deviceException(val) {
       this.contentClicked();
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
+    },
+    shareStreamStatus(val) {
+      console.warn(val);
     },
   },
 };

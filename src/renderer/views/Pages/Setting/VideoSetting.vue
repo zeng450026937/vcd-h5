@@ -68,10 +68,10 @@
           <!--<a-switch size="small" v-model="hardwareAcceleration"/>-->
           <!--<span class="ml-5">{{$t('setting.video.enableHWSpeed')}}</span>-->
         <!--</div>-->
-        <div class="mt-3 leading-normal">
-          <a-switch size="small" v-model="horizontalMirroring"/>
-          <span class="ml-5">{{$t('setting.video.enableMirroring')}}</span>
-        </div>
+        <!--<div class="mt-3 leading-normal">-->
+          <!--<a-switch size="small" v-model="horizontalMirroring"/>-->
+          <!--<span class="ml-5">{{$t('setting.video.enableMirroring')}}</span>-->
+        <!--</div>-->
         <div class="mt-3 leading-normal">
           <a-switch size="small" v-model="muteVideoWhenJoin"/>
           <span class="ml-5">{{$t('setting.video.disableVideo')}}</span>

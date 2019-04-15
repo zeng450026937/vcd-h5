@@ -65,7 +65,7 @@ meeting.provide({
         server,
         proxy,
         proxyPort,
-        protocol = 'wss',
+        protocol = 'tls',
         displayName,
         initialVideo,
         initialAudio,

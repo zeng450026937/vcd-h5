@@ -95,13 +95,18 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
-      selectedWindow  : {},
     };
   },
-  sketch : {
-    ns    : 'setting',
-    props : [ 'shareSmoothMode' ],
-  },
+  sketch : [
+    {
+      ns    : 'setting',
+      props : [ 'shareSmoothMode' ],
+    },
+    {
+      ns    : 'conference.share',
+      props : [ 'selectedWindow' ],
+    }
+  ],
 
   computed : {
     share() {
@@ -130,6 +135,7 @@ export default {
         this.selectedWindow.id, false /* audio */, this.shareSmoothMode /* smooth mode */
       )
         .then((val) => {
+          console.warn(val)
           this.visible = false;
 
           if (this.source === 'conference') {

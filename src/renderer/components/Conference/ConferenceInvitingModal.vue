@@ -99,7 +99,6 @@ export default {
       checkedKeys     : [],
       selectedContact : [],
       showCopySuccess : false,
-      protocols       : [ 'SIP', 'H.323', 'RTMP', 'SFB(Lync)' ],
       protocol        : 'H.323',
       address         : '',
       currentTab      : 'inviteUser', // inviteUser inviteOther
@@ -107,6 +106,16 @@ export default {
     };
   },
   computed : {
+    isCloud() {
+      return this.$model.account.serverType === 'cloud';
+    },
+    protocols() {
+      const protocols = [ 'SIP', 'H.323', 'RTMP', 'SFB(Lync)' ];
+
+      if (this.isCloud) protocols.push('亿联云账号');
+      
+      return protocols;
+    },
     currentUser() {
       return this.$model.contact.currentUser;
     },
@@ -144,6 +153,8 @@ export default {
         case 'SIP':
         case 'H.323':
           return '请输入IP地址或URI';
+        case '亿联云账号':
+          return '请输入9位云账号';
         case 'RTMP':
           return '请输入RTMP地址';
         case 'SFB(Lync)':

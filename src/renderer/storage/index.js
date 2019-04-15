@@ -49,6 +49,11 @@ const storage = new VueStorage({
       key     : 'id',
       default : {},
     },
+    { // 本地联系人
+      store   : 'FIRST_START',
+      type    : Boolean,
+      default : true,
+    },
   ],
 });
 

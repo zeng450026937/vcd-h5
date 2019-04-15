@@ -106,15 +106,23 @@
                 @click="toRegister">注册账号</span>
           <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
         </template>
-        <a-badge v-if="hasNewVersion">
+        <a-tooltip
+            :visible="isFirstStart"
+            placement="bottom"
+            overlayClassName="first-start-tooltip">
+          <template slot="title">
+            <span>首次登陆请先设置服务器</span>
+          </template>
+          <a-badge v-if="hasNewVersion">
               <span slot="count"
                     class="text-white bg-active rounded-lg h-4 leading-none"
                     style="transform: translate(100%, -50%);font-size: 10px;width: 31px;">
                 <span class="leading-tightest">NEW</span>
               </span>
-          <span class="cursor-pointer leading-tight text-xs" @click="openSetting">设置</span>
-        </a-badge>
-        <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">服务器设置</span>
+            <span class="cursor-pointer leading-tight text-xs" @click="openSetting">服务器设置</span>
+          </a-badge>
+          <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">服务器设置</span>
+        </a-tooltip>
       </div>
 
 
@@ -151,6 +159,7 @@ export default {
     return {
       dSearch,
       isCapsLockOn     : false,
+      isFirstStart     : true,
       preRmbPassword   : true,
       rawAccounts      : [],
       modifiedAccounts : [],
@@ -166,6 +175,7 @@ export default {
     this.initRawAccounts();
     await this.$nextTick();
     if (this.isAutoLogin) this.handleLogin();
+    this.isFirstStart = this.$storage.query(this.$storage.FIRST_START);
   },
   sketch : {
     ns    : 'account',
@@ -261,6 +271,8 @@ export default {
       this.isCapsLockOn = isCapsLockOn(event);
     },
     openSetting() {
+      this.$storage.update(this.$storage.FIRST_START, false)
+      this.isFirstStart = false;
       this.$emit('openSetting');
     },
   },
@@ -338,6 +350,20 @@ export default {
       margin-bottom: 12px;
       .ant-input {
         padding-left: 36px;
+      }
+    }
+  }
+  .first-start-tooltip {
+    .ant-tooltip-content {
+      .ant-tooltip-arrow {
+        border-bottom-color: #d7def3;
+      }
+      .ant-tooltip-inner {
+        background-color: #d7def3;
+        font-size: 12px;
+        color: #4A5FC4;
+        text-align: center;
+        line-height: 20px;
       }
     }
   }
