@@ -12,7 +12,11 @@
                       @click="showStatistics"/>
           <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         </template>
-        <span class="text-white text-xs leading-tight truncate">{{title}}</span>
+        <div class="text-white max-w-4/5 text-xs leading-tight truncate">
+          <span>与 </span>
+          <span class="truncate">{{this.userName}}</span>
+        </div>
+        <span class="text-white text-xs leading-tight"> 通话中</span>
       </div>
       <common-header class="text-white"/>
     </div>
@@ -36,16 +40,6 @@ export default {
     };
   },
   computed : {
-    title() {
-      const titleMap = {
-        connecting   : `正在呼叫 ${this.userName}`,
-        connected    : `与 ${this.userName} 通话中`,
-        ringing      : `${this.userName} 正在来电`,
-        disconnected : `与 ${this.userName} 的通话已结束`,
-      };
-
-      return titleMap[this.callStatus] || '当前通话已失效';
-    },
     callStatus() {
       return this.$model.state.callStatus;
     },

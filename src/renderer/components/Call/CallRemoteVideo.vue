@@ -7,9 +7,13 @@
         @video-dblclick="videoDblClick">
       <div v-if="!showVideo"
            slot="content"
-           class="absolute-center h-full flex flex-col items-center justify-center">
-        <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5">{{isVideoCall ? '视频通话' : '音频通话'}}</span>
+           class="absolute-center w-full h-full flex flex-col items-center justify-center">
+        <a-avatar :size="160" class="text-3xl border-8">{{this.nickName}}</a-avatar>
+        <div class="mt-5 w-full truncate display-name px-4">
+          <span class="max-h-full">正在呼叫 </span>
+          <span class="max-w-1/2">{{this.userName}}</span>
+          <span> …</span>
+        </div>
       </div>
       <call-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>
@@ -64,6 +68,17 @@ export default {
     }
   },
   computed : {
+    userName() {
+      const remoteIdentity = this.callStatus !== 'disconnected'
+        ? this.$rtc.call.remoteIdentity
+        || this.$rtc.call.incoming[0].remoteIdentity : null;
+
+      return remoteIdentity && (remoteIdentity.display_name
+        || remoteIdentity.uri.user);
+    },
+    nickName() {
+      return /^(.*)\(.*\)$/.test(this.userName) ? RegExp.$1.substr(-2, 2) : this.userName.substr(-2, 2);
+    },
     isConnecting() {
       return this.$rtc.call.connecting;
     },
@@ -155,7 +170,6 @@ export default {
     font-size: 84px;
   }
   .display-name {
-    opacity: 0.4;
     font-size: 24px;
     color: #FFFFFF;
     text-align: center;
