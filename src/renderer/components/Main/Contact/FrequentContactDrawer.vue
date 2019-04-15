@@ -86,10 +86,21 @@ export default {
     contacts() {
       return this.$model.contact.phoneBookStore.originTree;
     },
+    favoriteStore() {
+      return this.$model.contact.favoriteStore;
+    },
+    favoriteGroup() {
+      return this.favoriteStore.rootGroup;
+    },
   },
   methods : {
     async ensure() {
       if (!this.groupName || this.groupName.length > 30) return;
+
+      const groupNames = this.favoriteGroup.map((n) => n.name);
+
+      if (groupNames.indexOf(this.groupName) > -1) return this.$message.info('您已经添加了相同的分组！');
+
       if (this.modalType === 'edit') {
         await this.$rtc.contact.favorite.categoryEdit({
           id       : this.editedGroup.id,
