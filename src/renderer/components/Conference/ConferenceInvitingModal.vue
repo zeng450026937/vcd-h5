@@ -181,7 +181,6 @@ export default {
       this.selectedContact = data;
     },
     handleOk() {
-      if (!this.address) return;
       if (this.confirmLoading) return;
       this.confirmLoading = true;
 
@@ -191,6 +190,7 @@ export default {
       }
       else {
         // 邀请其他
+        if (!this.address) return;
         this.inviteOther();
       }
     },
