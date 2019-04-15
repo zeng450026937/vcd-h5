@@ -14,7 +14,7 @@ const DEFAULT_MAX_CHECK = 50 * 10000;
 export default class TreeStore {
   constructor({
     data,
-    expandLevel = 2,
+    expandLevel = 1,
     maxChecked = DEFAULT_MAX_CHECK,
     defaultChecked,
     loadMode = LOAD_MODE.OVERALL,

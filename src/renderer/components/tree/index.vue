@@ -52,8 +52,6 @@ export default {
       const isCheckboxElm = e.target.getAttribute('check-box') != null;
       const isHalfCheck = e.target.getAttribute('half-check') != null;
 
-      console.log(e.target.getAttribute('node-type'));
-
       if (type == null) return;
 
       const isOrg = type.indexOf('ORG') > -1;

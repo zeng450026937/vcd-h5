@@ -65,7 +65,7 @@ export default {
   },
   computed : {
     dataLoaded() {
-      return this.$model.contact.phoneBookLoaded;
+      return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
     },
     dataLoadFailed() {
       return this.$model.contact.phoneBookLoadFailed;
@@ -74,10 +74,13 @@ export default {
       return this.$model.contact.loadMode;
     },
     store() {
-      return this.$model.contact.phoneBookStore;
+      return this.$model.contact.mixContactStore;
+    },
+    mixContactStore() {
+      return this.$model.contact.mixContactStore;
     },
     contacts() {
-      return this.$model.contact.phoneBookStore.originTree;
+      return this.store.originTree;
     },
     currentUser() {
       return this.$model.contact.currentUser;

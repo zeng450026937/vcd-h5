@@ -25,6 +25,8 @@ let phoneBookStore;
 
 let favoriteStore;
 
+let mixContactStore;
+
 const LOAD_MODE = {
   AUTO    : 'AUTO',
   OVERALL : 'OVERALL',
@@ -66,24 +68,58 @@ model.provide({
     favoriteLoadFailed() {
       return rtc.contact.favorite.loadFailed;
     },
+    favorite() {
+      const tree = rtc.contact.favorite.list || [];
+
+      this.replaceId('favorite', tree);
+
+      return tree;
+    },
+    phoneBook() {
+      return this.loadMode === LOAD_MODE.SPLIT
+        ? rtc.contact.phonebook.org.list
+        : rtc.contact.phonebook.list;
+    },
     phoneBookStore() {
       phoneBookStore = new Store([], this.loadMode);
 
       if (!this.phoneBookLoaded) return phoneBookStore;
 
-      if (this.loadMode === LOAD_MODE.SPLIT) return phoneBookStore.update(rtc.contact.phonebook.org.list);
-
-      return phoneBookStore.update(rtc.contact.phonebook.list);
+      return phoneBookStore.update(this.phoneBook);
     },
     favoriteStore() {
       favoriteStore = new Store();
 
       if (!this.favoriteLoaded) return favoriteStore;
 
-      return favoriteStore.update(rtc.contact.favorite.list);
+      return favoriteStore.update(this.favorite);
+    },
+    mixContactStore() {
+      mixContactStore = new Store([], this.loadMode);
+
+      if (!this.phoneBookLoaded || !this.favoriteLoaded) return mixContactStore;
+
+      const phoneBookRoot = this.phoneBook.find((node) => node.parentId == null);
+      const favoriteRoot = this.favorite.find((node) => node.parentId == null);
+
+      favoriteRoot.node.parentId = phoneBookRoot.node.id;
+
+      const mix = [ ...this.favorite, ...this.phoneBook ];
+
+      return mixContactStore.update(mix);
     },
   },
   methods : {
+    replaceId(suffix, tree) {
+      const rootNode = tree.find((n) => n.node.parentId == null);
+      const rootGroup = tree.filter((n) => n.node.parentId === rootNode.node.id);
+
+      rootNode.node.id = `${rootNode.node.id}${suffix}`;
+
+      rootGroup.forEach((n) => {
+        n.node.parentId = rootNode.node.id;
+      });
+    },
     async findContacts(val) {
       return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
         .map((c) => {

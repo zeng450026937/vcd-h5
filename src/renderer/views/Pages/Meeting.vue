@@ -46,6 +46,7 @@
                     </a-select-opt-group>
                   </template>
                   <a-input placeholder='会议ID'
+                           maxlength="64"
                            :class="{'meeting-error': meetingIDError}">
                     <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                   </a-input>
@@ -55,6 +56,7 @@
               <div class="mt-4 input-with-icon">
                 <a-input
                     placeholder='会议密码'
+                    maxlength="64"
                     type='password'
                     :value="meetingInfo.pin"
                     @change="onPasswordChange"
