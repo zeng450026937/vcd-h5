@@ -57,6 +57,10 @@ export class PopupWindow extends BaseWindow {
         this.hasFinishedRendering = true;
 
         this.maybeEmitDidLoad();
+        // electron bug ?
+        // you have to set setAlwaysOnTop after window created
+        // even it is declared in the window options
+        this.window.setAlwaysOnTop(true);
       }
     );
 
