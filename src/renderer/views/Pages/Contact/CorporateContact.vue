@@ -97,7 +97,7 @@ export default {
       return {
         company : this.rootNode.name,
         group   : this.currentGroupName,
-        amount  : this.rootNode.amount,
+        amount  : this.currentGroupAmount,
       };
     },
     LOAD_MODE() {
@@ -111,6 +111,9 @@ export default {
     },
     currentGroupName() {
       return this.store.getNode(this.currentGroup).name;
+    },
+    currentGroupAmount() {
+      return this.store.getNode(this.currentGroup).amount;
     },
     selectedGroup() {
       return this.store.getNode(this.currentGroup);
@@ -164,7 +167,7 @@ export default {
     },
     addToFavorite(group, contact) { // 添加当前联系人到常用联系人分组
       this.$rtc.contact.favorite.add({
-        type        : contact.type,
+        type        : contact.node.type,
         contactsId  : contact.id,
         categoryIds : [ group.id ],
       }).then(() => {

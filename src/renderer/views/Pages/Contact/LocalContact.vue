@@ -115,6 +115,12 @@ export default {
       this.$refs.localContactDrawer.visible = true;
       this.$refs.localContactDrawer.form.$nextTick(() => {
         this.drawerType = 'edit';
+        this.$refs.localContactDrawer.form.setFieldsValue({
+          number : item.number,
+          email  : item.email,
+          name   : item.name,
+          phone  : item.phone,
+        });
         this.$refs.localContactDrawer.editedContact = item;
       });
     },

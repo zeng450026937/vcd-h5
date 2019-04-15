@@ -16,44 +16,41 @@
       <a-divider class="my-0 "/>
       <div class="h-full m-4 bg-white flex items-center flex-col border" v-if="ready">
         <div class="flex w-3/4 flex-col h-full">
-          <div>
-
-            <div class="flex py-5 items-center w-full border-b" v-if="!this.recordInfo.isConference">
-              <div class="flex flex-col truncate">
-                <div class="font-semibold leading-normal text-base items-center truncate">
-                  {{contact.name}}
-                </div>
-                <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-                  暂时无法获取当前联系人的个性签名信息。
-                </div>
+          <div class="flex py-5 items-center w-full border-b" v-if="!this.recordInfo.isConference">
+            <div class="flex flex-col truncate" style="max-width: 600px">
+              <div class="font-semibold leading-normal text-base items-center truncate">
+                {{contact.name}}
               </div>
-              <div class="flex flex-grow"></div>
-              <div class="ml-16" >
-                <a-avatar :size="72" v-if="!contact.unknown">
-                  <span class="text-lg">{{contact.name}}</span>
-                </a-avatar>
-                <a-avatar :size="72" v-else class="bg-indigo" icon="team"></a-avatar>
+              <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
+                暂时无法获取当前联系人的个性签名信息。
               </div>
             </div>
-
-            <div class="flex py-5 items-center w-full border-b" v-else>
-              <div class="flex flex-col truncate">
-                <div class="font-semibold leading-normal text-base items-center truncate">
-                  {{records[0].subject}}
-                </div>
-                <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-                  视频会议
-                </div>
-              </div>
-              <div class="flex flex-grow"></div>
-              <div class="ml-16" >
-                <a-avatar :size="72" class="bg-indigo">
-                  <a-iconfont class="text-3xl" type="icon-huiyishi"></a-iconfont>
-                </a-avatar>
-              </div>
+            <div class="flex flex-grow"></div>
+            <div class="ml-16" >
+              <a-avatar :size="72" v-if="!contact.unknown">
+                <span class="text-lg">{{contact.name}}</span>
+              </a-avatar>
+              <a-avatar :size="72" v-else class="bg-indigo" icon="team"></a-avatar>
             </div>
-
           </div>
+
+          <div class="flex py-5 items-center w-full border-b" v-else>
+            <div class="flex flex-col truncate" style="max-width: 600px">
+              <div class="font-semibold leading-normal text-base items-center truncate">
+                {{recordInfo.subject}}
+              </div>
+              <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
+                视频会议
+              </div>
+            </div>
+            <div class="flex flex-grow"></div>
+            <div class="ml-16" >
+              <a-avatar :size="72" class="bg-indigo">
+                <a-iconfont class="text-3xl" type="icon-huiyishi"></a-iconfont>
+              </a-avatar>
+            </div>
+          </div>
+
           <div>
             <div class="flex flex-col py-5 border-b" v-if="!this.recordInfo.isConference">
               <div v-if="!contact.unknown">
@@ -236,7 +233,7 @@ export default {
       });
 
       this.recordGroupList = recordGroupList;
-      
+
       if (this.recordInfo.isConference) {
         return this.ready = true;
       }
