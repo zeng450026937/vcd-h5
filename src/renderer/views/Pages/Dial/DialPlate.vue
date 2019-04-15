@@ -146,7 +146,7 @@ export default {
     },
     inputNumber(e) {
       if (this.callNumber.length < 64) {
-        this.callNumber = e.target.value.replace(/[^0-9*#@.+]+/, '');
+        this.callNumber = e.target.value; // .value.replace(/[^0-9*#@.+]+/, '');
       }
     },
     clearNumber() {

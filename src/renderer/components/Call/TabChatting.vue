@@ -15,7 +15,12 @@
           </div>
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
-              <a-textarea v-model="message" placeholder="请输入您将要发送的消息" class="h-full"/>
+              <a-textarea v-model="message"
+                          placeholder="请输入您将要发送的消息"
+                          class="h-full"
+                          @keydown.enter.prevent=""
+                          @keyup.enter.prevent = 'sendMessage'
+              />
             </div>
             <div class="w-1/6 bg-under-painting">
               <a-button type="primary"
@@ -63,6 +68,7 @@ export default {
   },
   methods : {
     sendMessage() {
+      if (this.isSendingDisabled || !this.message) return;
       this.$model.call.chat.sendMessage('我', this.displayName, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;

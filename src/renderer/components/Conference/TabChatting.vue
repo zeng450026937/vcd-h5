@@ -21,6 +21,8 @@
               <a-textarea v-model="message"
                           :placeholder="isOnHold ? '暂无发消息的权限' : '请输入您将要发送的消息'"
                           :read-only="isOnHold"
+                          @keydown.enter.prevent=""
+                          @keyup.enter.prevent = 'sendMessage'
                           class="h-full"/>
             </div>
             <div class="w-1/6 bg-grey-light">
@@ -41,8 +43,6 @@
 </template>
 
 <script>
-import moment from 'moment';
-import 'moment/locale/zh-cn';
 import TabChattingMessageContent from './TabChattingMessageContent.vue';
 
 export default {
@@ -77,7 +77,8 @@ export default {
     },
   },
   methods : {
-    sendMessage() {
+    sendMessage(e) {
+      if (this.isSendingDisabled || !this.message || this.isOnHold) return;
       this.$model.conference.chat.sendMessage('我', this.target, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
@@ -93,4 +94,3 @@ export default {
   },
 };
 </script>
-
