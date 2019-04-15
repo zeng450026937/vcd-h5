@@ -108,19 +108,19 @@ export default {
       return this.currentUser ? [ this.currentUser.id ] : [];
     },
     dataLoaded() {
-      return this.$model.contact.phoneBookLoaded;
+      return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
     },
     dataLoadFailed() {
-      return this.$model.contact.phoneBookLoadFailed;
+      return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
     },
     loadMode() {
       return this.$model.contact.loadMode;
     },
     store() {
-      return this.$model.phoneBookStore;
+      return this.$model.contact.mixContactStore;
     },
     contacts() {
-      return this.$model.contact.phoneBookStore.originTree;
+      return this.store.originTree.filter((n) => !n.isVMR);
     },
     numberTitle() {
       return this.protocol === 'RTMP' ? '地址' : '号码';
@@ -193,7 +193,6 @@ export default {
         .then(() => {
           this.confirmLoading = false;
           this.visible = false;
-          // this.isVideoConference = this.isVideoCall;
         })
         .catch(() => {
           this.confirmLoading = false;

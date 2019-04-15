@@ -68,7 +68,7 @@ export default {
       return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
     },
     dataLoadFailed() {
-      return this.$model.contact.phoneBookLoadFailed;
+      return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
     },
     loadMode() {
       return this.$model.contact.loadMode;
@@ -80,7 +80,7 @@ export default {
       return this.$model.contact.mixContactStore;
     },
     contacts() {
-      return this.store.originTree;
+      return this.store.originTree.filter((n) => !n.isVMR);
     },
     currentUser() {
       return this.$model.contact.currentUser;

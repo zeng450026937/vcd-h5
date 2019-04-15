@@ -123,19 +123,19 @@ export default {
       return this.currentUser ? [ this.currentUser.id ] : [];
     },
     dataLoadFailed() {
-      return this.$model.contact.phoneBookLoadFailed;
+      return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
     },
     dataLoaded() {
-      return this.$model.contact.phoneBookLoaded;
+      return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
     },
     loadMode() {
       return this.$model.contact.loadMode;
     },
     store() {
-      return this.$model.phoneBookStore;
+      return this.$model.contact.mixContactStore;
     },
     contacts() {
-      return this.$model.contact.phoneBookStore.originTree;
+      return this.store.originTree.filter((n) => !n.isVMR);
     },
     isInviteDisabled() {
       if (this.currentTab === 'inviteUser') {

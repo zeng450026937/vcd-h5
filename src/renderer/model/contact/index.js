@@ -136,7 +136,7 @@ model.provide({
         }));
     },
     async getAsyncChildNodes(options) {
-      const asyncData = phoneBookStore.getAsyncData(options.parentId);
+      const asyncData = phoneBookStore.getAsyncData(options.parentId); // 混合 情况下 异步加载会有问题；这里暂时不修改，等后续需求明确再修改
 
       if (asyncData) return asyncData;
 
