@@ -56,9 +56,14 @@ model.provide({
       });
     },
     answer(ctx) {
-      const { toAudio, isVideoCall } = ctx.payload;
+      const { toAudio, isVideoCall, isInvite } = ctx.payload;
 
-      if (!toAudio) {
+      if (isInvite && toAudio) {
+        const conference = this.$getVM('conference');
+
+        conference.sketch.isVideoConference = !toAudio;
+      }
+      else if (!toAudio) {
         this.isVideoCall = isVideoCall;
       }
       // FIXME 音视频切换的时序问题

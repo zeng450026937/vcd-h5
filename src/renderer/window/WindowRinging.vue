@@ -13,7 +13,7 @@
 
       <div class="flex justify-center mt-4 self-end">
         <!--麦克风（接听）-->
-        <a-button v-if="isVideoCall" class="text-base w-36"
+        <a-button v-if="isVideoCall || conferenceInviter" class="text-base w-36"
                   @click="transferToAudio">
           <a-iconfont type="icon-qiehuan"/>
           转语音通话
@@ -75,7 +75,7 @@ export default {
       this.kom.dispatch('call.decline');
     },
     answerCall(toAudio = false) {
-      this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall });
+      this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall, isInvite: this.conferenceInviter });
       window.close();
     },
     transferToAudio() {
