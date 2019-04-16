@@ -100,9 +100,6 @@ export default {
       props : [ 'isVideoCall' ],
     },
   ],
-  mounted() {
-    debugger
-  },
   computed : {
     isCloud() {
       return this.$model.account.serverType === 'cloud';

@@ -1,7 +1,7 @@
 <template>
-  <a-layout id="global-search" class="h-full bg-white">
+  <a-layout id="global-search" class="bg-white">
     <template v-if="hasContacts">
-      <div class="flex flex-col h-full">
+      <div class="flex flex-col">
         <div class="flex items-center h-7 px-3">
           <span class="flex flex-grow text-xs">企业联系人</span>
           <span v-if="showLoadMore"

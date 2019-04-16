@@ -1,6 +1,6 @@
 export function callType(record) {
   if (!record.connected && record.refuse === true) return '已拒绝';
-  if (!record.connected) return '未接通';
+  if (!record.connected) return '未接';
   if (record.type === 'incoming') return '呼入';
   if (record.type === 'callout') return '呼出';
 }
