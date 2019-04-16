@@ -18,13 +18,14 @@
             <div v-for="(tab, index) in tabList" :key="index">
               <a-badge :numberStyle="{backgroundColor: 'red', boxShadow : 'none'}"
                        class="shadow-none"
-                       :dot="(hasNewApply && index === 1) || (hasNewMessage && index === 2)">
+                       :dot="(hasNewApply && tab.comp === 'TabMemberView')
+                          || (hasNewMessage && tab.comp === 'TabChatting')">
                 <a-iconfont :type="tab.icon"
                             :title="tab.title"
                             class="ml-4 cursor-pointer text-black9 text-base"
-                            :class="{'text-indigo': currentTab === tab.is,
-                          'hover:text-indigo-light': currentTab !== tab.is}"
-                            @click="switchTab(tab.is)"/>
+                            :class="{'text-indigo': currentTab === tab.comp,
+                          'hover:text-indigo-light': currentTab !== tab.comp}"
+                            @click="switchTab(tab.comp)"/>
               </a-badge>
             </div>
           </div>
@@ -51,19 +52,6 @@ export default {
     TabChatting,
     TabSetting,
   },
-  data() {
-    const tabList = [
-      { icon: 'icon-suoding', is: 'TabLockConference', title: '锁定会议' },
-      { icon: 'icon-chengyuanliebiao', is: 'TabMemberView', title: '成员列表' },
-      { icon: 'icon-liaotian', is: 'TabChatting', title: '聊天' },
-      { icon: 'icon-kongzhi', is: 'TabSetting', title: '会议设置' },
-    ];
-
-    return {
-      tabList,
-    };
-  },
-
   sketch : [
     {
       ns    : 'conference.sketch',
@@ -79,6 +67,18 @@ export default {
     },
   ],
   computed : {
+    tabList() {
+      const tabList = [
+        { icon: 'icon-suoding', comp: 'TabLockConference', title: '锁定会议' },
+        { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: '成员列表' },
+        { icon: 'icon-liaotian', comp: 'TabChatting', title: '聊天' },
+        { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
+      ];
+
+      if (this.$model.conference.currentUser.isCastViewer()) tabList.splice(1, 1);
+
+      return tabList;
+    },
     hasNewApply() {
       return this.hasNewMeetingApply || this.hasNewSpeakApply;
     },

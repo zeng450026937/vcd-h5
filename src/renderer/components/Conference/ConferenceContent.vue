@@ -22,7 +22,8 @@
               <div v-for="(tab, index) in tabList" :key="index">
                 <a-badge :numberStyle= "{backgroundColor: 'white', boxShadow : 'none'}"
                          class="shadow-none"
-                         :dot="(hasNewApply && index === 1) || (hasNewMessage && index === 2)">
+                         :dot="(hasNewApply && tab.comp === 'TabMemberView')
+                          || (hasNewMessage && tab.comp === 'TabChatting')">
                 <a-iconfont :type="tab.icon"
                             :title="tab.title"
                             class="ml-4 cursor-pointer hover:text-indigo-light text-base"
@@ -75,15 +76,7 @@ export default {
     // HoldItemGroup,
   },
   data() {
-    const tabList = [
-      { icon: 'icon-suoding', comp: 'TabLockConference', title: '锁定会议' },
-      { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: '成员列表' },
-      { icon: 'icon-liaotian', comp: 'TabChatting', title: '聊天' },
-      { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
-    ];
-
     return {
-      tabList,
       shareWindow       : null,
       hideControlsTimer : null,
     };
@@ -107,6 +100,18 @@ export default {
     },
   ],
   computed : {
+    tabList() {
+      const tabList = [
+        { icon: 'icon-suoding', comp: 'TabLockConference', title: '锁定会议' },
+        { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: '成员列表' },
+        { icon: 'icon-liaotian', comp: 'TabChatting', title: '聊天' },
+        { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
+      ];
+
+      if (this.$model.conference.currentUser.isCastViewer()) tabList.splice(1, 1);
+
+      return tabList;
+    },
     conferenceContent() {
       return () => document.getElementById('layout-conference-content');
     },
