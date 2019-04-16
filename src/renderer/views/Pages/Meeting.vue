@@ -46,8 +46,7 @@
                     </a-select-opt-group>
                   </template>
                   <a-input placeholder='会议ID'
-                           maxlength="64"
-                           :class="{'meeting-error': meetingIDError}">
+                           :class="{'meeting-error': meetingInfoError}">
                     <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                   </a-input>
                 </a-auto-complete>

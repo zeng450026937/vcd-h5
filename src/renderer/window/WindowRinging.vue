@@ -6,7 +6,7 @@
           <a-avatar :size="48" class="target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
           <div class="flex flex-col ml-5">
             <span class="text-base leading-none font-bold">{{this.displayName}}</span>
-            <span class="text-base leading-none mt-4">{{isVideoCall ? '邀请您进行视频通话': '邀请您参加语音通话'}}</span>
+            <span class="text-base leading-none mt-4">{{ringText}}</span>
           </div>
         </div>
       </div>
@@ -38,6 +38,9 @@
 export default {
   name     : 'WindowRinging',
   computed : {
+    ringText() {
+      return this.conferenceInviter ? '邀请您参加视频会议' : this.isVideoCall ? '邀请您进行视频通话' : '邀请您参加语音通话';
+    },
     rtc() {
       return (window.opener && window.opener.rtc) || window.rtc;
     },
@@ -51,9 +54,15 @@ export default {
         || remoteIdentity.uri.user)) || '未知用户';
     },
     isVideoCall() {
+      if (this.conferenceInviter) return false;
       const { callInfo } = this.rtc.account.newChannel[0]; // 只考虑一路
 
       return callInfo && callInfo.video;
+    },
+    conferenceInviter() {
+      const { headers } = this.rtc.call.incoming[0].request;
+      
+      return headers && headers['Apollo-Conference-Inviter'];
     },
   },
   mounted() {

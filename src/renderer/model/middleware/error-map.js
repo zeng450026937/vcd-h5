@@ -16,8 +16,8 @@ const ERROR_MAP = {
   // message
   'User not register'     : '用户未注册',
   // call
-  'Not Found'             : '未找到当前号码',
-  Canceled                : '当前通话已取消',
+  'Not Found'             : '您拨打的号码无法接通，请稍后再拨',
+  // Canceled                : '当前通话已取消',
   // 登陆
   ACCOUNT_NOT_EMPTY       : '账号不能为空',
   ACCOUNT_TOO_LONG        : '无法输入超过128个字符',

@@ -95,7 +95,8 @@ meeting.provide({
 
         storage.insertOrUpdate(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, meetingData, 'number');
         this.enterDisabled = false;
-      }).catch(() => {
+      }).catch((e) => {
+        this.$message.error('当前服务器无法访问');
         this.enterDisabled = false;
       });
     },
