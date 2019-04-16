@@ -100,7 +100,13 @@ export default {
       props : [ 'isVideoCall' ],
     },
   ],
+  mounted() {
+    debugger
+  },
   computed : {
+    isCloud() {
+      return this.$model.account.serverType === 'cloud';
+    },
     currentUser() {
       return this.$model.contact.currentUser;
     },
@@ -108,15 +114,21 @@ export default {
       return this.currentUser ? [ this.currentUser.id ] : [];
     },
     dataLoaded() {
+      if (this.isCloud) return this.$model.contact.phoneBookLoaded;
+
       return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
     },
     dataLoadFailed() {
+      if (this.isCloud) return this.$model.contact.phoneBookLoadFailed;
+
       return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
     },
     loadMode() {
       return this.$model.contact.loadMode;
     },
     store() {
+      if (this.isCloud) return this.$model.contact.phoneBookStore;
+
       return this.$model.contact.mixContactStore;
     },
     contacts() {

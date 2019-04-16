@@ -68,6 +68,9 @@ model.provide({
     favoriteLoadFailed() {
       return rtc.contact.favorite.loadFailed;
     },
+    dataLoaded() {
+      return this.favoriteLoaded && this.phoneBookLoaded;
+    },
     favorite() {
       const tree = rtc.contact.favorite.list || [];
 

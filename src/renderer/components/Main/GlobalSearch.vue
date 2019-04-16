@@ -10,6 +10,7 @@
           >{{hasLoadMore ? '收起' : '更多'}}</span>
         </div>
         <contact-list hide-popup
+                      :highlightContent="searchText"
                       :contactList="hasLoadMore ? searchResults : searchResults.slice(0, 5)"
                       highlightSelected/>
       </div>

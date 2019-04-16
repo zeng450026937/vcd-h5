@@ -122,16 +122,22 @@ export default {
     disabled() {
       return this.currentUser ? [ this.currentUser.id ] : [];
     },
-    dataLoadFailed() {
-      return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
-    },
     dataLoaded() {
+      if (this.isCloud) return this.$model.contact.phoneBookLoaded;
+
       return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
+    },
+    dataLoadFailed() {
+      if (this.isCloud) return this.$model.contact.phoneBookLoadFailed;
+
+      return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
     },
     loadMode() {
       return this.$model.contact.loadMode;
     },
     store() {
+      if (this.isCloud) return this.$model.contact.phoneBookStore;
+
       return this.$model.contact.mixContactStore;
     },
     contacts() {

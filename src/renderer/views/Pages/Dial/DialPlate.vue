@@ -3,6 +3,7 @@
     <div class="flex flex-col h-full">
       <app-header title="拨号"/>
       <div class="h-full m-4 bg-white flex border">
+
         <div class="flex flex-col"
              style="width: 360px;padding: 56px">
           <div class="flex items-center">
@@ -17,19 +18,18 @@
                           slot="suffix"
                           type="icon-guanbi"
                           class="text-sm text-grey cursor-pointer hover:text-red"
-                          @click="clearNumber"/>
+                          @click="clearNumber"></a-iconfont>
             </a-input>
             <a-iconfont type="icon-huishan"
                         title="退格"
                         class="text-2xl ml-3 cursor-pointer"
-                        @click="removeTailNumber"/>
+                        @click="removeTailNumber"></a-iconfont>
           </div>
           <span v-show="!localContactExist"
                 class="text-indigo cursor-pointer text-center text-xs leading-tight"
                 style="margin: 10px 0;"
                 @click="showAddLocalContact"
           >添加为本地联系人</span>
-
           <plate-content ref="plateContent"
                          :class="{'mt-10': localContactExist}"
                          @inputNumber="clickNumber"/>
@@ -46,23 +46,11 @@
             </a-button>
           </div>
         </div>
-        <a-divider type="vertical" class="h-full mx-0"/>
-        <div class="flex flex-grow h-full">
-          <div class="h-full flex flex-col w-full">
-            <div class="px-2 py-3 border-b">拨号搜素结果（{{searchResult.length}}）</div>
-            <div class="h-full flex justify-center items-center" v-if="!searchResult.length">
-              <common-empty image="empty-result"/>
-            </div>
-            <contact-list v-else
-                          hide-popup
-                          class="mx-1"
-                          :contactList="searchResult"
-                          :highlightContent="callNumber"
-                          highlightSelected
-            ></contact-list>
 
-          </div>
-        </div>
+        <a-divider type="vertical" class="h-full mx-0"/>
+
+        <search-list :search-result="searchResult" :high-light-key="callNumber"></search-list>
+
       </div>
     </div>
     <div>
@@ -75,18 +63,16 @@
 import { debounce } from 'lodash';
 import AppHeader from '../../../components/Main/MainHeader.vue';
 import LocalContactDrawer from '../../../components/Main/Contact/LocalContactDrawer.vue';
-import ContactList from '../../../components/Main/Contact/ContactList.vue';
-import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
 import PlateContent from '../../../components/Common/PlateContent.vue';
+import SearchList from '../../../components/Dial/searchList.vue';
 
 export default {
   name       : 'DialPlate',
   components : {
     AppHeader,
     LocalContactDrawer,
-    CommonEmpty,
-    ContactList,
     PlateContent,
+    SearchList,
   },
   data() {
     return {
@@ -127,6 +113,13 @@ export default {
         this.searchResult.push(...this.localContacts.filter((local) => local.number.indexOf(val) > -1));
       }).catch((err) => {
         console.warn(err.message);
+
+        if (this.phoneBookLoaded) {
+          this.searchResult = this.phoneBookStore.search(val);
+        }
+
+        this.localContactExist = this.localContacts.filter((local) => local.number === val).length > 0;
+        this.searchResult.push(...this.localContacts.filter((local) => local.number.indexOf(val) > -1));
       });
     }, 500);
 
@@ -137,6 +130,12 @@ export default {
   computed : {
     localContacts() {
       return this.$model.contact.local.localContactGroup.items;
+    },
+    phoneBookLoaded() {
+      return this.$model.contact.phoneBookLoaded;
+    },
+    phoneBookStore() {
+      return this.$model.contact.phoneBookStore;
     },
   },
   methods : {
