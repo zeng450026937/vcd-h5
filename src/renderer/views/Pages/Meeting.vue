@@ -317,7 +317,7 @@ export default {
       Object.assign(this.meetingInfo, {
         number       : '',
         pin          : '',
-        server       : this.serverType === 'cloud' ? 'yealinkvc.com' : '',
+        server       : this.serverType === 'cloud' ? 'yealinkcloud.cc' : '',
         displayName  : '',
         proxy        : '',
         proxyPort    : '',
@@ -340,7 +340,7 @@ export default {
       this.meetingInfo = {
         number       : '',
         pin          : '',
-        server       : this.serverType === 'cloud' ? 'yealinkvc.com' : '',
+        server       : this.serverType === 'cloud' ? 'yealinkcloud.cc' : '',
         displayName  : '',
         proxy        : '',
         proxyPort    : '',

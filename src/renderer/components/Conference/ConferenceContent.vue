@@ -233,7 +233,7 @@ export default {
       }
       else {
         this.$rtc.media.screenMedia.releaseStream();
-        console.warn(this.$rtc.conference)
+        console.warn(this.$rtc.conference);
       }
     },
     remoteScreenStream(val) {
@@ -243,10 +243,6 @@ export default {
       }
     },
     localScreenStream(val) {
-      // // 自己发辅流最小化VCD窗口
-      // if (val && this.minimizedWhenLocalSharing) {
-      //   this.$dispatch('application.minimize');
-      // }
     },
     deviceException(val) {
       this.contentClicked();
@@ -255,7 +251,11 @@ export default {
       if (val) this.isShareInCenter = false;
     },
     shareStreamStatus(val) {
-      console.warn(val);
+      if (this.hasScreenStream && !val) {
+        // 分享的应用被关闭
+        this.$message.warn('由于共享的窗口被关闭，内容共享结束');
+        this.$rtc.conference.shareChannel.disconnect();
+      }
     },
   },
 };

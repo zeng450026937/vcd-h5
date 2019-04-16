@@ -155,13 +155,16 @@ export default {
       };
     },
     hasRemoteScreenStream() {
-      return !!this.$rtc.call.share.remoteStream;
+      return this.$rtc.call.share.remoteStream;
     },
     hasLocalScreenStream() {
-      return !!this.$rtc.call.share.localStream;
+      return this.$rtc.call.share.localStream;
     },
     hasScreenStream() {
-      return this.hasRemoteScreenStream || this.hasLocalScreenStream;
+      return !!this.hasRemoteScreenStream || !!this.hasLocalScreenStream;
+    },
+    shareStreamStatus() {
+      return this.$rtc.media.screenMedia.statusAnalyser.status.video;
     },
   },
   mounted() {
@@ -229,9 +232,23 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = !!val;
+      if (val) {
+        this.$rtc.media.screenMedia.acquireStream();
+      }
+      else {
+        this.$rtc.media.screenMedia.releaseStream();
+        console.warn(this.$rtc.conference);
+      }
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
+    },
+    shareStreamStatus(val) {
+      if (this.hasScreenStream && !val) {
+        // 分享的应用被关闭
+        this.$message.warn('由于共享的窗口被关闭，内容共享结束');
+        this.$rtc.call.share.channel.disconnect();
+      }
     },
   },
 };
