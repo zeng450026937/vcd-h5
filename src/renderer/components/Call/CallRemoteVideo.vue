@@ -5,7 +5,13 @@
         :hide-video="!showVideo"
         :source="source"
         @video-dblclick="videoDblClick">
-      <div v-if="!showVideo"
+      <div v-if="!showVideo && !isConnecting"
+           slot="content"
+           class="absolute-center h-full flex flex-col items-center justify-center">
+        <a-iconfont type="icon-huiyishi" class="display-icon"/>
+        <span class="display-name mt-5 opacity-50">{{isVideoCall ? '视频通话' : '音频通话'}}</span>
+      </div>
+      <div v-else-if="!showVideo"
            slot="content"
            class="absolute-center w-full h-full flex flex-col items-center justify-center">
         <a-avatar :size="160" class="text-3xl border-8">{{this.nickName}}</a-avatar>

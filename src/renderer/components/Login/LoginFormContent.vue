@@ -6,7 +6,7 @@
         <span>登录</span>
       </div>
 
-      <div class="login-form flex flex-col">
+      <div class="login-form flex flex-col" @keyup.enter="handleLogin">
         <div class="mb-4">
           <a-auto-complete
               :value="loginData.account"

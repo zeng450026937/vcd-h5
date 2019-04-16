@@ -78,7 +78,6 @@ model.provide({
   },
   methods : {
     storeConfig() {
-      storage.insert(LOGIN_STORAGE.SERVER_TYPE, this.serverType);
       storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, this.rmbPassword);
       storage.insert(LOGIN_STORAGE.AUTO_LOGIN, this.autoLogin);
     },
@@ -94,6 +93,11 @@ model.provide({
         && !DOMAIN_REG.test(values.server)) errorText = 'SERVER_FORMAT_ERROR';
 
       if (errorText) throw new Error(errorText);
+    },
+  },
+  watch : {
+    serverType(val) {
+      storage.insert(LOGIN_STORAGE.SERVER_TYPE, val);
     },
   },
 });

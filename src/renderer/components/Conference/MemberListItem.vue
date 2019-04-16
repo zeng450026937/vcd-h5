@@ -7,10 +7,6 @@
         <a-avatar>
           {{displayName}}
         </a-avatar>
-        <template v-if="item.isSharing()">
-          <div class="circle-inner"></div>
-          <div class="circle-outer"></div>
-        </template>
       </div>
       <div class="flex flex-col flex-grow w-1 ml-3">
         <div class="item-name flex flex-grow items-center">
@@ -33,7 +29,12 @@
           <span v-else>{{displayPhone}}</span>
         </span>
       </div>
-      <div v-if="!isApplyGroup">
+      <div v-if="!isApplyGroup" class="group">
+        <a-iconfont v-if="item.isSharing()"
+                    title="正在分享辅流"
+                    type="icon-fuliu"
+                    class="ml-4 text-base text-indigo"/>
+
         <a-iconfont v-if="!item.isCastViewer()"
                     :type="videoIcon.icon"
                     :title="videoIcon.title"
@@ -54,7 +55,7 @@
             <a-iconfont v-if="hasPermission"
                         title="更多"
                         type="icon-gengduo1"
-                        class="ml-4 text-indigo cursor-pointer text-base"/>
+                        class="ml-4 text-indigo cursor-pointer text-base "/>
           </a>
           <a-menu slot="overlay">
             <a-menu-item v-if="hasSetAsPresenter || hasSetAsVisitor" key="0" @click="setPresenter">
