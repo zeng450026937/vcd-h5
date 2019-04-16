@@ -236,19 +236,16 @@ export default {
 
 
     copyConferenceInfo() {
-      const { description } = this.$rtc.conference.information;
-      const meetingInfo = {
-        subject          : description.subject,
-        conferenceNumber : description.conferenceNumber,
-        attendeePin      : description.attendeePin,
-      };
+      const { recordId } = this.$rtc.conference.information;
 
-      copy(JSON.stringify(meetingInfo)).then(() => {
+      this.$model.schedule.fetchMailTemplate(recordId).then((val) => {
+        copy(val);
         this.showCopySuccess = true;
         setTimeout(() => {
           this.showCopySuccess = false;
         }, 3000);
       });
+
     },
   },
   watch : {
