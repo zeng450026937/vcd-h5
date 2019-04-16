@@ -179,11 +179,6 @@ export default {
   beforeDestroy() {
     if (this.updateTimer) clearInterval(this.updateTimer);
   },
-  mounted() {
-    this.updateTimer = setInterval(() => {
-      this.currentEvent.updateStatus();
-    }, 1000);
-  },
   computed : {
     sortedInvitee() {
       const { invitee } = this.currentEvent.invitees;
@@ -257,7 +252,22 @@ export default {
       copy(this.currentEvent.liveShareUrl);
     },
     copyShareUrl() {
-      copy(this.shareUrl);
+      this.$model.schedule.fetchMailTemplate(this.currentEvent.recordId).then((val) => {
+        copy(val);
+      });
+    },
+  },
+  watch : {
+    currentEvent : {
+      handler(val, oldVal) {
+        if (val.conferenceNumber && (!oldVal || !oldVal.conferenceNumber)) {
+          this.updateTimer = setInterval(() => {
+            this.currentEvent.updateStatus();
+          }, 1000);
+        }
+        else if (this.updateTimer) clearInterval(this.updateTimer);
+      },
+      immediate : true,
     },
   },
 };

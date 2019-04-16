@@ -52,7 +52,7 @@
       <conference-inviting-modal ref="invitingModal"
                                  :getContainer="conferenceContent"/>
     </div>
-    <hold-item-group/>
+    <!--<hold-item-group/>-->
   </a-layout>
 </template>
 
@@ -62,7 +62,7 @@ import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
-import HoldItemGroup from './HoldItemGroup.vue';
+// import HoldItemGroup from './HoldItemGroup.vue';
 import { CONFERENCE } from '../../router/constants';
 
 export default {
@@ -72,7 +72,7 @@ export default {
     ConferenceLocalVideo,
     ConferenceShareVideo,
     ConferenceInvitingModal,
-    HoldItemGroup,
+    // HoldItemGroup,
   },
   data() {
     const tabList = [
@@ -156,9 +156,7 @@ export default {
       return !!this.remoteScreenStream || !!this.localScreenStream;
     },
     shareStreamStatus() {
-      if (!this.hasScreenStream) return false;
-      
-      return this.remoteScreenStream ? this.remoteScreenStream.active : this.localScreenStream.active;
+      return this.$rtc.media.screenMedia.statusAnalyser.status.video;
     },
   },
   mounted() {
@@ -230,6 +228,13 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = !!val;
+      if (val) {
+        this.$rtc.media.screenMedia.acquireStream();
+      }
+      else {
+        this.$rtc.media.screenMedia.releaseStream();
+        console.warn(this.$rtc.conference)
+      }
     },
     remoteScreenStream(val) {
       // 观看他人内容共享时自动最大化VCD窗口
@@ -238,7 +243,6 @@ export default {
       }
     },
     localScreenStream(val) {
-      console.warn('UPDATE')
       // // 自己发辅流最小化VCD窗口
       // if (val && this.minimizedWhenLocalSharing) {
       //   this.$dispatch('application.minimize');

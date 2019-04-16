@@ -51,7 +51,7 @@
       <call-inviting-modal ref="invitingModal"
                            :getContainer="callContent"/>
     </div>
-    <hold-item-group/>
+    <!--<hold-item-group/>-->
   </a-layout>
 </template>
 
@@ -61,7 +61,7 @@ import CallRemoteVideo from './CallRemoteVideo.vue';
 import CallLocalVideo from './CallLocalVideo.vue';
 import CallShareVideo from './CallShareVideo.vue';
 import CallInvitingModal from './CallInvitingModal.vue';
-import HoldItemGroup from '../Conference/HoldItemGroup.vue';
+// import HoldItemGroup from '../Conference/HoldItemGroup.vue';
 import { CALL } from '../../router/constants';
 
 export default {
@@ -71,7 +71,7 @@ export default {
     CallRemoteVideo,
     CallLocalVideo,
     CallShareVideo,
-    HoldItemGroup,
+    // HoldItemGroup,
   },
   data() {
     return {

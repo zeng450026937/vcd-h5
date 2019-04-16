@@ -76,7 +76,9 @@ export default {
           break;
         case 'remote':
           break;
-        case 'screen': break;
+        case 'screen':
+        case 'call-screen':
+          break;
         default: break;
       }
     }
@@ -159,7 +161,9 @@ export default {
           break;
         case 'remote':
           break;
-        case 'screen': break;
+        case 'screen':
+        case 'call-screen':
+          break;
         default: break;
       }
     },

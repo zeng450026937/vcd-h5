@@ -168,6 +168,23 @@ model.provide({
 
       this.pendings.delete(planId);
     },
+
+    async fetchMailTemplate(conferenceRecordId) {
+      let template = '';
+
+      await this.cm[C.GET_MAIL_TEMPLATE]({
+        enterpriseId   : rtc.account.enterpriseId,
+        conferenceRecordId,
+        isDST          : false,
+        utcOffset      : '28800',
+        language       : 'zh',
+        isManager      : false,
+        loginStaffName : rtc.account.username,
+      }).then((val) => template = val && val.data)
+        .catch((e) => logger.warn('fetch mail template failed. error: %s', e));
+      
+      return template;
+    },
     
     toArray() {
       const { merged, conferences, templates } = this;

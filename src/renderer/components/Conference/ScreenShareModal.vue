@@ -135,7 +135,6 @@ export default {
         this.selectedWindow.id, false /* audio */, this.shareSmoothMode /* smooth mode */
       )
         .then((val) => {
-          console.warn(val)
           this.visible = false;
 
           if (this.source === 'conference') {
