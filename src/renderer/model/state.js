@@ -305,6 +305,7 @@ async function createConferenceRecord(info) {
 
 async function createCallRecord(info) {
   const { account, server } = storage.query('CURRENT_ACCOUNT');
+
   const params = {
     subject      : info.target,
     type         : info.direction === 'incoming' ? 'incoming' : 'callout',
@@ -330,21 +331,23 @@ async function createCallRecord(info) {
 
 async function createIncomingRecord(info) {
   const { account, server } = storage.query('CURRENT_ACCOUNT');
+
   const params = {
-    subject      : info.remoteIdentity._display_name,
-    type         : info.direction,
-    direction    : info.direction,
-    connected    : false,
-    media        : 'video',
-    id           : info.id,
-    startTime    : Date.now(),
-    endTime      : null,
-    otherId      : info.remoteIdentity._display_name,
-    isConference : !!(info.focusUri && info.entity),
-    pin          : info.pin,
+    subject          : info.remoteIdentity.uri._user,
+    type             : info.direction,
+    direction        : info.direction,
+    conferenceNumber : info.remoteIdentity.uri._user,
+    connected        : false,
+    media            : 'video',
+    id               : info.id,
+    startTime        : Date.now(),
+    endTime          : null,
+    otherId          : info.remoteIdentity.uri._user,
+    isConference     : !!(info.focusUri && info.entity),
+    pin              : info.pin,
     account,
     server,
-    other        : {
+    other            : {
       name : info.remoteIdentity._display_name,
     },
   };

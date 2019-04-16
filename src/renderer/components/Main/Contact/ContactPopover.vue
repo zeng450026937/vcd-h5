@@ -57,7 +57,7 @@
       </div>
     </template>
     <div>
-      <contact-avatar :size="32" :key="contact.id" :contact="contact"></contact-avatar>
+      <contact-avatar :size="28" :key="contact.id" :contact="contact"></contact-avatar>
     </div>
   </a-popover>
 

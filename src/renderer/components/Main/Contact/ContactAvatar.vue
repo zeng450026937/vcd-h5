@@ -9,7 +9,7 @@
     >
       <a-iconfont :type="contact|icon"></a-iconfont>
     </a-avatar>
-    <a-avatar :size=size v-else >{{contact.nick}}</a-avatar>
+    <a-avatar :size="size" v-else class="text-xs">{{contact.nick}}</a-avatar>
   </div>
 
 </template>
