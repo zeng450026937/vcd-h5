@@ -22,15 +22,16 @@ model.provide({
     const serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE) || 'cloud';
     const rmbPassword = storage.query(LOGIN_STORAGE.REMEMBER_PASSWORD);
     const autoLogin = storage.query(LOGIN_STORAGE.AUTO_LOGIN);
+    const autoLoginDisabled = storage.query(LOGIN_STORAGE.AUTO_LOGIN_DISABLED);
     
     return {
       serverType,
       rmbPassword,
       autoLogin,
-      autoLoginDisabled : false,
-      loginType         : 'login',
-      proxy             : '',
-      proxyPort         : '',
+      autoLoginDisabled,
+      loginType : 'login',
+      proxy     : '',
+      proxyPort : '',
     };
   },
   created() {
@@ -98,6 +99,9 @@ model.provide({
   watch : {
     serverType(val) {
       storage.insert(LOGIN_STORAGE.SERVER_TYPE, val);
+    },
+    autoLoginDisabled(val) {
+      storage.insert(LOGIN_STORAGE.AUTO_LOGIN_DISABLED, val);
     },
   },
 });
