@@ -1,5 +1,6 @@
 import { ConferenceManager } from 'apollosip';
 import { sortBy } from 'lodash';
+import moment from 'moment';
 import Vuem from '../vuem';
 import { ScheduleDatabse } from '../../database/schedule-database';
 import { arrayify } from '../../lib/arrayify';
@@ -9,6 +10,7 @@ import {
   fixTemplate,
 } from './fix-info';
 import rtc from '../../rtc';
+import 'moment/locale/zh-cn';
 
 
 const C = ConferenceManager.Command;
@@ -175,8 +177,8 @@ model.provide({
       await this.cm[C.GET_MAIL_TEMPLATE]({
         enterpriseId   : rtc.account.enterpriseId,
         conferenceRecordId,
-        isDST          : false,
-        utcOffset      : '28800',
+        isDST          : moment().isDST(),
+        utcOffset      : moment().utcOffset() * 60,
         language       : 'zh',
         isManager      : false,
         loginStaffName : rtc.account.username,
