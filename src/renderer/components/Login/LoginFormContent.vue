@@ -275,6 +275,7 @@ export default {
       this.isFirstStart = false;
       this.$emit('openSetting');
     },
+
   },
   watch : {
     serverType() { // f服务器类型发生变化

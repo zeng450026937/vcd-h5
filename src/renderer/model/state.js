@@ -131,7 +131,7 @@ model.provide({
       const offsetLeft = window.screen.width - width - 10;
       const offsetTop = window.screen.height - height * callCount - 50;
 
-      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop}directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
+      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop},directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
 
       window.callCount = callCount;
       const newWindow = window.open('ringing.html',

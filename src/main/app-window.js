@@ -122,12 +122,23 @@ export class AppWindow extends BaseWindow {
       // prevent popup window from showing before web is ready.
       options.show = false;
 
+      console.log(additionalFeatures);
+
       switch (frameName) {
         case 'screen-share':
           options.minWidth = 528;
           options.minHeight = 297;
           break;
         case 'notification':
+          options.resizable = false;
+          options.transparent = true;
+          break;
+        case 'share-controls':
+          options.minWidth = 614;
+          options.minHeight = 56;
+          options.width = options.minWidth;
+          options.height = options.minHeight;
+          options.backgroundColor = '#00ffffff';
           options.resizable = false;
           options.transparent = true;
           break;

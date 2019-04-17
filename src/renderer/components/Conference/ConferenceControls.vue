@@ -27,7 +27,7 @@
       <a-button v-if="isVideoConference && shareAvailable"
                 shape="circle"
                 class="control-btn"
-                :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
+                title="分享辅流"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -161,12 +161,7 @@ export default {
     },
   },
   methods : {
-    showScreenShareModal() {
-      if (this.hasLocalScreenStream) {
-        this.$rtc.conference.shareChannel.disconnect();
-        
-        return;
-      }
+    async showScreenShareModal() {
       this.$refs.shareModal.visible = true;
     },
     showLeaveModal() {

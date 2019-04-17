@@ -105,7 +105,7 @@ export default {
     {
       ns    : 'conference.share',
       props : [ 'selectedWindow' ],
-    }
+    },
   ],
 
   computed : {
@@ -128,21 +128,31 @@ export default {
     handleCancel() {
       this.visible = false;
     },
-    handleShare() {
+    async handleShare() {
       if (!this.selectedWindow.id) return;
+
+      if (this.source === 'conference') {
+        await this.$rtc.conference.shareChannel.disconnect();
+      }
+      else {
+        await this.$rtc.call.share.disconnect();
+      }
+
       // 分享辅流
       this.$rtc.media.selectScreen(
         this.selectedWindow.id, false /* audio */, this.shareSmoothMode /* smooth mode */
       )
         .then((val) => {
           this.visible = false;
-
-          if (this.source === 'conference') {
-            return this.$rtc.conference.shareChannel.connect();
-          }
-          else {
-            return this.$rtc.call.share.connect('send');
-          }
+          // TODO ///
+          setTimeout(() => {
+            if (this.source === 'conference') {
+              return this.$rtc.conference.shareChannel.connect();
+            }
+            else {
+              return this.$rtc.call.share.connect('send');
+            }
+          }, 0);
         });
     },
     onOpen() {

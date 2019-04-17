@@ -29,6 +29,7 @@ model.provide({
       //
       onLine     : navigator.onLine,
       connection : dumpConnection(),
+      remote,
     };
   },
 
@@ -71,6 +72,11 @@ model.provide({
       await next();
 
       remote.getCurrentWindow().hide();
+    },
+    async show(ctx, next) {
+      await next();
+
+      remote.getCurrentWindow().show();
     },
 
     async updateTrayMenu(ctx, next) {

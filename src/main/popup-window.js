@@ -61,6 +61,7 @@ export class PopupWindow extends BaseWindow {
         // you have to set setAlwaysOnTop after window created
         // even it is declared in the window options
         this.window.setAlwaysOnTop(true);
+        this.window.setBackgroundColor(this.windowOptions.backgroundColor || '#ffffff');
       }
     );
 

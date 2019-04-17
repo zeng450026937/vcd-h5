@@ -12,6 +12,12 @@ module.exports = {
       title    : 'shareScreen',
       filename : 'shareScreen.html',
     },
+    shareControls : {
+      entry    : 'src/renderer/window/shareControls.js',
+      template : 'public/shareControls.html',
+      title    : 'shareControls',
+      filename : 'shareControls.html',
+    },
     ringing : {
       entry    : 'src/renderer/window/ringing.js',
       template : 'public/ringing.html',

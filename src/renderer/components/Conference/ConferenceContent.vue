@@ -7,7 +7,7 @@
         <div class="header no-dragable flex flex-col h-10 z-10"
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
-            <a-iconfont v-if="hasScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
+            <a-iconfont v-if="remoteScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
                         title="弹出辅流"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
@@ -44,7 +44,7 @@
       <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
-      <div v-if="hasScreenStream && !isShareWindowOpen"
+      <div v-if="hasScreenStream"
            :class="shareVideoClasses">
         <conference-share-video
             :source="leftSource"
@@ -77,8 +77,10 @@ export default {
   },
   data() {
     return {
-      shareWindow       : null,
-      hideControlsTimer : null,
+      shareWindow         : null,
+      shareControlsWindow : null,
+      isShareControlsOpen : false,
+      hideControlsTimer   : null,
     };
   },
   sketch : [
@@ -184,8 +186,23 @@ export default {
         // FIXME TMP SOLUTION
         setTimeout(() => {
           this.isShareWindowOpen = !this.shareWindow.closed;
-        }, 1000);
+        }, 800);
       };
+    },
+    openShareControls() {
+      if (this.isShareControlsOpen) return;
+
+      const width = 614;
+      const height = 56;
+      const offsetLeft = window.screen.width / 2 - width / 2;
+      const offsetTop = 0;
+
+      const option = `width=${width},height=${height},left=${offsetLeft},
+            top=${offsetTop},directories=no,titlebar=no,
+            toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
+
+      this.shareControlsWindow = window.open('shareControls.html', 'share-controls', option);
+      this.isShareWindowOpen = true;
     },
     showInviteModal() {
       this.$refs.invitingModal.visible = true;
@@ -233,15 +250,31 @@ export default {
       },
       immediate : true,
     },
+    localScreenStream(val) {
+      if (val) {
+        this.openShareControls();
+        if (this.minimizedWhenLocalSharing) {
+          this.$dispatch('application.hide');
+        }
+      }
+      else if (this.shareControlsWindow) {
+        this.shareControlsWindow.close();
+        this.isShareControlsOpen = false;
+        if (this.minimizedWhenLocalSharing) {
+          this.$dispatch('application.show');
+        }
+      }
+    },
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
-      this.isShareInCenter = !!val;
+
+      this.isShareInCenter = this.remoteScreenStream;
+
       if (val) {
         this.$rtc.media.screenMedia.acquireStream();
       }
       else {
         this.$rtc.media.screenMedia.releaseStream();
-        console.warn(this.$rtc.conference);
       }
     },
     remoteScreenStream(val) {
@@ -249,8 +282,6 @@ export default {
       if (val && this.maximizedWhenRemoteSharing) {
         this.$dispatch('application.maximize');
       }
-    },
-    localScreenStream(val) {
     },
     deviceException(val) {
       this.contentClicked();
