@@ -108,7 +108,9 @@ export default {
         { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
       ];
 
-      if (this.$model.conference.currentUser.isCastViewer()) tabList.splice(1, 1);
+      const { currentUser } = this.$model.conference;
+
+      if (currentUser && currentUser.isCastViewer()) tabList.splice(1, 1);
 
       return tabList;
     },

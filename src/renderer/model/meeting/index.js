@@ -46,7 +46,11 @@ meeting.provide({
         initialVideo,
         initialAudio,
       }).then(() => {
-        storage.insert(`MEETING_INFO_RECORD_${rtc.account.username}`, this.meetingRecord);
+        storage.insertOrUpdate(`MEETING_INFO_RECORD_${rtc.account.username}`, {
+          lastDate : Date.now(),
+          number,
+          pin,
+        }, 'number', true, true);
         this.enterDisabled = false;
       }).catch((e) => {
         this.enterDisabled = false;
@@ -91,9 +95,16 @@ meeting.provide({
         const meetingData = Object.assign({
           lastLoginDate : Date.now(),
           type          : this.serverType,
-        }, anonMeetingRecord);
+        }, { number,
+          pin,
+          server,
+          proxy,
+          proxyPort,
+          protocol,
+          displayName,
+        });
 
-        storage.insertOrUpdate(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, meetingData, 'number');
+        storage.insertOrUpdate(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST, meetingData, 'number');
         this.enterDisabled = false;
       }).catch((e) => {
         this.$message.error('当前服务器无法访问');

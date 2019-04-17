@@ -188,7 +188,7 @@ export default {
         proxy        : '10.200.112.165',
         proxyPort    : '5061',
         initialVideo : true,
-        initialAudio : true,
+        initialAudio : false,
       },
       rawAccounts      : [],
       modifiedAccounts : [],
@@ -305,30 +305,32 @@ export default {
       this.meetingInfo.initialVideo = !this.meetingInfo.initialVideo;
     },
     deleteAccount(val) {
-      this.$storage.deleteItem(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, val.number, 'number');
+      this.$storage.deleteItem(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST, val.number, 'number');
       this.initRawAccounts();
     },
     clearAccount() {
-      this.$storage.deleteItem(LOGIN_STORAGE.MEETING_ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
+      this.$storage.deleteItem(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
       this.initRawAccounts();
     },
     selectAccount(val) {
       Object.assign(this.meetingInfo, {
-        number       : '',
-        pin          : '',
-        server       : this.serverType === 'cloud' ? 'yealinkcloud.cc' : '',
-        displayName  : '',
-        proxy        : '',
-        proxyPort    : '',
+        number      : '',
+        pin         : '',
+        server      : this.serverType === 'cloud' ? 'yealinkcloud.cc' : '',
+        displayName : '',
+        proxy       : '',
+        proxyPort   : '',
+      }, this.modifiedAccounts.find((a) => a.number === val),
+      {
         initialVideo : true,
-        initialAudio : true,
-      }, this.modifiedAccounts.find((a) => a.number === val));
+        initialAudio : false,
+      });
     },
     searchAccount(val) {
       this.dSearch(val.trim());
     },
     initRawAccounts() {
-      this.rawAccounts = (this.$storage.query(LOGIN_STORAGE.MEETING_ACCOUNT_LIST) || []); // 得到最初的登陆历史记录
+      this.rawAccounts = (this.$storage.query(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST) || []); // 得到最初的登陆历史记录
       this.modifyAccounts();
     },
     modifyAccounts() {
@@ -344,7 +346,7 @@ export default {
         proxy        : '',
         proxyPort    : '',
         initialVideo : true,
-        initialAudio : true,
+        initialAudio : false,
       };
       this.dSearch();
     },

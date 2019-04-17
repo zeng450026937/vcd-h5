@@ -66,21 +66,24 @@ export default class VueStorage {
    * @param store
    * @param value
    * @param key
+   * @param toArray
+   * @param autoKey
    */
-  insertItem(store, value, key) {
+  insertItem(store, value, key, toArray, autoKey) {
     const storage = this.getStorage(store) || {};
     const pk = storage.key || 'id';
 
-    if (storage && storage.autoKey) { // 自动赋值
+    if ((storage && storage.autoKey) || autoKey) { // 自动赋值
       value[pk] = value[pk] || uuid();
     }
     key = key || pk;
 
     if (!value[key]) throw new Error(`the attr of ${key} is required`);
-    const item = this.query(store);
+    let item = this.query(store);
 
     if (!Array.isArray(item)) {
-      throw new Error('please use func of insert to insert none Array value');
+      if (!toArray) throw new Error('please use func of insert to insert none Array value');
+      else item = [];
     }
 
     const index = item.findIndex((i) => i[key] === value[key]);
@@ -154,11 +157,11 @@ export default class VueStorage {
    * @param value
    * @param key
    */
-  insertOrUpdate(store, value, key) {
+  insertOrUpdate(store, value, key, toArray, autoKey) {
     const storage = this.getStorage(store) || {};
     const pk = storage.key || 'id';
 
-    if (storage && storage.autoKey) { // 自动赋值
+    if ((storage && storage.autoKey) || autoKey) { // 自动赋值
       value[pk] = value[pk] || uuid();
     }
     key = key || pk;
@@ -166,11 +169,16 @@ export default class VueStorage {
     if (!value[key]) {
       throw new Error(`the attr of ${key} is required`);
     }
-    const item = this.query(store);
+    let item = this.query(store);
 
-    if (!Array.isArray(item)) { // none Array
-      return this.insert(store, value);
+    if (!Array.isArray(item)) {
+      if (!toArray) return this.insert(store, value);
+      else item = [];
     }
+
+    // if (!Array.isArray(item)) { // none Array
+    //   return this.insert(store, value);
+    // }
 
     const index = item.findIndex((i) => i[key] === value[key]);
 

@@ -45,14 +45,46 @@
         </div>
         <div class="flex flex-col items-center px-24 bg-white">
           <div class="mt-5 w-full">
-            <a-input
-                placeholder='会议 ID'
-                :class="{'meeting-error': meetingIDError}"
+            <a-auto-complete
                 :value="meetingInfo.number"
-                @change="onNumberChange"
+                class="certain-category-search w-full overflow-x-hidden"
+                :dropdownMatchSelectWidth="false"
+                optionLabelProp="value"
+                @select="selectAccount"
+                @search="searchAccount"
             >
-              <a-iconfont v-number-only slot="prefix" type='icon-ID' class="text-base text-black9"/>
-            </a-input>
+              <template v-if="searchedAccounts.length > 0" slot="dataSource">
+                <a-select-opt-group>
+                  <div class="flex justify-between px-3 border-b" slot="label">
+                    <span>历史记录</span>
+                    <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
+                  </div>
+                  <a-select-option v-for="item in searchedAccounts"
+                                   :key="item.number" :value="item.number" class="group">
+                    <div class="flex items-center px-2 py-2">
+                      <span class="certain-search-item-count">{{item.number}}</span>
+                      <div class="flex flex-grow"></div>
+                      <a-iconfont
+                          type="icon-guanbi"
+                          class="flex text-red opacity-0 group-hover:opacity-100"
+                          @click.stop="deleteAccount(item)"
+                      ></a-iconfont>
+                    </div>
+                  </a-select-option>
+                </a-select-opt-group>
+              </template>
+              <a-input placeholder='会议 ID' @change="onNumberChange">
+                <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
+              </a-input>
+            </a-auto-complete>
+            <!--<a-input-->
+                <!--placeholder='会议 ID'-->
+                <!--:class="{'meeting-error': meetingIDError}"-->
+                <!--:value="meetingInfo.number"-->
+                <!--@change="onNumberChange"-->
+            <!--&gt;-->
+              <!--<a-iconfont v-number-only slot="prefix" type='icon-ID' class="text-base text-black9"/>-->
+            <!--</a-input>-->
           </div>
 
           <div class="mt-5 w-full">
@@ -97,6 +129,7 @@
 </template>
 
 <script>
+import { cloneDeep, debounce } from 'lodash';
 import AppHeader from '../../../components/Main/MainHeader.vue';
 import MediaContent from '../../../components/Conference/TabSettingMedia.vue';
 import VideoView from '../../../components/Common/VideoView.vue';
@@ -144,12 +177,29 @@ export default {
     },
   },
   data() {
+    const dSearch = debounce((val = '') => {
+      this.searchedAccounts = this.modifiedAccounts.filter((a) => a.number.indexOf(val) >= 0);
+    }, 200);
+
+    
     return {
-      meetingInfo    : this.$model.meeting.meetingRecord, // number pin
-      enterPopup     : null,
-      showSetting    : false,
-      meetingIDError : false,
+      dSearch,
+      meetingInfo : {
+        number       : '',
+        pin          : '',
+        initialVideo : true,
+        initialAudio : false,
+      }, // number pin
+      rawAccounts      : [],
+      modifiedAccounts : [],
+      searchedAccounts : [],
+      enterPopup       : null,
+      showSetting      : false,
+      meetingIDError   : false,
     };
+  },
+  mounted() {
+    this.initRawAccounts();
   },
   methods : {
     checkNumber() {
@@ -197,6 +247,45 @@ export default {
     },
     triggerVideo() {
       this.meetingInfo.initialVideo = !this.meetingInfo.initialVideo;
+    },
+    deleteAccount(val) {
+      this.$storage.deleteItem(`MEETING_INFO_RECORD_${this.$rtc.account.username}`, val.number, 'number');
+      this.initRawAccounts();
+    },
+    clearAccount() {
+      this.$storage.deleteItem(`MEETING_INFO_RECORD_${this.$rtc.account.username}`, this.rawAccounts.map((account) => account.id));
+      this.initRawAccounts();
+    },
+    selectAccount(val) {
+      Object.assign(this.meetingInfo, {
+        number : '',
+        pin    : '',
+      }, this.modifiedAccounts.find((a) => a.number === val),
+      {
+        initialVideo : true,
+        initialAudio : false,
+      });
+    },
+    searchAccount(val) {
+      this.dSearch(val.trim());
+    },
+    initRawAccounts() {
+      this.rawAccounts = (this.$storage.query(`MEETING_INFO_RECORD_${this.$rtc.account.username}`) || []); // 得到最初的登陆历史记录
+      this.modifyAccounts();
+    },
+    modifyAccounts() {
+      this.modifiedAccounts = this.rawAccounts
+        .sort((account1, account2) => account2.lastDate - account1.lastDate);
+      this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
+      const account = this.modifiedAccounts[0] || {};
+
+      this.meetingInfo = {
+        number       : account.number,
+        pin          : account.pin,
+        initialVideo : true,
+        initialAudio : false,
+      };
+      this.dSearch();
     },
   },
 };

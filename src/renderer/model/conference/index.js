@@ -201,7 +201,7 @@ model.provide({
       this.isLocalUnmuteAudio = false;
     },
     onPermissionChanged(permission, oldPri) {
-      console.warn(permission, oldPri)
+      console.warn(permission, oldPri);
       // 参会者状态 organizer：组织者， presenter：主持人，attendee：访客 castviewer: 广播方
       if (!oldPri || this.muteBlockBy === 'client') return;
 
@@ -213,7 +213,7 @@ model.provide({
       }
     },
     onDemostateChanged(role, oldRole) {
-      console.warn(role, oldRole)
+      console.warn(role, oldRole);
       if (this.muteBlockBy === 'client') return;
       // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
       if (role === 'demonstrator' && oldRole === 'audience') {
@@ -226,8 +226,10 @@ model.provide({
     onRoleChanged(role, oldRole) {
       if (oldRole && role === 'waiting') this.$message.info('您已被主持人移到会议大厅');
       else if (role && oldRole === 'waiting') this.$message.info('您已被主持人批准进入会议');
-      else if(!role && oldRole) {
-        if(rtc.conference.reason.cause === 'User Deleted') {
+      else if (!role && oldRole) {
+        const { reason } = rtc.conference;
+
+        if (reason || (reason.cause === 'User Deleted')) {
           this.$message.info('您被移出会议');
         }
       }
