@@ -36,6 +36,8 @@ meeting.provide({
         pin,
         initialVideo,
         initialAudio,
+        audio,
+        video,
       } = ctx.payload.number ? ctx.payload : this.meetingRecord;
       const { conference } = rtc;
 
@@ -45,6 +47,8 @@ meeting.provide({
       return conference.join({
         initialVideo,
         initialAudio,
+        audio,
+        video,
       }).then(() => {
         this.isPreparing = false;
         storage.insertOrUpdate(`MEETING_INFO_RECORD_${rtc.account.username}`, {

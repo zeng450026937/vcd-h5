@@ -106,7 +106,7 @@ export default {
       }
 
       if (type === 'audio') {
-        return this.doAudio(info);
+        return this.doAudio(info, false, true);
       }
     },
     doVideo(item, video = true, audio = true) {
@@ -116,6 +116,8 @@ export default {
           pin          : item.pin,
           initialVideo : true,
           initialAudio : true,
+          audio,
+          video,
         })
           .then(() => {
             this.$model.conference.sketch.isVideoConference = video;
@@ -143,7 +145,10 @@ export default {
         const lastRecord = polymerization[polymerization.length - 1];
 
         if (lastRecord.otherId === record.otherId
-          && lastRecord.type === record.type && lastRecord.refuse === record.refuse) {
+          && lastRecord.type === record.type
+          && lastRecord.refuse === record.refuse
+          && lastRecord.media === record.media
+          && lastRecord.connected === record.connected) {
           polymerization[polymerization.length - 1] = record;
         }
         else {

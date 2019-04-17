@@ -188,6 +188,8 @@ export default {
           pin          : item.pin,
           initialVideo : true,
           initialAudio : true,
+          video,
+          audio,
         });
       }
       else {

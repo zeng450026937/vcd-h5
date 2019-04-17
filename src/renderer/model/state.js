@@ -285,12 +285,15 @@ export default model;
 
 async function createConferenceRecord(info) {
   const { account, server } = storage.query('CURRENT_ACCOUNT');
+
+  if (info.media == null) info.media = { video: true };
+
   const params = {
     subject          : info.subject,
     type             : 'callout',
     direction        : 'outgoing',
     connected        : false,
-    media            : 'video',
+    media            : info.media.video ? 'video' : 'audio',
     id               : info.id,
     startTime        : Date.now(),
     endTime          : null,
@@ -313,12 +316,14 @@ async function createConferenceRecord(info) {
 async function createCallRecord(info) {
   const { account, server } = storage.query('CURRENT_ACCOUNT');
 
+  if (info.media == null) info.media = { video: true };
+
   const params = {
     subject      : info.target,
     type         : info.direction === 'incoming' ? 'incoming' : 'callout',
     direction    : info.direction,
     connected    : false,
-    media        : 'video',
+    media        : info.media.video ? 'video' : 'audio',
     id           : info.id,
     startTime    : Date.now(),
     endTime      : null,
@@ -339,13 +344,14 @@ async function createCallRecord(info) {
 async function createIncomingRecord(info) {
   const { account, server } = storage.query('CURRENT_ACCOUNT');
 
+  if (info.media == null) info.media = { video: true };
   const params = {
     subject          : info.remoteIdentity.uri._user,
     type             : info.direction,
     direction        : info.direction,
     conferenceNumber : info.remoteIdentity.uri._user,
     connected        : false,
-    media            : 'video',
+    media            : info.media.video ? 'video' : 'audio',
     id               : info.id,
     startTime        : Date.now(),
     endTime          : null,

@@ -229,6 +229,8 @@ export default {
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
+        video        : true,
+        audio        : true,
       };
       this.$dispatch('meeting.joinMeeting').then(() => {
         this.isVideoConference = true;
@@ -240,6 +242,8 @@ export default {
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
+        video        : false,
+        audio        : true,
       };
       this.$dispatch('meeting.joinMeeting').then(() => {
         this.isVideoConference = false;
