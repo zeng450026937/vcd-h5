@@ -15,6 +15,9 @@ chat.provide({
     currentTab() {
       return this.$parent.sketch.currentTab;
     },
+    isOnHold() {
+      return this.$parent.currentUser.isOnHold();
+    },
     newMessage() {
       return rtc.conference.message;
     },
@@ -50,6 +53,7 @@ chat.provide({
   },
   watch : {
     newMessage(val) {
+      if (this.isOnHold) return;
       if (this.currentTab !== 'TabChatting') {
         this.hasNewMessage = true;
       }

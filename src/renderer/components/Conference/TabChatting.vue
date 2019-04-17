@@ -9,7 +9,7 @@
           <div>
             <div class="flex items-center">
               <span class="whitespace-no-wrap text-xs leading-tight">发给</span>
-              <a-select v-model="target" class="w-full ml-2" :disabled="isOnHold">
+              <a-select v-model="target" class="w-full ml-2">
                 <a-select-option v-for="(user, index) in targetList"
                                  :value="user.entity"
                                  :key="index">{{user.displayText}}</a-select-option>
@@ -19,8 +19,7 @@
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
               <a-textarea v-model="message"
-                          :placeholder="isOnHold ? '暂无发消息的权限' : '请输入您将要发送的消息'"
-                          :read-only="isOnHold"
+                          placeholder="请输入您将要发送的消息"
                           @keydown.enter.prevent=""
                           @keyup.enter.prevent = 'sendMessage'
                           class="h-full"/>
@@ -29,7 +28,7 @@
               <a-button type="primary"
                         class="w-full h-full p-0 text-xs"
                         :class="{'bg-disabled': isSendingDisabled}"
-                        :disabled="isSendingDisabled || !message || isOnHold"
+                        :disabled="isSendingDisabled || !message"
                         @click="sendMessage">
                 <span v-if="isSendingDisabled" class="text-base text-white">{{timeout}}</span>
                 <a-iconfont v-else type="icon-fasong" class="text-base"/>
@@ -59,9 +58,15 @@ export default {
       sendingTimer      : null,
     };
   },
+  sketch : {
+    ns    : 'conference.sketch',
+    props : [ 'isInConferenceMain' ],
+  },
   computed : {
     userList() {
-      return this.$model.conference.member.userList.filter((user) => !user.isCurrentUser());
+      return this.$model.conference.member.userList.filter((user) => !user.isCurrentUser()
+        && !user.isOnHold()
+        && !user.isCastViewer());
     },
     targetList() {
       return [
@@ -90,6 +95,16 @@ export default {
           this.isSendingDisabled = false;
         }
       }, 1000);
+    },
+  },
+  watch : {
+    isOnHold : {
+      handler(val) {
+        if (val) {
+          this.isInConferenceMain = true;
+        }
+      },
+      immediate : true,
     },
   },
 };

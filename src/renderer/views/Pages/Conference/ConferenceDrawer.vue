@@ -75,7 +75,10 @@ export default {
         { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
       ];
 
-      if (this.$model.conference.currentUser.isCastViewer()) tabList.splice(1, 1);
+      const { currentUser } = this.$model.conference;
+
+      if (currentUser && currentUser.isCastViewer()) tabList.splice(1, 1); // 广播方
+      else if (currentUser && currentUser.isOnHold()) tabList.splice(2, 1); // 会议大厅
 
       return tabList;
     },
