@@ -18,10 +18,11 @@
           </div>
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
-              <a-textarea v-model="message"
+              <a-textarea :value="message"
                           placeholder="请输入您将要发送的消息"
                           @keydown.enter.prevent=""
                           @keyup.enter.prevent = 'sendMessage'
+                          @change="onMessageInputed"
                           class="h-full"/>
             </div>
             <div class="w-1/6 bg-grey-light">
@@ -88,6 +89,13 @@ export default {
     },
   },
   methods : {
+    onMessageInputed(e) {
+      const { value } = e.target;
+
+      if (value.length <= 100) {
+        this.message = value;
+      }
+    },
     sendMessage(e) {
       if (this.isSendingDisabled || !this.message || this.isOnHold) return;
       this.$model.conference.chat.sendMessage('我', this.target, this.message, 'send');

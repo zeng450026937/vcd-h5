@@ -77,14 +77,6 @@
                 <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
               </a-input>
             </a-auto-complete>
-            <!--<a-input-->
-                <!--placeholder='会议 ID'-->
-                <!--:class="{'meeting-error': meetingIDError}"-->
-                <!--:value="meetingInfo.number"-->
-                <!--@change="onNumberChange"-->
-            <!--&gt;-->
-              <!--<a-iconfont v-number-only slot="prefix" type='icon-ID' class="text-base text-black9"/>-->
-            <!--</a-input>-->
           </div>
 
           <div class="mt-5 w-full">

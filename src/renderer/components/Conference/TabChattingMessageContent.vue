@@ -5,10 +5,20 @@
         <div :key="index">
           <div class="flex flex-col px-3 pt-3">
             <div class="flex items-center text-xs leading-tight select-none">
-              <span :class="{'text-indigo': message.type === 'receive'}">{{message.from}}</span>
+              <div style="max-width: 120px" class="truncate">
+                <span class="truncate"
+                      :title="message.from"
+                      :class="{'text-indigo': message.type === 'receive'}">{{message.from}}</span>
+              </div>
               <span style="margin: 0 6px">@</span>
-              <span :class="{'text-indigo': !message.isPrivate || message.type === 'send'}">{{message.to}}</span>
-              <div class="flex flex-grow"></div>
+              <div class="w-1 flex flex-grow">
+                <span class="truncate"
+                      :title="message.to"
+                      :class="{'text-indigo': !message.isPrivate || message.type === 'send'}">
+                  {{message.to}}
+                </span>
+                <span v-if="!message.toAll" class="text-red-light whitespace-no-wrap mx-1">(私聊)</span>
+              </div>
               <span class="text-black6">{{message.date}}</span>
             </div>
             <div style="margin-top: 6px;word-break: break-all;"
@@ -45,4 +55,3 @@ export default {
   },
 };
 </script>
-

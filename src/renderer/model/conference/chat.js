@@ -30,6 +30,7 @@ chat.provide({
       const { conference } = rtc.conference;
       const startTime = moment(new Date(), 'YYYYMMDD').format('HH:mm');
       const messageObject = {
+        toAll     : target === 'all',
         from,
         content,
         date      : startTime,
@@ -61,6 +62,7 @@ chat.provide({
         from      : val.user['@display-text'],
         content   : val.msg,
         date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
+        toAll     : !val['@is-private'],
         to        : val['@is-private'] ? '我' : '所有人',
         isPrivate : val['@is-private'],
         type      : 'receive',
