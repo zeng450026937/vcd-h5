@@ -16,7 +16,10 @@
             <div class="subject">{{ record | recordName}}</div>
           </div>
           <div class="record-info" >
-            <div class="record-info-status" :class="{'text-red':!record.connected}">
+            <div class="record-info-status"
+                 :class="{
+                  'text-red':!(!record.connected && record.refuse === true && record.type === 'callout') && (!record.connected)
+                 }">
               <a-iconfont  :type='record|callIcon' class="text-base mr-1" theme="filled"></a-iconfont>
               <div>{{record|callType}}</div>
             </div>
@@ -30,13 +33,13 @@
             </div>
             <div class="record-operate-btns">
               <a-iconfont
-                  @click="doVideo(record)"
+                  @click.stop="doVideo(record)"
                   type='icon-shipin'
                   class="text-indigo text-base cursor-pointer hover:text-blue">
               </a-iconfont>
 
               <a-iconfont
-                  @click="doAudio(record)"
+                  @click.stop="doAudio(record)"
                   type='icon-yuyin'
                   class="text-indigo text-base cursor-pointer hover:text-blue mx-5">
               </a-iconfont>
@@ -80,7 +83,7 @@ export default {
 
       if (type === 'all') return this.callRecord;
 
-      if (type === 'missed') return this.callRecord.filter((record) => !record.connected);
+      if (type === 'missed') return this.callRecord.filter((record) => !record.connected && (record.type === 'incoming' || record.direction === 'incoming'));
 
       return [];
     },
@@ -131,10 +134,32 @@ export default {
     doAudio(item) {
       this.doVideo(item, false, true);
     },
+    classification(records) {
+      const polymerization = [];
+
+      records.forEach((record) => {
+        if (polymerization.length === 0) return polymerization.push(record);
+
+        const lastRecord = polymerization[polymerization.length - 1];
+
+        if (lastRecord.otherId === record.otherId
+          && lastRecord.type === record.type && lastRecord.refuse === record.refuse) {
+          polymerization[polymerization.length - 1] = record;
+        }
+        else {
+          polymerization.push(record);
+        }
+      });
+
+      return polymerization;
+    },
     async updateRecord() {
       const { account, server } = this.$storage.query('CURRENT_ACCOUNT');
 
-      this.callRecord = await this.callRecordDb.getRecordByRecent([ account, server ], 100);
+      const records = await this.callRecordDb.getRecordByRecent([ account, server ], 100);
+
+      this.callRecord = this.classification(records);
+
 
       this.ready = true;
     },
@@ -151,7 +176,9 @@ export default {
     callType,
     callIcon,
     genStartTime,
-    duration({ startTime, endTime }) {
+    duration({ startTime, endTime, type, connected, refuse }) {
+      if (!connected && refuse === true && type === 'callout') return '已取消';
+
       if (!endTime || !startTime) return '';
 
       return genDurationTime(startTime, endTime);
@@ -170,6 +197,7 @@ export default {
 
       return record.contact.name;
     },
+
   },
   async beforeCreate() {
     this.callRecordDb = CallRecord.Create();
@@ -202,19 +230,21 @@ export default {
         height: 56px;
         cursor: pointer;
         .record-operate-btns {
-          display: none;
+          max-height: 0;
+          overflow: hidden;
         }
         &:hover {
           background: #E1E5F2;
           .record-operate-btns {
-            display: block;
+            max-height: 20px;
           }
           .record-date {
-            display: none;
+            max-height: 0;
+            overflow: hidden;
           }
         }
         .record-subject {
-          width: 45%;
+          width: 46%;
           display: flex;
           align-items: center;
           padding:0 20px 0 10px;
@@ -231,6 +261,7 @@ export default {
           width: 20%;
           display: flex;
           flex-direction: column;
+          padding: 0 2px;
           .record-info-status {
             display: flex;
           }
@@ -241,7 +272,8 @@ export default {
         }
         .record-operate {
           text-align: center;
-          width: 35%;
+          width: 34%;
+          overflow: hidden;
           .record-date {
             font-size: 12px;
             color: #999999;

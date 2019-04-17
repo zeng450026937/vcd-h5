@@ -169,7 +169,7 @@ export default {
         this.$rtc.call.decline().catch(() => {});
       }
       else {
-        this.$rtc.call.disconnect();
+        this.$rtc.call.cancel();
       }
     },
     openPlateModal() {

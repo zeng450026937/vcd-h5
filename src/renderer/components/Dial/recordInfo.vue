@@ -54,8 +54,8 @@
                     <a-col :span="2">手机</a-col>
                     <a-col :span="8">{{contact.phone}}</a-col>
                     <a-col :span="2">部门</a-col>
-                    <a-col :span="8" class="text-indigo cursor-pointer"
-                           @click="addLocalContact">{{contact.parentNode}}{{contact.isLocal ? '本地联系人' : '（添加本地联系人）'}}
+                    <a-col :span="8" class="text-indigo">
+                      {{contact.parentNode}}{{contact.isLocal ? '本地联系人' : ''}}
                     </a-col>
                   </a-row>
                 </a-col>
@@ -102,12 +102,12 @@
       </div>
 
       <div class="flex justify-center py-2 border-t w-full">
-        <a-button @click="doVideo(this.recordInfo)" class="ml-4"
+        <a-button @click="doVideo(recordInfo)" class="ml-4"
                   type="primary">
           <a-iconfont type="icon-shipin"/>
           视频通话
         </a-button>
-        <a-button @click="doAudio(this.recordInfo)" class="ml-4"
+        <a-button @click="doAudio(recordInfo)" class="ml-4"
                   type="primary">
           <a-iconfont type="icon-yuyin"/>
           音频通话
@@ -246,14 +246,6 @@ export default {
 
           contact = contacts.find((n) => n.number === val);
         }
-
-        if (contact) {
-          this.contact = contact;
-
-          const parentNode = this.store.findParentNode(contact.id, contact.parentId);
-
-          this.contact.parentNode = parentNode.name;
-        }
       }
 
       if (!contact) {
@@ -264,6 +256,15 @@ export default {
       if (!contact) {
         this.contact = { number: val, name: '未知联系人', unknown: true };
       }
+
+      if (contact) {
+        this.contact = contact;
+
+        const parentNode = this.store.findParentNode(contact.id, contact.parentId);
+
+        this.contact.parentNode = parentNode.name;
+      }
+
       this.$nextTick(() => {
         this.ready = true;
       });
