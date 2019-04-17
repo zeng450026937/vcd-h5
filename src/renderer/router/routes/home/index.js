@@ -1,5 +1,4 @@
 import contacts from './contacts';
-import record from './record';
 import setting from './setting';
 import schedule from './schedule';
 import meeting from './meeting';
@@ -19,7 +18,6 @@ export default {
       children : [
         ...contacts,
         ...meeting,
-        ...record,
         ...setting,
         ...schedule,
       ],

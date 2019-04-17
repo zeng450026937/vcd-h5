@@ -12,7 +12,6 @@ const genSidebarNavs = (routes) => {
   const sideNavs = {
     instance    : { icon: 'icon-jishihuiyi', text: '即时会议' },
     join        : { icon: 'icon-jiaruhuiyi', text: '加入会议' },
-    records     : { icon: 'icon-tonghuajilu', text: '通话记录' },
     dial        : { icon: 'icon-bohao', text: '拨号' },
     schedule    : {},
     corporate   : { icon: 'icon-qiyelianxiren', text: '企业联系人' },
@@ -48,7 +47,6 @@ const initialSidebar = () => {
       navs        : [
         sideNavs.instance,
         sideNavs.join,
-        sideNavs.records,
         sideNavs.dial,
       ],
     },
