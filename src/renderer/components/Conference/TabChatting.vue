@@ -69,16 +69,22 @@ export default {
         && !user.isCastViewer());
     },
     targetList() {
-      return [
-        {
-          entity      : 'all',
-          displayText : '全体',
-        },
-        ...this.userList,
-      ];
+      const targetList = [ {
+        entity      : 'all',
+        displayText : '全体',
+      } ];
+
+      if (!this.isCastViewer) {
+        targetList.push(...this.userList);
+      }
+
+      return targetList;
     },
     isOnHold() {
       return this.$model.conference.currentUser.isOnHold();
+    },
+    isCastViewer() {
+      return this.$model.conference.currentUser.isCastViewer();
     },
   },
   methods : {
