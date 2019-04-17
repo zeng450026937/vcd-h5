@@ -27,8 +27,15 @@ model.provide({
   computed : {
     // 登录状态 disconnected connecting registering registered disconnected
     loginStatus : () => rtc.account.status,
-    // 会议状态 disconnected connecting connected disconnected
-    confStatus  : () => rtc.conference.status,
+    isPreparing() {
+      return this.$parent.meeting.isPreparing;
+    },
+    // 会议状态 isPreparing disconnected connecting connected disconnected
+    confStatus() {
+      const { status } = rtc.conference;
+
+      return this.isPreparing ? 'connecting' : status;
+    },
     // 通话状态 ringing connecting connected disconnected
     // connecting   : 呼叫
     // connected    : 通话中

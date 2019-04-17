@@ -11,7 +11,7 @@ meeting.provide({
   data() {
     return {
       meetingRecord : null,
-      enterDisabled : false,
+      isPreparing   : false,
     };
   },
   computed : {
@@ -27,8 +27,8 @@ meeting.provide({
   },
   middleware : {
     async joinMeeting(ctx, next) {
-      if (this.enterDisabled) return;
-      this.enterDisabled = true;
+      if (this.isPreparing) return;
+      this.isPreparing = true;
       await next();
 
       const {
@@ -46,20 +46,20 @@ meeting.provide({
         initialVideo,
         initialAudio,
       }).then(() => {
+        this.isPreparing = false;
         storage.insertOrUpdate(`MEETING_INFO_RECORD_${rtc.account.username}`, {
           lastDate : Date.now(),
           number,
           pin,
         }, 'number', true, true);
-        this.enterDisabled = false;
       }).catch((e) => {
-        this.enterDisabled = false;
+        this.isPreparing = false;
         throw e;
       });
     },
     async anonymousJoin(ctx, next) {
-      if (this.enterDisabled) return;
-      this.enterDisabled = true;
+      if (this.isPreparing) return;
+      this.isPreparing = true;
       await next();
 
       const anonMeetingRecord = ctx.payload;
@@ -105,10 +105,13 @@ meeting.provide({
         });
 
         storage.insertOrUpdate(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST, meetingData, 'number');
-        this.enterDisabled = false;
+        this.isPreparing = false;
       }).catch((e) => {
-        this.$message.error('当前服务器无法访问');
-        this.enterDisabled = false;
+        if (!e) {
+          this.$message.error('当前服务器无法访问');
+        }
+        else throw e;
+        this.isPreparing = false;
       });
     },
     meetnow(ctx, next) {
