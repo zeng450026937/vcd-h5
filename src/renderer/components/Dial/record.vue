@@ -8,9 +8,9 @@
       </a-radio-group>
     </div>
 
-
-    <div class="record-list">
-      <div class="record-item" @click="toDetail(record)" v-for="record in currentRecords" :key="record.id">
+    <div class="record-scroll-area">
+      <div class="record-list">
+        <div class="record-item" @click="toDetail(record)" v-for="record in currentRecords" :key="record.id">
           <div class="record-subject">
             <ContactPopover @update-info="handleUpdateInfo" @call="handleCall" :info="record"></ContactPopover>
             <div class="subject">{{ record | recordName}}</div>
@@ -18,9 +18,10 @@
           <div class="record-info" >
             <div class="record-info-status"
                  :class="{
-                  'text-red':!(!record.connected && record.refuse === true && record.type === 'callout') && (!record.connected)
+                  'text-red':!(!record.connected && record.refuse === true && record.type === 'callout')
+                  && (!record.connected)
                  }">
-              <a-iconfont  :type='record|callIcon' class="text-base mr-1" theme="filled"></a-iconfont>
+              <a-iconfont  :type='record|callIcon' class="text-sm mr-1" theme="filled"></a-iconfont>
               <div>{{record|callType}}</div>
             </div>
             <div class="record-info-duration">
@@ -50,6 +51,7 @@
               </a-iconfont>
             </div>
           </div>
+        </div>
       </div>
     </div>
 
@@ -226,62 +228,68 @@ export default {
       border-bottom: 1px solid #e0e0e0;
       width: 100%;
     }
-    .record-list {
+    .record-scroll-area {
       height: calc( 100% - 80px);
       overflow-y: auto;
-      .record-item {
-        display: flex;
-        align-items: center;
-        height: 56px;
-        cursor: pointer;
-        .record-operate-btns {
-          max-height: 0;
-          overflow: hidden;
-        }
-        &:hover {
-          background: #E1E5F2;
+      width: calc( 100% + 6px);
+      .record-list {
+        width: calc( 100% - 6px);
+        .record-item {
+          display: flex;
+          align-items: center;
+          height: 56px;
+          cursor: pointer;
           .record-operate-btns {
-            max-height: 20px;
-          }
-          .record-date {
             max-height: 0;
             overflow: hidden;
           }
-        }
-        .record-subject {
-          width: 46%;
-          display: flex;
-          align-items: center;
-          padding:0 20px 0 10px;
-          overflow: hidden;
-          .subject {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex-grow: 1;
-            padding-left: 10px;
+          &:hover {
+            background: #E1E5F2;
+            .record-operate-btns {
+              max-height: 20px;
+            }
+            .record-date {
+              max-height: 0;
+              overflow: hidden;
+            }
           }
-        }
-        .record-info {
-          width: 20%;
-          display: flex;
-          flex-direction: column;
-          padding: 0 2px;
-          .record-info-status {
+          .record-subject {
+            width: 46%;
             display: flex;
+            align-items: center;
+            padding:0 20px 0 10px;
+            overflow: hidden;
+            .subject {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              flex-grow: 1;
+              padding-left: 10px;
+            }
           }
-          .record-info-duration {
-            font-size: 12px;
-            color: #999999;
+          .record-info {
+            width: 20%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 2px;
+            .record-info-status {
+              display: flex;
+              font-size: 12px;
+            }
+            .record-info-duration {
+              font-size: 12px;
+              color: #999999;
+            }
           }
-        }
-        .record-operate {
-          text-align: center;
-          width: 34%;
-          overflow: hidden;
-          .record-date {
-            font-size: 12px;
-            color: #999999;
+          .record-operate {
+            text-align: center;
+            width: 34%;
+            overflow: hidden;
+            .record-date {
+              font-size: 12px;
+              color: #999999;
+            }
           }
         }
       }
