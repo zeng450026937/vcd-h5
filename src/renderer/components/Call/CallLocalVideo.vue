@@ -5,7 +5,13 @@
                 object-fit="cover"
                 muted
                 class="cursor-pointer"
+                :hide-video="isVideoBlock"
                 :class="{'opacity-0':current === 0}"/>
+    <div v-if="isVideoBlock && current !== 0"
+         class="flex h-full items-center justify-center"
+         slot="content">
+      <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
+    </div>
     <template v-if="current !== 2">
       <div class="video-controls group-hover:opacity-100 h-8"
            :class="{'opacity-0': current !== 0}">
@@ -56,6 +62,9 @@ export default {
     isConnected() {
       return this.$rtc.call.connected;
     },
+    isVideoBlock() {
+      return this.$model.call.mediaStatus.video;
+    },
   },
   methods : {
     // 变大或者变小
@@ -101,6 +110,11 @@ export default {
       transform: translateX(-100%);
       background: rgba(0,0,0,0.65);
       transition: opacity ease-in-out .5s;
+    }
+    .display-icon {
+      opacity: 0.4;
+      color: white;
+      font-size: 36px;
     }
   }
   .call-local-video { // min shrink normal expand

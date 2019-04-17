@@ -155,7 +155,9 @@ model.provide({
 
       if (status) {
         lobby.allow(user.entity).then(() => {
-          this.messageTextList.push(`${user.displayText} 加入会议`);
+          const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
+
+          this.messageTextList.push(`${text} 加入会议`);
         });
       }
       else {
@@ -229,7 +231,7 @@ model.provide({
       else if (!role && oldRole) {
         const { reason } = rtc.conference;
 
-        if (reason || (reason.cause === 'User Deleted')) {
+        if (!reason || (reason.cause === 'User Deleted')) {
           this.$message.info('您被移出会议');
         }
       }
@@ -259,10 +261,14 @@ model.provide({
     async addedUser(val) {
       await Promise.resolve();
       if (val.isOnHold()) return;
-      this.messageTextList.push(`${val.displayText} 加入会议`);
+      const text = val.displayText.length > 10 ? `${val.displayText.slice(0, 10)}...` : val.displayText;
+
+      this.messageTextList.push(`${text} 加入会议`);
     },
     deletedUser(val) {
-      this.messageTextList.push(`${val.displayText} 离开会议`);
+      const text = val.displayText.length > 10 ? `${val.displayText.slice(0, 10)}...` : val.displayText;
+
+      this.messageTextList.push(`${text} 离开会议`);
     },
   },
 });

@@ -81,15 +81,10 @@ export default {
     CallPlateModal,
     ScreenShareModal,
   },
-  data() {
-    return {
-      mediaStatus : { audio: false, video: false },
-    };
-  },
   sketch : [
     {
       ns    : 'call',
-      props : [ 'isVideoCall' ],
+      props : [ 'isVideoCall', 'mediaStatus' ],
     },
     {
       ns    : 'call.sketch',

@@ -17,6 +17,7 @@ model.provide({
     return {
       isVideoCall : null,
       callNumber  : '',
+      mediaStatus : { audio: false, video: false },
     };
   },
   middleware : {

@@ -10,7 +10,13 @@
                 muted
                 object-fit="cover"
                 class="cursor-pointer"
+                :hide-video="isVideoBlock"
                 :class="{'opacity-0':current === 0}"/>
+    <div v-if="isVideoBlock && current !== 0"
+         class="flex h-full items-center justify-center bg-main-theme"
+         slot="content">
+      <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
+    </div>
     <template v-if="current !== 2 && isVideoConference">
       <div class="video-controls group-hover:opacity-100 h-8"
            :class="{'opacity-0': current !== 0}">
@@ -59,6 +65,9 @@ export default {
   computed : {
     current() {
       return this.localWindowState.current;
+    },
+    isVideoBlock() {
+      return this.$model.conference.videoStatus === 'block';
     },
   },
   methods : {
@@ -110,6 +119,11 @@ export default {
       color: white;
       transform: translateY(-100%);
     }
+    .display-icon {
+      opacity: 0.4;
+      color: white;
+      font-size: 36px;
+    }
   }
   .conference-local-video { // min shrink normal expand
     &-min {
@@ -129,4 +143,5 @@ export default {
       height: 198px;
     }
   }
+
 </style>
