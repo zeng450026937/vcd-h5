@@ -178,9 +178,11 @@ export default {
       return this.$model.contact.findContacts(val);
     },
     create() {
-      this.$refs.transfer.create({
-        data : this.contacts,
-      });
+      if (this.$refs.transfer) {
+        this.$refs.transfer.create({
+          data : this.contacts,
+        });
+      }
     },
     handleChange(data) {
       data._isVue = true;
@@ -251,7 +253,6 @@ export default {
           this.showCopySuccess = false;
         }, 3000);
       });
-
     },
   },
   watch : {
@@ -267,6 +268,9 @@ export default {
         this.$nextTick(() => {
           this.create();
         });
+      }
+      else {
+        this.currentTab = 'inviteUser';
       }
     },
     async currentTab(val) {

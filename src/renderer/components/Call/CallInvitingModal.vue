@@ -162,6 +162,9 @@ export default {
           this.create();
         });
       }
+      else {
+        this.currentTab = 'inviteUser';
+      }
     },
   },
   methods : {
@@ -172,9 +175,11 @@ export default {
       return this.$model.contact.findContacts(val);
     },
     create() {
-      this.$refs.transfer.create({
-        data : this.contacts,
-      });
+      if (this.$refs.transfer) {
+        this.$refs.transfer.create({
+          data : this.contacts,
+        });
+      }
     },
     handleChange(data) {
       data._isVue = true;
