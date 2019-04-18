@@ -84,6 +84,9 @@ export default {
     }
   },
   computed : {
+    audioOutputDevice() {
+      return this.$model.media.audioOutputDevice;
+    },
     videoId() {
       return `${this.source}-video-${Date.now()}`;
     },
@@ -169,6 +172,9 @@ export default {
     },
   },
   watch : {
+    audioOutputDevice(val) {
+      this.videoElement.setSinkId(val.deviceId);
+    },
     videoStream : {
       handler   : 'onVideoStreamChanged',
       immediate : true,

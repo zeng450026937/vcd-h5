@@ -128,7 +128,7 @@ model.provide({
       const using = this.audioOutputDevice;
 
       const hasUsing = using && devices.some((d) => isSameDevice(d, using));
-      
+
       // can't find setting device, use the first one
       if (!hasUsing) {
         this.audioOutputDevice = device;

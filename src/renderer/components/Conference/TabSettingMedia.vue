@@ -116,6 +116,14 @@ export default {
     selectContainer() {
       return () => this.$el;
     },
+    audioOutputDevice() {
+      return this.$model.media.audioOutputDevice;
+    },
+  },
+  watch : {
+    audioOutputDevice(val) {
+      this.$refs.testAudio.setSinkId(val.deviceId);
+    },
   },
   methods : {
     playTestMusic() {
