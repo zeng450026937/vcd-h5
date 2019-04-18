@@ -103,7 +103,7 @@
                           <span class="ml-1 mr-2 truncate">
                             {{item['display-text']}}
                           </span>
-                          （<span>{{item.phone}}</span>）
+                          <span v-if="item.phone">（{{item.phone}}）</span>
                         </div>
                       </div>
                     </template>

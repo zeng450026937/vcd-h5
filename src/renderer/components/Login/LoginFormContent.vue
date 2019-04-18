@@ -272,6 +272,7 @@ export default {
     openSetting() {
       this.$storage.update(this.$storage.FIRST_START, false)
       this.isFirstStart = false;
+      this.isCapsLockOn = false;
       this.$emit('openSetting');
     },
 

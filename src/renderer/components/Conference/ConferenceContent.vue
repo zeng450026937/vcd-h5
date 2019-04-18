@@ -44,7 +44,7 @@
       <div :class="localVideoClasses">
         <conference-local-video/>
       </div>
-      <div v-if="hasScreenStream"
+      <div v-if="remoteScreenStream"
            :class="shareVideoClasses">
         <conference-share-video
             :source="leftSource"
@@ -137,7 +137,7 @@ export default {
     },
     localVideoClasses() {
       const position = this.isInConferenceMain ? 'right'
-        : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
+        : this.remoteScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
 
       return {
         [`local-video-content local-video-content-${position}`] : true,
