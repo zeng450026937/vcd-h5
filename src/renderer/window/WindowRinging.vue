@@ -55,9 +55,9 @@ export default {
     },
     isVideoCall() {
       if (this.conferenceInviter) return false;
-      const { callInfo } = this.rtc.account.newChannel[0]; // 只考虑一路
+      const { callType } = this.rtc.account.newChannel[0]; // 只考虑一路
 
-      return callInfo && callInfo.video;
+      return callType && callType === 'video';
     },
     conferenceInviter() {
       const { headers } = this.rtc.call.incoming[0].request;
