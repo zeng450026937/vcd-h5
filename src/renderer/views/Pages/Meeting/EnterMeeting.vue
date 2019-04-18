@@ -55,12 +55,12 @@
             >
               <template v-if="searchedAccounts.length > 0" slot="dataSource">
                 <a-select-opt-group>
-                  <div class="flex justify-between px-3 border-b" slot="label">
+                  <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
                     <span>历史记录</span>
                     <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
                   </div>
-                  <a-select-option v-for="item in searchedAccounts"
-                                   :key="item.number" :value="item.number" class="group">
+                  <a-select-option v-for="(item, index) in searchedAccounts"
+                                   :key="index" :value="item.number" class="group">
                     <div class="flex items-center px-2 py-2">
                       <span class="certain-search-item-count">{{item.number}}</span>
                       <div class="flex flex-grow"></div>

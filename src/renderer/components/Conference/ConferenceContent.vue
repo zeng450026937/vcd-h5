@@ -191,18 +191,10 @@ export default {
     },
     openShareControls() {
       if (this.isShareControlsOpen) return;
-
-      const width = 614;
-      const height = 56;
-      const offsetLeft = window.screen.width / 2 - width / 2;
-      const offsetTop = 0;
-
-      const option = `width=${width},height=${height},left=${offsetLeft},
-            top=${offsetTop},directories=no,titlebar=no,
-            toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
-
-      this.shareControlsWindow = window.open('shareControls.html', 'share-controls', option);
-      this.isShareWindowOpen = true;
+      this.$dispatch('application.openShareControls').then((window) => {
+        this.shareControlsWindow = window;
+        this.isShareControlsOpen = true;
+      });
     },
     showInviteModal() {
       this.$refs.invitingModal.visible = true;

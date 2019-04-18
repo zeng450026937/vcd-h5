@@ -27,7 +27,7 @@
                 >
                   <template v-if="searchedAccounts.length > 0" slot="dataSource">
                     <a-select-opt-group>
-                      <div class="flex justify-between px-3 border-b" slot="label">
+                      <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
                         <span>历史记录</span>
                         <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
                       </div>
@@ -335,7 +335,6 @@ export default {
     },
     modifyAccounts() {
       this.modifiedAccounts = this.rawAccounts
-        .filter((account) => account.type === this.serverType)
         .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
       this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
       this.meetingInfo = {

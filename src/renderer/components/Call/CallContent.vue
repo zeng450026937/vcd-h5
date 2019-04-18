@@ -7,7 +7,7 @@
         <div class="header no-dragable flex flex-col h-10 z-10"
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
-            <a-iconfont v-if="hasScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
+            <a-iconfont v-if="hasRemoteScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
                         title="弹出辅流"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
@@ -75,8 +75,9 @@ export default {
   },
   data() {
     return {
-      shareWindow       : null,
-      hideControlsTimer : null,
+      shareWindow         : null,
+      hideControlsTimer   : null,
+      isShareControlsOpen : false,
     };
   },
   sketch : [
@@ -95,6 +96,10 @@ export default {
     {
       ns    : 'conference.sketch',
       props : [ 'updateHoldPosition' ],
+    },
+    {
+      ns    : 'setting',
+      props : [ 'maximizedWhenRemoteSharing', 'minimizedWhenLocalSharing' ],
     },
   ],
   computed : {
@@ -171,6 +176,13 @@ export default {
     this.contentClicked();
   },
   methods : {
+    openShareControls() {
+      if (this.isShareControlsOpen) return;
+      this.$dispatch('application.openShareControls').then((window) => {
+        this.shareControlsWindow = window;
+        this.isShareControlsOpen = true;
+      });
+    },
     openShareWindow() {
       if (this.isShareWindowOpen) return;
 
@@ -231,13 +243,12 @@ export default {
     },
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
-      this.isShareInCenter = !!val;
+      this.isShareInCenter = this.remoteScreenStream;
       if (val) {
         this.$rtc.media.screenMedia.acquireStream();
       }
       else {
         this.$rtc.media.screenMedia.releaseStream();
-        console.warn(this.$rtc.conference);
       }
     },
     isShareWindowOpen(val) {
@@ -248,6 +259,27 @@ export default {
         // 分享的应用被关闭
         this.$message.warn('由于共享的窗口被关闭，内容共享结束');
         this.$rtc.call.share.channel.disconnect();
+      }
+    },
+    hasRemoteScreenStream(val) {
+      // 观看他人内容共享时自动最大化VCD窗口
+      if (val && this.maximizedWhenRemoteSharing) {
+        this.$dispatch('application.maximize');
+      }
+    },
+    hasLocalScreenStream(val) {
+      if (val) {
+        this.openShareControls();
+        if (this.minimizedWhenLocalSharing) {
+          this.$dispatch('application.hide');
+        }
+      }
+      else if (this.shareControlsWindow) {
+        this.shareControlsWindow.close();
+        this.isShareControlsOpen = false;
+        if (this.minimizedWhenLocalSharing) {
+          this.$dispatch('application.show');
+        }
       }
     },
   },

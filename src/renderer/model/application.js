@@ -1,4 +1,4 @@
-import { remote, ipcRenderer, shell } from 'electron';
+import electron, { remote, ipcRenderer, shell, screen } from 'electron';
 import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 
@@ -30,6 +30,7 @@ model.provide({
       onLine     : navigator.onLine,
       connection : dumpConnection(),
       remote,
+      electron,
     };
   },
 
@@ -86,6 +87,33 @@ model.provide({
       
       // send template via ipc message to main process
       ipcRenderer.send('update-tray-menu', template);
+    },
+    async openShareControls(ctx, next) {
+      await next();
+
+      const displays = screen.getAllDisplays();
+
+      let currentPointX = screen.getCursorScreenPoint().x;
+
+      let currentDistance = 0;
+
+      displays.forEach((display) => {
+        const { width } = display.bounds;
+
+        currentPointX -= width;
+        if (currentPointX > 0) currentDistance += width;
+      });
+
+      const width = 614;
+      const height = 56;
+      const offsetLeft = currentDistance + window.screen.width / 2 - width / 2;
+      const offsetTop = 0;
+
+      const option = `width=${width},height=${height},left=${offsetLeft},
+            top=${offsetTop},directories=no,titlebar=no,
+            toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
+
+      return window.open('shareControls.html', 'share-controls', option);
     },
   },
   

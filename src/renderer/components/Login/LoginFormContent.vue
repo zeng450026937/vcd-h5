@@ -18,7 +18,7 @@
           >
             <template v-if="searchedAccounts.length > 0" slot="dataSource">
               <a-select-opt-group>
-                <div class="flex justify-between px-3 border-b" slot="label">
+                <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
                   <span>历史记录</span>
                   <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
                 </div>

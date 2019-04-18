@@ -66,7 +66,16 @@ export default {
         const time = (new Date().getTime() - meetTime.getTime()) / 1000;
 
         while (checkTimes++ === checkInterval) {
-          this.rtc.conference.getStats().then((val) => {
+          let target;
+
+          if (this.rtc.conference.connected) {
+            target = this.rtc.conference;
+          }
+          else if (this.rtc.call.connected) {
+            target = this.rtc.call.share.channel;
+          }
+          if (!target) { this.closeSharing(); }
+          target.getStats().then((val) => {
             if (this.signal === val.media.quality) {
               checkInterval *= 2;
               checkInterval = (checkInterval * 2) % 15;

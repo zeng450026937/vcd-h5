@@ -54,7 +54,7 @@ export default {
     inputPlateContent(e) {
       this.plateContent = e.target.value.replace(/[^0-9*#]+/, '');
       if (/[0-9*#]+/.test(e.data)) {
-        this.$rtc.call.sendDTMF(e.data);
+        this.$rtc.conference.sendDTMF(e.data);
       }
     },
     clickNumber(num) {
