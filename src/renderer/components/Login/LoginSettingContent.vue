@@ -3,7 +3,13 @@
     <div class="flex flex-grow">
       <a-tabs defaultActiveKey="1" class="w-full">
         <a-tab-pane tab="基本设置" key="1">
-          <div class="flex h-full flex-col px-20 pt-10">
+          <div class="flex flex-col px-20 pt-10">
+            <span class="mb-3 leading-normal">服务器设置</span>
+            <a-input v-model="tmpServer" placeholder='服务器地址'>
+            </a-input>
+            <div class="mt-4"></div>
+          </div>
+          <div class="flex h-full flex-col px-20">
             <span class="mb-3 leading-normal">代理服务器设置</span>
             <a-input v-model="tmpProxy" placeholder='代理服务器地址'>
             </a-input>
@@ -41,16 +47,18 @@ export default {
     return {
       tmpProxy     : '',
       tmpProxyPort : '',
+      tmpServer    : '',
       errorQueue   : Promise.resolve(),
     };
   },
   mounted() {
     this.tmpProxy = this.proxy;
     this.tmpProxyPort = this.proxyPort;
+    this.tmpServer = this.server;
   },
   sketch : {
     ns    : 'account',
-    props : [ 'proxy', 'proxyPort' ],
+    props : [ 'proxy', 'proxyPort', 'server' ],
   },
   methods : {
     validateProxy() {
@@ -61,6 +69,7 @@ export default {
       if (this.validateProxy()) {
         this.proxy = this.tmpProxy;
         this.proxyPort = this.tmpProxyPort;
+        this.server = this.tmpServer;
         this.closeSetting();
       }
       else {

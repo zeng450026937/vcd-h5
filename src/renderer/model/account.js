@@ -22,25 +22,35 @@ model.provide({
       loginType : 'login',
       proxy     : '',
       proxyPort : '',
+      server    : '',
     };
   },
   middleware : {
     async login(ctx, next) {
       await next();
-      const { account, pin, server } = ctx.payload;
+      const { account, pin } = ctx.payload;
 
-      this.validateForm(ctx.payload);
+      this.validateForm({
+        ...ctx.payload,
+        server : this.server,
+      });
 
       const protocol = ctx.payload.protocol || 'tls';
       const port = this.proxyPort || (this.serverType === 'cloud' && protocol === 'tls' ? 5061 : 5061);
 
-      rtc.account.uri = `${account}@${server}`;
+      rtc.account.uri = `${account}@${this.server}`;
       rtc.account.password = pin;
-      rtc.account.servers = await formatServers({ server, protocol, proxy: this.proxy, port });
+      rtc.account.servers = await formatServers({
+        server : this.server,
+        protocol,
+        proxy  : this.proxy,
+        port,
+      });
       rtc.account.protocol = protocol;
       this.autoLoginDisabled = true;
       await rtc.account.signin().then(() => {
-        const loginData = Object.assign({}, { account, server }, {
+        const loginData = Object.assign({}, { account }, {
+          server        : this.server,
           proxy         : this.proxy,
           proxyPort     : this.proxyPort,
           lastLoginDate : Date.now(),

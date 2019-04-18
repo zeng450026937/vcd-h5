@@ -62,15 +62,6 @@
             </div>
           </a-input>
         </div>
-
-        <div class="mb-2">
-          <a-input :value="loginData.server"
-                   @change="onServerChange"
-                   placeholder='服务器地址'>
-            <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
-          </a-input>
-        </div>
-
         <div class="flex justify-between mt-24px">
           <a-checkbox class="text-xs text-black6"
                       :checked="rmbPassword"
@@ -167,7 +158,6 @@ export default {
       loginData        : {
         account : '',
         pin     : '',
-        server  : '',
       },
     };
   },
@@ -203,13 +193,6 @@ export default {
 
       if (value.length <= 64) {
         this.loginData.pin = value;
-      }
-    },
-    onServerChange(e) {
-      const { value } = e.target;
-
-      if (value.length <= 64) {
-        this.loginData.server = value;
       }
     },
     handleLogin(e) {
@@ -261,10 +244,10 @@ export default {
       this.loginData = {
         account : data.account,
         pin     : data.pin,
-        server  : this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server,
       };
       this.$model.account.proxy = data.proxy;
       this.$model.account.proxyPort = data.proxyPort;
+      this.$model.account.server = this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server;
     },
     passwordInputted(event) {
       this.isCapsLockOn = isCapsLockOn(event);
