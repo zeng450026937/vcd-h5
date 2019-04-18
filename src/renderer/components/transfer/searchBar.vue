@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="transfer-search-content">
     <a-input v-model="text"
              placeholder="搜索"
              class="search-area rounded-none border-none">
@@ -37,13 +37,16 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.content {
+<style lang="less">
+.transfer-search-content {
   height: 40px;
   border-bottom: 1px solid #E0E0E0;
   .search-area{
     width: 100%;
     height: 100%;
+    .ant-input {
+      border: none !important;
+    }
   }
 }
 </style>
