@@ -214,7 +214,6 @@ export default {
     },
     handleLogin(e) {
       this.$dispatch('account.login', this.loginData);
-      this.autoLoginDisabled = true;
     },
     toForget() { // 跳转到忘记密码页面
       shell.openExternal('https://meeting.ylyun.com/meeting/forget');

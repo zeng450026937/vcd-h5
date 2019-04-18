@@ -146,7 +146,7 @@ export default {
         // 如果当前在会议中，则先退出会议
         await this.$rtc.conference.leave();
       }
-      this.$rtc.account.signout();
+      this.$dispatch('account.logout');
     },
     openFeedback() {
       this.$refs.feedbackModal.visible = true;

@@ -6,16 +6,6 @@ import { IP_REG, DOMAIN_REG } from '../utils';
 
 const model = new Vuem();
 
-class AccountHistory {
-  get() {}
-
-  add() {}
-
-  remove() {}
-
-  update() {}
-}
-
 // ...
 model.provide({
   data() {
@@ -34,9 +24,6 @@ model.provide({
       proxyPort : '',
     };
   },
-  created() {
-    this.history = new AccountHistory();
-  },
   middleware : {
     async login(ctx, next) {
       await next();
@@ -51,6 +38,7 @@ model.provide({
       rtc.account.password = pin;
       rtc.account.servers = await formatServers({ server, protocol, proxy: this.proxy, port });
       rtc.account.protocol = protocol;
+      this.autoLoginDisabled = true;
       await rtc.account.signin().then(() => {
         const loginData = Object.assign({}, { account, server }, {
           proxy         : this.proxy,
@@ -66,11 +54,14 @@ model.provide({
         storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
         storage.update('CURRENT_ACCOUNT', loginData);
         this.storeConfig(); // 登录成功之后保存登录前的状态
+        this.autoLoginDisabled = false;
       }).catch((err) => {
+        this.autoLoginDisabled = true;
         throw err;
       });
     },
     async logout(ctx, next) {
+      this.autoLoginDisabled = true;
       rtc.account.signout();
       await next();
     },
@@ -80,7 +71,6 @@ model.provide({
   methods : {
     storeConfig() {
       storage.insert(LOGIN_STORAGE.REMEMBER_PASSWORD, this.rmbPassword);
-      storage.insert(LOGIN_STORAGE.AUTO_LOGIN, this.autoLogin);
     },
     validateForm(values) {
       let errorText = '';
@@ -102,6 +92,9 @@ model.provide({
     },
     autoLoginDisabled(val) {
       storage.insert(LOGIN_STORAGE.AUTO_LOGIN_DISABLED, val);
+    },
+    autoLogin(val) {
+      storage.insert(LOGIN_STORAGE.AUTO_LOGIN, this.autoLogin);
     },
   },
 });
