@@ -1,5 +1,5 @@
 <template>
-  <div id="login-header" class="z-10" :style="{background}">
+  <div class="z-10 login-header" :style="{background}">
     <div class="h-9 select-none">
       <div class="flex flex-row h-full">
 
@@ -130,7 +130,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-  #login-header {
+  .login-header {
     .gray {
       color: #333333;
     }

@@ -1,7 +1,12 @@
 <template>
   <div id="login-content" class="h-full flex">
     <div class="side">
-      <login-header :useOperationBar="false" />
+      <login-header class="header" :useOperationBar="false" />
+      <img  ondragstart="return false;" class="bg" src="../../assets/login-bg.png"/>
+      <div class="logo z-10">
+        Yealink
+      </div>
+
     </div>
     <div class="main">
       <login-header :use-drop-down="!showSetting" :background="'#ffffff'" :use-title="false" />
@@ -49,14 +54,35 @@ export default {
 <style lang="less">
   #login-content {
     .side {
-      width: 50%;
-      background-image: url("../../assets/login-bg.png");
-      background-repeat: no-repeat;
-      background-size: 50% 100%;
-      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      width: 560px;
+      position: relative;
+    }
+    .header {
+      width: 100%;
+      height: 36px;
+    }
+    .logo {
+      display: flex;
+      font-size: 32px;
+      color: #ffffff;
+      height: calc(100% - 36px);
+      font-weight: bold;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 36px;
+      user-select: none;
+    }
+    .bg {
+      object-fit: none;
+      object-position: 50% 50%;
+      height: 100%;
+      width: 100%;
+      position: absolute;
     }
     .main {
-      width: 50%;
+      flex-grow: 1;
       height: 100%;
       display: flex;
       flex-direction: column;
