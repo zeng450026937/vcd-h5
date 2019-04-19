@@ -30,6 +30,7 @@
                 v-else
                 enable-keyboard
                 :contact-list="localContacts"
+                :selected-contact="currentUser"
                 @check="handleCheck">
               <a-dropdown slot-scope="{item}"
                           slot="more"
