@@ -27,7 +27,7 @@
 
           <a-dropdown v-if="useDropDown" v-model="helpStatus" :trigger="['click']">
             <a-menu slot="overlay" @click.self="handleHelpClick">
-              <a-menu-item key="cloud" class="px-6">帮助</a-menu-item>
+              <a-menu-item key="cloud" class="px-6" @click="goHelp">帮助</a-menu-item>
               <a-menu-item key="yms" class="px-6" @click="reportIssues">反馈</a-menu-item>
             </a-menu>
             <a-iconfont type="icon-fankui"
@@ -114,6 +114,10 @@ export default {
       const ROUTE = this.loginType === 'login' ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
 
       this.$router.push(ROUTE);
+    },
+    goHelp() {
+      this.helpStatus = false;
+      this.$dispatch('application.openExternal', { path: 'http://support.yealink.com' });
     },
   },
   watch : {

@@ -1,18 +1,16 @@
 <template>
   <a-layout id="enter-meeting" class="h-full">
     <app-header title="加入会议"/>
-    <div class="flex justify-center items-center h-full">
-      <div  v-if="!showSetting"
-            style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
-           class="flex flex-col bg-white"
+    <div class="flex justify-center items-center h-full" style="padding: 16px;">
+      <div style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
+           class="flex flex-col bg-white w-full h-full relative"
            @keyup.enter="enterMeeting">
-        <div style="height: 270px;"
-             class="relative flex bg-media">
+        <div class="relative flex bg-media h-full">
           <video-view v-if="meetingInfo.initialVideo" class="w-full h-full"
                       muted
                       object-fit="cover"/>
           <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
-            <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
+            <a-iconfont type="icon-shipinjinyong" class="display-icon"></a-iconfont>
           </div>
           <div class="controls-content flex self-end w-full justify-center">
             <div class="flex mb-4">
@@ -22,7 +20,7 @@
                         :class="{[`bg-${videoIcon.color}`] : true}"
                         @click="triggerVideo"
               >
-                <a-iconfont :type="videoIcon.icon" class="text-white"/>
+                <a-iconfont :type="videoIcon.icon" class="text-white"></a-iconfont>
               </a-button>
               <a-button shape="circle"
                         class="controls-btn text-lg w-10 h-10 mx-4 border-transparent"
@@ -31,91 +29,91 @@
                         @click="triggerAudio"
               >
                 <a-iconfont :type="audioIcon.icon"
-                            class="text-white"/>
-              </a-button>
-              <a-button shape="circle"
-                        title="设置"
-                        class="controls-btn text-lg w-10 h-10 border-transparent"
-                        @click="showSetting = true"
-              >
-                <a-iconfont type="icon-kongzhi" class="text-white"/>
+                            class="text-white"></a-iconfont>
               </a-button>
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-center px-24 bg-white">
-          <div class="mt-5 w-full">
-            <a-auto-complete
-                :value="meetingInfo.number"
-                class="certain-category-search w-full overflow-x-hidden"
-                :dropdownMatchSelectWidth="false"
-                optionLabelProp="value"
-                @select="selectAccount"
-                @search="searchAccount"
-            >
-              <template v-if="searchedAccounts.length > 0" slot="dataSource">
-                <a-select-opt-group>
-                  <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                    <span>历史记录</span>
-                    <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
-                  </div>
-                  <a-select-option v-for="(item, index) in searchedAccounts"
-                                   :key="index" :value="item.number" class="group">
-                    <div class="flex items-center px-2 py-2">
-                      <span class="certain-search-item-count">{{item.number}}</span>
-                      <div class="flex flex-grow"></div>
-                      <a-iconfont
-                          type="icon-guanbi"
-                          class="flex text-red opacity-0 group-hover:opacity-100"
-                          @click.stop="deleteAccount(item)"
-                      ></a-iconfont>
+        <div class="join-meeting-form" v-show="!showSetting">
+          <div class="join-meeting-form-header">
+            <div>输入会议号码</div>
+            <div>
+              <a-iconfont
+                  type="icon-kongzhi"
+                  class="text-white cursor-pointer"
+                  @click="showSetting = true">
+              </a-iconfont>
+            </div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="mt-5 w-full">
+              <a-auto-complete
+                  :value="meetingInfo.number"
+                  class="certain-category-search w-full overflow-x-hidden"
+                  :dropdownMatchSelectWidth="false"
+                  optionLabelProp="value"
+                  @select="selectAccount"
+                  @search="searchAccount"
+              >
+                <template v-if="searchedAccounts.length > 0" slot="dataSource">
+                  <a-select-opt-group>
+                    <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
+                      <span>历史记录</span>
+                      <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
                     </div>
-                  </a-select-option>
-                </a-select-opt-group>
-              </template>
-              <a-input placeholder='会议 ID' @change="onNumberChange">
-                <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
-              </a-input>
-            </a-auto-complete>
-          </div>
+                    <a-select-option v-for="(item, index) in searchedAccounts"
+                                     :key="index" :value="item.number" class="group">
+                      <div class="flex items-center px-2 py-2">
+                        <span class="certain-search-item-count">{{item.number}}</span>
+                        <div class="flex flex-grow"></div>
+                        <a-iconfont
+                            type="icon-guanbi"
+                            class="flex text-red opacity-0 group-hover:opacity-100"
+                            @click.stop="deleteAccount(item)"
+                        ></a-iconfont>
+                      </div>
+                    </a-select-option>
+                  </a-select-opt-group>
+                </template>
+                <a-input placeholder='会议 ID' @change="onNumberChange">
+                  <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
+                </a-input>
+              </a-auto-complete>
+            </div>
 
-          <div class="mt-5 w-full">
-            <a-input
-                :value="meetingInfo.pin"
-                placeholder='会议密码'
-                type="password"
-                @change="onPasswordChange"
-            >
-              <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
-            </a-input>
+            <div class="mt-5 w-full">
+              <a-input
+                  :value="meetingInfo.pin"
+                  placeholder='会议密码'
+                  type="password"
+                  @change="onPasswordChange"
+              >
+                <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
+              </a-input>
+            </div>
+            <a-button type="primary" class="mt-16" block
+                      :disabled="isConnected"
+                      @click="enterMeeting">
+              加入
+            </a-button>
           </div>
-          <div class="mt-5 w-full">
-            <a-input
-                :value="server"
-                read-only
-                lder='服务器地址'
-            >
-              <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
-            </a-input>
-          </div>
-          <a-button type="primary" class="mt-10" block
-                    :disabled="isConnected"
-                    @click="enterMeeting">立即加入</a-button>
         </div>
-      </div>
-      <div v-else style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
-           class="flex flex-col bg-white">
-        <div class="mt-5 px-20 relative">
-          <!--返回按钮区域-->
-          <div class="absolute" style="left: 20px; top: 3px">
+        <div class="meeting-setting-form" v-show="showSetting">
+          <div class="back-btn">
             <a-iconfont type="icon-left"
                         title="返回"
-                        class="cursor-pointer text-black9"
-                        @click="showSetting = false"/>
+                        class="cursor-pointer pl-3"
+                        @click="showSetting = false">
+            </a-iconfont>
           </div>
-          <media-content class="media-content text-black3"/>
+          <media-content
+              :text-color="'text-wihte'"
+              :background="'setting-bg'"
+              :showVideo="false"
+              class="media-content text-white"/>
         </div>
       </div>
+
     </div>
   </a-layout>
 </template>
@@ -313,6 +311,40 @@ export default {
     .media-content{
       .video-content {
         height: 158px !important;
+      }
+    }
+    .join-meeting-form {
+      position: absolute;
+      width: 280px;
+      height: 300px;
+      padding: 20px;
+      right: 20px;
+      top: 25%;
+      background: rgba(0,0,0,0.65);
+      box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);
+      .join-meeting-form-header{
+        color: #FFFFFF;
+        padding: 12px 0;
+        font-size: 16px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+    .meeting-setting-form {
+      width:280px;
+      padding: 10px 0 24px 0;
+      background: rgba(0,0,0,0.65);
+      box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);
+      position: absolute;
+      right: 20px;
+      top: 20%;
+      .back-btn {
+        padding: 10px 0;
+        color: #FFFFFF;
+        font-weight: bold;
+      }
+      .setting-bg {
+        background: rgba(0,0,0,0);
       }
     }
   }
