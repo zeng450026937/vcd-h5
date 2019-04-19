@@ -1,6 +1,6 @@
 <template>
   <a-layout class="justify-center items-center bg-white p-10">
-    <div v-if="group" class="flex flex-col items-center">
+    <div v-if="group" class="flex flex-col items-center" style="word-break: break-all">
       <div class="text-xl">{{group.company}}</div>
       <div class="text-base mt-4 text-center">{{group.group}}</div>
       <div v-if="loadMode!=='SPLIT'" class="text-base mt-4">-{{group.amount}} 人-</div>

@@ -42,7 +42,7 @@
            :class="localVideoClasses">
         <call-local-video/>
       </div>
-      <div v-if="hasScreenStream && !isShareWindowOpen"
+      <div v-if="hasRemoteScreenStream && !isShareWindowOpen"
            :class="shareVideoClasses">
         <call-share-video
             :source="leftSource"
@@ -243,7 +243,7 @@ export default {
     },
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
-      this.isShareInCenter = this.remoteScreenStream;
+      this.isShareInCenter = this.hasRemoteScreenStream;
       if (val) {
         this.$rtc.media.screenMedia.acquireStream();
       }
@@ -258,7 +258,7 @@ export default {
       if (this.hasScreenStream && !val) {
         // 分享的应用被关闭
         this.$message.warn('由于共享的窗口被关闭，内容共享结束');
-        this.$rtc.call.share.channel.disconnect();
+        this.$rtc.call.share.disconnect();
       }
     },
     hasRemoteScreenStream(val) {

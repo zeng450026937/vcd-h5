@@ -157,11 +157,6 @@ export default {
   },
   methods : {
     showScreenShareModal() {
-      if (this.hasLocalScreenStream) {
-        this.$rtc.call.share.disconnect();
-
-        return;
-      }
       this.$refs.shareModal.visible = true;
     },
     hangUp() {

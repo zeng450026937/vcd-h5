@@ -50,7 +50,7 @@ export default {
         await this.rtc.conference.shareChannel.disconnect();
       }
       else if (this.rtc.call.connected) {
-        await this.rtc.call.share.channel.disconnect();
+        await this.rtc.call.share.disconnect();
       }
       window.close();
     },
@@ -65,16 +65,27 @@ export default {
       this.durationTimer = setInterval(() => {
         const time = (new Date().getTime() - meetTime.getTime()) / 1000;
 
+        if (checkTimes > checkInterval) checkTimes = 0;
         while (checkTimes++ === checkInterval) {
           let target;
 
+          let closeWindow = false;
+
           if (this.rtc.conference.connected) {
             target = this.rtc.conference;
+            closeWindow = !target || !target.shareChannel.localStream;
           }
           else if (this.rtc.call.connected) {
             target = this.rtc.call.share.channel;
+            closeWindow = !target || !target.localStream;
           }
-          if (!target) { this.closeSharing(); }
+          else {
+            this.closeSharing();
+          }
+          if (closeWindow) {
+            this.closeSharing();
+          }
+
           target.getStats().then((val) => {
             if (this.signal === val.media.quality) {
               checkInterval *= 2;

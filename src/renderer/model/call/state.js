@@ -28,6 +28,7 @@ state.provide({
       this.durationTimer = setInterval(() => {
         const time = (new Date().getTime() - meetTime.getTime()) / 1000;
 
+        if (checkTimes > checkInterval) checkTimes = 0;
         while (checkTimes++ === checkInterval) {
           rtc.call.getStats().then((val) => {
             if (this.signal === val.quality) {
