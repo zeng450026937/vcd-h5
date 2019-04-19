@@ -36,7 +36,7 @@
                 </a-select-option>
               </a-select-opt-group>
             </template>
-            <a-input placeholder='电话或电子邮件' :maxlength="64">
+            <a-input maxlength="64" placeholder='电话或电子邮件'>
               <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
             </a-input>
           </a-auto-complete>
@@ -45,7 +45,7 @@
         <div class="mb-4">
           <a-input
               v-model="loginData.pin"
-              :maxlength="64"
+              maxlength="64"
               @keypress="passwordInputted"
               type="password"
               placeholder='密码'>
@@ -181,20 +181,6 @@ export default {
     },
   },
   methods : {
-    // onAccountChange(e) {
-    //   const { value } = e.target;
-    //
-    //   if (value.length <= 64) {
-    //     this.loginData.account = value;
-    //   }
-    // },
-    // onPinChange(e) {
-    //   const { value } = e.target;
-    //
-    //   if (value.length <= 64) {
-    //     this.loginData.pin = value;
-    //   }
-    // },
     handleLogin(e) {
       this.$dispatch('account.login', this.loginData);
     },

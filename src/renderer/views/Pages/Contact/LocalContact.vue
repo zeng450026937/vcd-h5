@@ -6,7 +6,6 @@
           <div class="flex items-center h-full px-4 text-base">
             <span>本地联系人</span>
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
-                        v-if="localContacts.length<200"
                         title="添加本地联系人"
                         type="icon-tianjialianxiren"
                         @click="addLocalContact"></a-iconfont>
@@ -31,6 +30,7 @@
                 v-else
                 enable-keyboard
                 :contact-list="localContacts"
+                :selected-contact="currentUser"
                 @check="handleCheck">
               <a-dropdown slot-scope="{item}"
                           slot="more"
@@ -88,6 +88,7 @@ export default {
     return {
       currentUser : {},
       drawerType  : '',
+      maxContacts : 200,
     };
   },
   created() {
@@ -139,6 +140,7 @@ export default {
       this.ensureModal.display();
     },
     addLocalContact() {
+      if (this.localContacts.length >= this.maxContacts) return this.$message.info(`您最多只能添加${this.maxContacts}个联系人`);
       this.$refs.localContactDrawer.visible = true;
       this.$refs.localContactDrawer.form.$nextTick(() => {
         this.drawerType = 'add';

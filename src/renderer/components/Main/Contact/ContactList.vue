@@ -241,6 +241,12 @@ export default {
       type    : Boolean,
       default : false,
     },
+    selectedContact : {
+      type : Object,
+      default() {
+        return {};
+      },
+    },
   },
   components : {
     RecycleScroller,
@@ -250,9 +256,8 @@ export default {
   data() {
     return {
       LOAD_MODE,
-      selectedContact : {},
-      enableScroll    : false,
-      pathList        : [],
+      enableScroll : false,
+      pathList     : [],
     };
   },
   computed : {
@@ -281,18 +286,13 @@ export default {
     getPathList(group) {
       if (!group) return [];
       const currentGroup = this.store.getNode(group);
-      const pathList = this.store.findBranch(currentGroup).map((i) => ({
+
+      return this.store.findBranchWithSelf(currentGroup).map((i) => ({
         text : i.name,
         id   : i.id,
       })).reverse();
-
-      pathList.push({ text: currentGroup.name, id: currentGroup.id });
-
-      return pathList;
     },
     check(item) {
-      //  if (this.checkable) this.contactChecked(item);
-      if (this.highlightSelected && !item.isGroup) this.selectedContact = item;
       this.$emit('check', item);
     },
     deleteContact(item) {
@@ -337,7 +337,7 @@ export default {
 
       if (nextItem.isGroup) return;
 
-      this.$emit('check', this.selectedContact = nextItem);
+      this.$emit('check', nextItem);
     },
     nextContact() {
       if (!this.enableKeyboard) return;

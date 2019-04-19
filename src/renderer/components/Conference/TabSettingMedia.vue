@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="tab-setting-media" class="bg-white">
+  <a-layout id="tab-setting-media" :class="background">
     <div class="flex flex-col select-none px-4">
       <div class="flex flex-col">
         <span class="leading-normal">摄像头</span>
@@ -42,7 +42,7 @@
                  disabled read-only
                  class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <volume-progress />
-        <span class="test-mic-text leading-tight text-xs text-black6">麦克风测试</span>
+        <span :class="textColor" class="test-mic-text leading-tight text-xs">麦克风测试</span>
       </div>
 
       <div class="flex flex-col mt-5">
@@ -61,12 +61,12 @@
                  value="无设备"
                  disabled read-only
                  class="pl-4 mt-2 select-none text-black9 bg-white"/>
-        <div class="mt-2 flex items-center text-indigo">
+        <div class="mt-2 flex items-center" :class="textColor !=='text-black6' ? textColor : 'text-indigo'">
           <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
                       title="播放测试音频"
                       class="test-audio-text text-base cursor-pointer"
-                      @click="playTestMusic"/>
-          <span class="test-audio-text ml-1 text-xs leading-tight">播放测试音频</span>
+                      @click="playTestMusic"></a-iconfont>
+          <span class="test-audio-text ml-1 text-xs leading-tight" >播放测试音频</span>
         </div>
       </div>
       <audio ref="testAudio" @ended="isPlaying = false" @playing="isPlaying = true">
@@ -96,6 +96,14 @@ export default {
     showVideo : {
       type    : Boolean,
       default : true,
+    },
+    background : {
+      type    : String,
+      default : 'bg-white',
+    },
+    textColor : {
+      type    : String,
+      default : 'text-black6',
     },
   },
   destroyed() {

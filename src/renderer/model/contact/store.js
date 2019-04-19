@@ -251,6 +251,14 @@ export default class Store {
     return this.originTree.find((n) => n.number === number);
   }
 
+  findBranchWithSelf(node) {
+    const branch = this.findBranch(node);
+
+    branch.unshift(node);
+
+    return branch;
+  }
+
   findBranch(node, branch = []) {
     const { id, parentId } = node;
     const parent = this.findParentNode(id, parentId);

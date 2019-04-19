@@ -5,13 +5,13 @@
         <a-tab-pane tab="基本设置" key="1">
           <div class="flex flex-col px-20 pt-10">
             <span class="mb-3 leading-normal">服务器设置</span>
-            <a-input v-model="tmpServer" placeholder='服务器地址'>
+            <a-input maxlength="64" v-model="tmpServer" placeholder='服务器地址'>
             </a-input>
             <div class="mt-4"></div>
           </div>
           <div class="flex h-full flex-col px-20">
             <span class="mb-3 leading-normal">代理服务器设置</span>
-            <a-input v-model="tmpProxy" placeholder='代理服务器地址'>
+            <a-input  maxlength="64"  v-model="tmpProxy" placeholder='代理服务器地址'>
             </a-input>
             <div class="mt-4"></div>
             <a-input v-number-only v-model="tmpProxyPort" placeholder='端口'>

@@ -32,6 +32,7 @@
               :storeName="storeName"
               :store="store"
               :currentGroup="currentGroup"
+              :selected-contact="currentUser"
               :contact-list="currents"
               enable-keyboard
               :audio-icon="false"
@@ -114,13 +115,14 @@ export default {
     ContactList,
     CommonEmpty,
   },
+  sketch : {
+    ns    : 'ui',
+    props : [ 'currentFavoriteGroup', 'currentFavoriteContact' ],
+  },
   data() {
     return {
-      currentUser   : {},
-      selectedGroup : {},
-      modalType     : 'add',
-      currentGroup  : 'rootNode',
-      storeName     : 'favoriteStore',
+      modalType : 'add',
+      storeName : 'favoriteStore',
     };
   },
   beforeCreate() {
@@ -165,6 +167,22 @@ export default {
     },
     groupList() {
       return this.rootGroup;
+    },
+    currentGroup : {
+      get() {
+        return this.currentFavoriteGroup;
+      },
+      set(val) {
+        this.currentFavoriteGroup = val;
+      },
+    },
+    currentUser : {
+      get() {
+        return this.currentFavoriteContact;
+      },
+      set(val) {
+        this.currentFavoriteContact = val;
+      },
     },
   },
   methods : {
@@ -269,12 +287,7 @@ export default {
     },
   },
   watch : {
-    frequentContacts : {
-      handler(val) {
-        this.selectedGroup = val;
-      },
-      immediate : true,
-    },
+
   },
 };
 </script>
