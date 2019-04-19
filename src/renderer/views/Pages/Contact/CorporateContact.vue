@@ -34,6 +34,7 @@
         <div class="border-r w-2/5">
           <div class="h-full p-1 overflow-y-hidden">
             <contact-list :contact-list="currentGroupList"
+                          :selected-contact="selectedContact"
                           :load-mode="loadMode"
                           :current-group="currentGroup"
                           :store="store"
@@ -85,20 +86,18 @@ export default {
     ContactList,
     ContactInfo,
   },
+  sketch : {
+    ns    : 'ui',
+    props : [ 'currentPhoneBookGroup', 'currentPhoneBookContact' ],
+  },
   data() {
     return {
-      breadcrumbs     : [],
-      selectedContact : {},
-      currentGroup    : 'rootNode',
+      breadcrumbs : [],
     };
   },
   computed : {
-    groupInfo() {
-      return {
-        company : this.rootNode.name,
-        group   : this.currentGroupName,
-        amount  : this.currentGroupAmount,
-      };
+    isCloud() {
+      return this.$model.account.serverType === 'cloud';
     },
     LOAD_MODE() {
       return this.$model.contact.LOAD_MODE;
@@ -109,6 +108,19 @@ export default {
     store() {
       return this.$model.contact.phoneBookStore;
     },
+    rootNode() {
+      return this.store.rootNode;
+    },
+    rootGroup() {
+      return this.store.rootGroup;
+    },
+    groupInfo() {
+      return {
+        company : this.rootNode.name,
+        group   : this.currentGroupName,
+        amount  : this.currentGroupAmount,
+      };
+    },
     currentGroupName() {
       return this.store.getNode(this.currentGroup).name;
     },
@@ -118,22 +130,30 @@ export default {
     selectedGroup() {
       return this.store.getNode(this.currentGroup);
     },
-    rootGroup() {
-      return this.store.rootGroup;
-    },
     currentGroupList() {
       if (this.currentGroup === 'rootNode') return this.rootGroup;
 
       return this.store.getChild(this.currentGroup);
     },
-    rootNode() {
-      return this.store.rootNode;
-    },
+
     favoriteGroup() {
       return this.$model.contact.favoriteStore.rootGroup;
     },
-    isCloud() {
-      return this.$model.account.serverType === 'cloud';
+    currentGroup : {
+      get() {
+        return this.currentPhoneBookGroup;
+      },
+      set(val) {
+        this.currentPhoneBookGroup = val;
+      },
+    },
+    selectedContact : {
+      get() {
+        return this.currentPhoneBookContact;
+      },
+      set(val) {
+        this.currentPhoneBookContact = val;
+      },
     },
   },
   methods : {
@@ -141,23 +161,13 @@ export default {
       this.breadcrumbChange(path);
     },
     breadcrumbChange(item) {
-      const index = this.breadcrumbs.findIndex((b) => b.id === item.id);
-
-      this.breadcrumbs = this.breadcrumbs.slice(0, index + 1);
       this.currentGroup = item.id;
       this.selectedContact = {};
     },
     async handleCheck(item) {
-      if (!item.isGroup) {
-        this.selectedContact = item;
+      if (!item.isGroup) return this.selectedContact = item;
 
-        return;
-      }
-
-      this.breadcrumbs.push({
-        id   : item.id,
-        text : item.name,
-      });
+      this.selectedContact = {};
 
       if (this.loadMode === this.LOAD_MODE.SPLIT) {
         await this.$model.contact.getAsyncChildNodes({ parentId: item.id });
@@ -179,12 +189,12 @@ export default {
   watch : {
     currentGroup : {
       handler(val) {
-        if (val && this.breadcrumbs.length === 0) {
-          this.breadcrumbs.push({
-            id   : this.rootNode.id,
-            text : this.rootNode.name,
-          });
-        }
+        const group = this.store.getNode(val);
+
+        this.breadcrumbs = this.store.findBranchWithSelf(group).map((i) => ({
+          text : i.name,
+          id   : i.id,
+        })).reverse();
       },
       immediate : true,
     },

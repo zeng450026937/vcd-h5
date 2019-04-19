@@ -99,8 +99,6 @@ export default {
 
       const groupNames = this.favoriteGroup.map((n) => n.name);
 
-      if (groupNames.indexOf(this.groupName) > -1) return this.$message.info('您已经添加了相同的分组！');
-
       if (this.modalType === 'edit') {
         await this.$rtc.contact.favorite.categoryEdit({
           id       : this.editedGroup.id,
@@ -115,6 +113,7 @@ export default {
         });
       }
       else {
+        if (groupNames.indexOf(this.groupName) > -1) return this.$message.info('您已经添加了相同的分组！');
         await this.$rtc.contact.favorite.categoryAdd({
           groupName : this.groupName,
           contacts  : this.$refs.transfer.getChecked().map((c) => ({
