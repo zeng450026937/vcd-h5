@@ -20,7 +20,7 @@
     </div>
     <navigation @nav-click="clickNav" :use-calendar="useSchedule" :navs="sidebar.navs"></navigation>
 
-    <div class="flex h-full" v-if="searchText">
+    <div class="flex global-search-content" v-if="searchText">
       <global-search/>
     </div>
     <div class="flex flex-grow"></div>
@@ -79,10 +79,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   #main-nav {
     min-width: 240px;
     max-width: 260px;
     width: 100%;
+    .global-search-content {
+      height: calc( 100% - 56px);
+      overflow-y: auto
+    }
   }
 </style>

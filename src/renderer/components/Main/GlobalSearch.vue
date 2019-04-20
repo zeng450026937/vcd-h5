@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="global-search" class="bg-white">
+  <div id="global-search" class="bg-white w-full">
     <template v-if="hasContacts">
       <div class="flex flex-col">
         <div class="flex items-center h-7 px-3">
@@ -16,7 +16,7 @@
       </div>
     </template>
     <common-empty v-else class="mt-10"/>
-  </a-layout>
+  </div>
 </template>
 
 <script>

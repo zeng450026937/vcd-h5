@@ -5,7 +5,7 @@
       <div style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
            class="flex flex-col bg-white w-full h-full relative"
            @keyup.enter="enterMeeting">
-        <div class="relative flex bg-media h-full">
+        <div class="flex bg-media h-full">
           <video-view v-if="meetingInfo.initialVideo" class="w-full h-full"
                       muted
                       object-fit="cover"/>
@@ -34,87 +34,87 @@
             </div>
           </div>
         </div>
-        <div class="join-meeting-form" v-show="!showSetting">
-          <div class="join-meeting-form-header">
-            <div>输入会议号码</div>
-            <div>
-              <a-iconfont
-                  type="icon-kongzhi"
-                  class="text-white cursor-pointer"
-                  @click="showSetting = true">
+        <div class="meeting-form-content">
+          <div class="join-meeting-form" v-show="!showSetting">
+            <div class="join-meeting-form-header">
+              <div>输入会议号码</div>
+              <div>
+                <a-iconfont
+                    type="icon-kongzhi"
+                    class="text-white cursor-pointer"
+                    @click="showSetting = true">
+                </a-iconfont>
+              </div>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="mt-5 w-full">
+                <a-auto-complete
+                    :value="meetingInfo.number"
+                    class="certain-category-search w-full overflow-x-hidden"
+                    :dropdownMatchSelectWidth="false"
+                    optionLabelProp="value"
+                    @select="selectAccount"
+                    @search="searchAccount"
+                >
+                  <template v-if="searchedAccounts.length > 0" slot="dataSource">
+                    <a-select-opt-group>
+                      <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
+                        <span>历史记录</span>
+                        <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
+                      </div>
+                      <a-select-option v-for="(item, index) in searchedAccounts"
+                                       :key="index" :value="item.number" class="group">
+                        <div class="flex items-center px-2 py-2">
+                          <span class="certain-search-item-count">{{item.number}}</span>
+                          <div class="flex flex-grow"></div>
+                          <a-iconfont
+                              type="icon-guanbi"
+                              class="flex text-red opacity-0 group-hover:opacity-100"
+                              @click.stop="deleteAccount(item)"
+                          ></a-iconfont>
+                        </div>
+                      </a-select-option>
+                    </a-select-opt-group>
+                  </template>
+                  <a-input placeholder='会议 ID' @change="onNumberChange">
+                    <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
+                  </a-input>
+                </a-auto-complete>
+              </div>
+
+              <div class="mt-5 w-full">
+                <a-input
+                    :value="meetingInfo.pin"
+                    placeholder='会议密码'
+                    type="password"
+                    @change="onPasswordChange"
+                >
+                  <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
+                </a-input>
+              </div>
+              <a-button type="primary" class="mt-16" block
+                        :disabled="isConnected"
+                        @click="enterMeeting">
+                加入
+              </a-button>
+            </div>
+          </div>
+          <div class="meeting-setting-form" v-show="showSetting">
+            <div class="back-btn">
+              <a-iconfont type="icon-left"
+                          title="返回"
+                          class="cursor-pointer pl-3"
+                          @click="showSetting = false">
               </a-iconfont>
             </div>
+            <media-content
+                :text-color="'text-wihte'"
+                :background="'setting-bg'"
+                :showVideo="false"
+                class="media-content text-white"/>
           </div>
-          <div class="flex flex-col items-center">
-            <div class="mt-5 w-full">
-              <a-auto-complete
-                  :value="meetingInfo.number"
-                  class="certain-category-search w-full overflow-x-hidden"
-                  :dropdownMatchSelectWidth="false"
-                  optionLabelProp="value"
-                  @select="selectAccount"
-                  @search="searchAccount"
-              >
-                <template v-if="searchedAccounts.length > 0" slot="dataSource">
-                  <a-select-opt-group>
-                    <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                      <span>历史记录</span>
-                      <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
-                    </div>
-                    <a-select-option v-for="(item, index) in searchedAccounts"
-                                     :key="index" :value="item.number" class="group">
-                      <div class="flex items-center px-2 py-2">
-                        <span class="certain-search-item-count">{{item.number}}</span>
-                        <div class="flex flex-grow"></div>
-                        <a-iconfont
-                            type="icon-guanbi"
-                            class="flex text-red opacity-0 group-hover:opacity-100"
-                            @click.stop="deleteAccount(item)"
-                        ></a-iconfont>
-                      </div>
-                    </a-select-option>
-                  </a-select-opt-group>
-                </template>
-                <a-input placeholder='会议 ID'
-                         maxlength="64"
-                         @change="onNumberChange">
-                  <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
-                </a-input>
-              </a-auto-complete>
-            </div>
+        </div>
 
-            <div class="mt-5 w-full">
-              <a-input
-                  :value="meetingInfo.pin"
-                  maxlength="64"
-                  placeholder='会议密码'
-                  type="password"
-                  @change="onPasswordChange"
-              >
-                <a-iconfont slot="prefix" type='icon-mima' class="text-base text-black9"/>
-              </a-input>
-            </div>
-            <a-button type="primary" class="mt-16" block
-                      :disabled="isConnected"
-                      @click="enterMeeting">
-              加入
-            </a-button>
-          </div>
-        </div>
-        <div class="meeting-setting-form" v-show="showSetting">
-          <div class="back-btn">
-            <a-iconfont type="icon-left"
-                        title="返回"
-                        class="cursor-pointer pl-3"
-                        @click="showSetting = false">
-            </a-iconfont>
-          </div>
-          <media-content
-              text-color="text-white"
-              :background="'setting-bg'"
-              :showVideo="false"
-              class="media-content text-white"/>
-        </div>
       </div>
 
     </div>
@@ -316,39 +316,43 @@ export default {
         height: 158px !important;
       }
     }
-    .join-meeting-form {
+    .meeting-form-content{
+      height: 100%;
+      width: 100%;
+      display: flex;
       position: absolute;
-      width: 280px;
-      height: 300px;
+      justify-content: flex-end;
       padding: 20px;
-      right: 20px;
-      top: 25%;
-      background: rgba(0,0,0,0.65);
-      box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);
-      .join-meeting-form-header{
-        color: #FFFFFF;
-        padding: 12px 0;
-        font-size: 16px;
-        display: flex;
-        justify-content: space-between;
+      align-items: center;
+      .join-meeting-form {
+        width: 280px;
+        height: 300px;
+        padding: 20px;
+        background: rgba(0,0,0,0.65);
+        box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);
+        .join-meeting-form-header{
+          color: #FFFFFF;
+          padding: 12px 0;
+          font-size: 16px;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+      .meeting-setting-form {
+        width:280px;
+        padding: 10px 0 24px 0;
+        background: rgba(0,0,0,0.65);
+        box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);
+        .back-btn {
+          padding: 10px 0;
+          color: #FFFFFF;
+          font-weight: bold;
+        }
+        .setting-bg {
+          background: rgba(0,0,0,0);
+        }
       }
     }
-    .meeting-setting-form {
-      width:280px;
-      padding: 10px 0 24px 0;
-      background: rgba(0,0,0,0.65);
-      box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);
-      position: absolute;
-      right: 20px;
-      top: 20%;
-      .back-btn {
-        padding: 10px 0;
-        color: #FFFFFF;
-        font-weight: bold;
-      }
-      .setting-bg {
-        background: rgba(0,0,0,0);
-      }
-    }
+
   }
 </style>
