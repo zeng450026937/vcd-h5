@@ -27,7 +27,7 @@ meeting.provide({
   },
   middleware : {
     async joinMeeting(ctx, next) {
-      if (this.isPreparing) return;
+      if (this.isPreparing) return Promise.resolve();
       this.isPreparing = true;
       await next();
 

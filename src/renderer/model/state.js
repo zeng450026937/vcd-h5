@@ -115,9 +115,12 @@ model.provide({
       else if (val === 'connected') {
         await rtc.media.localMedia.acquireStream();
       }
-      else if (once && val === 'disconnected') {
+      else if (once === 'connected' && val === 'disconnected') {
         this.isInMiniCall = false;
         await rtc.media.localMedia.releaseStream();
+      }
+      else if (once && val === 'disconnected') {
+        this.isInMiniCall = false;
       }
     },
     openCallWindow() {

@@ -64,7 +64,7 @@ export default {
   mounted() {
     this.initStream();
   },
-  destroyed() {
+  beforeDestroy() {
     if (this.enableLocalVideo) {
       this.videoElement.removeEventListener('canplay', this.captureStream);
       this.staticStream = null;
