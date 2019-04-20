@@ -24,10 +24,6 @@
             <a-switch size="small" v-model="maximizedWhenRemoteSharing"/>
             <span class="setting-label">{{$t('setting.conference.maxWindowWhenWatchingSharing')}}</span>
           </div>
-          <!-- <div class="mt-3">
-            <a-switch size="small" v-model="enableGpu"/>
-            <span class="setting-label">{{$t('setting.conference.enableGpu')}}</span>
-          </div>-->
           <div class="mt-3">
             <a-switch size="small" v-model="shareSmoothMode"/>
             <span class="setting-label">{{$t('setting.conference.preferredPictureFluency')}}</span>
@@ -44,37 +40,6 @@
             <span class="border-l-4 border-black h-4"></span>
             <span class="setting-title">{{$t('setting.conference.baseSetting')}}</span>
           </div>
-          <!-- <div class="mt-3">
-            <a-switch size="small" v-model="muteAudioWhenJoin"/>
-            <span class="setting-label">{{$t('setting.conference.autoSilence')}}</span>
-          </div>
-          <div class="mt-3">
-            <a-switch size="small" v-model="showNoticeTip"></a-switch>
-            <span class="setting-label">{{$t('setting.conference.noticeWhenLeaving')}}</span> 
-            <a-tooltip>
-              <template slot='title'>
-                {{$t('setting.conference.noticeTitle')}}
-              </template>
-              <a-iconfont type="icon-tishi" class="ml-3 text-indigo-dark cursor-pointer text-base"/>
-            </a-tooltip>
-          </div>
-          
-          <div class="flex flex-col ml-10">
-            <a-radio-group class="mt-2" v-model="noticeTip" :disabled="!noticeTip">
-              <a-radio  :value="1">{{$t('setting.conference.noticeOnlyJoiner')}}</a-radio>
-              <a-radio  :value="2">{{$t('setting.conference.noticeBoth')}}</a-radio>
-              <a-radio  :value="3">{{$t('setting.conference.noticeAll')}}</a-radio>
-            </a-radio-group>
-          </div>
-          <div class="mt-3">
-            <a-switch size="small" v-model="meetnowPassword"/>
-            <span class="setting-label">{{$t('setting.conference.instanceMeetingPassword')}}</span>
-          </div>
-
-          <div class="mt-3">
-            <a-switch size="small" v-model="loginOptions"/>
-            <span class="setting-label">{{$t('setting.conference.loginSelector')}}</span>
-          </div> -->
           <div class="mt-3">
             <a-switch size="small" v-model="dnd"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
@@ -82,6 +47,14 @@
           <div class="mt-3">
             <a-switch size="small" v-model="enableLocalVideo"/>
             <span class="setting-label">启用本地视频</span>
+          </div>
+          <div class="mt-3">
+            <div>视频质量</div>
+            <a-select v-model="videoQuality" class="w-48 mt-3">
+              <a-select-option v-for="(quality, index) in videoQualities" :key="index"
+                               :value="quality.value"
+              >{{quality.label}}</a-select-option>
+            </a-select>
           </div>
         </div>
       </div>
@@ -109,37 +82,17 @@ export default {
   
   data() {
     return {
-      // advanceEntryTimeRange : [ 5, 180 ],
-      // showAdvanceTimeError  : false,
-      // advanceTimeErrorText  : '',
-      // customPasswordInput   : '',
-      // showCustomPsdError    : false,
-      // customPsdErrorText    : '',
-      // settings not supported yet
-      // advanceEntryTime      : 5,
-      // isRandomOrCustom      : false,
-      // showNoticeTip         : false,
-      // form                  : this.$form.createForm(this),
       advancedSettingUrl : 'http://www.yealink.com',
+      videoQualities     : [
+        { label: '超清模式', value: '1080P' },
+        { label: '高清模式', value: '720P' },
+        { label: '标清模式', value: '360P' },
+      ],
     };
   },
   computed : {
-    // showNoticeTip : {
-    //   set(val) {
-    //     if (val) {
-    //       this.noticeTip = 1;
-    //     }
-    //     else {
-    //       this.noticeTip = 0;
-    //     }
-    //   },
-    //   get() {
-    //     return this.noticeTip > 0;
-    //   },
-    // },
   },
   mounted() {
-    // this.customPasswordInput = this.customPassword;
   },
   sketch : [
     {
@@ -147,19 +100,11 @@ export default {
       props : [ 
         'minimizedWhenLocalSharing',
         'maximizedWhenRemoteSharing',
-        // 'enableGpu',
         'shareWithSound',
-        // 'muteAudioWhenJoin',
-        // 'noticeTip',
-        // 'muteVideoWhenJoin',
-        // 'customPassword',
-        // 'meetnowPassword',
-        // 'bookingPassword',
-        // 'noticeSound',
-        // 'loginOptions',
         'shareSmoothMode',
         'dnd',
         'enableLocalVideo',
+        'videoQuality',
       ],
     },
   ],
@@ -173,36 +118,6 @@ export default {
   },
   
   methods : {
-    checkAdvanceTime() {
-      // eslint-disable-next-line radix
-      if (!/^\d{1,3}$/.test(this.advanceEntryTime) || this.advanceEntryTime < this.advanceEntryTimeRange[0] || this.advanceEntryTime > this.advanceEntryTimeRange[1]) {
-        this.showAdvanceTimeError = true;
-        this.advanceTimeErrorText = '您输入的入会时间不合法！';
-        
-        return false;
-      }
-      else {
-        this.showAdvanceTimeError = false;
-        
-        return true;
-      }
-    },
-
-    // checkCustomPsd() {
-    //   if (!/^\d{6}$/.test(this.customPasswordInput)) {
-    //     this.showCustomPsdError = true;
-    //     this.customPsdErrorText = '您输入的自定义密码不合法！';
-        
-    //     return false;
-    //   }
-    //   else {
-    //     this.showCustomPsdError = false;
-    //     this.customPassword = this.customPasswordInput;
-        
-    //     return true;
-    //   }
-    // },
-
     handleAdvancedSetting() {
       shell.openExternal(this.advancedSettingUrl);
     },

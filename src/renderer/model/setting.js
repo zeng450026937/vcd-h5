@@ -31,7 +31,7 @@ model.provide({
       audioOutputDevice          : null,
       videoInputDevice           : null,
       audioQuality               : null,
-      videoQuality               : null,
+      videoQuality               : '1080P',
       screenQuality              : null,
       noiseSuppression           : true,
       highProfile                : false,

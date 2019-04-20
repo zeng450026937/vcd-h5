@@ -328,16 +328,18 @@ model.provide({
     this.videoInputDevice = setting.videoInputDevice;
 
     setting.$watch(
-      'highProfile',
+      'videoQuality',
       (val) => {
-        if (val) {
-          this.videoQuality.width = 1920;
-          this.videoQuality.height = 1080;
-        }
-        else {
-          this.videoQuality.width = 1280;
-          this.videoQuality.height = 720;
-        }
+        const QUALITY_MAP = {
+          '1080P' : { width: 1920, height: 1080 },
+          '720P'  : { width: 1280, height: 720 },
+          '360P'  : { width: 640, height: 360 },
+        };
+
+        const quality = QUALITY_MAP[val] || QUALITY_MAP['1080P'];
+
+        this.videoQuality.width = quality.width;
+        this.videoQuality.height = quality.height;
 
         rtc.media.localMedia.videoQuality.width = this.videoQuality.width;
         rtc.media.localMedia.videoQuality.height = this.videoQuality.height;
