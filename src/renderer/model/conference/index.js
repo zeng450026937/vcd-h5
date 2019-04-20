@@ -260,7 +260,7 @@ model.provide({
     role        : 'onRoleChanged',
     async addedUser(val) {
       await Promise.resolve();
-      if (val.isOnHold()) return;
+      // if (val.isOnHold()) return;
       const text = val.displayText.length > 10 ? `${val.displayText.slice(0, 10)}...` : val.displayText;
 
       this.messageTextList.push(`${text} 加入会议`);
