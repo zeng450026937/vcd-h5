@@ -49,17 +49,19 @@ meeting.provide({
         initialAudio,
         audio,
         video,
-      }).then(() => {
-        this.isPreparing = false;
-        storage.insertOrUpdate(`MEETING_INFO_RECORD_${rtc.account.username}`, {
-          lastDate : Date.now(),
-          number,
-          pin,
-        }, 'number', true, true);
-      }).catch((e) => {
-        this.isPreparing = false;
-        throw e;
-      });
+      })
+        .then(() => {
+          this.isPreparing = false;
+          storage.insertOrUpdate(`MEETING_INFO_RECORD_${rtc.account.username}`, {
+            lastDate : Date.now(),
+            number,
+            pin,
+          }, 'number', true, true);
+        })
+        .catch((e) => {
+          this.isPreparing = false;
+          throw e;
+        });
     },
     async anonymousJoin(ctx, next) {
       if (this.isPreparing) return;
@@ -111,17 +113,17 @@ meeting.provide({
         storage.insertOrUpdate(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST, meetingData, 'number');
         this.isPreparing = false;
       }).catch((e) => {
+        this.isPreparing = false;
         if (!e) {
           this.$message.error('当前服务器无法访问');
         }
         else throw e;
-        this.isPreparing = false;
       });
     },
     meetnow(ctx, next) {
       const { users } = ctx.payload;
 
-      rtc.conference.meetnow(users, { subject: `${rtc.account.username} 的视频会议` });
+      return rtc.conference.meetnow(users, { subject: `${rtc.account.username} 的视频会议` });
     },
   },
   watch : {

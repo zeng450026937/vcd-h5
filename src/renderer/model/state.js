@@ -108,16 +108,6 @@ model.provide({
         if (!this.isInMiniCall) { // Mini下挂断新的来电
           router.push(CALL.CALL_MAIN);
         }
-        if (val === 'connected') {
-          await rtc.media.localMedia.acquireStream();
-        }
-      }
-      else if (val === 'connected') {
-        await rtc.media.localMedia.acquireStream();
-      }
-      else if (once === 'connected' && val === 'disconnected') {
-        this.isInMiniCall = false;
-        await rtc.media.localMedia.releaseStream();
       }
       else if (once && val === 'disconnected') {
         this.isInMiniCall = false;
@@ -189,23 +179,6 @@ model.provide({
     callStatus : {
       handler   : 'handleCall',
       immediate : true,
-    },
-    async isInMiniConference(val) {
-      if (val && rtc.conference.connected) {
-        await rtc.media.localMedia.acquireStream();
-      }
-      else {
-        await rtc.media.localMedia.releaseStream();
-      }
-    },
-    async isInMiniCall(val) {
-      if (val && rtc.call.connected) {
-        await rtc.media.localMedia.acquireStream();
-      }
-      else {
-        // 未连接时候缩小视频区域
-        await rtc.media.localMedia.releaseStream();
-      }
     },
   },
   async created() {

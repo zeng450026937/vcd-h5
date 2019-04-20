@@ -14,6 +14,7 @@ import conference from './conference';
 import main from './main';
 import call from './call/index';
 import ui from './ui';
+import streamManager from './stream-manager';
 
 import errorMessage from './middleware/error-message';
 
@@ -35,6 +36,7 @@ model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
 model.mount('ui', ui);
+model.mount('streamManager', streamManager);
 
 // logging middleware must be the first one
 model.use(async(ctx, next) => {

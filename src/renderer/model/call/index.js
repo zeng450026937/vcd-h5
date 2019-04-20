@@ -15,7 +15,7 @@ model.mount('sketch', sketch);
 model.provide({
   data() {
     return {
-      isVideoCall : null,
+      isVideoCall : true,
       callNumber  : '',
       mediaStatus : { audio: false, video: false },
     };
@@ -24,7 +24,6 @@ model.provide({
     call(ctx) {
       const { number } = ctx.payload;
 
-      this.isVideoCall = ctx.payload.options.video;
       let host;
 
       let target;
@@ -50,6 +49,7 @@ model.provide({
       call.target = number;
 
       return call.connect('send', ctx.payload.options).then(() => {
+        this.isVideoCall = ctx.payload.options.video;
         const setting = this.$getVM('setting');
 
         if (setting.enableLocalVideo) return;
@@ -59,19 +59,16 @@ model.provide({
     answer(ctx) {
       const { toAudio, isVideoCall, isInvite } = ctx.payload;
 
-      if (isInvite && toAudio) {
-        const conference = this.$getVM('conference');
-
-        conference.sketch.isVideoConference = !toAudio;
-      }
-      else if (!toAudio) {
-        this.isVideoCall = isVideoCall;
-      }
       // FIXME 音视频切换的时序问题
       rtc.call.answer().then(() => {
         setTimeout(() => {
-          if (toAudio) {
-            this.isVideoCall = false;
+          if (isInvite && toAudio) {
+            const conference = this.$getVM('conference');
+
+            conference.sketch.isVideoConference = !toAudio;
+          }
+          else {
+            this.isVideoCall = !toAudio;
           }
         }, 500);
       });
@@ -120,7 +117,7 @@ model.provide({
     },
     isConnected(val) {
       if (!val) {
-        this.isVideoCall = null;
+        this.isVideoCall = true;
       }
     },
   },

@@ -5,7 +5,7 @@
     <div :class="{'message-bottom': !isVideoConference}">
       <conference-message v-if="current !== 2 && isVideoConference" class="conference-message"/>
     </div>
-    <video-view v-show="isVideoConference"
+    <video-view v-if="isVideoConference"
                 source="local"
                 muted
                 object-fit="cover"

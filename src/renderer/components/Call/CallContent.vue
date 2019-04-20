@@ -37,7 +37,7 @@
             :source="centerSource"
             @video-dblclick="maxCallContent"/>
       </div>
-      <div v-if="isConnected"
+      <div v-if="isConnected && isVideoCall"
            v-show="isVideoCall"
            :class="localVideoClasses">
         <call-local-video/>

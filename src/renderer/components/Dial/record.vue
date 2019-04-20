@@ -10,7 +10,8 @@
 
     <div class="record-scroll-area">
       <div class="record-list">
-        <div class="record-item" @click="toDetail(record)" v-for="record in currentRecords" :key="record.id">
+        <div class="record-item"
+             @click="toDetail(record)" v-for="(record, index) in currentRecords" :key="record.id + index">
           <div class="record-subject">
             <ContactPopover @update-info="handleUpdateInfo" @call="handleCall" :info="record"></ContactPopover>
             <div class="subject">{{ record | recordName}}</div>
