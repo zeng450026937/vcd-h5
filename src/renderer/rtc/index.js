@@ -1,7 +1,7 @@
 import Vue from 'vue';
-// import ApolloRTC from '../../../lib/apollo-rtc/src/index';
+import ApolloRTC from '../../../lib/apollo-rtc/src/index';
 
-import ApolloRTC from 'apollortc';
+// import ApolloRTC from 'apollortc';
 import ApolloSIP from 'apollosip';
 
 const __DEV__ = process.env.NODE_ENV === 'development';

@@ -7,10 +7,11 @@ model.provide({
     return {
       lastSendTime : null,
       lastRecvTime : null,
+      currentChannel : null,
     };
   },
 
-  middlseware : {
+  middleware : {
     // p2p
     async connect(ctx, next) {
       await next();
@@ -20,15 +21,24 @@ model.provide({
       await next();
     },
 
+
     // conference
     // & anonymouse dialin
     async dialin(ctx, next) {
       await next();
     },
 
-    async answer(ctx, next) {
-      await next();
-    },
+    // async answer(ctx, next) {
+    //   await next();
+    //
+    //   call  / conference;
+    //
+    //   channel.connect();
+    // },
+    //
+    // async refer() {
+    //   channel.refer();
+    // },
   },
 
   async created() {
