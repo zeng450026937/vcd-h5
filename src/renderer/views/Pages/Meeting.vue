@@ -46,6 +46,7 @@
                     </a-select-opt-group>
                   </template>
                   <a-input placeholder='会议ID'
+                           maxlength="64"
                            :class="{'meeting-error': meetingInfoError}">
                     <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                   </a-input>
@@ -66,6 +67,7 @@
               <div class="mt-4 input-with-icon">
                 <a-input
                     v-model="meetingInfo.server"
+                    maxlength="64"
                     placeholder='服务器地址'
                 >
                   <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
@@ -74,6 +76,7 @@
               <div class="mt-4 input-with-icon">
                 <a-input
                     placeholder='您在会议中的名称'
+                    maxlength="64"
                     :value="meetingInfo.displayName"
                     @change="onDisplayNameChange"
                 >
@@ -93,6 +96,7 @@
               <div v-if="isProxyPanelVisible" class="mt-3 mb-5 input-without-icon flex justify-between">
                 <a-input
                     v-model="meetingInfo.proxy"
+                    maxlength="64"
                     placeholder='代理服务器地址'
                     style="width: 188px;"
                 >
@@ -100,7 +104,6 @@
                 <a-input
                     :value="meetingInfo.proxyPort"
                     @change="onProxyPortChange"
-                    v-number-only
                     placeholder='端口'
                     style="width: 76px;"
                 >
@@ -148,6 +151,7 @@
     <video-view v-if="meetingInfo.initialVideo"
                 object-fit="cover"
                 muted
+                ignore-static-video
                 class="z-0 bg-media"/>
     <div v-else class="local-video-bg flex flex-grow flex-col items-center justify-center">
       <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
@@ -358,6 +362,9 @@ export default {
       else { // 重新设置 searchResult
         this.modifyAccounts();
       }
+    },
+    'meetingInfo.proxyPort' : function(val) {
+      this.meetingInfo.proxyPort = val.replace(/\D+/, '');
     },
   },
 };

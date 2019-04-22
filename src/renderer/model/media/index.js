@@ -336,13 +336,18 @@ model.provide({
           '360P'  : { width: 640, height: 360 },
         };
 
-        const quality = QUALITY_MAP[val] || QUALITY_MAP['1080P'];
+        const quality = QUALITY_MAP[val] || QUALITY_MAP['720P'];
 
         this.videoQuality.width = quality.width;
         this.videoQuality.height = quality.height;
 
         rtc.media.localMedia.videoQuality.width = this.videoQuality.width;
         rtc.media.localMedia.videoQuality.height = this.videoQuality.height;
+
+        const id = this.audioInputDeviceId;
+
+        this.audioInputDeviceId = null;
+        this.audioInputDeviceId = id;
       },
       { immediate: true }
     );

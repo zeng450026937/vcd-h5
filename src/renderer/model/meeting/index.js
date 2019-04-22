@@ -51,7 +51,6 @@ meeting.provide({
         video,
       })
         .then(() => {
-          this.isPreparing = false;
           storage.insertOrUpdate(`MEETING_INFO_RECORD_${rtc.account.username}`, {
             lastDate : Date.now(),
             number,
@@ -59,7 +58,6 @@ meeting.provide({
           }, 'number', true, true);
         })
         .catch((e) => {
-          this.isPreparing = false;
           throw e;
         });
     },

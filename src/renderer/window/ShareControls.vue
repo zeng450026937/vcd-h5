@@ -4,7 +4,7 @@
       <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
                   title="信号"
                   class="text-white text-base cursor-pointer" @click="showStatisticsModal"/>
-      <span>ID: 6666555588</span>
+      <span>ID: {{targetId}}</span>
       <span class="mr-2">共享时长: {{duration}}</span>
       <a-button class="ml-2 bg-transparent border-white text-white" @click="showSharingModal">
         <a-iconfont type="icon-qiehuan"></a-iconfont>
@@ -37,6 +37,17 @@ export default {
     kom() {
       return (window.opener && window.opener.kom) || window.kom;
     },
+    targetId() {
+      if (this.rtc.conference.connected) {
+        return this.rtc.conference.information.description.conferenceId;
+      }
+      else if (this.rtc.call.connected) {
+        return this.rtc.call.remoteIdentity.uri.user;
+      }
+      else {
+        this.closeSharing();
+      }
+    },
   },
   created() {
     this.initSignal();
@@ -45,6 +56,19 @@ export default {
     if (this.durationTimer) clearInterval(this.durationTimer);
   },
   methods : {
+    checkStatus(conference_cb, call_cb, reject_cb) {
+
+      // const promise = new Promise();
+      //
+      // if (this.rtc.conference.connected) {
+      //   promise.resolve('conference');
+      // }
+      // else if (this.rtc.call.connected) {
+      //   promise.resolve('call');
+      // }
+      //
+      // return promise;
+    },
     async showStatisticsModal() {
       await this.kom.dispatch('application.show');
       this.toMain();

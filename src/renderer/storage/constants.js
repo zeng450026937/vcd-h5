@@ -11,3 +11,7 @@ export const LOGIN_STORAGE = {
 export const CONTACT_STORAGE = {
   LOCAL_CONTACT : 'LOCAL_CONTACT',
 };
+
+export const SETTING_STORAGE = {
+  SETTING : 'APP_SETTING',
+}

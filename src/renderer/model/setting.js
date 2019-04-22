@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron';
-import rtc from '../rtc';
+import storage,{ SETTING_STORAGE } from '../storage';
 import Vuem from './vuem';
 
-const storage = window.localStorage;
-
-const VERSION = '1';
-const STORAGE_KEY = `SETTING_V${VERSION}`;
+// const storage = window.localStorage;
+//
+// const VERSION = '1';
+// const STORAGE_KEY = `SETTING_V${VERSION}`;
 const LANGUAGE = navigator.browserLanguage || navigator.languages[0] || navigator.language;
 
 const model = new Vuem();
@@ -31,7 +31,7 @@ model.provide({
       audioOutputDevice          : null,
       videoInputDevice           : null,
       audioQuality               : null,
-      videoQuality               : '1080P',
+      videoQuality               : '720P',
       screenQuality              : null,
       noiseSuppression           : true,
       highProfile                : false,
@@ -79,8 +79,7 @@ model.provide({
       let saved;
 
       try {
-        saved = storage.getItem(STORAGE_KEY);
-        saved = JSON.parse(saved);
+        saved = storage.query(SETTING_STORAGE.SETTING);
       }
       catch (error) {
         logger.error('load setting failed, error: %s', error);
@@ -93,7 +92,7 @@ model.provide({
     // save all setting
     save() {
       try {
-        storage.setItem(STORAGE_KEY, JSON.stringify(this.$data));
+        storage.insert(SETTING_STORAGE.SETTING, this.$data);
       }
       catch (error) {
         logger.error('save setting failed, error: %s', error);

@@ -14,7 +14,7 @@
             <a-input  maxlength="64"  v-model="tmpProxy" placeholder='代理服务器地址'>
             </a-input>
             <div class="mt-4"></div>
-            <a-input v-number-only v-model="tmpProxyPort" placeholder='端口'>
+            <a-input v-model="tmpProxyPort" placeholder='端口'>
             </a-input>
           </div>
         </a-tab-pane>
@@ -78,6 +78,11 @@ export default {
     },
     closeSetting() {
       this.$emit('closeSetting');
+    },
+  },
+  watch : {
+    tmpProxyPort(val) {
+      this.tmpProxyPort = val.replace(/\D+/, '');
     },
   },
 };

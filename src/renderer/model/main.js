@@ -140,6 +140,7 @@ model.provide({
           this.searchText = '';
           this.hasLoadMore = false;
           this.searchResults = [];
+          router.push(LOGIN.LOGIN_CONTENT);
         }
       },
       immediate : true,

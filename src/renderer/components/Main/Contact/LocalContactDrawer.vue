@@ -52,7 +52,6 @@
           >
             <a-input placeholder='请输入手机号'
                      maxlength="11"
-                     v-number-only
                      v-decorator="[
                           'phone',
                           {rules: [

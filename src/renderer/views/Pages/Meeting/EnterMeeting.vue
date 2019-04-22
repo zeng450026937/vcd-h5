@@ -75,7 +75,9 @@
                     </a-select-option>
                   </a-select-opt-group>
                 </template>
-                <a-input placeholder='会议 ID' @change="onNumberChange">
+                <a-input placeholder='会议 ID'
+                         maxlength="64"
+                         @change="onNumberChange">
                   <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                 </a-input>
               </a-auto-complete>
@@ -84,6 +86,7 @@
             <div class="mt-5 w-full">
               <a-input
                   :value="meetingInfo.pin"
+                  maxlength="64"
                   placeholder='会议密码'
                   type="password"
                   @change="onPasswordChange"
@@ -107,7 +110,7 @@
             </a-iconfont>
           </div>
           <media-content
-              :text-color="'text-wihte'"
+              text-color="text-white"
               :background="'setting-bg'"
               :showVideo="false"
               class="media-content text-white"/>

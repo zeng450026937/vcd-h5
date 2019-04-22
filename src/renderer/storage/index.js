@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueStorage from './lib';
-import { LOGIN_STORAGE, CONTACT_STORAGE } from './constants';
+import { LOGIN_STORAGE, CONTACT_STORAGE, SETTING_STORAGE } from './constants';
 
 Vue.use(VueStorage);
 
@@ -61,10 +61,15 @@ const storage = new VueStorage({
       type    : Boolean,
       default : true,
     },
+    {
+      store   : SETTING_STORAGE.SETTING,
+      type    : Object,
+      default : {},
+    },
   ],
 });
 
-export { LOGIN_STORAGE, CONTACT_STORAGE };
+export { LOGIN_STORAGE, CONTACT_STORAGE, SETTING_STORAGE };
 
 if (process.env.NODE_ENV === 'development') {
   window.storage = storage;

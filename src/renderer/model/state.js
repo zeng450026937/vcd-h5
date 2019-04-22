@@ -27,8 +27,13 @@ model.provide({
   computed : {
     // 登录状态 disconnected connecting registering registered disconnected
     loginStatus : () => rtc.account.status,
-    isPreparing() {
-      return this.$parent.meeting.isPreparing;
+    isPreparing : {
+      get() {
+        return this.$parent.meeting.isPreparing;
+      },
+      set(val) {
+        this.$parent.meeting.isPreparing = val;
+      },
     },
     // 会议状态 isPreparing disconnected connecting connected disconnected
     confStatus() {
@@ -59,21 +64,10 @@ model.provide({
           });
         }
       }
-      else {
-        if (val === 'registered') { // 登录成功状态
-          await wait(1000);
-          if (this.loginStatus === 'registered') { // 防止中途退出
-            router.push(getPath('instance', routes));
-          }
-        }
-        else { // 未登录状态
-          router.push(LOGIN.LOGIN_CONTENT);
-        }
-
-        if (this.loginPopup) popup.destroy(this.loginPopup);
-      }
+      else if (this.loginPopup) popup.destroy(this.loginPopup);
     },
     handleEnterMeeting(val, once) {
+      this.isPreparing = false;
       if (val === 'connecting') { // 正在入会状态
         if (!this.enterPopup || this.enterPopup._isDestroyed) {
           this.enterPopup = popup.prepared('loadingModal', { content: '正在进入会议...' }).display();

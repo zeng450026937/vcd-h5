@@ -11,9 +11,9 @@
                 object-fit="cover"
                 class="cursor-pointer"
                 :hide-video="isVideoBlock"
-                :class="{'opacity-0':current === 0}"/>
+                :class="{'opacity-0':current === 0, 'z-end': isVideoBlock}"/>
     <div v-if="isVideoBlock && current !== 0"
-         class="flex h-full items-center justify-center bg-main-theme"
+         class="flex h-full items-center justify-center bg-media-closed"
          slot="content">
       <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
     </div>

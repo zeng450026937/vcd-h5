@@ -15,18 +15,6 @@ import { AppWindowProxy } from './proxy/app-window-proxy';
 
 Vue.config.productionTip = false;
 
-Vue.directive('number-only', {
-  bind(el) {
-    el.handler = function() {
-      el.value = el.value.replace(/\D+/, '');
-    };
-    el.addEventListener('input', el.handler);
-  },
-  unbind(el) {
-    el.removeEventListener('input', el.handler);
-  },
-});
-
 new Vue({
   mixins : [
     AppWindowProxy,

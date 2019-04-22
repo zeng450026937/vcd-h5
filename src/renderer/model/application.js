@@ -29,8 +29,6 @@ model.provide({
       //
       onLine     : navigator.onLine,
       connection : dumpConnection(),
-      remote,
-      electron,
     };
   },
 
@@ -49,10 +47,11 @@ model.provide({
     async maximize(ctx, next) {
       await next();
 
+      const { unBack } = ctx.payload;
       const current = remote.getCurrentWindow();
 
       if (current.isMaximized()) {
-        current.unmaximize();
+        if (!unBack) current.unmaximize();
 
         return;
       }

@@ -51,6 +51,10 @@ export default {
       type    : Boolean,
       default : false,
     },
+    ignoreStaticVideo : {
+      type    : Boolean,
+      default : false,
+    },
   },
   data() {
     return {
@@ -109,7 +113,8 @@ export default {
     enableLocalVideo() {
       return this.$rtc.account.registered
         && this.source.endsWith('local')
-        && this.$model.setting.enableLocalVideo;
+        && this.$model.setting.enableLocalVideo
+        && !this.ignoreStaticVideo;
     },
     isRemoteStream() {
       return this.source.endsWith('remote');

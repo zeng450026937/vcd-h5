@@ -150,7 +150,7 @@ export default {
     return {
       dSearch,
       isCapsLockOn     : false,
-      isFirstStart     : true,
+      isFirstStart     : false,
       preRmbPassword   : true,
       rawAccounts      : [],
       modifiedAccounts : [],

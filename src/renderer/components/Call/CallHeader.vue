@@ -48,8 +48,7 @@ export default {
         ? this.$rtc.call.remoteIdentity
         || this.$rtc.call.incoming[0].remoteIdentity : null;
 
-      return remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user);
+      return remoteIdentity && remoteIdentity.uri.user;
     },
     userName() {
       return this.displayName || this.targetUser || '未知用户';

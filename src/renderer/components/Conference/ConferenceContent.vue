@@ -272,7 +272,7 @@ export default {
     remoteScreenStream(val) {
       // 观看他人内容共享时自动最大化VCD窗口
       if (val && this.maximizedWhenRemoteSharing) {
-        this.$dispatch('application.maximize');
+        this.$dispatch('application.maximize', { unBack: true });
       }
     },
     deviceException(val) {
