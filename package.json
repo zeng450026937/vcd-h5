@@ -6,6 +6,7 @@
   "category": "VCD",
   "customId": "default",
   "description": "VC Desktop Developed by H5",
+  "lang": "zh",
   "author": {
     "name": "Yealink",
     "email": "server-app@yealink.com"

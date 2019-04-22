@@ -1,23 +1,51 @@
-export const separator = { 
+import { ipcMain } from 'electron';
+
+export const separator = {
   type : 'separator',
 };
 
 export const showAppWindow = {
-  label : '显示主面板',
+  label : 'Display main panel',
+  i18n  : 'showWindow',
   id    : 'show-app-window',
 };
 
 export const quit = {
-  label : '退出',
+  label : 'Quit',
+  i18n  : 'quit',
   id    : 'quit',
 };
 
 export const joinConference = {
-  label : '加入会议',
+  label : 'Meet now',
+  i18n  : 'joinConference',
   id    : 'join-conference',
 };
 
 export const logout = {
-  label : '注销',
+  label : 'Log out',
+  i18n  : 'logout',
   id    : 'logout',
+};
+
+export const language = {
+  label   : 'Language',
+  i18n    : 'language',
+  id      : 'language',
+  submenu : [
+    {
+      label   : '中文',
+      type    : 'radio',
+      id      : 'language',
+      checked : false,
+      lang    : 'zh',
+    },
+    {
+      label   : 'English',
+      type    : 'radio',
+      id      : 'language',
+      checked : true,
+      lang    : 'en',
+    },
+  ],
 };

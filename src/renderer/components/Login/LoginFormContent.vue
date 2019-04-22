@@ -3,7 +3,7 @@
 
     <div class="flex flex-col content">
       <div class="login-title">
-        <span>登录</span>
+        <span>{{$t('login.login')}}</span>
       </div>
 
       <div class="login-form flex flex-col" @keyup.enter="handleLogin">

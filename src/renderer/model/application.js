@@ -139,9 +139,13 @@ model.provide({
 
     ipcRenderer.on(
       'menu-event',
-      (event, { name }) => {
+      (event, { name, menuItem }) => {
         console.warn('menu-event', name);
-        this.$dispatch('menu-event', name);
+        // this.$dispatch('menu-event', name);
+
+        if (name === 'language') {
+          this.$dispatch('i18n.changeLocale', { lang: menuItem.lang });
+        }
       }
     );
 

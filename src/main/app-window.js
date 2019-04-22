@@ -5,6 +5,7 @@ import { PopupWindow } from './popup-window';
 import { formatPathAsUrl } from './utils';
 import { buildMenu } from './menu/build-menu';
 import * as trayMenu from './menu/tray-menu';
+import { getLanguage, setLanguage } from './language';
 
 const minWidth = 1120;
 const minHeight = 630;
@@ -43,13 +44,16 @@ export class AppWindow extends BaseWindow {
     this.tray = new Tray(resolve(__public, 'favicon.png'));
 
     this.tray.setToolTip(process.env.VUE_APP_TITLE);
-    this.tray.setContextMenu(
-      buildMenu([
-        trayMenu.showAppWindow,
-        trayMenu.separator,
-        trayMenu.quit,
-      ])
-    );
+
+    buildMenu([
+      trayMenu.showAppWindow,
+      trayMenu.language,
+      trayMenu.separator,
+      trayMenu.quit,
+    ]).then((menus) => {
+      this.tray.setContextMenu(menus);
+    });
+
     this.tray.on('click', () => this.restoreWindow());
 
     ipcMain.on(
@@ -66,6 +70,19 @@ export class AppWindow extends BaseWindow {
           case trayMenu.joinConference.id:
           case trayMenu.logout.id:
             this.window.webContents.send('menu-event', event);
+            break;
+          case trayMenu.language.id:
+            buildMenu([
+              trayMenu.showAppWindow,
+              trayMenu.language,
+              trayMenu.separator,
+              trayMenu.quit,
+            ], event.menuItem.lang).then((menus) => {
+              this.tray.setContextMenu(menus);
+            });
+            setLanguage(event.menuItem.lang);
+            this.window.webContents.send('menu-event', event);
+            break;
           default:
             break;
         }
@@ -75,9 +92,9 @@ export class AppWindow extends BaseWindow {
     this.window.webContents.on(
       'update-tray-menu',
       (event, template) => {
-        this.tray.setContextMenu(
-          buildMenu(template)
-        );
+        buildMenu(template).then((menus) => {
+          this.tray.setContextMenu(menus);
+        });
       }
     );
     // end of setup tray
@@ -97,6 +114,12 @@ export class AppWindow extends BaseWindow {
     ipcMain.on('will-quit', (event) => {
       this.quitting = true;
       event.returnValue = true;
+    });
+
+    ipcMain.on('request-locale', async(event) => {
+      const lang = await getLanguage();
+
+      event.sender.send('request-locale-reply', lang);
     });
     
     // on macOS, when the user closes the window we really just hide it. This

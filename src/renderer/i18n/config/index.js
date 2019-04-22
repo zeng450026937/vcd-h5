@@ -2,11 +2,11 @@
 module.exports = {
   langList : {
     zh : {
-      locale : 'zh-CN',
+      locale : 'zh',
       remark : '简体中文',
     },
     en : {
-      locale : 'en-US',
+      locale : 'en',
       remark : '英文',
     },
   },
