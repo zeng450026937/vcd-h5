@@ -2,16 +2,13 @@ import Vuem from './vuem';
 import rtc from '../rtc';
 import popup from '../popup';
 import router from '../router';
-import { getPath } from '../router/utils';
-import { wait } from '../utils';
-import { LOGIN, CONFERENCE, CALL } from '../router/constants';
+import { CONFERENCE, CALL } from '../router/constants';
 import storage from '../storage';
 import { CallRecord } from '../database/call-record';
 
 
 const callRecordDB = CallRecord.Create();
 const model = new Vuem();
-const routes = router.options.routes;
 
 model.provide({
   data() {
@@ -80,6 +77,7 @@ model.provide({
       else {
         if (val === 'connected') { // 入会成功
           router.push(CONFERENCE.CONFERENCE_MAIN);
+          this.$dispatch('application.show');
         }
         else if (once === 'connected' && val === 'disconnected') { // 退出会议
           this.isInMiniConference = false;
@@ -101,6 +99,9 @@ model.provide({
       else if (val === 'connecting' || (once === 'ringing' && val === 'connected')) { // 拨号 或者 来电接通
         if (!this.isInMiniCall) { // Mini下挂断新的来电
           router.push(CALL.CALL_MAIN);
+        }
+        if (once === 'ringing' && val === 'connected') {
+          this.$dispatch('application.show');
         }
       }
       else if (once && val === 'disconnected') {
