@@ -18,8 +18,12 @@ const i18n = new VueI18n({
   messages       : utils.moduleToI18n(langNameObj, langModuleList),
 });
 
-getLocale().then((lang) => {
+export function setLocale(lang) {
   i18n.locale = lang;
+}
+
+getLocale().then((lang) => {
+  setLocale(lang);
 });
 
 export default i18n;

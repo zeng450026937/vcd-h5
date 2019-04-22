@@ -15,7 +15,6 @@ import main from './main';
 import call from './call/index';
 import ui from './ui';
 import streamManager from './stream-manager';
-import i18n from './i18n';
 import errorMessage from './middleware/error-message';
 
 Vue.use(Vuem);
@@ -36,7 +35,6 @@ model.mount('conference', conference);
 model.mount('main', main);
 model.mount('call', call);
 model.mount('ui', ui);
-model.mount('i18n', i18n);
 model.mount('streamManager', streamManager);
 
 // logging middleware must be the first one
