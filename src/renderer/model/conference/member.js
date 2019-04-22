@@ -65,9 +65,18 @@ member.provide({
     },
     waitingList() {
       const { userList } = rtc.conference.information.users;
-      // 等待大厅
+      const holdList = userList.filter((user) => {
+        const isOnHold = user.isOnHold();
 
-      return userList.filter((user) => user.isOnHold()).reverse();
+        if (!isOnHold) user.holdid = -1;
+        
+        return isOnHold;
+      });
+
+      if (!this.addHoldSSID) this.addHoldSSID = this._genSSID('holdid');
+      this.addHoldSSID(holdList);
+
+      return holdList.sort((h1, h2) => (h1.holdid > h2.holdid ? -1 : 1));
     },
     speakApplyList() {
       const { userList } = rtc.conference.information.users;
@@ -80,6 +89,18 @@ member.provide({
     },
     currentUserIsPresenter() {
       return this.currentUser && this.currentUser.isPresenter();
+    },
+  },
+  methods : {
+    _genSSID(key) {
+      let SSID = 0;
+      const addSSID = (holdList) => {
+        holdList.forEach((hold) => {
+          if (!hold[key] || hold[key] < 0) hold[key] = ++SSID;
+        });
+      };
+
+      return addSSID;
     },
   },
   watch : {

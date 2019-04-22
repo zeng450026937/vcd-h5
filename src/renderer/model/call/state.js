@@ -36,7 +36,7 @@ state.provide({
               checkInterval = (checkInterval * 2) % 15;
               checkTimes = 0;
             }
-            this.signal = val.quality || '1';
+            this.signal = val.quality > 0 ? val.quality : '1';
           });
         }
         this.duration = secondsToHms(time);

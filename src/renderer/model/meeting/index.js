@@ -85,7 +85,15 @@ meeting.provide({
 
       const port = proxyPort || (this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061);
 
-      const servers = await formatServers({ server, protocol, proxy, port });
+      let servers;
+
+      try {
+        servers = await formatServers({ server, protocol, proxy, port });
+      }
+      catch (e) {
+        this.isPreparing = false;
+        throw e;
+      }
 
       await rtc.conference.leave();
       
@@ -120,8 +128,9 @@ meeting.provide({
     },
     meetnow(ctx, next) {
       const { users } = ctx.payload;
+      const subject = `${rtc.account.username} 的视频会议`;
 
-      return rtc.conference.meetnow(users, { subject: `${rtc.account.username} 的视频会议` });
+      return rtc.conference.meetnow(users, { subject });
     },
   },
   watch : {

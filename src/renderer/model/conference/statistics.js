@@ -148,7 +148,7 @@ function formatStatistics(data) {
   // 网络
   const quality = data.media.quality - 1;
 
-  statisticInfo[0].value = [ '极差', '一般', '良好', '极佳' ][quality < 0 ? 1 : quality];
+  statisticInfo[0].value = [ '极差', '一般', '良好', '极佳' ][quality < 0 ? 0 : quality];
 
   // 总带宽
   result = getTotalOutgoingBitrate(data);

@@ -82,7 +82,7 @@ export default {
   },
   watch : {
     tmpProxyPort(val) {
-      this.tmpProxyPort = val.replace(/\D+/, '');
+      if (val) this.tmpProxyPort = val.replace(/\D+/, '');
     },
   },
 };

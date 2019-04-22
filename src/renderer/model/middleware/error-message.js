@@ -18,10 +18,8 @@ export default async function errorMessage(ctx, next) {
 
     let key = error.cause || (error.data && error.data.cause) || error.message;
 
-    if (typeof error.message === 'string' && !key) {
-      if (error.message.startsWith('getaddrinfo ENOTFOUND')) {
-        key = 'ENOTFOUND';
-      }
+    if (key.startsWith('getaddrinfo ENOTFOUND')) {
+      key = 'ENOTFOUND';
     }
     if (ERROR_MAP[key]) {
       debounceNotice(ctx.vm, ERROR_MAP[key]);
