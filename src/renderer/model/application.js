@@ -1,6 +1,8 @@
 import electron, { remote, ipcRenderer, shell, screen } from 'electron';
 import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
+import rtc from '../rtc';
+import popup from '../popup';
 
 function dumpConnection() {
   const connection = navigator;
@@ -174,15 +176,27 @@ model.provide({
 
 model.use(async(ctx, next) => {
   const { method, setting } = ctx;
-  const hideWhenClose = setting.hideWhenClose;
 
   // if hideWhenClose is enable, redirect close to hide
-  if (method === 'close' && hideWhenClose) {
-    ctx.method = 'hide';
-  }
+  if (method === 'close') {
+    if (setting.hideWhenClose) {
+      ctx.method = 'hide';
+      
+      return await next();
+    }
+    const showPopup = rtc.conference.connected || rtc.call.connected || rtc.call.connecting;
 
-  // always return next() result
-  return await next();
+    if (showPopup) {
+      const ensurePopup = popup.prepared('ensureModal', { content: '关闭窗口会结束当前通话，确认关闭吗？' });
+
+      ensurePopup.display();
+      ensurePopup.vm.$once('cancel', async() => popup.destroy(ensurePopup));
+      ensurePopup.vm.$once('ok', async() => await next());
+    }
+  }
+  else {
+    return await next();
+  }
 });
 
 export default model;
