@@ -197,6 +197,9 @@ model.use(async(ctx, next) => {
       ensurePopup.vm.$once('cancel', async() => popup.destroy(ensurePopup));
       ensurePopup.vm.$once('ok', async() => await next());
     }
+    else {
+      return await next();
+    }
   }
   else {
     return await next();
