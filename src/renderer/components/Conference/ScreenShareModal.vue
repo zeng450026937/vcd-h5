@@ -91,7 +91,6 @@ export default {
   },
   data() {
     return {
-      visible         : false,
       screenList      : [],
       applicationList : [],
       timer           : null,
@@ -114,6 +113,14 @@ export default {
     },
     windowList() {
       return this.share.windowList;
+    },
+    visible : {
+      get() {
+        return this.$model.conference.sketch.isSharingVisible;
+      },
+      set(val) {
+        this.$model.conference.sketch.isSharingVisible = val;
+      },
     },
   },
   mounted() {

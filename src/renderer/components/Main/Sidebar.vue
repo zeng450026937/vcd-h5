@@ -138,8 +138,6 @@ export default {
       }
       this.isInMiniConference = this.confStatus === 'connected';
       this.isInMiniCall = this.isCallConfirmed || this.callStatus === 'connecting';
-
-      this.$router.push(sidebar.currentPath);
     },
     async clickLogout() {
       if (this.confStatus === 'connected') {
@@ -150,13 +148,6 @@ export default {
     },
     openFeedback() {
       this.$refs.feedbackModal.visible = true;
-    },
-  },
-  watch : {
-    currentSidebar(sidebar) {
-      if (sidebar.currentRoute) {
-        this.$router.push(sidebar.currentRoute);
-      }
     },
   },
 };

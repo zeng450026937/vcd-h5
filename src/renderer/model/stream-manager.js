@@ -17,6 +17,10 @@ model.provide({
   methods : {
   },
   computed : {
+    // 是否是启用本地视频
+    enableLocalVideo() {
+      return this.$parent.setting.enableLocalVideo;
+    },
     // 通话和会议的类型
     isVideoConference() {
       return this.$parent.conference.sketch.isVideoConference;
@@ -31,7 +35,7 @@ model.provide({
     // 会议中是否需要释放本地视频流
     releaseStreamInConference() {
       return (!this.isVideoConference && rtc.conference.connected) // 视频会议 转 音频会议
-        || (this.isVideoConference && rtc.conference.status === 'disconnected'); // 挂断视频会议
+        || (this.isVideoConference && rtc.conference.status === 'disconnected');// 挂断视频会议
     },
     // 通话中是否需要获取视频流
     acquireStreamInCall() {
@@ -44,27 +48,44 @@ model.provide({
   },
   watch : {
     acquireStreamInConference(val) {
-      if (val) {
+      if (val && !this.enableLocalVideo) {
         rtc.media.localMedia.acquireStream();
         console.warn('获取会议视频流');
       }
     },
     releaseStreamInConference(val) {
-      if (val) {
+      if (val && !this.enableLocalVideo) {
         if (val) rtc.media.localMedia.releaseStream();
         console.warn('释放会议视频流');
       }
     },
     acquireStreamInCall(val) {
-      if (val) {
+      if (val && !this.enableLocalVideo) {
         rtc.media.localMedia.acquireStream();
         console.warn('获取通话视频流');
       }
     },
     releaseStreamInCall(val) {
-      if (val) {
+      if (val && !this.enableLocalVideo) {
         if (val) rtc.media.localMedia.releaseStream();
         console.warn('释放通话视频流');
+      }
+    },
+    enableLocalVideo(val) {
+      const hasStream = (
+        (this.isVideoConference && rtc.conference.connected)
+        || (this.isVideoCall && rtc.call.connected)
+      );
+
+      if (!hasStream) return;
+
+      if (val) {
+        console.warn('释放视频流');
+        rtc.media.localMedia.releaseStream();
+      }
+      else {
+        console.warn('获取视频流');
+        rtc.media.localMedia.acquireStream();
       }
     },
   },

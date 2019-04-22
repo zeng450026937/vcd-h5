@@ -183,9 +183,7 @@ export default {
       }
     },
     expandMiniContent() {
-      this.$model.state.isInMiniCall = false;
       this.isInMiniCall = false;
-      this.$router.push(CALL.CALL_MAIN);
     },
     toAudioCall() {
       this.showMorePanel = false;

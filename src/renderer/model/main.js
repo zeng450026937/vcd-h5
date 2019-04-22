@@ -1,6 +1,6 @@
 import Vuem from './vuem';
 import kom from '.';
-import { LOGIN, } from '../router/constants';
+import { CONFERENCE, LOGIN, CALL } from '../router/constants';
 import rtc from '../rtc';
 import { findAllRoutes } from '../router/utils';
 import router from '../router';
@@ -123,6 +123,12 @@ model.provide({
         setting,
       };
     },
+    isInMiniConference() {
+      return this.$parent.state.isInMiniConference;
+    },
+    isInMiniCall() {
+      return this.$parent.state.isInMiniCall;
+    },
   },
   watch : {
     isRegistered : {
@@ -149,6 +155,27 @@ model.provide({
     isCallDisConnected(val) {
       if (val && this.isConferenceDisConnected) {
         router.push(this.isRegistered ? this.currentNav.path : LOGIN.LOGIN_CONTENT);
+      }
+    },
+    isInMiniConference(val) {
+      if (val) {
+        router.push(this.currentNav.path);
+      }
+      else if (!this.isConferenceDisConnected) {
+        router.push(CONFERENCE.CONFERENCE_MAIN);
+      }
+    },
+    isInMiniCall(val) {
+      if (val) {
+        router.push(this.currentNav.path);
+      }
+      else if (!this.isCallDisConnected) {
+        router.push(CALL.CALL_MAIN);
+      }
+    },
+    currentSidebar(sidebar) {
+      if (sidebar.currentPath) {
+        router.push(sidebar.currentPath);
       }
     },
   },

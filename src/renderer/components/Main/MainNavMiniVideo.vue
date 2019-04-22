@@ -177,7 +177,6 @@ export default {
     },
     expandVideoContent() {
       this.isInMiniConference = false;
-      this.$router.push(CONFERENCE.CONFERENCE_MAIN);
     },
     onAudioBtnClick() {
       this.$dispatch('conference.toggleAudio');

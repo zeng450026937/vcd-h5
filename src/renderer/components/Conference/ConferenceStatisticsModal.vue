@@ -72,12 +72,19 @@ export default {
   },
   data() {
     return {
-      visible     : false,
       statistics  : {},
       staticTimer : null,
     };
   },
   computed : {
+    visible : {
+      get() {
+        return this.$model.conference.sketch.isStatisticsVisible;
+      },
+      set(val) {
+        this.$model.conference.sketch.isStatisticsVisible = val;
+      },
+    },
   },
   mounted() {
   },

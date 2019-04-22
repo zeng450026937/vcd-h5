@@ -4,6 +4,10 @@ import rtc from '../../rtc';
 const sketch = new Vuem();
 
 const initialDate = () => ({
+  // 一些可见性的Modal
+  isStatisticsVisible : false,
+  isSharingVisible    : false,
+
   hideControls          : false, // 是否隐藏会议页面底部和头部的控制按钮
   isShareInCenter       : false, // 辅流页面是否显示在主页面
   isShareWindowOpen     : false,

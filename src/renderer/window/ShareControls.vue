@@ -3,10 +3,10 @@
     <div class="flex controls-wrapper w-full h-full justify-between items-center px-4">
       <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
                   title="信号"
-                  class="text-white text-base cursor-pointer"/>
+                  class="text-white text-base cursor-pointer" @click="showStatisticsModal"/>
       <span>ID: 6666555588</span>
       <span class="mr-2">共享时长: {{duration}}</span>
-      <a-button class="ml-2 bg-transparent border-white text-white">
+      <a-button class="ml-2 bg-transparent border-white text-white" @click="showSharingModal">
         <a-iconfont type="icon-qiehuan"></a-iconfont>
         切换共享
       </a-button>
@@ -45,6 +45,33 @@ export default {
     if (this.durationTimer) clearInterval(this.durationTimer);
   },
   methods : {
+    async showStatisticsModal() {
+      await this.kom.dispatch('application.show');
+      this.toMain();
+      Promise.resolve().then(() => {
+        this.kom.vm.conference.sketch.isSharingVisible = false;
+        this.kom.vm.conference.sketch.isStatisticsVisible = true;
+      });
+    },
+    async showSharingModal() {
+      await this.kom.dispatch('application.show');
+      this.toMain();
+      Promise.resolve().then(() => {
+        this.kom.vm.conference.sketch.isStatisticsVisible = false;
+        this.kom.vm.conference.sketch.isSharingVisible = true;
+      });
+    },
+    toMain() {
+      if (this.rtc.conference.connected) {
+        this.kom.vm.state.isInMiniConference = false;
+      }
+      else if (this.rtc.call.connected) {
+        this.kom.vm.state.isInMiniCall = false;
+      }
+      else {
+        this.closeSharing();
+      }
+    },
     async closeSharing() {
       if (this.rtc.conference.connected) {
         await this.rtc.conference.shareChannel.disconnect();
