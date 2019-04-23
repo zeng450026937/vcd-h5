@@ -55,6 +55,7 @@
                                :value="quality.value"
               >{{quality.label}}</a-select-option>
             </a-select>
+            <span class="text-black6 text-xs ml-4">{{qualityTips}}</span>
           </div>
         </div>
       </div>
@@ -91,6 +92,15 @@ export default {
     };
   },
   computed : {
+    qualityTips() {
+      const TIPS = {
+        '1080P' : '充分发挥系统性能，展现最好视频画质，会占用较大系统与网络资源。',
+        '720P'  : '平衡系统流畅度与画质效果，适用于大多数场景。',
+        '360P'  : '调低带宽并降低视频质量，可以提高系统流畅度。',
+      };
+      
+      return TIPS[this.videoQuality];
+    },
   },
   mounted() {
   },

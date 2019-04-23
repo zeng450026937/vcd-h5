@@ -12,21 +12,29 @@ import { getLocale } from './proxy/main-process-proxy';
 
 export default {
   name   : 'App',
-  sketch : {
-    ns    : 'i18n',
-    props : [ 'language' ],
-  },
+  sketch : [
+    {
+      ns    : 'i18n',
+      props : [ 'language' ],
+    }, 
+    {
+      ns    : 'application',
+      props : [ 'offLine' ],
+    },
+  ],
   data() {
     return {
       locale : zhCN,
     };
   },
-  computed : {
-  },
   methods : {},
   watch   : {
     language(val) {
       this.$i18n.locale = val;
+    },
+    offLine(val) {
+      if (val) this.offLineMessage = this.$message.error('网络不可用，请检查你的网络设置');
+      else if (this.offLineMessage) this.offLineMessage();
     },
   },
   async created() {

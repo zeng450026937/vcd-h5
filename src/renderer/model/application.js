@@ -1,4 +1,4 @@
-import electron, { remote, ipcRenderer, shell, screen } from 'electron';
+import { remote, ipcRenderer, shell, screen } from 'electron';
 import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 import rtc from '../rtc';
@@ -31,6 +31,8 @@ model.provide({
       //
       onLine     : navigator.onLine,
       connection : dumpConnection(),
+      remote,
+      screen,
     };
   },
 
