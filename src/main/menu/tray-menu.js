@@ -40,12 +40,12 @@ export const language = {
       checked : false,
       lang    : 'zh',
     },
-    // {
-    //   label   : 'English',
-    //   type    : 'radio',
-    //   id      : 'language',
-    //   checked : true,
-    //   lang    : 'en',
-    // },
+    {
+      label   : 'English',
+      type    : 'radio',
+      id      : 'language',
+      checked : true,
+      lang    : 'en',
+    },
   ],
 };
