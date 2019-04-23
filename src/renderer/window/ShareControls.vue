@@ -209,10 +209,10 @@ export default {
             closeWindow = !target || !target.localStream;
           }
           else {
-            this.closeSharing();
+            this.terminateSharing();
           }
           if (closeWindow) {
-            this.closeSharing();
+            this.terminateSharing();
           }
 
           target.getStats().then((val) => {
