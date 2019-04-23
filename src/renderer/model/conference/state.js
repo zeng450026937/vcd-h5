@@ -39,13 +39,15 @@ state.provide({
             }
             const { quality } = val.media;
 
-            if (quality <= 0 && !isShowSignalWarning) { // 丢包率 > 12% (10%)
-              setTimeout(() => {
-                if (this.isConnected) {
-                  isShowSignalWarning = true;
-                  this.warningNotice = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
-                }
-              }, 500);
+            if (quality <= 0) { // 丢包率 > 12% (10%)
+              if (!isShowSignalWarning) {
+                setTimeout(() => {
+                  if (this.isConnected) {
+                    isShowSignalWarning = true;
+                    this.warningNotice = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+                  }
+                }, 500);
+              }
             }
             else {
               if (isShowSignalWarning) {

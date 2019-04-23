@@ -16,10 +16,16 @@ export default {
       locale : zhCN,
     };
   },
-  computed : {
+  sketch : {
+    ns    : 'application',
+    props : [ 'offLine' ],
   },
   methods : {},
   watch   : {
+    offLine(val) {
+      if (val) this.offLineMessage = this.$message.error('网络不可用，请检查你的网络设置');
+      else if (this.offLineMessage) this.offLineMessage();
+    },
   },
 };
 </script>

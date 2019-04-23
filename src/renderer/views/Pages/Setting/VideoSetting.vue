@@ -60,18 +60,6 @@
         </div>
       </div>
       <div class="flex flex-col mt-3">
-        <div class="leading-normal">
-          <a-switch size="small" v-model="highProfile"/>
-          <span class="ml-5">{{$t('setting.video.enableHDVideo')}}</span>
-        </div>
-        <!--<div class="mt-3 leading-normal">-->
-          <!--<a-switch size="small" v-model="hardwareAcceleration"/>-->
-          <!--<span class="ml-5">{{$t('setting.video.enableHWSpeed')}}</span>-->
-        <!--</div>-->
-        <!--<div class="mt-3 leading-normal">-->
-          <!--<a-switch size="small" v-model="horizontalMirroring"/>-->
-          <!--<span class="ml-5">{{$t('setting.video.enableMirroring')}}</span>-->
-        <!--</div>-->
         <div class="mt-3 leading-normal">
           <a-switch size="small" v-model="muteVideoWhenJoin"/>
           <span class="ml-5">{{$t('setting.video.disableVideo')}}</span>
@@ -97,8 +85,7 @@ export default {
   sketch : [ 
     {
       ns    : 'setting',
-      props : [ 
-        'highProfile',
+      props : [
         'hardwareAcceleration',
         'muteVideoWhenJoin',
         'horizontalMirroring',

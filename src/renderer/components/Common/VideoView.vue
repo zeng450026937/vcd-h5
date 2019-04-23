@@ -3,7 +3,12 @@
             class="overflow-hidden video-content-wrapper bg-media"
             :class="{[`${position} video-content-wrapper-${position}`]: true,
             'w-full h-full': position === 'absolute'}">
+    <div v-if="!videoStream && !hideVideo"
+         class="flex h-full items-center justify-center bg-media-closed">
+      <a-iconfont type="icon-shipinjinyong" class="display-icon"/>
+    </div>
     <video
+        v-show="videoStream"
         :id="videoId"
         class="video-content"
         :class="{'force-16-9' : !videoStream}"
@@ -13,11 +18,6 @@
         @click="videoClicked"
         @dblclick="videoDblClicked"
     ></video>
-    <div v-if="!videoStream && !hideVideo"
-         class="loading-notice">
-      <a-spin size="large"/>
-      <div class="mt-2 text-indigo text-xl">视频加载中...</div>
-    </div>
     <template v-show="hideVideo">
       <slot name="content"/>
     </template>
@@ -221,6 +221,11 @@ export default {
     }
     .force-16-9 {
        padding-top: 56.25%;
+    }
+    .display-icon {
+      opacity: 0.4;
+      color: white;
+      font-size: 36px;
     }
   }
 </style>
