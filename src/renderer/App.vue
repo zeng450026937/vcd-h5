@@ -30,7 +30,9 @@ export default {
     },
   },
   async created() {
-    this.$i18n.locale = await getLocale();
+    const lang = await getLocale();
+
+    this.$dispatch('i18n.changeLocale', { lang });
   },
 };
 </script>

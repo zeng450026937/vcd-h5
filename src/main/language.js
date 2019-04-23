@@ -1,10 +1,10 @@
 import { app } from 'electron';
-import { readJson, writeJson } from 'fs-extra';
-import { resolve } from 'path';
+import { readJson, outputJson } from 'fs-extra';
+import { join } from 'path';
 
 const i18n = require('../renderer/i18n/modules/main');
 
-const path = resolve(__dirname, './package.json');
+const path = join(app.getPath('userData'), './setting/setting.json');
 
 const langs = {
   'zh-CN' : 'zh',
@@ -19,7 +19,8 @@ function getLocale() {
 }
 
 export async function getLanguage() {
-  const json = await readJson(path);
+  const json = await readJson(path).catch(() => Promise.resolve({}));
+
   const locale = getLocale();
 
   if (!json.lang) {
@@ -37,7 +38,7 @@ export async function setLanguage(lang, json) {
 
   json.lang = lang;
 
-  await writeJson(
+  await outputJson(
     path,
     json,
     { spaces: 2 },

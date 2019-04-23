@@ -10,7 +10,7 @@ const model = new Vuem();
 
 const genSidebarNavs = (routes) => {
   const sideNavs = {
-    instance    : { icon: 'icon-jishihuiyi', text: '即时会议' },
+    instance    : { icon: 'icon-jishihuiyi', text: '发起会议' },
     join        : { icon: 'icon-jiaruhuiyi', text: '加入会议' },
     dial        : { icon: 'icon-bohao', text: '拨号' },
     schedule    : {},
