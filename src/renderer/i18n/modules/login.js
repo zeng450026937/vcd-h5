@@ -21,7 +21,7 @@ module.exports = {
       rememberPsd         : 'remenber password',
       autoLogin           : 'auto login',
       joinMeeting         : 'join meeting',
-      login               : 'login',
+      login               : 'Login',
       setting             : 'setting',
     },
   },

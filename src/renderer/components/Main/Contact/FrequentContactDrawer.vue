@@ -45,13 +45,11 @@
 <script>
 /* eslint-disable no-loop-func */
 import Transfer from '../../transfer/index.vue';
-import CommonEmpty from '../../Shared/CommonEmpty.vue';
 
 export default {
   name       : 'FrequentContactDrawer',
   components : {
     Transfer,
-    CommonEmpty,
   },
   props : {
     modalType : { // add edit

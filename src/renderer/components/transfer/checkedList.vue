@@ -10,6 +10,7 @@
       <span></span>
     </div>
     <recycle-scroller
+        v-show="list.length>0"
         :items="list"
         :buffer="20"
         :page-mode="false"
@@ -40,11 +41,16 @@
         </div>
       </template>
     </recycle-scroller>
+    <div class="empty-content" v-if="list.length === 0">
+      <common-empty class="text-grey" image="empty-contact" text="请选择参会成员"/>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { RecycleScroller } from 'vue-virtual-scroller';
+import CommonEmpty from '../Shared/CommonEmpty.vue';
 
 export default {
   name  : 'CheckedList',
@@ -63,6 +69,7 @@ export default {
   },
   components : {
     RecycleScroller,
+    CommonEmpty,
   },
   data() {
     return {
@@ -193,6 +200,12 @@ export default {
       }
 
     }
+  }
+  .empty-content {
+    height: 75%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
   }
 }
 </style>

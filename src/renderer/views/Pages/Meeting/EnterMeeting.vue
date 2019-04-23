@@ -319,9 +319,9 @@ export default {
     }
     .meeting-form-content{
       height: 100%;
-      width: 100%;
       display: flex;
       position: absolute;
+      right: 0;
       justify-content: flex-end;
       padding: 20px;
       align-items: center;
