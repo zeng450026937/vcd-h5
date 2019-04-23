@@ -30,7 +30,7 @@ variables:
   GITLAB_CI_UPLOAD_WINDOWS: .\%GITLAB_CI_SCRIPT_PATH%\upload_windows.bat
   
   #nexus仓库地址
-  REPOSITORY_URL: https://nexus.yealinkops.com/repository/packages-manager
+  REPOSITORY_URL: https://nexus.yealinkops.com/repository/packages-repo
   REPOSITORY_USER: devops
   REPOSITORY_PASSWORD: UaW9URs9KQlYtFz3
   GIT_SUBMODULE_STRATEGY: recursive
