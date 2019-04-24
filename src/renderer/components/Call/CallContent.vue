@@ -271,7 +271,7 @@ export default {
       if (val) {
         this.openShareControls();
         if (this.minimizedWhenLocalSharing) {
-          this.$dispatch('application.hide');
+          this.$dispatch('application.minimize');
         }
       }
       else if (this.shareControlsWindow) {

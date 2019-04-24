@@ -1,19 +1,19 @@
 <template>
-  <div id="window" ref="controls" class="share-controls">
-    <div class="flex controls-wrapper w-full h-full justify-between items-center px-4 select-none">
+  <div id="window" ref="controls" class="share-controls px-2 py-2">
+    <div class="flex controls-wrapper w-full h-full justify-between px-2 items-center select-none dragable">
       <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
                   title="信号"
-                  class="text-white text-base cursor-pointer"
+                  class="text-white text-base cursor-pointer no-dragable"
                   @click="showStatisticsModal"/>
       <span>ID: {{targetId}}</span>
       <span class="mr-2">共享时长: {{duration}}</span>
-      <a-button class="ml-2 bg-transparent border-white text-white"
+      <a-button class="ml-2 bg-transparent border-white text-white no-dragable"
                 @click="showSharingModal">
         <a-iconfont type="icon-qiehuan"></a-iconfont>
         切换共享
       </a-button>
       <a-button @click="terminateSharing"
-                class="bg-red-light border-transparent text-white">
+                class="bg-red-light border-transparent text-white no-dragable">
         <a-iconfont type="icon-tingzhi" class="text-white"></a-iconfont>
         停止共享
       </a-button>
@@ -38,8 +38,6 @@ export default {
       shrinkTimer   : null,
       // 拖动相关
       isDragging    : false,
-      mouseX        : null,
-      mouseY        : null,
       mouseEnter    : false,
     };
   },
@@ -67,18 +65,16 @@ export default {
     this.lazyShrink = debounce(this.shrinkToTop, 200);
     this.lazyExpand = debounce(this.expandFromTop, 200);
 
+    this.lazyShrink();
     remote.getCurrentWindow().on('move', this.lazyShrink);
   },
   async mounted() {
     this.EVENT_MAP = {
-      mouseup    : this.onControlsClickUp,
-      mousedown  : this.onControlsClickDown,
-      mousemove  : this.onControlsDrag,
       mouseenter : this.onMouseEnter,
       mouseleave : this.onMouseLeave,
     };
     await this.$nextTick();
-    this.setupEvent(this.$refs.controls);
+    this.setupEvent(document);
   },
   beforeDestroy() {
     if (this.durationTimer) clearInterval(this.durationTimer);
@@ -86,37 +82,21 @@ export default {
     this.removeEvent(this.$refs.controls);
   },
   methods : {
-    // 事件相关
-    onControlsClickDown({ pageX, pageY }) { // 鼠标点下
-      this.mouseX = pageX;
-      this.mouseY = pageY;
-      this.isDragging = true;
-    },
-    onControlsClickUp() { // 鼠标松开
-      this.isDragging = false;
-    },
-    onControlsDrag({ pageX, pageY }) { // 鼠标点击拖动
-      if (this.isDragging) {
-        const win = remote.getCurrentWindow();
-
-        let [ x, y ] = win.getPosition();
-
-        x += (pageX - this.mouseX);
-        y += (pageY - this.mouseY);
-        win.setPosition(x, y, true);
-      }
-    },
     onMouseEnter() { // 鼠标移进来
       this.mouseEnter = true;
       this.lazyExpand();
     },
-    onMouseLeave({ pageY }) { // 鼠标移出去
-      if (pageY < 6 && pageY > 0) return;
+    onMouseLeave({ pageX, pageY }) { // 鼠标移出去
+      if ((pageX > 10 && pageX < 604) && (pageY > 10 && pageY < 46)) {
+        this.mouseEnter = true;
+        
+        return;
+      }
       this.mouseEnter = false;
-      this.isDragging = false;
       this.lazyShrink();
     },
     setupEvent(target, eventMap = this.EVENT_MAP) {
+      this.removeEvent(target, eventMap);
       Object.entries(eventMap).forEach(([ event, handle ]) => target.addEventListener(event, handle));
     },
     removeEvent(target, eventMap = this.EVENT_MAP) {
@@ -141,7 +121,7 @@ export default {
       const [ offsetX, offsetY ] = current.getPosition();
 
       if (offsetY < 0) {
-        current.setPosition(offsetX, 0);
+        current.setPosition(offsetX, -6);
       }
     },
 
@@ -158,15 +138,21 @@ export default {
     async showStatisticsModal() {
       this.toMain();
       Promise.resolve().then(() => {
-        this.kom.vm.conference.sketch.isSharingVisible = false;
-        this.kom.vm.conference.sketch.isStatisticsVisible = true;
+        const { fromConference } = this.origin;
+        const source = fromConference ? 'conference' : 'call';
+
+        this.kom.vm[source].sketch.isSharingVisible = false;
+        this.kom.vm[source].sketch.isStatisticsVisible = true;
       });
     },
     async showSharingModal() {
       this.toMain();
       Promise.resolve().then(() => {
-        this.kom.vm.conference.sketch.isStatisticsVisible = false;
-        this.kom.vm.conference.sketch.isSharingVisible = true;
+        const { fromConference } = this.origin;
+        const source = fromConference ? 'conference' : 'call';
+
+        this.kom.vm[source].sketch.isStatisticsVisible = false;
+        this.kom.vm[source].sketch.isSharingVisible = true;
       });
     },
 
@@ -196,32 +182,27 @@ export default {
         while (checkTimes++ === checkInterval) {
           let target;
 
-          let closeWindow = false;
-
           const { fromConference, fromCall } = this.origin;
 
           if (fromConference) {
-            target = this.rtc.conference;
-            closeWindow = !target || !target.shareChannel.localStream;
+            target = this.rtc.conference.shareChannel;
           }
           else if (fromCall) {
-            target = this.rtc.call.share.channel;
-            closeWindow = !target || !target.localStream;
+            target = this.rtc.call;
           }
-          else {
-            this.terminateSharing();
-          }
-          if (closeWindow) {
+
+          if (!target || !target.localStream) {
             this.terminateSharing();
           }
 
           target.getStats().then((val) => {
-            if (this.signal === val.media.quality) {
+            const { quality } = val;
+
+            if (this.signal === val.quality) {
               checkInterval *= 2;
               checkInterval = (checkInterval * 2) % 15;
               checkTimes = 0;
             }
-            const { quality } = val.media;
 
             this.signal = quality >= 1 ? quality : '1';
           });
@@ -239,7 +220,6 @@ export default {
     height: 56px;
     background: rgba(0,0,0,0.65);
     border-radius: 0 0 4px 4px;
-    cursor: move;
     .controls-wrapper {
       font-size: 14px;
       color: #FFFFFF;

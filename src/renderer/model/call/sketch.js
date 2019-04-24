@@ -4,6 +4,10 @@ import rtc from '../../rtc';
 const sketch = new Vuem();
 
 const initialDate = () => ({
+  // 一些可见性的Modal
+  isStatisticsVisible : false,
+  isSharingVisible    : false,
+
   currentTab       : '', // TabSetting TabChatting
   isInCallMain     : true,
   hideControls     : false,

@@ -116,10 +116,10 @@ export default {
     },
     visible : {
       get() {
-        return this.$model.conference.sketch.isSharingVisible;
+        return this.$model[this.source].sketch.isSharingVisible;
       },
       set(val) {
-        this.$model.conference.sketch.isSharingVisible = val;
+        this.$model[this.source].sketch.isSharingVisible = val;
       },
     },
   },

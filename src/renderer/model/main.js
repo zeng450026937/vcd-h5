@@ -22,7 +22,7 @@ const genSidebarNavs = (routes) => {
     confSetting : { icon: 'icon-huiyishi', text: '会议' },
     audio       : { icon: 'icon-maikefeng', text: '音频' },
     video       : { icon: 'icon-shexiangtou', text: '视频' },
-    about       : { icon: 'icon-guanyu', text: '关于' },
+    about       : { icon: 'icon-tongyongtishi', text: '关于' },
   };
   
   routes.forEach((route) => {
