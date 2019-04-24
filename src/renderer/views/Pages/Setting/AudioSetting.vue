@@ -17,7 +17,7 @@
                     v-model="audioInputDeviceId" class="mt-2">
             <a-select-option v-for="audioInput in audioInputDevices"
                              :key="audioInput.deviceId + audioInput.groupId"
-            >{{audioInput.label}}
+            >{{audioInput.label | filterLabel}}
             </a-select-option>
           </a-select>
           <a-input v-else
@@ -101,6 +101,11 @@ export default {
   methods : {
     playTestMusic() {
       this.$refs.testAudio.play().then(() => {});
+    },
+  },
+  filters : {
+    filterLabel(val) {
+      return /^(.*)\(.*\)$/.test(val) ? RegExp.$1 : val;
     },
   },
 };

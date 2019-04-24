@@ -68,7 +68,7 @@ model.provide({
             conference.sketch.isVideoConference = !toAudio;
           }
           else {
-            this.isVideoCall = !toAudio;
+            this.isVideoCall = isVideoCall && !toAudio;
           }
         }, 500);
       });
