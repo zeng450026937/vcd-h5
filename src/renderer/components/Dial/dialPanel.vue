@@ -4,13 +4,12 @@
 
       <a-input ref="numberInput"
                id="number-input"
-               defaultValue="号码"
                :value="callNumber"
                @input="inputNumber"
                @keyup.enter="videoCall">
 
         <a-iconfont v-show="!!callNumber"
-                    title="清空"
+                    :title="$t('dial.dialpad.clear')"
                     slot="suffix"
                     type="icon-guanbi"
                     class="text-sm text-grey cursor-pointer hover:text-red"
@@ -20,7 +19,7 @@
       </a-input>
 
       <a-iconfont type="icon-huishan"
-                  title="退格"
+                  :title="$t('dial.dialpad.backspace')"
                   class="text-2xl ml-3 cursor-pointer"
                   @click="removeTailNumber">
       </a-iconfont>
@@ -31,7 +30,7 @@
         v-show="!localContactExist"
         class="add-local-btn text-indigo  text-xs leading-tight"
         @click="addLocal">
-      添加为本地联系人
+      {{$t('dial.dialpad.addLocal')}}
     </span>
 
     <plate-content
@@ -44,12 +43,12 @@
       <a-button type="primary" class="w-1/2" :disabled="!callNumber"
                 @click="videoCall">
         <a-iconfont type="icon-shipin" class="text-base"></a-iconfont>
-        视频呼叫
+        {{$t('dial.dialpad.videoCall')}}
       </a-button>
       <a-button type="primary" class="ml-4 w-1/2"
                 @click="audioCall" :disabled="!callNumber">
         <a-iconfont type="icon-yuyin" class="text-base"></a-iconfont>
-        音频呼叫
+        {{$t('dial.dialpad.audioCall')}}
       </a-button>
     </div>
   </div>

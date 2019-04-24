@@ -3,8 +3,8 @@
 
     <div class="record-header">
       <a-radio-group v-model="recordType" size="small" defaultValue="all" buttonStyle="solid">
-        <a-radio-button value="all" class="text-xs">所有通话</a-radio-button>
-        <a-radio-button value="missed" class="text-xs">未接来电</a-radio-button>
+        <a-radio-button value="all" class="text-xs">{{$t('dial.record.all')}}</a-radio-button>
+        <a-radio-button value="missed" class="text-xs">{{$t('dial.record.missed')}}</a-radio-button>
       </a-radio-group>
     </div>
 
@@ -22,7 +22,7 @@
                   'text-red':!(!record.connected && record.refuse === true && record.type === 'callout')
                   && (!record.connected)
                  }">
-              <a-iconfont  :type='record|callIcon' class="text-sm mr-1" theme="filled"></a-iconfont>
+              <a-iconfont :type='record|callIcon' class="text-sm mr-1" theme="filled"></a-iconfont>
               <div>{{record|callType}}</div>
             </div>
             <div class="record-info-duration">
@@ -64,6 +64,7 @@ import { CallRecord } from '../../database/call-record';
 import { genDurationTime, genStartTime } from '../../utils/date';
 import { callIcon, callType } from '../../utils/filters';
 import ContactPopover from '../Main/Contact/ContactPopover.vue';
+import { $t } from '../../i18n';
 
 export default {
   name       : 'record',
@@ -163,12 +164,9 @@ export default {
     },
     async updateRecord() {
       const { account, server } = this.$storage.query('CURRENT_ACCOUNT');
-
       const records = await this.callRecordDb.getRecordByRecent([ account, server ], 100);
 
       this.callRecord = this.classification(records);
-
-
       this.ready = true;
     },
     handleUpdateInfo({ id, contact }) {
@@ -185,7 +183,7 @@ export default {
     callIcon,
     genStartTime,
     duration({ startTime, endTime, type, connected, refuse }) {
-      if (!connected && refuse === true && type === 'callout') return '已取消';
+      if (!connected && refuse === true && type === 'callout') return $t('contact.status.cancel');
 
       if (!endTime || !startTime) return '';
 
@@ -196,7 +194,7 @@ export default {
     },
     recordName(record) {
       if (record.isConference) {
-        if (!record.subject) return '未知联系人';
+        if (!record.subject) return $t('contact.label.unknown');
 
         return record.subject;
       }

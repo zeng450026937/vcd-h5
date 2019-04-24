@@ -1,9 +1,11 @@
+import { $t } from '../i18n'
+
 export function callType(record) {
-  if (!record.connected && record.refuse === true && record.type === 'callout') return '呼出';
-  if (!record.connected && record.refuse === true) return '已拒接';
-  if (!record.connected) return '未接';
-  if (record.type === 'incoming') return '呼入';
-  if (record.type === 'callout') return '呼出';
+  if (!record.connected && record.refuse === true && record.type === 'callout') return $t('dial.record.callOut');
+  if (!record.connected && record.refuse === true) return $t('dial.record.refuse');
+  if (!record.connected) return $t('dial.record.missCall');
+  if (record.type === 'incoming') return $t('dial.record.callIn');
+  if (record.type === 'callout') return $t('dial.record.callOut');
 }
 
 export function callIcon(record) {

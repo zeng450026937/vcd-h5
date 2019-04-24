@@ -6,12 +6,12 @@
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
             <a-iconfont v-if="currentGroup !== 'rootNode'" type="icon-left"
-                        title="返回"
+                        :title="$t('contact.button.back')"
                         class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
                         @click="goBack"></a-iconfont>
             <span>{{currentGroupName}}</span>
             <a-iconfont v-if="currentGroup === 'rootNode' && rootGroup.length<100"
-                        title="添加常用联系人分组"
+                        :title="$t('contact.frequent.addFrequentGroup')"
                         class="ml-4 text-indigo cursor-pointer no-dragable"
                         type="icon-tianjiafenzu"
                         theme="filled" @click="addGroup"></a-iconfont>
@@ -24,8 +24,10 @@
         <div class="h-full border-r overflow-y-auto px-1 py-1 w-2/5">
           <div v-if="currentGroup === 'rootNode' && currents.length <= 0"
                class="flex flex-col h-full justify-center items-center">
-            <common-empty image="empty-contact" text="暂未添加常用联系人"/>
-            <a-button type="primary" ghost class="mt-8" @click="addGroup">添加分组</a-button>
+            <common-empty image="empty-contact" :text="$t('contact.frequent.noFrequent')"/>
+            <a-button type="primary" ghost class="mt-8" @click="addGroup">
+              {{$t('contact.frequent.addGroup')}}
+            </a-button>
           </div>
           <contact-list
               v-else
@@ -41,32 +43,31 @@
             <a-dropdown slot-scope="{item}"
                         slot="more"
                         :trigger="['click']">
-
               <a-iconfont
                   v-if="item.isGroup"
                   @click.stop=""
                   type="icon-gengduo1"
-                  title="更多"
+                  :title="$t('contact.common.more')"
                   class="mr-2 text-indigo cursor-pointer text-sm">
               </a-iconfont>
 
               <a-iconfont
                   v-else
                   type="icon-gengduo1"
-                  title="更多"
+                  :title="$t('contact.common.more')"
                   class="mr-2 text-indigo cursor-pointer text-sm">
               </a-iconfont>
 
               <a-menu slot="overlay" v-if="item.isGroup">
                 <a-menu-item @click="editGroup(item)">
-                  编辑分组
+                  {{$t('contact.frequent.editGroup')}}
                 </a-menu-item>
                 <a-menu-item @click="removeGroup(item)">
-                  删除分组
+                  {{$t('contact.frequent.deleteGroup')}}
                 </a-menu-item>
               </a-menu>
               <a-menu slot="overlay" v-else>
-                <a-sub-menu title="移动该联系人至" key="test">
+                <a-sub-menu :title="$t('contact.frequent.moveContact')" key="test">
                   <template v-if="groupList.length > 1">
                     <a-menu-item v-for="(group, index) in groupList"
                                  v-if="group.id !== currentGroup"
@@ -75,11 +76,13 @@
                       {{group.name}}
                     </a-menu-item>
                   </template>
-                  <a-menu-item class="cursor-not-allowed text-black9" v-else>暂无其他分组</a-menu-item>
+                  <a-menu-item class="cursor-not-allowed text-black9" v-else>
+                    {{$t('contact.frequent.noOtherGroup')}}
+                  </a-menu-item>
                 </a-sub-menu>
 
                 <a-menu-item @click="removeContact(item)">
-                  移除该常用联系人
+                  {{$t('contact.frequent.removeContact')}}
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
@@ -92,8 +95,7 @@
                         @toGroup="goBack"/>
         </div>
       </div>
-      <frequent-contact-drawer ref="contactDrawer"
-                               :modal-type="modalType"/>
+      <frequent-contact-drawer ref="contactDrawer" :modal-type="modalType"/>
     </div>
   </a-layout>
 </template>
@@ -224,10 +226,10 @@ export default {
       this.ensureModal.display();
     },
     removeGroup(group) {
-      this.genEnsurePopup('确认删除当前分组?', () => {
+      this.genEnsurePopup(this.$t('contact.message.confirmDeleteGroup'), () => {
         // 删除当前分组
         this.$rtc.contact.favorite.categoryDelete({ id: group.id }).then(() => {
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('contact.message.deleteSuccess'));
         });
       }, () => {});
     },
@@ -254,10 +256,10 @@ export default {
         await this.deleteContact(contact, currentGroup);
 
         this.$rtc.contact.favorite.doSync().then(() => {
-          this.$message.success('移动成功');
+          this.$message.success(this.$t('contact.message.moveSuccess'));
         });
       }).catch(() => {
-        this.$message.error('移动失败，可能目标分组已经存在此联系人，请重试');
+        this.$message.error(this.$t('contact.message.moveFailed'));
       });
     },
 
@@ -273,14 +275,14 @@ export default {
     removeContact(contact) {
       const group = this.store.getNode(contact.parentId);
 
-      this.genEnsurePopup('确认删除当前常用联系人?', () => {
+      this.genEnsurePopup(this.$t('contact.message.sureToDelFreContact'), () => {
         // 删除当前联系人
         this.deleteContact(contact, group).then(() => {
           this.$rtc.contact.favorite.doSync().then(() => {
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('contact.message.deleteSuccess'));
           });
         }).catch(() => {
-          this.$message.error('删除失败，请重试');
+          this.$message.error(this.$t('contact.message.deleteFailed'));
         });
       }, () => {
       });

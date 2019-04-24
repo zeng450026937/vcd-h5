@@ -39,12 +39,12 @@
       <div class="flex flex-col items-center text-white text-3xl mt-1 h-full">
         <template v-for="(item, index) in sidebar">
           <div :key="index"
-               class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-12 relative"
+               class="no-dragable cursor-pointer w-full flex flex-col items-center justify-center h-14 relative"
                :class="{'mt-2':index === 0,
                        'active':currentSidebar === item,
                        'hover:text-indigo': currentSidebar !== item}"
                @click="clickMenu(item, index)">
-            <a-iconfont :type="item.icon" class="text-base"></a-iconfont>
+            <a-iconfont :type="item.icon" class="text-xl"></a-iconfont>
             <span class="text-3xs font-thin mt-2">{{item.text}}</span>
             <div :class="{'active-tag' : currentSidebar === item}"></div>
           </div>

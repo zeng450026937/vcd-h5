@@ -18,4 +18,8 @@ const i18n = new VueI18n({
   messages       : utils.moduleToI18n(langNameObj, langModuleList),
 });
 
+export function $t(key) {
+  return i18n.t(key);
+}
+
 export default i18n;

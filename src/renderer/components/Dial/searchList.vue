@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-grow h-full">
     <div class="h-full flex flex-col w-full">
-      <div class="border-b dial-search-title">拨号搜素结果（{{searchResult.length}}）</div>
+      <div class="border-b dial-search-title">{{$t('contact.titles.search')}}（{{searchResult.length}}）</div>
       <div class="h-full flex justify-center items-center" v-if="!searchResult.length">
         <common-empty image="empty-result"/>
       </div>

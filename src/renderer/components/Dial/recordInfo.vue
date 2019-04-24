@@ -8,7 +8,7 @@
               {{contact.name}}
             </div>
             <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-              暂时无法获取当前联系人的个性签名信息。
+              ${'contact.label.unknownInfo'}
             </div>
           </div>
           <div class="flex flex-grow"></div>
@@ -26,7 +26,7 @@
               {{recordInfo.subject}}
             </div>
             <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-              视频会议
+              {{$t('contact.label.videoConference')}}
             </div>
           </div>
           <div class="flex flex-grow"></div>
@@ -43,19 +43,19 @@
               <a-row class="text-xs">
                 <a-col :span="24" class="leading-tight">
                   <a-row>
-                    <a-col :span="2">账号</a-col>
+                    <a-col :span="2">{{$t('contact.label.name')}}</a-col>
                     <a-col :span="8">{{contact.number}}</a-col>
-                    <a-col :span="2">邮箱</a-col>
+                    <a-col :span="2">{{$t('contact.label.email')}}</a-col>
                     <a-col :span="8">{{contact.email}}</a-col>
                   </a-row>
                 </a-col>
                 <a-col :span="24" class="mt-3 leading-tight">
                   <a-row>
-                    <a-col :span="2">手机</a-col>
+                    <a-col :span="2">{{$t('contact.label.phone')}}</a-col>
                     <a-col :span="8">{{contact.phone}}</a-col>
-                    <a-col :span="2">部门</a-col>
+                    <a-col :span="2">{{$t('contact.label.department')}}</a-col>
                     <a-col :span="8" class="text-indigo">
-                      {{contact.parentNode}}{{contact.isLocal ? '本地联系人' : ''}}
+                      {{contact.parentNode}}{{contact.isLocal ? $t('contact.local.describe') : ''}}
                     </a-col>
                   </a-row>
                 </a-col>
@@ -64,10 +64,15 @@
             <div v-else>
               <div class="text-xs">
                 <div class="leading-tight flex justify-between">
-                  <div :span="2">账号<span class="ml-4">{{contact.number}}</span></div>
+                  <div :span="2">
+                    {{$t('contact.label.account')}}
+                    <span class="ml-4">{{contact.number}}</span>
+                  </div>
 
-                  <div :span="4" class="text-indigo cursor-pointer"
-                       @click="addLocalContact">添加为本地联系人
+                  <div :span="4"
+                       class="text-indigo cursor-pointer"
+                       @click="addLocalContact">
+                    {{$t('contact.local.title.addAs')}}
                   </div>
                 </div>
               </div>
@@ -77,7 +82,9 @@
             <div>
               <div class="text-xs">
                 <div class="leading-tight flex">
-                  <div class="mr-5" :span="2">会议ID </div>
+                  <div class="mr-5" :span="2">
+                    {{$t('contact.label.conferenceId')}}
+                  </div>
                   <span>{{this.recordInfo.conferenceNumber}}</span>
                 </div>
               </div>
@@ -104,13 +111,13 @@
       <div class="flex justify-center py-2 border-t w-full">
         <a-button @click="doVideo(recordInfo)" class="ml-4"
                   type="primary">
-          <a-iconfont type="icon-shipin"/>
-          视频通话
+          <a-iconfont type="icon-shipin"></a-iconfont>
+          {{$t('dial.button.video')}}
         </a-button>
         <a-button @click="doAudio(recordInfo)" class="ml-4"
                   type="primary">
-          <a-iconfont type="icon-yuyin"/>
-          音频通话
+          <a-iconfont type="icon-yuyin"></a-iconfont>
+          {{$t('dial.button.audio')}}
         </a-button>
       </div>
     </div>
@@ -202,11 +209,6 @@ export default {
     },
     async addLocalContact() {
       this.$emit('add-local', this.recordInfo.otherId);
-      // this.$refs.localContactDrawer.visible = true;
-      // await this.$refs.localContactDrawer.$nextTick();
-      // this.$refs.localContactDrawer.form.setFieldsValue({
-      //   number : this.recordInfo.otherId,
-      // });
     },
     async setCallRecord() {
       const callRecordDb = CallRecord.Create();
@@ -254,7 +256,7 @@ export default {
       }
 
       if (!contact) {
-        this.contact = { number: val, name: '未知联系人', unknown: true };
+        this.contact = { number: val, name: this.$t('contact.label.unknown'), unknown: true };
       }
 
       if (contact) {

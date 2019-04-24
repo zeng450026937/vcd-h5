@@ -1,4 +1,5 @@
 import { flow as pipe } from 'lodash';
+import { $t } from '../i18n';
 
 function genDouble(num) {
   return num < 10 ? `0${num}` : `${num}`;
@@ -63,8 +64,8 @@ export function genDurationTime(start, end) {
 
 export function genDateString(time) {
   time = new Date(time);
-  if (isToday(time)) return '今天';
-  if (isYesterday(time)) return '昨天';
+  if (isToday(time)) return $t('dial.record.today');
+  if (isYesterday(time)) return $t('dial.record.yesterday');
 
   return getDate(time);
 }
@@ -72,8 +73,8 @@ export function genDateString(time) {
 export function genStartTime(time) {
   time = new Date(time);
 
-  return isToday(time) ? `今天 ${getTime(time)}`
+  return isToday(time) ? `${$t('dial.record.today')} ${getTime(time)}`
     : isYesterday(time)
-      ? `昨天 ${getTime(time)}`
+      ? `${$t('dial.record.yesterday')} ${getTime(time)}`
       : getDateTime(time);
 }

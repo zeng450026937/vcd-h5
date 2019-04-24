@@ -4,9 +4,9 @@
       <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <span>本地联系人</span>
+            <span>{{$t('contact.local.describe')}}</span>
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
-                        title="添加本地联系人"
+                        :title="$t('contact.local.add')"
                         type="icon-tianjialianxiren"
                         @click="addLocalContact"></a-iconfont>
           </div>
@@ -19,10 +19,10 @@
           <div class="h-full p-1 overflow-y-hidden">
             <div v-if="localContacts.length <= 0"
                  class="flex flex-col h-full justify-center items-center">
-              <common-empty image="empty-contact" text="暂未添加本地联系人"/>
+              <common-empty image="empty-contact" :text="$t('contact.local.title.noContact')"/>
               <a-button type="primary" ghost
                         class="mt-8"
-                        @click="addLocalContact">添加联系人
+                        @click="addLocalContact">{{$t('contact.common.add')}}
               </a-button>
             </div>
 
@@ -37,16 +37,16 @@
                           @click.stop=""
                           :trigger="['click']">
                 <a-iconfont type="icon-gengduo1"
-                            title="更多"
+                            :title="$t('contact.common.more')"
                             class="mr-2 text-indigo cursor-pointer text-base"></a-iconfont>
                 <a-menu slot="overlay">
                   <a-menu-item @click="editContact(item)">
                     <a-iconfont type="icon-bianji"></a-iconfont>
-                    <span>编辑该联系人</span>
+                    <span>{{$t('contact.button.editContact')}}</span>
                   </a-menu-item>
                   <a-menu-item @click="deleteContact(item)">
                     <a-iconfont type="icon-shanchu"></a-iconfont>
-                    <span>删除该联系人</span>
+                    <span>{{$t('contact.button.deleteContact')}}</span>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -58,8 +58,7 @@
         <!--</div>-->
 
         <div class="flex flex-grow w-3/5 bg-white justify-center">
-          <contact-info :user="currentUser"
-                        :group="groupInfo"/>
+          <contact-info :user="currentUser" :group="groupInfo"/>
         </div>
 
       </div>
@@ -107,7 +106,7 @@ export default {
     },
     groupInfo() {
       return {
-        group  : '本地联系人',
+        group  : this.$t('contact.local.describe'),
         amount : this.localContacts.length,
       };
     },
@@ -127,12 +126,12 @@ export default {
       });
     },
     deleteContact(item) {
-      this.ensureModal = this.$popup.prepared('ensureModal', { content: `确认删除用户 ${item.name}?` });
+      this.ensureModal = this.$popup.prepared('ensureModal', { content: this.$t('contact.message.confirmDelete', { name: item.name }) });
       this.ensureModal.vm.$on('cancel', () => {});
       this.ensureModal.vm.$on('ok', () => {
         this.$dispatch('contact.local.deleteData', { id: item.id }).then(() => {
           this.$refs.localContactDrawer.visible = false;
-          this.$message.success('删除成功');
+          this.$message.success(this.$t('contact.message.deleteSuccess'));
           this.ensureModal.hide();
           this.currentUser = {};
         });
@@ -140,7 +139,14 @@ export default {
       this.ensureModal.display();
     },
     addLocalContact() {
-      if (this.localContacts.length >= this.maxContacts) return this.$message.info(`您最多只能添加${this.maxContacts}个联系人`);
+      if (this.localContacts.length >= this.maxContacts) {
+        return this.$message.info(
+          this.$t(
+            'contact.message.addContact',
+            { number: this.maxContacts }
+          ),
+        );
+      }
       this.$refs.localContactDrawer.visible = true;
       this.$refs.localContactDrawer.form.$nextTick(() => {
         this.drawerType = 'add';
@@ -159,7 +165,6 @@ export default {
       const id = this.currentUser.id;
 
       this.currentUser = this.localContacts.find((n) => n.id === id);
-      console.log(this.currentUser);
     },
   },
 };

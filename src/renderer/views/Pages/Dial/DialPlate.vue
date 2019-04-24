@@ -9,10 +9,12 @@
             <template v-if="activeRecordInfo">
               <a-iconfont @click="back" type="icon-left" class="text-grey-dark text-base mr-2 hover:text-purple-dark">
               </a-iconfont>
-              <span>{{activeRecordInfo.isConference ? '会议详情' : '通话详情'}}</span>
+              <span class="font-semibold">
+                {{activeRecordInfo.isConference ? $t('dial.title.conferenceDetail') : $t('dial.title.callDetail')}}
+              </span>
             </template>
 
-            <span v-else>拨号</span>
+            <span class="font-semibold" v-else>{{$t('dial.title.dial')}}</span>
           </div>
         </div>
       </app-header>

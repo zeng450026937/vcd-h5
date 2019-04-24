@@ -15,68 +15,68 @@
       <div class="flex flex-col px-5 pt-4 flex-grow overflow-y-auto">
         <a-form class="add-local-contact-form" :form="form">
           <a-form-item
-              label='姓名'
+              :label="$t('contact.label.name')"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
           >
-            <a-input placeholder='请输入姓名'
+            <a-input :placeholder="$t('contact.placeholder.inputName')"
                      maxlength="64"
                      v-decorator="[
                           'name',
                           {rules: [
-                              { required: true, message: '请输入用户姓名!' },
-                              { max: 64, message: '用户名不能超过64位!' }
+                              { required: true, message: $t('contact.message.inputName') },
+                              { max: 64, message: $t('contact.message.nameNoLess64') }
                            ],
                           }
                          ]"/>
           </a-form-item>
 
           <a-form-item
-              label='账号'
+              :label="$t('contact.label.account')"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
           >
-            <a-input placeholder='请输入账号'
+            <a-input :placeholder="$t('contact.placeholder.inputAccount')"
                      maxlength="20"
                      v-decorator="[
                           'number',
                           {rules: [
-                              { required: true, message: '请输入账号!' },
-                              { max: 20, message: '账号不能超过20位!' }
+                              { required: true, message: $t('contact.message.inputAccount') },
+                              { max: 20, message: $t('contact.message.accountNoLess20') }
                            ]}
                          ]"/>
           </a-form-item>
           <a-form-item
-              label='手机'
+              :label="$t('contact.label.phone')"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
           >
-            <a-input placeholder='请输入手机号'
+            <a-input :placeholder="$t('contact.placeholder.inputPhone')"
                      maxlength="11"
                      v-decorator="[
                           'phone',
                           {
                             rules: [
-                              { max: 11, message: '手机号不能超过11位!' },
-                              { pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: '手机号格式不正确!'}
+                              { max: 11, message: $t('contact.message.phoneNoMore11') },
+                              { pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: $t('contact.message.wrongPhoneNumber')}
                             ],
                             validateTrigger : 'blur'
                           }
                          ]"/>
           </a-form-item>
           <a-form-item
-              label='邮箱'
+              :label="$t('contact.label.email')"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
           >
-            <a-input placeholder='请输入邮箱'
+            <a-input :placeholder="$t('contact.placeholder.inputEmail')"
                maxlength="64"
                v-decorator="[
                 'email',
                 {
                   rules: [
-                    { max: 254, message: '邮箱不能超过254位!' },
-                    { pattern: /^.+@((.+)*\.).+$/, message: '邮箱格式不正确!'}
+                    { max: 254, message: $t('contact.message.emailNoMore254') },
+                    { pattern: /^.+@((.+)*\.).+$/, message: $t('contact.message.wrongEmail')}
                   ],
                   validateTrigger : 'blur'
                  }
@@ -89,8 +89,8 @@
             <a-button type="primary"
                       class="mx-2"
                       htmlType="submit"
-                      @click="handleSubmit">确定</a-button>
-            <a-button class="mx-2" @click="visible = false">取消</a-button>
+                      @click="handleSubmit">{{$t('contact.button.confirm')}}</a-button>
+            <a-button class="mx-2" @click="visible = false">{{$t('contact.button.cancel')}}</a-button>
         </div>
       </div>
     </div>
@@ -124,9 +124,9 @@ export default {
   computed : {
     drawerTitle() {
       return {
-        'add-as' : '添加为本地联系人',
-        add      : '添加本地联系人',
-        edit     : '编辑本地联系人',
+        'add-as' : this.$t('contact.local.title.addAs'),
+        add      : this.$t('contact.local.title.add'),
+        edit     : this.$t('contact.local.title.edit'),
       }[this.type];
     },
   },
@@ -145,7 +145,7 @@ export default {
           await this.$dispatch('contact.local.updateData', this.newLocalContact);
         }
         this.visible = false;
-        this.$message.success('操作成功');
+        this.$message.success(this.$t('contact.message.success'));
         this.$emit('submit-success');
       });
     },

@@ -3,7 +3,7 @@
     <calendar-nav v-if="useCalendar"/>
     <div v-else>
       <div v-for="(nav, index) in navs"
-           class="flex items-center h-12 px-4 cursor-pointer"
+           class="flex items-center h-14 px-4 cursor-pointer"
            :class="{'bg-list-select':currentNav === nav,'hover:bg-list-hover': currentNav !== nav}"
            :key="index"
            @click="handleClick(nav)">

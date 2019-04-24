@@ -22,7 +22,10 @@
         <div class="flex flex-col px-5 py-3 text-xs">
           <div class="flex items-center">
 
-            <span class="mr-3 truncate text-black6">{{contact.isUser ? '账号' : '号码'}}</span>
+            <span class="mr-3 truncate text-black6">
+              {{contact.isUser ? $t('contact.label.account') : $t('contact.label.number')}}
+            </span>
+
             <span>{{contact.number}}</span>
 
             <div class="flex flex-grow"></div>
@@ -41,15 +44,15 @@
 
           <template v-if="contact.isUser">
             <div class="flex items-center mt-3 ">
-              <span class="mr-3 text-black6">手机</span>
+              <span class="mr-3 text-black6">{{$t('contact.label.phone')}}</span>
               <span>{{contact.phone}}</span>
             </div>
             <div class="flex mt-3 items-center">
-              <span class="mr-3 text-black6">邮箱</span>
-              <span>{{contact.email || '暂无邮箱'}}</span>
+              <span class="mr-3 text-black6">{{$t('contact.label.email')}}</span>
+              <span>{{contact.email || $t('contact.label.noEmail')}}</span>
             </div>
             <div class="mt-3 flex items-start">
-              <span class="mr-3 whitespace-no-wrap text-black6">分组</span>
+              <span class="mr-3 whitespace-no-wrap text-black6">{{$t('contact.label.group')}}</span>
               <span class="text-indigo"></span>
             </div>
           </template>
@@ -130,7 +133,7 @@ export default {
       }
 
       if (!contact) {
-        contact = { number: val, name: '未知联系人', unknown: true };
+        contact = { number: val, name: this.$t('contact.label.unknown'), unknown: true };
       }
 
       return contact;
