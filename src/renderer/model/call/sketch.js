@@ -69,6 +69,15 @@ sketch.provide({
         Object.assign(this, initialDate());
       }
     },
+    isInCallMain(val) {
+      if (val) {
+        this.localWindowState.current = this.localWindowState.pre;
+      }
+      else {
+        this.localWindowState.pre = this.localWindowState.current;
+        this.localWindowState.current = 2;
+      }
+    },
   },
 });
 

@@ -15,9 +15,10 @@ model.mount('sketch', sketch);
 model.provide({
   data() {
     return {
-      isVideoCall : true,
-      callNumber  : '',
-      mediaStatus : { audio: false, video: false },
+      isVideoCall      : true, // 标志当前会话
+      prepareVideoCall : false, // 将要进行的会话
+      callNumber       : '',
+      mediaStatus      : { audio: false, video: false },
     };
   },
   middleware : {
@@ -48,13 +49,20 @@ model.provide({
 
       call.target = number;
 
+      this.prepareVideoCall = ctx.payload.options.video;
+
       return call.connect('send', ctx.payload.options).then(() => {
+        this.prepareVideoCall = false;
         this.isVideoCall = ctx.payload.options.video;
         const setting = this.$getVM('setting');
 
         if (setting.enableLocalVideo) return;
         this.switchCallType(this.isVideoCall);
+      }).catch((e) => {
+        this.prepareVideoCall = false;
+        throw e;
       });
+
     },
     answer(ctx) {
       const { toAudio, isVideoCall, isInvite } = ctx.payload;

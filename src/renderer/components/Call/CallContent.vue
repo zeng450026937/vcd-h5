@@ -141,7 +141,7 @@ export default {
     },
     localVideoClasses() {
       const position = this.isInCallMain ? 'right'
-        : this.hasScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
+        : this.hasRemoteScreenStream && !this.isShareWindowOpen ? 'center-right' : 'center';
 
       return {
         [`local-video-content local-video-content-${position}`] : true,

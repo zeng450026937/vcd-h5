@@ -10,7 +10,8 @@
                         @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
-            <a-iconfont type="icon-tianjialianxiren"
+            <a-iconfont v-if="isConnected"
+                        type="icon-tianjialianxiren"
                         class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                         @click="showInviteModal"/>
             <template v-for="(tab, index) in tabList">
@@ -18,7 +19,8 @@
                        :numberStyle="{backgroundColor: 'red', boxShadow : 'none'}"
                        class="shadow-none"
                        :dot="hasNewMessage && index === 0">
-                <a-iconfont :key="index" :type="tab.icon"
+                <a-iconfont v-if="isConnected || index !== 0"
+                            :key="index" :type="tab.icon"
                             class="ml-4 cursor-pointer text-black9 text-base"
                             :class="{'text-indigo': currentTab === tab.is,
                             'hover:text-indigo-light': currentTab !== tab.is}"
@@ -73,6 +75,11 @@ export default {
   async mounted() {
     await this.$nextTick();
     this.updateHoldPosition = true;
+  },
+  computed : {
+    isConnected() {
+      return this.$rtc.call.connected;
+    },
   },
   methods : {
     showInviteModal() {

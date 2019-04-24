@@ -77,23 +77,6 @@ export default {
     },
   },
   watch : {
-    isInCallMain(val) {
-      if (val) {
-        this.localWindowState.current = this.localWindowState.pre;
-      }
-      else {
-        this.localWindowState.pre = this.current;
-        this.localWindowState.current = 2;
-      }
-    },
-    // isConnected : {
-    //   handler(val) {
-    //     if (val) {
-    //       this.$rtc.call.channel.replaceLocalStream(this.$model.conference.staticStream);
-    //     }
-    //   },
-    //   immediate : true,
-    // },
   },
 };
 </script>

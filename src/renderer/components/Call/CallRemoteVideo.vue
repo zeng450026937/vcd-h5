@@ -3,7 +3,7 @@
     <remote-video
         :class="videoClasses"
         :hide-video="!showVideo"
-        :source="source"
+        :source="prepareVideoCall ? 'local' : source"
         @video-dblclick="videoDblClick">
       <div v-if="!showVideo && !isConnecting"
            slot="content"
@@ -11,9 +11,13 @@
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
         <span class="display-name mt-5 opacity-50">{{isVideoCall ? '视频通话' : '音频通话'}}</span>
       </div>
-      <div v-else-if="!showVideo"
+      <div v-else-if="!showVideo || prepareVideoCall"
            slot="content"
-           class="absolute-center w-full h-full flex flex-col items-center justify-center">
+           class="w-full h-full flex flex-col items-center justify-center"
+            :class="{
+              'absolute-center':isInCallMain,
+              'absolute video-content': !isInCallMain
+            }">
         <a-avatar :size="160" class="text-3xl border-8">{{this.nickName}}</a-avatar>
         <div class="mt-5 w-full truncate display-name px-4">
           <span class="max-h-full">正在呼叫 </span>
@@ -55,7 +59,7 @@ export default {
     },
     {
       ns    : 'call',
-      props : [ 'isVideoCall' ],
+      props : [ 'isVideoCall', 'prepareVideoCall' ],
     },
   ],
   destroyed() {
@@ -89,7 +93,7 @@ export default {
       return this.$rtc.call.connecting;
     },
     showVideo() {
-      return this.isVideoCall && this.$rtc.call.connected;
+      return this.isVideoCall && (this.$rtc.call.connected || this.prepareVideoCall);
     },
     controlsClasses() {
       return {

@@ -2,7 +2,7 @@
   <div id="call-controls" class="flex justify-center py-5 items-center">
     <div class="button-content flex h-12 items-center justify-center z-10">
       <!--视频控制-->
-      <a-button v-if="isVideoCall"
+      <a-button v-if="prepareVideoCall || isVideoCall"
                 :disabled="videoDisabled"
                 shape="circle"
                 class="w-10 h-10 text-lg mx-2 text-white border-transparent control-btn"
@@ -23,7 +23,7 @@
         <a-iconfont :type="audioIcon.icon"/>
       </a-button>
       <!--分享辅流-->
-      <a-button v-if="isVideoCall && isConnected"
+      <a-button v-if="(prepareVideoCall || isVideoCall ) && isConnected"
                 shape="circle"
                 class="control-btn"
                 :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
@@ -84,7 +84,7 @@ export default {
   sketch : [
     {
       ns    : 'call',
-      props : [ 'isVideoCall', 'mediaStatus' ],
+      props : [ 'isVideoCall', 'mediaStatus', 'prepareVideoCall' ],
     },
     {
       ns    : 'call.sketch',
