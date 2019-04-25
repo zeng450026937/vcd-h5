@@ -76,15 +76,21 @@ export default {
     },
     answerCall(toAudio = false) {
       this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall, isInvite: this.conferenceInviter });
-      window.close();
+      this.close();
     },
     transferToAudio() {
       this.answerCall(true);
     },
     checkStatus() {
       if (!this.rtc.call.ringing) {
-        window.close();
+        this.close();
       }
+    },
+    close() {
+      const notify = this.kom.vm.$getVM('notify');
+
+      window.close();
+      notify.$emit('ringing-close');
     },
   },
 };

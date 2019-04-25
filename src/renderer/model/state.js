@@ -96,7 +96,7 @@ model.provide({
           return;
         }
 
-        this.openCallWindow(); // 打开右下角的小窗口
+        this.$dispatch('notify.notify', { type: 'ringing' }); // 打开右下角的小窗口
       }
       else if (val === 'connecting' || (once === 'ringing' && val === 'connected')) { // 拨号 或者 来电接通
         if (!this.isInMiniCall) { // Mini下挂断新的来电
@@ -109,75 +109,6 @@ model.provide({
       else if (once && val === 'disconnected') {
         this.isInMiniCall = false;
       }
-    },
-    openCallWindow() {
-      const callCount = (window.callCount || 0) + 1;
-
-      if (callCount > 3) {
-        return rtc.call.decline();
-      }
-      const width = 320;
-      const height = 180;
-      const offsetLeft = window.screen.width - width - 10;
-      const offsetTop = window.screen.height - height * callCount - 50;
-
-      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop},directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
-
-      window.callCount = callCount;
-      const newWindow = window.open('ringing.html',
-        'ringing',
-        option);
-
-      newWindow.onunload = function(e) {
-        setTimeout(() => {
-          if (newWindow.closed) {
-            window.callCount--;
-          }
-        }, 200);
-      };
-    },
-    requestPermission() {
-      const permission = Notification.permission;
-
-      if (permission === 'denied' || permission === 'default') {
-        return Notification.requestPermission();
-      }
-
-      return Promise.resolve();
-    },
-    notify(info) {
-      this.requestPermission().then(() => {
-        const notification = new Notification(info.subject, {
-          body : '请加入会议',
-        });
-
-        notification.onclick = () => {
-          this.$dispatch('meeting.joinMeeting', {
-            number       : info['conference-number'],
-            pin          : info['presenter-pin'],
-            initialVideo : true,
-            initialAudio : true,
-          });
-        };
-      });
-    },
-    openNotification() {
-      if (this.isOpenNotify) return;
-
-      const width = 320;
-      const height = 180;
-      const offsetLeft = window.screen.width - width - 10;
-      const offsetTop = window.screen.height - height - 50;
-
-      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop},directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
-
-      window.open(
-        'notification.html',
-        'notification',
-        option
-      );
-
-      this.isOpenNotify = true;
     },
   },
   watch : {
@@ -199,22 +130,6 @@ model.provide({
   async created() {
     await this.$nextTick();
 
-    const schedule = this.$getVM('schedule');
-
-    schedule.$on('schedule-event', (info) => {
-      this.scheduleEvents.push(info);
-      this.openNotification(info);
-    });
-
-    this.$on('notify-close', () => {
-      this.isOpenNotify = false;
-
-      if (this.scheduleEvents.length > 0) {
-        setTimeout(() => {
-          this.openNotification();
-        }, 500);
-      }
-    });
 
     rtc.account.$on('call-record', async(info) => {
       console.warn('rtc.account.event', info);

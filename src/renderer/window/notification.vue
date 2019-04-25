@@ -13,19 +13,19 @@
             <div class="text-base leading-none font-bold truncate" :title="conference.subject">
               {{conference.subject}}
             </div>
-            <div class="text-base leading-none mt-4 truncate">{{conference['start-time']}}}</div>
+            <div class="text-base leading-none mt-4 truncate">{{conference['start-time'] | tipMsg}}</div>
           </div>
         </div>
       </div>
 
       <div class="flex justify-center mt-4 self-end">
         <!--麦克风（接听）-->
-        <a-button class="text-base w-36">
+        <a-button @click="audioEnter" class="text-base w-36">
           <a-iconfont type="icon-qiehuan"/>
           转语音通话
         </a-button>
         <!--麦克风（接听）-->
-        <a-button class="text-base w-14 ml-3 text-white border-transparent"
+        <a-button @click="enterMeeting" class="text-base w-14 ml-3 text-white border-transparent"
                   type="primary">
           <a-iconfont type="icon-yuyin"/>
         </a-button>
@@ -45,6 +45,20 @@ export default {
       scheduleEvents : [],
     };
   },
+  filters : {
+    tipMsg(startTime) {
+      if (!startTime) return '';
+
+      const now = Date.now();
+      const start = startTime.valueOf();
+
+      if (start - now > 1000 * 60 * 4) return '会议5分钟后开始';
+
+      if (start - now < 1000 * 60 * 4 && start - now > 0) return '会议即将开始';
+
+      if (start - now < 0) return '会议进行中';
+    },
+  },
   computed : {
     kom() {
       return (window.opener && window.opener.kom) || window.kom;
@@ -54,22 +68,45 @@ export default {
     },
   },
   mounted() {
-    const state = this.kom.vm.$getVM('state');
+    const notify = this.kom.vm.$getVM('notify');
 
-    this.scheduleEvents = state.scheduleEvents;
+    this.scheduleEvents = notify.scheduleEvents;
 
     setTimeout(() => {
       window.close();
-      state.$emit('notify-close');
-    }, 6000);
+      notify.$emit('notify-close');
+    }, 10000);
   },
   methods : {
     close() {
-      const state = this.kom.vm.$getVM('state');
+      const notify = this.kom.vm.$getVM('notify');
 
-      state.scheduleEvents.shift();
       window.close();
-      state.$emit('notify-close');
+      notify.$emit('notify-close');
+    },
+    enterMeeting() {
+      const params = {
+        number       : this.conference['conference-number'],
+        pin          : this.conference['presenter-pin'],
+        initialVideo : true,
+        initialAudio : true,
+      };
+
+      this.kom.dispatch('meeting.joinMeeting', params);
+      this.close();
+    },
+    audioEnter() {
+      const params = {
+        number       : this.conference['conference-number'],
+        pin          : this.conference['presenter-pin'],
+        initialVideo : false,
+        initialAudio : true,
+      };
+
+      this.kom.dispatch('meeting.joinMeeting', params).then(() => {
+        this.kom.vm.conference.sketch.isVideoConference = false;
+      });
+      this.close();
     },
   },
 };
