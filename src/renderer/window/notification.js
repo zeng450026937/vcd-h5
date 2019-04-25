@@ -1,7 +1,7 @@
 import Vue from 'vue';
+import notification from './notification.vue';
 import '../plugins/ant-design';
 import '../plugins/electron';
-import notification from './notification.vue';
 import { NotificationWindowProxy } from '../proxy/notification-window-proxy';
 
 Vue.config.productionTip = false;

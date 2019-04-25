@@ -19,6 +19,8 @@ model.provide({
       isInMiniCall        : false, // 记录当前页面是否在P2P通话的小窗口
       currentConferenceId : null,
       recordUpdate        : null,
+      scheduleEvents      : [],
+      isOpenNotify        : false,
     };
   },
   computed : {
@@ -159,6 +161,24 @@ model.provide({
         };
       });
     },
+    openNotification() {
+      if (this.isOpenNotify) return;
+
+      const width = 320;
+      const height = 180;
+      const offsetLeft = window.screen.width - width - 10;
+      const offsetTop = window.screen.height - height - 50;
+
+      const option = `width=${width},height=${height},left=${offsetLeft},top=${offsetTop},directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no`;
+
+      window.open(
+        'notification.html',
+        'notification',
+        option
+      );
+
+      this.isOpenNotify = true;
+    },
   },
   watch : {
     loginStatus : {
@@ -182,7 +202,18 @@ model.provide({
     const schedule = this.$getVM('schedule');
 
     schedule.$on('schedule-event', (info) => {
-      this.notify(info);
+      this.scheduleEvents.push(info);
+      this.openNotification(info);
+    });
+
+    this.$on('notify-close', () => {
+      this.isOpenNotify = false;
+
+      if (this.scheduleEvents.length > 0) {
+        setTimeout(() => {
+          this.openNotification();
+        }, 500);
+      }
     });
 
     rtc.account.$on('call-record', async(info) => {

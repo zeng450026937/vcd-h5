@@ -153,8 +153,10 @@ export class AppWindow extends BaseWindow {
           options.minHeight = 297;
           break;
         case 'notification':
-          options.resizable = false;
-          options.transparent = true;
+          options.minWidth = 320;
+          options.minHeight = 180;
+          options.width = options.minWidth;
+          options.height = options.minHeight;
           break;
         case 'share-controls':
           options.minWidth = 614;
