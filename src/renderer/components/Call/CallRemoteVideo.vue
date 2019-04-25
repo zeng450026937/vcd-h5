@@ -2,6 +2,7 @@
   <div id="call-remote-video" class="h-full w-full bg-media relative">
     <remote-video
         :class="videoClasses"
+        :muted="prepareVideoCall"
         :hide-video="!showVideo"
         :source="prepareVideoCall ? 'local' : source"
         @video-dblclick="videoDblClick">

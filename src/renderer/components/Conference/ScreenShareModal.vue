@@ -32,6 +32,7 @@
       </div>
       <a-button key="submit"
                 type="primary"
+                :loading="isSharing"
                 :disabled="!selectedWindow.id"
                 @click="handleShare">
         确定
@@ -94,6 +95,7 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
+      isSharing       : false,
     };
   },
   sketch : [
@@ -112,7 +114,7 @@ export default {
       return this.$model.conference.share;
     },
     windowList() {
-      return this.share.windowList;
+      return this.share.windowList.filter((window) => window.name !== 'shareControls');
     },
     visible : {
       get() {
@@ -138,6 +140,7 @@ export default {
     async handleShare() {
       if (!this.selectedWindow.id) return;
 
+      this.isSharing = true;
       if (this.source === 'conference') {
         await this.$rtc.conference.shareChannel.disconnect();
       }
@@ -150,16 +153,21 @@ export default {
         this.selectedWindow.id, false /* audio */, this.shareSmoothMode /* smooth mode */
       )
         .then((val) => {
-          this.visible = false;
           // TODO ///
           setTimeout(() => {
             if (this.source === 'conference') {
-              return this.$rtc.conference.shareChannel.connect();
+              return this.$rtc.conference.shareChannel.connect().then(() => {
+                this.isSharing = false;
+                this.visible = false;
+              }).catch((e) => {});
             }
             else {
-              return this.$rtc.call.share.connect('send');
+              return this.$rtc.call.share.connect('send').then(() => {
+                this.isSharing = false;
+                this.visible = false;
+              });
             }
-          }, 0);
+          }, 500);
         });
     },
     onOpen() {

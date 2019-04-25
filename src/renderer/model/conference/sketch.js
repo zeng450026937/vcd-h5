@@ -79,6 +79,11 @@ sketch.provide({
         this.deviceExceptionNotice.close();
         Object.assign(this, initialDate());
       }
+      else if (val === 'connected' && rtc.conference.mediaChannel.channel._isRefer) {
+        const call = this.$getVM('call');
+
+        this.isVideoConference = call.callType === 'video';
+      }
     },
     isVideoConference(val) { // TODO 失败了呢? -- 返回值
       if (this.conferenceStatus === 'disconnected') return;

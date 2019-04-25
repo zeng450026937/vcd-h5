@@ -18,6 +18,7 @@ model.provide({
       isVideoCall      : true, // 标志当前会话
       prepareVideoCall : false, // 将要进行的会话
       callNumber       : '',
+      callType         : 'video',
       mediaStatus      : { audio: false, video: false },
     };
   },
@@ -62,7 +63,6 @@ model.provide({
         this.prepareVideoCall = false;
         throw e;
       });
-
     },
     answer(ctx) {
       const { toAudio, isVideoCall, isInvite } = ctx.payload;
@@ -86,8 +86,18 @@ model.provide({
     },
     async upgrade(ctx, next) {
       await next();
+
+      const toAudio = !this.isVideoCall;
       
-      return rtc.call.upgrade(ctx.payload, { subject: `${rtc.account.username} 的视频会议` });
+      return rtc.call.upgrade(
+        ctx.payload,
+        { subject: `${rtc.account.username} 的视频会议` },
+        { toAudio }
+      ).then(() => {
+        const conferenceSketch = this.$getVM('conference.sketch');
+
+        conferenceSketch.isVideoConference = !toAudio;
+      });
     },
   },
   computed : {
@@ -107,6 +117,9 @@ model.provide({
   watch : {
     isVideoCall(val) {
       if (val == null) return;
+      if (this.isConnected) {
+        this.callType = val ? 'video' : 'audio';
+      }
       this.switchCallType(val);
       if (!val) { // 不是视频通话 有辅流则关闭辅流
         const shareChannel = rtc.call.share.channel;
@@ -126,6 +139,9 @@ model.provide({
     isConnected(val) {
       if (!val) {
         this.isVideoCall = true;
+      }
+      else if (rtc.call.direction === 'outgoing') {
+        rtc.call.channel.renegotiate();
       }
     },
   },
