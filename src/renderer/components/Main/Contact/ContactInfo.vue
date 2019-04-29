@@ -24,17 +24,17 @@
       <div class="flex flex-col flex-grow text-sm px-10">
         <div class="flex leading-normal">
           <div class="flex flex-col">
-            <span class="mt-5 mr-3 truncate text-black6">{{user.isUser ? '账号' : '号码'}}</span>
-            <span v-if="user.isVMR" class="mt-5 mr-3 text-black6">组织者</span>
+            <span class="mt-5 mr-3 truncate text-black6">{{user.isUser ? $t('contact.label.account') : $t('contact.label.number')}}</span>
+            <span v-if="user.isVMR" class="mt-5 mr-3 text-black6">{{$t('contact.label.organizer')}}</span>
             <template v-if="user.isUser">
-              <span v-if="user.phone" class="mt-5 mr-3 text-black6">手机</span>
-              <span v-if="user.email" class="mt-5 mr-3 text-black6">邮箱</span>
+              <span v-if="user.phone" class="mt-5 mr-3 text-black6">{{$t('contact.label.phone')}}</span>
+              <span v-if="user.email" class="mt-5 mr-3 text-black6">{{$t('contact.label.email')}}</span>
             </template>
-            <span v-if="store" class="mt-5 mr-3 whitespace-no-wrap text-black6">分组</span>
+            <span v-if="store" class="mt-5 mr-3 whitespace-no-wrap text-black6">{{$t('contact.label.group')}}</span>
           </div>
           <div class="flex flex-col">
             <span class="mt-5">{{user.number}}</span>
-            <span v-if="user.isVMR" class="text-black9 mt-5">暂时无法获取当前会议的组织者</span>
+            <span v-if="user.isVMR" class="text-black9 mt-5">{{$t('contact.label.unknownOrganizer')}}</span>
             <template v-if="user.isUser">
               <span v-if="user.phone" class="mt-5">{{user.phone}}</span>
               <span v-if="user.email" class="mt-5">{{user.email}}</span>
@@ -58,13 +58,13 @@
         <a-button type="primary"
                   style="width: 120px;"
                   @click="doVideo">
-          <a-iconfont type="icon-shipin" class="text-base"/>视频通话
+          <a-iconfont type="icon-shipin" class="text-base"/>{{$t('dial.button.video')}}
         </a-button>
         <a-button type="primary"
                   class="ml-4"
                   style="width: 120px;"
                   @click="doAudio">
-          <a-iconfont type="icon-yuyin" class="text-base"/>音频通话
+          <a-iconfont type="icon-yuyin" class="text-base"/>{{$t('dial.button.audio')}}
         </a-button>
       </div>
     </div>
@@ -76,6 +76,7 @@
 
 <script>
 import GroupInfo from './ContactGroupInfo.vue';
+import { $t } from '../../../i18n';
 
 export default {
   name       : 'ContactInfo',
@@ -160,10 +161,10 @@ export default {
               : 'icon-zuzhi';
     },
     filterCardText(item) {
-      if (item.isUser || item.isExternal) return '暂时无法获取当前联系人的个性签名信息。';
-      else if (item.isDevice) return '暂时无法获取当前设备绑定的会议室';
-      else if (item.isVMR) return '暂时无法获取当前虚拟会议模式';
-      else if (item.isService) return '服务号';
+      if (item.isUser || item.isExternal) return $t('contact.label.unknownInfo');
+      else if (item.isDevice) return $t('contact.label.unknownDevice');
+      else if (item.isVMR) return $t('contact.label.unknownVMR');
+      else if (item.isService) return $t('contact.label.serviceNumber');
     },
   },
 };

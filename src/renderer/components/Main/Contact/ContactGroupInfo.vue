@@ -3,7 +3,7 @@
     <div v-if="group" class="flex flex-col items-center" style="word-break: break-all">
       <div class="text-xl">{{group.company}}</div>
       <div class="text-base mt-4 text-center">{{group.group}}</div>
-      <div v-if="loadMode!=='SPLIT'" class="text-base mt-4">-{{group.amount}} 人-</div>
+      <div v-if="loadMode!=='SPLIT'" class="text-base mt-4">-{{group.amount}} {{$t('contact.common.person')}}-</div>
     </div>
   </a-layout>
 </template>
@@ -17,7 +17,7 @@ export default {
       default() {
         return {
           company : 0,
-          group   : '企业联系人',
+          group   : this.$t('contact.corporate.describe'),
           amount  : 0,
         };
       },

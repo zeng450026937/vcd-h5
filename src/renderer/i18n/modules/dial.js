@@ -13,6 +13,8 @@ module.exports = {
         addLocal  : '添加为本地联系人',
         videoCall : '视频呼叫',
         audioCall : '音频呼叫',
+        more      : '更多',
+        del       : '删除',
       },
       record : {
         all       : '所有通话',

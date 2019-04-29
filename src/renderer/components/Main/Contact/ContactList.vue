@@ -70,7 +70,7 @@
 
                     <div class="flex flex-col px-5 py-3 text-xs">
                       <div class="flex items-center">
-                        <span class="mr-3 truncate text-black6">{{item.isUser ? '账号' : '号码'}}</span>
+                        <span class="mr-3 truncate text-black6">{{item.isUser ? $t('contact.label.account') : $t('contact.label.number')}}</span>
                         <span>{{item.number}}</span>
                         <div class="flex flex-grow"></div>
                         <a-iconfont type="icon-shipin"
@@ -82,15 +82,15 @@
                       </div>
                       <template v-if="item.isUser">
                         <div class="flex items-center mt-3 ">
-                          <span class="mr-3 text-black6">手机</span>
+                          <span class="mr-3 text-black6">{{$t('contact.label.phone')}}</span>
                           <span>{{item.phone}}</span>
                         </div>
                         <div class="flex mt-3 items-center">
-                          <span class="mr-3 text-black6">邮箱</span>
-                          <span>{{item.email || '暂无邮箱'}}</span>
+                          <span class="mr-3 text-black6">{{$t('contact.label.email')}}</span>
+                          <span>{{item.email || $t('contact.label.noEmail')}}</span>
                         </div>
                         <div class="mt-3 flex items-start">
-                          <span class="mr-3 whitespace-no-wrap text-black6">分组</span>
+                          <span class="mr-3 whitespace-no-wrap text-black6">{{$t('contact.label.group')}}</span>
                           <span class="text-indigo">
                              <template v-for="(item, index) in pathList" >
                                 <a :key="item.id"
@@ -125,25 +125,25 @@
             <div class="opacity-0 group-hover:opacity-100 flex justify-around"
                  :class="{'opacity-100': selectedContact.id === item.id}">
               <a-iconfont v-if="videoIcon"
-                          title="视频呼叫"
+                          :title="$t('dial.dialpad.videoCall')"
                           type="icon-shipin"
                           class="mr-3 text-indigo cursor-pointer text-base"
                           @click.stop="handleMeeting(item, 'video')"></a-iconfont>
               <a-iconfont v-if="audioIcon && !item.isGroup"
-                          title="音频呼叫"
+                          :title="$t('dial.dialpad.audioCall')"
                           type="icon-yuyin"
                           class="mr-3 text-indigo cursor-pointer text-base"
                           @click.stop="handleMeeting(item, 'audio')"></a-iconfont>
 
               <a-iconfont v-if="(item.isGroup && groupMoreIcon) || (!item.isGroup && moreIcon)"
-                          title="更多"
+                          :title="$t('dial.dialpad.more')"
                           type="icon-gengduo1"
                           class="mr-2 text-indigo cursor-pointer text-base">
               </a-iconfont>
               <slot name="more" :item="item"></slot>
 
               <a-iconfont v-if="deleteIcon && !(item.isSelf && selfUnDeleted)"
-                          title="删除"
+                          :title="$t('dial.dialpad.del')"
                           type="icon-guanbi"
                           class="mr-2 text-black9 cursor-pointer text-base hover:text-red"
                           @click="deleteContact(item)"></a-iconfont>
@@ -152,7 +152,7 @@
         </template>
       </recycle-scroller>
       <div v-else class="flex items-center justify-center h-full">
-        <common-empty class="text-grey" image="empty-contact" text="暂无联系人"/>
+        <common-empty class="text-grey" image="empty-contact" :text="$t('contact.label.noContact')"/>
       </div>
       <contact-modal :storeName="storeName" ref="contactModal" @confirm="startMeeting"></contact-modal>
     </div>
@@ -164,6 +164,7 @@ import { RecycleScroller } from 'vue-virtual-scroller';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import ContactModal from './ContactModal.vue';
+import { $t } from '../../../i18n';
 
 const LOAD_MODE = {
   AUTO    : 'AUTO',
@@ -367,10 +368,10 @@ export default {
               : node.isVMR ? 'icon-xunihuiyishi' : 'icon-zuzhi';
     },
     filterCardText(item) {
-      if (item.isUser || item.isExternal) return '暂时无法获取当前联系人的个性签名信息。';
-      else if (item.isDevice) return '暂时无法获取当前设备绑定的会议室';
-      else if (item.isVMR) return '暂时无法获取当前虚拟会议模式';
-      else if (item.isService) return '服务号';
+      if (item.isUser || item.isExternal) return $t('contact.label.unknownInfo');
+      else if (item.isDevice) return $t('contact.label.unknownDevice');
+      else if (item.isVMR) return $t('contact.label.unknownVMR');
+      else if (item.isService) return $t('contact.label.serviceNumber');
     },
   },
   mounted() {

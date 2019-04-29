@@ -14,7 +14,7 @@
       <div class="flex p-5 w-full flex-col">
 
         <div class="w-full">
-          <a-input :maxlength="30" placeholder="请输入分组名称" v-model="groupName"/>
+          <a-input :maxlength="30" :placeholder="$t('contact.modal.placeholder.enterGroupName')" v-model="groupName"/>
         </div>
 
         <div class="transfer-model-content pb-5  mt-5">
@@ -31,9 +31,13 @@
         <div class="w-full flex h-12 border-t justify-center items-center pt-5">
           <a-button type="primary" class="mx-2"
                     :disabled="!groupName || groupName.length > 30"
-                    :title="!groupName ? '分组名称不能为空' : groupName.length > 30 ? '分组长度不能超过30' : '添加分组'"
-                    @click="ensure">确定</a-button>
-          <a-button class="mx-2" @click="visible = false">取消</a-button>
+                    :title="!groupName
+                      ? $t('contact.modal.title.groupNameNoEmpty')
+                      : groupName.length > 30
+                        ? $t('contact.modal.title.groupNoMore30')
+                        : $t('contact.modal.title.addGroup') "
+                    @click="ensure">{{$t('contact.button.confirm')}}</a-button>
+          <a-button class="mx-2" @click="visible = false">{{$t('contact.button.cancel')}}</a-button>
         </div>
 
       </div>
@@ -67,7 +71,9 @@ export default {
   },
   computed : {
     modalTitle() {
-      return this.modalType === 'add' ? '添加分组' : '更新分组';
+      return this.modalType === 'add'
+        ? this.$t('contact.modal.title.addGroup')
+        : this.$t('contact.modal.title.updateGroup');
     },
     dataLoaded() {
       return this.$model.contact.phoneBookLoaded;
@@ -106,12 +112,12 @@ export default {
             type       : c.type,
           })),
         }).then(() => {
-          this.$message.success('更新成功');
+          this.$message.success(this.$t('contact.modal.message.updateSuccess'));
           this.visible = false;
         });
       }
       else {
-        if (groupNames.indexOf(this.groupName) > -1) return this.$message.info('您已经添加了相同的分组！');
+        if (groupNames.indexOf(this.groupName) > -1) return this.$message.info(this.$t('contact.modal.message.sameGroupName'));
         await this.$rtc.contact.favorite.categoryAdd({
           groupName : this.groupName,
           contacts  : this.$refs.transfer.getChecked().map((c) => ({
@@ -119,7 +125,7 @@ export default {
             type       : c.type,
           })),
         }).then(() => {
-          this.$message.success('添加成功');
+          this.$message.success(this.$t('contact.modal.message.addSuccess'));
           this.visible = false;
         });
       }

@@ -3,8 +3,9 @@ module.exports = {
   lang : {
     zh : {
       common : {
-        add  : '添加联系人',
-        more : '更多',
+        add    : '添加联系人',
+        more   : '更多',
+        person : '人',
       },
       local : {
         describe : '本地联系人',
@@ -26,21 +27,27 @@ module.exports = {
         removeContact    : '移除该常用联系人',
       },
       corporate : {
-
+        describe : '企业联系人',
       },
       label : {
-        name            : '姓名',
-        account         : '账号',
-        phone           : '手机',
-        email           : '邮箱',
-        number          : '号码',
-        group           : '分组',
-        department      : '部门',
-        noEmail         : '暂无邮箱',
-        unknown         : '未知联系人',
-        unknownInfo     : '暂时无法获取当前联系人的个性签名信息。',
-        videoConference : '视频会议',
-        conferenceId    : '会议ID',
+        name             : '姓名',
+        account          : '账号',
+        phone            : '手机',
+        email            : '邮箱',
+        number           : '号码',
+        group            : '分组',
+        department       : '部门',
+        organizer        : '组织者',
+        noEmail          : '暂无邮箱',
+        unknown          : '未知联系人',
+        unknownInfo      : '暂时无法获取当前联系人的个性签名信息。',
+        unknownOrganizer : '暂时无法获取当前会议的组织者。',
+        unknownDevice    : '暂时无法获取当前设备绑定的会议室。',
+        unknownVMR       : '暂时无法获取当前虚拟会议模式。',
+        videoConference  : '视频会议',
+        conferenceId     : '会议ID',
+        serviceNumber    : '服务号',
+        noContact        : '暂无联系人',
       },
       placeholder : {
         inputName    : '请输入姓名',
@@ -76,9 +83,27 @@ module.exports = {
         editContact   : '编辑该联系人',
         deleteContact : '删除该联系人',
         back          : '返回',
+        meetingNow    : '立即开会',
       },
       titles : {
-        search : '拨号搜素结果',
+        search    : '拨号搜素结果',
+        callGroup : '发起群呼',
+      },
+      modal : {
+        placeholder : {
+          enterGroupName : '请输入分组名称',
+        },
+        title : {
+          addGroup         : '添加分组',
+          updateGroup      : '更新分组',
+          groupNoMore30    : '分组长度不能超过30',
+          groupNameNoEmpty : '分组名称不能为空',
+        },
+        message : {
+          updateSuccess : '更新成功!',
+          addSuccess    : '添加成功!',
+          sameGroupName : '您已经添加了相同的分组！',
+        },
       },
 
     },

@@ -189,7 +189,7 @@ export default {
           pin          : item.pin,
           initialVideo : true,
           initialAudio : true,
-        }) .then(() => {
+        }).then(() => {
           this.$model.conference.sketch.isVideoConference = video;
         });
       }

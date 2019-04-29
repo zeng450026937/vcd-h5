@@ -26,8 +26,8 @@
         </div>
 
         <div class="w-full flex h-12 border-t justify-center items-center pt-5">
-          <a-button type="primary" class="mx-2" @click="confirm">立即开会</a-button>
-          <a-button class="mx-2" @click="visible = false">取消</a-button>
+          <a-button type="primary" class="mx-2" @click="confirm">{{$t('contact.button.meetingNow')}}</a-button>
+          <a-button class="mx-2" @click="visible = false">{{$t('contact.button.cancel')}}</a-button>
         </div>
 
       </div>
@@ -62,7 +62,7 @@ export default {
     return {
       LOAD_MODE,
       visible    : false,
-      modalTitle : '发起群呼',
+      modalTitle : this.$t('contact.titles.callGroup'),
       checkItem  : null,
       maxChecked : 100,
       storeMap   : {
