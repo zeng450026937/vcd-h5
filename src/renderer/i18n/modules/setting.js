@@ -108,7 +108,7 @@ module.exports = {
         updateChannel        : '升级通道',
         noobGuide            : '查看新手引导',
         property             : '标签',
-        langChangeNotice     : '语言已切换至 ',
+        langChangeNotice     : '语言已切换至{lang}！',
         addProperty          : '添加标签',
         addPropertyNotice    : '添加标签成功！',
         fullPropertyNotice   : '当前标签已满，无法继续添加！',
@@ -120,6 +120,11 @@ module.exports = {
           faster   : '快速',
           stable   : '稳定',
         },
+      },
+    },
+    en : {
+      common : {
+        langChangeNotice : 'Language has been switched to {lang}',
       },
     },
   },

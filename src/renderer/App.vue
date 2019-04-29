@@ -35,7 +35,7 @@ export default {
       const langName = this.langList.find((item) => item.lang === val).label;
 
       this.$message.success(
-        `${this.$t('setting.common.langChangeNotice')} ${langName} !`
+        this.$t('setting.common.langChangeNotice', { lang: langName })
       );
     },
     offLine(val) {
