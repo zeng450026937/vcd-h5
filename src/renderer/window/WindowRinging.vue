@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { remote } from 'electron';
+
 export default {
   name     : 'WindowRinging',
   computed : {
@@ -66,11 +68,23 @@ export default {
     },
   },
   mounted() {
+    window.updatePosition = this.updatePosition;
     setInterval(() => {
       this.checkStatus();
     }, 1000);
   },
+  beforeDestroy() {
+    window.updatePosition = null;
+  },
   methods : {
+    updatePosition(y) {
+      const browserWindow = remote.getCurrentWindow();
+      const [ currentX ] = browserWindow.getPosition();
+
+      setTimeout(() => {
+        browserWindow.setPosition(currentX, y, true);
+      }, 300);
+    },
     hangUp() {
       this.kom.dispatch('call.decline');
     },
@@ -90,7 +104,7 @@ export default {
       const notify = this.kom.vm.$getVM('notify');
 
       window.close();
-      notify.$emit('ringing-close');
+      notify.$emit('ringing-close', window.id);
     },
   },
 };

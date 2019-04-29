@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { remote } from 'electron';
+
 export default {
   name : 'notification',
   data() {
@@ -72,17 +74,21 @@ export default {
 
     this.scheduleEvents = notify.scheduleEvents;
 
+    window.updatePosition = this.updatePosition;
+
     setTimeout(() => {
-      window.close();
-      notify.$emit('notify-close');
+      this.close();
     }, 10000);
+  },
+  beforeDestroy() {
+    this.updatePosition = null;
   },
   methods : {
     close() {
       const notify = this.kom.vm.$getVM('notify');
 
       window.close();
-      notify.$emit('notify-close');
+      notify.$emit('notify-close', window.id);
     },
     enterMeeting() {
       const params = {
@@ -107,6 +113,14 @@ export default {
         this.kom.vm.conference.sketch.isVideoConference = false;
       });
       this.close();
+    },
+    updatePosition(y) {
+      const browserWindow = remote.getCurrentWindow();
+      const [ currentX ] = browserWindow.getPosition();
+
+      setTimeout(() => {
+        browserWindow.setPosition(currentX, y, true);
+      }, 500);
     },
   },
 };

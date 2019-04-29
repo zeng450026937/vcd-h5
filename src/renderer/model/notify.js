@@ -39,8 +39,24 @@ model.provide({
       this.updatePosition();
     },
     updatePosition() {
+      this.popups.forEach((popup, index) => {
+        const { offsetTop } = this.genPopupsPosition(index + 1);
 
+        popup.updatePosition(offsetTop);
+      });
     },
+    getRandomString(num = 16) {
+      const allowedChars = '0123456789ABCDEF';
+
+      let result = '';
+
+      for (let i = 0; i < num; ++i) {
+        result += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+      }
+
+      return result;
+    },
+
     openRinging(info) {
       this.callNum++;
 
@@ -64,15 +80,19 @@ model.provide({
     },
     createNewWindow(tempalte, name) {
       const option = this.createOption(
-        this.genPopupsPosition()
+        this.genPopupsPosition(this.popupsNum)
       );
 
-      return window.open(tempalte, name, option);
+      const popup = window.open(tempalte, name, option);
+
+      popup.id = this.getRandomString();
+
+      return popup;
     },
-    genPopupsPosition() {
+    genPopupsPosition(pos) {
       return {
         offsetLeft : window.screen.width - this.width - 10,
-        offsetTop  : window.screen.height - (this.height + 50) * this.popupsNum,
+        offsetTop  : window.screen.height - (this.height + 50) * pos,
       };
     },
     createOption({ offsetLeft, offsetTop }) {
@@ -89,9 +109,12 @@ model.provide({
       this.openNotify(info);
     });
 
-    this.$on('notify-close', () => {
+    this.$on('notify-close', (id) => {
       this.isNotifyOpen = false;
       this.scheduleEvents.shift();
+      this.popups = this.popups.filter((popup) => popup.id !== id);
+
+      this.updatePosition();
 
       if (this.scheduleEvents.length > 0) {
         setTimeout(() => {
@@ -100,8 +123,12 @@ model.provide({
       }
     });
 
-    this.$on('ringing-close', (info) => {
-      debugger;
+    this.$on('ringing-close', (id) => {
+      if (this.callNum > 0) this.callNum--;
+
+      this.popups = this.popups.filter((popup) => popup.id !== id);
+
+      this.updatePosition();
     });
   },
 });
