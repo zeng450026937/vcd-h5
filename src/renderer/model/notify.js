@@ -69,14 +69,13 @@ model.provide({
       this.popups.push(newPopup);
     },
     openNotify(info) {
-      if (this.isOpenNotify) return;
+      if (this.isNotifyOpen) return;
 
-      this.scheduleEvents.push(info);
       const newPopup = this.createNewWindow('notification.html', 'notification');
 
       this.popups.push(newPopup);
 
-      this.isOpenNotify = true;
+      this.isNotifyOpen = true;
     },
     createNewWindow(tempalte, name) {
       const option = this.createOption(
@@ -118,7 +117,7 @@ model.provide({
 
       if (this.scheduleEvents.length > 0) {
         setTimeout(() => {
-          this.openNotify();
+          this.openNotify(this.scheduleEvents[0]);
         }, 500);
       }
     });
