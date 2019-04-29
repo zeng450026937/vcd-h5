@@ -4,8 +4,9 @@ const setting = require('./setting');
 const main = require('./main');
 const dial = require('./dial');
 const contact = require('./contact');
+const join = require('./join');
+const nav = require('./nav');
 const conversation = require('./conversation');
-
 
 module.exports = [
   login,
@@ -14,5 +15,7 @@ module.exports = [
   main,
   dial,
   contact,
+  join,
+  nav,
   conversation,
 ];

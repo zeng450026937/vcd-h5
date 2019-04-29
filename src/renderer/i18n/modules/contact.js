@@ -105,6 +105,13 @@ module.exports = {
           sameGroupName : '您已经添加了相同的分组！',
         },
       },
+      tree : {
+        clearAll     : '全部清空',
+        del          : '删除',
+        choosePerson : '请选择参会成员',
+        loadFailed   : '加载失败!',
+        search       : '搜索',
+      },
 
     },
   },

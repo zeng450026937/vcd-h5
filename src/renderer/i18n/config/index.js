@@ -7,7 +7,7 @@ module.exports = {
     },
     en : {
       locale : 'en',
-      remark : '英文',
+      remark : 'English',
     },
   },
   ouputExcelName : 'result.xlsx',

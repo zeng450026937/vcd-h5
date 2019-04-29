@@ -5,7 +5,7 @@
         {{list.length}}{{maxChecked ? `/${maxChecked}`: ''}}
       </span>
       <span class="clear" @click="clear">
-        全部清空
+        {{$t('contact.tree.clearAll')}}
       </span>
       <span></span>
     </div>
@@ -33,7 +33,7 @@
           </div>
           <a-iconfont
               v-if="item.id !== defaultChecked.id"
-              title="删除"
+              :title="$t('contact.tree.del')"
               type="icon-guanbi"
               class="delete-btn text-base text-black9 hover:text-red cursor-pointer"
               @click.stop="cancelChecked(item.id)">
@@ -42,7 +42,7 @@
       </template>
     </recycle-scroller>
     <div class="empty-content" v-if="list.length === 0">
-      <common-empty class="text-grey" image="empty-contact" text="请选择参会成员"/>
+      <common-empty class="text-grey" image="empty-contact" :text="$t('contact.tree.choosePerson')"/>
     </div>
 
   </div>

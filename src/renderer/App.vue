@@ -15,7 +15,7 @@ export default {
   sketch : [
     {
       ns    : 'i18n',
-      props : [ 'language' ],
+      props : [ 'language', 'langList' ],
     }, 
     {
       ns    : 'application',
@@ -31,6 +31,12 @@ export default {
   watch   : {
     language(val) {
       this.$i18n.locale = val;
+
+      const langName = this.langList.find((item) => item.lang === val).label;
+
+      this.$message.success(
+        `${this.$t('setting.common.langChangeNotice')} ${langName} !`
+      );
     },
     offLine(val) {
       if (val) this.offLineMessage = this.$message.error('网络不可用，请检查你的网络设置');
@@ -40,7 +46,7 @@ export default {
   async created() {
     const lang = await getLocale();
 
-    this.$dispatch('i18n.changeLocale', { lang });
+    this.$dispatch('i18n.setRendererLocale', { lang });
   },
 };
 </script>

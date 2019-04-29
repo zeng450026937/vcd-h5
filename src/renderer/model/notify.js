@@ -58,12 +58,10 @@ model.provide({
     },
 
     openRinging(info) {
-      this.callNum++;
-
       if (this.callNum > 1) {
         return rtc.call.incoming[0].decline();
       }
-
+      this.callNum++;
       const newPopup = this.createNewWindow('ringing.html', 'ringing');
 
       this.popups.push(newPopup);

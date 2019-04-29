@@ -21,3 +21,13 @@ export function getLocale() {
     });
   });
 }
+
+export function setLocale(lang) {
+  ipcRenderer.send('set-locale', lang);
+
+  return new Promise((resolve) => {
+    ipcRenderer.on('set-locale-reply', (event, args) => {
+      resolve(args);
+    });
+  });
+}

@@ -1,6 +1,6 @@
 <template>
   <a-layout id="enter-meeting" class="h-full">
-    <app-header title="加入会议"/>
+    <app-header :title="$t('join.title.joinMeeting')"/>
     <div class="flex justify-center items-center h-full" style="padding: 16px;">
       <div style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
            class="flex flex-col bg-white w-full h-full relative"
@@ -37,7 +37,7 @@
         <div class="meeting-form-content">
           <div class="join-meeting-form" v-show="!showSetting">
             <div class="join-meeting-form-header">
-              <div>输入会议号码</div>
+              <div>{{$t('join.title.inputConferenceId')}}</div>
               <div>
                 <a-iconfont
                     type="icon-kongzhi"
@@ -59,8 +59,8 @@
                   <template v-if="searchedAccounts.length > 0" slot="dataSource">
                     <a-select-opt-group>
                       <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                        <span>历史记录</span>
-                        <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
+                        <span>{{$t('join.account.history')}}</span>
+                        <span class="text-red cursor-pointer" @click="clearAccount">{{$t('join.account.clear')}}</span>
                       </div>
                       <a-select-option v-for="(item, index) in searchedAccounts"
                                        :key="index" :value="item.number" class="group">
@@ -76,7 +76,7 @@
                       </a-select-option>
                     </a-select-opt-group>
                   </template>
-                  <a-input placeholder='会议 ID' maxlength="64" @change="onNumberChange">
+                  <a-input :placeholder="$t('join.placeholder.conferenceId')" maxlength="64" @change="onNumberChange">
                     <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                   </a-input>
                 </a-auto-complete>
@@ -86,7 +86,7 @@
                 <a-input
                     :value="meetingInfo.pin"
                     maxlength="64"
-                    placeholder='会议密码'
+                    :placeholder="$t('join.placeholder.password')"
                     type="password"
                     @change="onPasswordChange"
                 >
@@ -96,14 +96,14 @@
               <a-button type="primary" class="mt-16" block
                         :disabled="isConnected"
                         @click="enterMeeting">
-                加入
+                {{$t('join.title.join')}}
               </a-button>
             </div>
           </div>
           <div class="meeting-setting-form" v-show="showSetting">
             <div class="back-btn">
               <a-iconfont type="icon-left"
-                          title="返回"
+                          :title="$t('join.title.back')"
                           class="cursor-pointer pl-3"
                           @click="showSetting = false">
               </a-iconfont>
@@ -148,11 +148,11 @@ export default {
     },
     videoIcon() {
       return this.meetingInfo.initialVideo ? {
-        title : '关闭摄像头',
+        title : this.$t('join.button.closeCamera'),
         icon  : 'icon-shipin',
         color : '',
       } : {
-        title : '打开摄像头',
+        title : this.$t('join.button.openCamera'),
         icon  : 'icon-shipinjinyong',
         color : 'red-light',
       };
@@ -160,11 +160,11 @@ export default {
     audioIcon() {
       return this.meetingInfo.initialAudio
         ? {
-          title : '关闭麦克风',
+          title : this.$t('join.button.closeMic'),
           icon  : 'icon-maikefeng',
           color : '',
         } : {
-          title : '打开麦克风',
+          title : this.$t('join.button.openMic'),
           icon  : 'icon-maikefengjinyong',
           color : 'red-light',
         };
@@ -201,10 +201,10 @@ export default {
 
       const { length } = this.meetingInfo.number || '';
 
-      if (length === 0) errorNotice = '会议ID不能为空';
-      else if (length > 64) errorNotice = '会议ID最多为64位';
-      else if (!this.isCloud && length !== 5) errorNotice = 'YMS账号会议ID仅支持五位数字输入';
-      else if (this.isCloud && length !== 5 && length !== 10) errorNotice = 'Cloud账号会议ID仅支持5位或者10位数字输入';
+      if (length === 0) errorNotice = this.$t('join.message.conferenceIdNoEmpty');
+      else if (length > 64) errorNotice = this.$t('join.message.idNoMore64');
+      else if (!this.isCloud && length !== 5) errorNotice = this.$t('join.message.ymsIdNoMore5');
+      else if (this.isCloud && length !== 5 && length !== 10) errorNotice = this.$t('join.message.cloudIdNoMore10');
       if (errorNotice) debounceNotice(this, errorNotice);
       
       return !errorNotice;

@@ -1,7 +1,7 @@
 <template>
   <div class="transfer-search-content">
     <a-input v-model="text"
-             placeholder="搜索"
+             :placeholder="$t('contact.tree.search')"
              class="search-area rounded-none border-none">
       <div slot="suffix">
         <a-iconfont

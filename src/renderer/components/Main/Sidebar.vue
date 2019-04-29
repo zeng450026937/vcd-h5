@@ -22,7 +22,7 @@
               </div>
 
               <div class="mt-10">
-                <a-button class="w-16" @click="clickLogout">注销</a-button>
+                <a-button class="w-16" @click="clickLogout">{{$t('nav.logout')}}</a-button>
               </div>
 
               <div class="text-center absolute mt-10">
@@ -45,7 +45,7 @@
                        'hover:text-indigo': currentSidebar !== item}"
                @click="clickMenu(item, index)">
             <a-iconfont :type="item.icon" class="text-xl"></a-iconfont>
-            <span class="text-3xs font-thin mt-2">{{item.text}}</span>
+            <span class="text-3xs font-thin mt-2">{{$t(item.i18nKey)}}</span>
             <div :class="{'active-tag' : currentSidebar === item}"></div>
           </div>
         </template>
@@ -54,7 +54,7 @@
               w-full flex flex-col items-center
               justify-center hover:text-indigo h-12 mb-2">
           <a-iconfont type="icon-fankui" class="text-base"></a-iconfont>
-          <span class="text-3xs font-thin mt-2">反馈</span>
+          <span class="text-3xs font-thin mt-2">{{$t('nav.feedback')}}</span>
         </div>
       </div>
     </div>

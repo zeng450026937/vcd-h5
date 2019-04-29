@@ -121,7 +121,23 @@ export class AppWindow extends BaseWindow {
 
       event.sender.send('request-locale-reply', lang);
     });
-    
+
+    ipcMain.on('set-locale', async(event, lang) => {
+      buildMenu([
+        trayMenu.showAppWindow,
+        trayMenu.language,
+        trayMenu.separator,
+        trayMenu.quit,
+      ], lang).then((menus) => {
+        this.tray.setContextMenu(menus);
+      });
+
+      await setLanguage(lang);
+
+
+      event.sender.send('request-locale-reply', lang);
+    });
+
     // on macOS, when the user closes the window we really just hide it. This
     // lets us activate quickly and keep all our interesting logic in the
     // renderer.

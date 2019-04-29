@@ -10,19 +10,19 @@ const model = new Vuem();
 
 const genSidebarNavs = (routes) => {
   const sideNavs = {
-    instance    : { icon: 'icon-jishihuiyi', text: '发起会议' },
-    join        : { icon: 'icon-jiaruhuiyi', text: '加入会议' },
-    dial        : { icon: 'icon-bohao', text: '拨号' },
+    instance    : { icon: 'icon-jishihuiyi', text: '发起会议', i18nKey: 'nav.InitiateMeeting' },
+    join        : { icon: 'icon-jiaruhuiyi', text: '加入会议', i18nKey: 'nav.joinMeeting' },
+    dial        : { icon: 'icon-bohao', text: '拨号', i18nKey: 'nav.dial' },
     schedule    : {},
-    corporate   : { icon: 'icon-qiyelianxiren', text: '企业联系人' },
-    frequent    : { icon: 'icon-changyonglianxiren', text: '常用联系人' },
-    local       : { icon: 'icon-bendilianxiren', text: '本地联系人' },
-    account     : { icon: 'icon-gerenziliao', text: '个人资料' },
-    common      : { icon: 'icon-tongyong', text: '通用' },
-    confSetting : { icon: 'icon-huiyishi', text: '会议' },
-    audio       : { icon: 'icon-maikefeng', text: '音频' },
-    video       : { icon: 'icon-shexiangtou', text: '视频' },
-    about       : { icon: 'icon-tongyongtishi', text: '关于' },
+    corporate   : { icon: 'icon-qiyelianxiren', text: '企业联系人', i18nKey: 'nav.corporate' },
+    frequent    : { icon: 'icon-changyonglianxiren', text: '常用联系人', i18nKey: 'nav.frequent' },
+    local       : { icon: 'icon-bendilianxiren', text: '本地联系人', i18nKey: 'nav.local' },
+    account     : { icon: 'icon-gerenziliao', text: '个人资料', i18nKey: 'nav.account' },
+    common      : { icon: 'icon-tongyong', text: '通用', i18nKey: 'nav.common' },
+    confSetting : { icon: 'icon-huiyishi', text: '会议', i18nKey: 'nav.conference' },
+    audio       : { icon: 'icon-maikefeng', text: '音频', i18nKey: 'nav.audio' },
+    video       : { icon: 'icon-shexiangtou', text: '视频', i18nKey: 'nav.video' },
+    about       : { icon: 'icon-tongyongtishi', text: '关于', i18nKey: 'nav.about' },
   };
   
   routes.forEach((route) => {
@@ -42,6 +42,7 @@ const initialSidebar = () => {
   return [
     { icon        : 'icon-huiyi',
       text        : '会议',
+      i18nKey     : 'nav.meeting',
       name        : 'meeting',
       currentPath : sideNavs.instance.path,
       navs        : [
@@ -52,6 +53,7 @@ const initialSidebar = () => {
     },
     { icon        : 'icon-richeng',
       text        : '日程',
+      i18nKey     : 'nav.schedule',
       name        : 'schedule',
       currentPath : sideNavs.schedule.path,
       navs        : [ sideNavs.schedule ],
@@ -59,6 +61,7 @@ const initialSidebar = () => {
     {
       icon        : 'icon-lianxiren',
       text        : '联系人',
+      i18nKey     : 'nav.contact',
       name        : 'contact',
       currentPath : sideNavs.corporate.path,
       navs        : isCloud
@@ -75,6 +78,7 @@ const initialSidebar = () => {
     {
       icon        : 'icon-shezhi',
       text        : '设置',
+      i18nKey     : 'nav.setting',
       name        : 'setting',
       currentPath : sideNavs.account.path,
       navs        : [

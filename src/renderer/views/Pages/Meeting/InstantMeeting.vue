@@ -23,7 +23,7 @@
         <a-button large type="primary"
                   class="w-24 text-sm"
                   @click="enterMeeting"
-        >开始会议
+        >{{$t('join.title.startMeeting')}}
         </a-button>
       </div>
     </div>

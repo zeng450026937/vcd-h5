@@ -8,7 +8,7 @@
            :key="index"
            @click="handleClick(nav)">
         <a-iconfont :type="nav.icon" class="text-base text-indigo-dark"></a-iconfont>
-        <span class="ml-3 text-sm">{{nav.text}}</span>
+        <span class="ml-3 text-sm">{{$t(nav.i18nKey)}}</span>
       </div>
     </div>
   </div>

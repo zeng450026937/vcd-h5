@@ -21,7 +21,7 @@
         </div>
         <div class="mt-5">
           <div>{{$t('setting.common.language')}}</div>
-          <a-select v-model="language" class="w-48 mt-3" @change="handleLanguageChange">
+          <a-select v-model="language" class="w-48 mt-3">
             <a-select-option v-for="(lang, index) in langList" :key="index"
                              :value="lang.lang"
             >{{lang.label}}</a-select-option>
@@ -94,7 +94,7 @@
                   <span>{{tag}}</span>
                   <a-iconfont type="icon-guanbi"
                               @click="handleDeleteProperty(index)"
-                              class="ml-3 text-black6 hover:text-red cursor-pointer"/>
+                              class="ml-3 text-black6 hover:text-red cursor-pointer"></a-iconfont>
                 </div>
               </template>
             </div>
@@ -109,7 +109,6 @@
 <script>
 import { isURL } from 'validator';
 import AppHeader from '../../../components/Main/MainHeader.vue';
-import { langList } from '../../../i18n/config';
 
 export default {
   name : 'CommonSetting',
@@ -120,29 +119,27 @@ export default {
   
   data() {
     return {
-      langList : Object.keys(langList).map((key) => (
-        { 
-          label : langList[key].remark,
-          lang  : langList[key].locale, 
-        }
-      )),
       addressErrorText    : '您输入的地址不合法！',
       showAddPropetyInput : false,
       addPropertyText     : '',
     };
   },
-
-  sketch : {
-    ns    : 'setting',
-    props : [ 
-      'autoStart',
-      'hideWhenClose',
-      'language',
-      'ytmsHostAddress',
-      'updateChannel',
-      'tags',
-    ],
-  },
+  sketch : [
+    {
+      ns    : 'setting',
+      props : [
+        'autoStart',
+        'hideWhenClose',
+        'ytmsHostAddress',
+        'updateChannel',
+        'tags',
+      ],
+    },
+    {
+      ns    : 'i18n',
+      props : [ 'language', 'langList' ],
+    },
+  ],
 
   computed : {
     updateChannelList() {
@@ -172,6 +169,10 @@ export default {
           value : this.ytmsHostAddress,
         }),
       });
+    },
+    language(val) {
+      this.$i18n.locale = val;
+      this.$dispatch('i18n.setMainLocale', { lang: val });
     },
   },
   
@@ -207,11 +208,6 @@ export default {
       this.$message.warning('新手引导二期实现');
     },
 
-    handleLanguageChange() {
-      this.$i18n.locale = this.language;
-      this.$message.success(`${this.$t('setting.common.langChangeNotice')} ${Object.values(langList).find((item) => item.locale === this.language).remark} !`);
-    },
-    
     handleAddProperty() {
       if (this.addPropertyText.trim() === '') return this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
 

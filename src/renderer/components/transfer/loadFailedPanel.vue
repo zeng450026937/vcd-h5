@@ -1,7 +1,7 @@
 <template>
   <div class="load-failed-content">
     <a-iconfont type="icon-guanyu" class="fail-icon"></a-iconfont>
-    <div> 加载失败!</div>
+    <div> {{$t('contact.tree.loadFailed')}}</div>
   </div>
 </template>
 

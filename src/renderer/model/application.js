@@ -146,7 +146,7 @@ model.provide({
         // this.$dispatch('menu-event', name);
 
         if (name === 'language') {
-          this.$dispatch('i18n.changeLocale', { lang: menuItem.lang });
+          this.$dispatch('i18n.setRendererLocale', { lang: menuItem.lang });
         }
       }
     );
