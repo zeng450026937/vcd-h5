@@ -234,7 +234,7 @@ export default {
         this.confirmLoading = false;
         this.address = '';
       }).catch((err) => {
-        this.$message.info('邀请失败,请重试!');
+        this.$message.info('邀请失败,请重试');
         this.confirmLoading = false;
       });
     },

@@ -13,7 +13,7 @@
                         @click="openShareWindow"/>
             <a-iconfont ref="maxIcon"
                         type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
-                        title="最大化/最小化"
+                        :title="$t('conversation.main.maximizeOrMinimize')"
                         @click="maxConferenceContent"/>
             <template v-if="isInConferenceMain">
               <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
