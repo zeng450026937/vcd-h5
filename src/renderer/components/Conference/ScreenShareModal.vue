@@ -5,6 +5,7 @@
       :getContainer="getContainer"
       :width=780
       :closable=false
+      destroy-on-close
       @ok="handleShare"
       @cancel="handleCancel"
       wrapClassName="screen-share-modal"

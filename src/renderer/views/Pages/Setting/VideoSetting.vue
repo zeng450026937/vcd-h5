@@ -65,6 +65,10 @@
           <span class="ml-5">{{$t('setting.video.disableVideo')}}</span>
         </div>
       </div>
+      <div class="mt-3">
+        <a-switch size="small" v-model="enableLocalVideo"/>
+        <span class="ml-5 setting-label">启用虚拟摄像头</span>
+      </div>
     </div>
   </a-layout>
 </template>
@@ -89,6 +93,7 @@ export default {
         'hardwareAcceleration',
         'muteVideoWhenJoin',
         'horizontalMirroring',
+        'enableLocalVideo',
       ],
     },
     {

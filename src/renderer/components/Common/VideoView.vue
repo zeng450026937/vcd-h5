@@ -9,7 +9,7 @@
     </div>
     <video
         v-show="videoStream"
-        :id="videoId"
+        ref="videoContent"
         class="video-content"
         :class="{'force-16-9' : !videoStream}"
         autoplay loop
@@ -65,7 +65,10 @@ export default {
     ns    : 'conference',
     props : [ 'staticStream' ],
   },
-  mounted() {
+  async mounted() {
+    await this.$nextTick();
+
+    this.videoElement = this.$refs.videoContent;
     this.initStream();
   },
   beforeDestroy() {
@@ -86,13 +89,11 @@ export default {
         default: break;
       }
     }
+    this.videoElement = null;
   },
   computed : {
     audioOutputDevice() {
       return this.$model.media.audioOutputDevice;
-    },
-    videoId() {
-      return `${this.source}-video-${Date.now()}`;
     },
     videoStream() {
       if (this.enableLocalVideo) return true;
@@ -144,7 +145,7 @@ export default {
       if (!stream) return;
       await this.$nextTick();
       if (!this.videoElement) { // TODO update DOM to refs
-        this.videoElement = document.getElementById(this.videoId);
+        this.videoElement = this.$refs.videoContent;
       }
       if (this.hideVideo) {
         this.videoElement.style.display = 'none';

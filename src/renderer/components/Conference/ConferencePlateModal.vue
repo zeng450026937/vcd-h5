@@ -6,6 +6,7 @@
       :footer="null"
       :getContainer="getContainer"
       centered
+      destroy-on-close
       style="left: 32px"
       wrapClassName="conference-plate-modal"
       @cancel="visible = false"

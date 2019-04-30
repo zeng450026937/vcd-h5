@@ -45,10 +45,6 @@
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="enableLocalVideo"/>
-            <span class="setting-label">启用本地视频</span>
-          </div>
-          <div class="mt-3">
             <div>视频质量</div>
             <a-select v-model="videoQuality" class="w-48 mt-3">
               <a-select-option v-for="(quality, index) in videoQualities" :key="index"

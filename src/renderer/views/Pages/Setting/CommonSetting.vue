@@ -3,7 +3,7 @@
     <div class="h-14 border-b">
       <div class="flex bg-white dragable h-full">
         <div class="flex items-center h-full px-4 text-base">
-          <span>{{$t('setting.common.title')}}</span>
+          <span class="no-dragable select-none" @click="openAdvanceSetting">{{$t('setting.common.title')}}</span>
         </div>
         <div class="flex flex-grow"></div>
         <app-header/>
@@ -27,12 +27,13 @@
             >{{lang.label}}</a-select-option>
           </a-select>
         </div>
-        <div class="mt-5">
-          <a-form :form="form">
-            <a-form-item class="mb-0">
-              <div class="leading-none">{{$t('setting.common.address')}}</div>
-              <a-input
-                  v-decorator="[
+        <template v-if="showAdvanceSetting">
+          <div class="mt-5">
+            <a-form :form="form">
+              <a-form-item class="mb-0">
+                <div class="leading-none">{{$t('setting.common.address')}}</div>
+                <a-input
+                    v-decorator="[
                   'ytmsHostAddress',
                   {
                     validateTrigger: 'blur',
@@ -43,64 +44,66 @@
                       }
                     ]
                   }]"
-                  class="w-48 mt-3"
-                  :placeholder="$t('setting.common.addressPlaceHolder')"
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-        <div class="mt-5">
-          <div>{{$t('setting.common.updateChannel')}}</div>
-          <a-select v-model="updateChannel" class="w-48 mt-3">
-            <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
-                             :value="channel.value"
-            >{{channel.label}}</a-select-option>
-          </a-select>
-        </div>
-        <div class="mt-5 align-top">
-        <div class="mt-2">{{$t('setting.common.property')}}</div>
-        <div class="flex-1">
+                    class="w-48 mt-3"
+                    :placeholder="$t('setting.common.addressPlaceHolder')"
+                />
+              </a-form-item>
+            </a-form>
+          </div>
+          <div class="mt-5">
+            <div>{{$t('setting.common.updateChannel')}}</div>
+            <a-select v-model="updateChannel" class="w-48 mt-3">
+              <a-select-option v-for="(channel, index) in updateChannelList" :key="index"
+                               :value="channel.value"
+              >{{channel.label}}
+              </a-select-option>
+            </a-select>
+          </div>
+          <div class="mt-5 align-top">
+            <div class="mt-2">{{$t('setting.common.property')}}</div>
+            <div class="flex-1">
 
-          <div class="mt-3 flex flex-col">
-            <template v-if="tags.length < 20">
-              <a-tag v-if="!showAddPropetyInput"
-                     class="w-60 h-8 flex items-center justify-center"
-                     style="borderStyle: dashed;"
-                     @click="addPropety">
-                <div>
-                  <a-iconfont type="icon-tianjia"/>
-                  {{$t('setting.common.addProperty')}}
+              <div class="mt-3 flex flex-col">
+                <template v-if="tags.length < 20">
+                  <a-tag v-if="!showAddPropertyInput"
+                         class="w-60 h-8 flex items-center justify-center"
+                         style="borderStyle: dashed;"
+                         @click="addProperty">
+                    <div>
+                      <a-iconfont type="icon-tianjia"/>
+                      {{$t('setting.common.addProperty')}}
+                    </div>
+                  </a-tag>
+                  <div v-show="showAddPropertyInput">
+                    <a-input v-model="addPropertyText"
+                             ref="propertyInput"
+                             maxlength="64"
+                             class="w-60"
+                             @keypress.enter="handleAddProperty"></a-input>
+                    <a-button type="primary" class="ml-2" shape="circle" size="small"
+                              icon="check" @click="handleAddProperty"></a-button>
+                    <a-button type="danger" class="ml-2" shape="circle" icon="close" size="small"
+                              @click="showAddPropertyInput=false;addPropertyText='';"></a-button>
+                  </div>
+                </template>
+                <a-tag v-else color="red" class="w-60 h-8 flex items-center justify-center">
+                  {{$t('setting.common.fullPropertyNotice')}}
+                </a-tag>
+                <div class="flex flex-wrap mt-3">
+                  <template v-for="(tag,index) in tags">
+                    <div class="h-8 mb-2 flex items-center justify-center bg-device-tag mr-3 px-4 rounded"
+                         :key="index">
+                      <span>{{tag}}</span>
+                      <a-iconfont type="icon-guanbi"
+                                  @click="handleDeleteProperty(index)"
+                                  class="ml-3 text-black6 hover:text-red cursor-pointer"></a-iconfont>
+                    </div>
+                  </template>
                 </div>
-              </a-tag>
-              <div v-show="showAddPropetyInput">
-                <a-input v-model="addPropertyText"
-                         ref="propertyInput"
-                         maxlength="64"
-                         class="w-60"
-                         @keypress.enter="handleAddProperty"></a-input>
-                <a-button type="primary" class="ml-2" shape="circle" size="small"
-                          icon="check" @click="handleAddProperty"></a-button>
-                <a-button type="danger" class="ml-2" shape="circle" icon="close" size="small"
-                          @click="showAddPropetyInput=false;addPropertyText='';"></a-button>
               </div>
-            </template>
-            <a-tag v-else color="red" class="w-60 h-8 flex items-center justify-center">
-              {{$t('setting.common.fullPropertyNotice')}}
-            </a-tag>
-            <div class="flex flex-wrap mt-3">
-              <template v-for="(tag,index) in tags">
-                <div class="h-8 mb-2 flex items-center justify-center bg-device-tag mr-3 px-4 rounded"
-                     :key="index">
-                  <span>{{tag}}</span>
-                  <a-iconfont type="icon-guanbi"
-                              @click="handleDeleteProperty(index)"
-                              class="ml-3 text-black6 hover:text-red cursor-pointer"></a-iconfont>
-                </div>
-              </template>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
       </div>
     </div>
   </a-layout>
@@ -119,9 +122,10 @@ export default {
   
   data() {
     return {
-      addressErrorText    : '您输入的地址不合法！',
-      showAddPropetyInput : false,
-      addPropertyText     : '',
+      addressErrorText     : '您输入的地址不合法！',
+      showAddPropertyInput : false,
+      addPropertyText      : '',
+      count                : 0,
     };
   },
   sketch : [
@@ -133,6 +137,7 @@ export default {
         'ytmsHostAddress',
         'updateChannel',
         'tags',
+        'showAdvanceSetting',
       ],
     },
     {
@@ -161,7 +166,6 @@ export default {
     this.defaultProtocol = 'http';
     this.defaultPort = '9301';
   },
-
   watch : {
     ytmsHostAddress() {
       this.form.updateFields({
@@ -182,11 +186,17 @@ export default {
 
   destroyed() {
     this.$dispatch('setting.save');
+    this.showAdvanceSetting = false;
   },
 
   methods : {
-    async addPropety() {
-      this.showAddPropetyInput = true;
+    openAdvanceSetting() {
+      if (this.count++ === 8) {
+        this.showAdvanceSetting = true;
+      }
+    },
+    async addProperty() {
+      this.showAddPropertyInput = true;
       await this.$refs.propertyInput.$nextTick();
       this.$refs.propertyInput.focus();
     },
@@ -203,11 +213,6 @@ export default {
 
       this.ytmsHostAddress = value;
     },
-
-    handleNoodGuide() {
-      this.$message.warning('新手引导二期实现');
-    },
-
     handleAddProperty() {
       if (this.addPropertyText.trim() === '') return this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
 
@@ -215,7 +220,7 @@ export default {
 
       if (this.tags.indexOf(this.addPropertyText) !== -1) return this.$message.error('已存在该标签');
 
-      this.showAddPropetyInput = false;
+      this.showAddPropertyInput = false;
       this.tags.push(this.addPropertyText);
       this.addPropertyText = '';
       this.$message.success(this.$t('setting.common.addPropertyNotice'));
