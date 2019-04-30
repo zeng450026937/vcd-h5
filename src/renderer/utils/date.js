@@ -78,3 +78,28 @@ export function genStartTime(time) {
       ? `${$t('dial.record.yesterday')} ${getTime(time)}`
       : getDateTime(time);
 }
+
+const weekMap = {
+  0 : '星期日',
+  1 : '星期一',
+  2 : '星期二',
+  3 : '星期三',
+  4 : '星期四',
+  5 : '星期五',
+  6 : '星期六',
+};
+
+export function formatDate(type, date) {
+  const map = {
+    '年-月-日' : (d) => {
+      const year = d.getFullYear();
+      const month = d.getMonth() + 1;
+      const day = d.getDate();
+      const week = weekMap[d.getDay()];
+
+      return `${year}年${genDouble(month)}月${genDouble(day)}日 ${week}`;
+    },
+  };
+
+  return map[type](date);
+}

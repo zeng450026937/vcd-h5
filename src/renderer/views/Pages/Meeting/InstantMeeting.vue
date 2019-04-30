@@ -35,18 +35,12 @@
 /* eslint-disable no-loop-func */
 
 import AppHeader from '../../../components/Main/MainHeader.vue';
-import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
-import ContactTree from '../../../components/Main/Contact/ContactTree.vue';
-import ContactList from '../../../components/Main/Contact/ContactList.vue';
 import transfer from '../../../components/transfer/index.vue';
 
 export default {
   name       : 'InstantMeeting',
   components : {
     AppHeader,
-    ContactTree,
-    ContactList,
-    CommonEmpty,
     transfer,
   },
   data() {

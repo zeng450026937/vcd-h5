@@ -6,6 +6,7 @@ module.exports = {
       schedule        : '日程',
       contact         : '联系人',
       setting         : '设置',
+      newMeeting      : '新的会议',
       InitiateMeeting : '发起会议',
       joinMeeting     : '加入会议',
       dial            : '拨号',

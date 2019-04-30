@@ -11,6 +11,7 @@ const model = new Vuem();
 const genSidebarNavs = (routes) => {
   const sideNavs = {
     instance    : { icon: 'icon-jishihuiyi', text: '发起会议', i18nKey: 'nav.InitiateMeeting' },
+    newMeeting  : { icon: 'icon-jishihuiyi', text: '新的会议', i18nKey: 'nav.newMeeting' },
     join        : { icon: 'icon-jiaruhuiyi', text: '加入会议', i18nKey: 'nav.joinMeeting' },
     dial        : { icon: 'icon-bohao', text: '拨号', i18nKey: 'nav.dial' },
     schedule    : {},
@@ -44,9 +45,10 @@ const initialSidebar = () => {
       text        : '会议',
       i18nKey     : 'nav.meeting',
       name        : 'meeting',
-      currentPath : sideNavs.instance.path,
+      currentPath : sideNavs.newMeeting.path,
       navs        : [
-        sideNavs.instance,
+        // sideNavs.instance,
+        sideNavs.newMeeting,
         sideNavs.join,
         sideNavs.dial,
       ],
@@ -106,6 +108,13 @@ model.provide({
     };
   },
   methods : {
+  },
+  middleware : {
+    async setCurrentSidebar(ctx, next) {
+      await next();
+
+      this.currentSidebar = this.sidebarMap[ctx.payload.name];
+    },
   },
   computed : {
     isRegistered() {

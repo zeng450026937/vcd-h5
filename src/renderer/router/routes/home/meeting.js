@@ -1,9 +1,15 @@
 export default [
+  // {
+  //   name      : 'instance',
+  //   path      : '/home/content/meeting/instance',
+  //   meta      : {},
+  //   component : () => import('@/renderer/views/Pages/Meeting/InstantMeeting.vue'),
+  // },
   {
-    name      : 'instance',
-    path      : '/home/content/meeting/instance',
+    name      : 'newMeeting',
+    path      : '/home/content/meeting/newMeeting',
     meta      : {},
-    component : () => import('@/renderer/views/Pages/Meeting/InstantMeeting.vue'),
+    component : () => import('@/renderer/views/Pages/Meeting/NewMeeting.vue'),
   },
   {
     name      : 'join',
@@ -18,4 +24,5 @@ export default [
     meta      : {},
     component : () => import('@/renderer/views/Pages/Dial/DialPlate.vue'),
   },
+
 ];
