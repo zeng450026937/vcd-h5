@@ -339,6 +339,7 @@ export default {
     },
     modifyAccounts() {
       this.modifiedAccounts = this.rawAccounts
+        .filter((account) => account.type === this.serverType)
         .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
       this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
       this.meetingInfo = {

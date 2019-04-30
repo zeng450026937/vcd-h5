@@ -10,12 +10,16 @@
       :footer="null"
   >
     <div class="flex flex-col items-center px-12 pb-4">
-      <h4 class="mt-5 leading-loose">{{isPresenter ? '您要结束会议还是离开会议?' : '您确定要离开会议?'}}</h4>
+      <h4 class="mt-5 leading-loose">{{isPresenter
+        ? $t('conversation.controls.terminateOrLeave')
+        : $t('conversation.controls.ensureLeave') }}</h4>
       <a-button v-if="isPresenter" class="mt-5 bg-red-light text-white border-transparent"
-                block @click="endedConference">结束会议</a-button>
+                block @click="endedConference">{{$t('conversation.controls.terminateConference')}}</a-button>
       <a-button class="mt-5 bg-main-theme text-white border-transparent" block
-                @click="leaveConference">{{isPresenter ? '离开会议，会议继续进行' : '离开会议'}}</a-button>
-      <a-button class="mt-5" block @click="cancel">取消</a-button>
+                @click="leaveConference">{{isPresenter
+        ? $t('conversation.controls.justLeaveConference')
+        : $t('conversation.controls.leaveConference')}}</a-button>
+      <a-button class="mt-5" block @click="cancel">{{$t('conversation.controls.cancel')}}</a-button>
     </div>
   </a-modal>
 </template>

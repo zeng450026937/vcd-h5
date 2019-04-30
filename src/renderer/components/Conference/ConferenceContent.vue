@@ -8,7 +8,7 @@
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="remoteScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
-                        title="弹出辅流"
+                        :title="$t('conversation.main.popSharing')"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
             <a-iconfont ref="maxIcon"
@@ -17,7 +17,7 @@
                         @click="maxConferenceContent"/>
             <template v-if="isInConferenceMain">
               <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
-                          title="邀请成员"
+                          :title="$t('conversation.main.inviteMember')"
                           @click="showInviteModal"/>
               <div v-for="(tab, index) in tabList" :key="index">
                 <a-badge :numberStyle= "{backgroundColor: 'white', boxShadow : 'none'}"
@@ -65,6 +65,7 @@ import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
 // import HoldItemGroup from './HoldItemGroup.vue';
 import { CONFERENCE } from '../../router/constants';
+import { $t } from '../../i18n';
 
 export default {
   name       : 'ConferenceContent',
@@ -104,10 +105,10 @@ export default {
   computed : {
     tabList() {
       const tabList = [
-        { icon: 'icon-suoding', comp: 'TabLockConference', title: '锁定会议' },
-        { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: '成员列表' },
-        { icon: 'icon-liaotian', comp: 'TabChatting', title: '聊天' },
-        { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
+        { icon: 'icon-suoding', comp: 'TabLockConference', title: $t('conversation.main.lockConference') },
+        { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: $t('conversation.main.memberList') },
+        { icon: 'icon-liaotian', comp: 'TabChatting', title: $t('conversation.main.chat') },
+        { icon: 'icon-kongzhi', comp: 'TabSetting', title: $t('conversation.main.setting') },
       ];
 
       const { currentUser } = this.$model.conference;
@@ -284,7 +285,7 @@ export default {
     shareStreamStatus(val) {
       if (this.hasScreenStream && !val) {
         // 分享的应用被关闭
-        this.$message.warn('由于共享的窗口被关闭，内容共享结束');
+        this.$message.warn($t('conversation.share.message.sharingEnded'));
         this.$rtc.conference.shareChannel.disconnect();
       }
     },

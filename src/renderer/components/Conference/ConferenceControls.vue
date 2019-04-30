@@ -27,7 +27,7 @@
       <a-button v-if="isVideoConference && shareAvailable"
                 shape="circle"
                 class="control-btn"
-                title="分享辅流"
+                :title="$t('conversation.controls.screenShare')"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -42,23 +42,23 @@
                class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
               @click="toAudioConference">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">切换为音频会议</span>
+            <span class="ml-3 text-xs">{{$t('conversation.controls.toAudio')}}</span>
           </div>
           <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                @click="openPlateModal">
             <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">拨号盘</span>
+            <span class="ml-3 text-xs">{{$t('conversation.controls.plate')}}</span>
           </div>
         </div>
         <a-button shape="circle"
-                  title="更多"
+                  :title="$t('conversation.controls.more')"
                   class="control-btn"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <!--退出-->
       <a-button shape="circle"
-                title="退出会议"
+                :title="$t('conversation.controls.exitConference')"
                 class="control-btn bg-red-light"
                 @click="showLeaveModal"
       ><a-iconfont type="icon-guaduan"/></a-button>
@@ -78,6 +78,7 @@ import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
 import ConferencePlateModal from './ConferencePlateModal.vue';
 import ConferenceMessage from './ConferenceMessage.vue';
+import {$t} from "../../i18n";
 
 export default {
   name       : 'ConferenceControls',
@@ -129,18 +130,18 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
-        unblock    : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
-        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: '取消举手' },
-        hand       : { icon: 'icon-jushou', color: '', title: '举手' },
+        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: $t('conversation.controls.turnOnMicrophone') },
+        unblock    : { icon: 'icon-maikefeng', color: '', title: $t('conversation.controls.turnOffMicrophone') },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: $t('conversation.controls.cancelRaiseHangs') },
+        hand       : { icon: 'icon-jushou', color: '', title: $t('conversation.controls.raiseHangs') },
       };
 
       return iconMap[this.$model.conference.audioStatus || 'unblock'];
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
-        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
+        unblock : { icon: 'icon-shipin', color: '', title: $t('conversation.controls.turnOffCamera') },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: $t('conversation.controls.turnOnCamera') },
       };
 
       return iconMap[this.$model.conference.videoStatus];

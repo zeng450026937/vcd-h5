@@ -30,7 +30,7 @@ model.provide({
     },
     // 会议中是否需要获取本地视频流
     acquireStreamInConference() {
-      return this.isVideoConference && rtc.conference.connected;
+      return this.isVideoConference && rtc.conference.connecting;
     },
     // 会议中是否需要释放本地视频流
     releaseStreamInConference() {

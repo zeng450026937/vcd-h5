@@ -242,7 +242,7 @@ export default {
         pin          : this.currentEvent.attendeePin,
         initialVideo : true,
         initialAudio : true,
-        video        : true,
+        video        : false,
         audio        : true,
       };
       this.$dispatch('meeting.joinMeeting').then(() => {

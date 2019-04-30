@@ -4,13 +4,13 @@
       <div class="flex items-center flex-grow dragable my-1 mr-12">
         <a-iconfont v-if="isLocked"
                     type="icon-suoding"
-                    title="会议已锁定"
+                    :title="$t('conversation.header.conferenceLocked')"
                     class="text-white text-base no-dragable mr-4"/>
         <a-iconfont type="icon-tonghuabaohu"
-                    title="通话保护"
+                    :title="$t('conversation.header.safeConversation')"
                     class="text-white text-base no-dragable mr-4"/>
         <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
-                    title="信号"
+                    :title="$t('conversation.header.signal')"
                     class="text-white no-dragable text-base mr-4 cursor-pointer"
                     @click="showStatistics"/>
         <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>

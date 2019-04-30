@@ -14,10 +14,10 @@
     <template slot="footer">
       <div class="absolute" style="line-height: 30px">
         <span v-if="!showCopySuccess" class="text-indigo leading-tight text-xs cursor-pointer"
-              @click="copyConferenceInfo">复制会议信息</span>
+              @click="copyConferenceInfo">{{$t('conversation.header.copyConferenceInfo')}}</span>
         <span v-else class="leading-tight cursor-pointer text-green items-center">
           <a-iconfont type="icon-tongguo" class="text-base"/>
-          <span class="text-xs ml-1">复制成功!</span>
+          <span class="text-xs ml-1">{{$t('conversation.header.copySucceed')}}!</span>
         </span>
       </div>
       <a-button
@@ -26,12 +26,12 @@
                 type="primary"
                 :loading="confirmLoading"
                 @click="handleOk">
-        确定
+        {{$t('common.controls.ensure')}}
       </a-button>
-      <a-button key="back" @click="handleCancel" class="ml-4">取消</a-button>
+      <a-button key="back" @click="handleCancel" class="ml-4">{{$t('common.controls.cancel')}}</a-button>
     </template>
     <a-tabs v-model="currentTab" class="inviting-tabs">
-      <a-tab-pane tab="邀请联系人" key="inviteUser">
+      <a-tab-pane :tab="$t('common.conversation.inviteContact')" key="inviteUser">
         <div style="height: 420px;">
           <div class="flex h-full p-5">
             <transfer
@@ -47,11 +47,11 @@
           </div>
         </div>
       </a-tab-pane>
-      <a-tab-pane tab="邀请其他" key="inviteOther">
+      <a-tab-pane :tab="$t('common.invite.inviteOthers')" key="inviteOther">
         <div style="height: 420px;">
           <div class="flex flex-col items-center justify-center h-full">
             <div class="flex">
-              <span class="leading-normal mt-1">协议</span>
+              <span class="leading-normal mt-1">{{$t('conversation.invite.protocol')}}</span>
               <div class="flex flex-col ml-5" style="width: 280px;">
                 <a-select v-model="protocol">
                   <a-select-option v-for="protocol in protocols" :key="protocol" :value="protocol">
@@ -80,6 +80,7 @@
 /* eslint-disable no-loop-func */
 import copy from 'clipboard-copy';
 import transfer from '../transfer/index.vue';
+import { $t } from '../../i18n';
 
 export default {
   name  : 'ConferenceInvitingModal',
@@ -112,7 +113,7 @@ export default {
     protocols() {
       const protocols = [ 'SIP', 'H.323', 'RTMP', 'SFB(Lync)' ];
 
-      if (this.isCloud) protocols.push('亿联云账号');
+      if (this.isCloud) protocols.push($t('conversation.invite.yealinkCloud'));
       
       return protocols;
     },
@@ -152,19 +153,21 @@ export default {
       }
     },
     numberTitle() {
-      return this.protocol === 'RTMP' ? '地址' : '号码';
+      return this.protocol === 'RTMP'
+        ? $t('conversation.invite.address')
+        : $t('conversation.invite.number');
     },
     inputPlaceholder() {
       switch (this.protocol) {
         case 'SIP':
         case 'H.323':
-          return '请输入IP地址或URI';
-        case '亿联云账号':
-          return '请输入9位云账号';
+          return $t('conversation.invite.inputIpOrUri');
+        case $t('conversation.invite.yealinkCloud'):
+          return $t('conversation.invite.inputCloudNumber');
         case 'RTMP':
-          return '请输入RTMP地址';
+          return $t('conversation.invite.inputRTMP');
         case 'SFB(Lync)':
-          return '请输入SfB (Lync)账号';
+          return $t('conversation.invite.inputSFB');
         default:
           return '';
       }
@@ -212,7 +215,7 @@ export default {
 
       this.$rtc.conference.conference.addUserBatch(users)
         .then(() => {
-          this.$message.info('已邀请');
+          this.$message.info($t('conversation.invite.message.invited'));
           this.confirmLoading = false;
           this.visible = false;
         })
@@ -223,18 +226,18 @@ export default {
     },
     inviteOther() {
       if (this.$rtc.conference.information.users.user.findIndex((user) => user.phone === this.address) >= 0) {
-        this.$message.info('该成员已在会议中');
+        this.$message.info($t('conversation.invite.message.alreadyExist'));
         this.confirmLoading = false;
         
         return;
       }
-      this.$message.info('已邀请');
+      this.$message.info($t('conversation.invite.message.invited'));
       this.$dispatch('conference.invite.invite', { protocol: this.protocol, address: this.address }).then(() => {
-        this.$message.info('邀请成功');
+        this.$message.info($t('conversation.invite.message.inviteSucceed'));
         this.confirmLoading = false;
         this.address = '';
       }).catch((err) => {
-        this.$message.info('邀请失败,请重试');
+        this.$message.info($t('conversation.invite.message.inviteFailed'));
         this.confirmLoading = false;
       });
     },
