@@ -3,6 +3,7 @@
       :visible="visible"
       style="left: 32px"
       centered
+      destroy-on-close
       :width=820
       :footer="null"
       wrapClassName="conference-statistics-modal"

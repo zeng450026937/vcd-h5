@@ -7,6 +7,7 @@ const contact = require('./contact');
 const join = require('./join');
 const nav = require('./nav');
 const conversation = require('./conversation');
+const common = require('./common');
 
 module.exports = [
   login,
@@ -18,4 +19,5 @@ module.exports = [
   join,
   nav,
   conversation,
+  common,
 ];

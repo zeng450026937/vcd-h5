@@ -14,10 +14,10 @@
     <template slot="footer">
       <div class="absolute" style="line-height: 30px">
         <span v-if="!showCopySuccess" class="text-indigo leading-tight text-xs cursor-pointer"
-              @click="copyConferenceInfo">{{$t('conversation.header.copyConferenceInfo')}}</span>
+              @click="copyConferenceInfo">{{$t('conversation.invite.copyConferenceInfo')}}</span>
         <span v-else class="leading-tight cursor-pointer text-green items-center">
           <a-iconfont type="icon-tongguo" class="text-base"/>
-          <span class="text-xs ml-1">{{$t('conversation.header.copySucceed')}}!</span>
+          <span class="text-xs ml-1">{{$t('conversation.invite.copySucceed')}}!</span>
         </span>
       </div>
       <a-button
@@ -31,7 +31,7 @@
       <a-button key="back" @click="handleCancel" class="ml-4">{{$t('common.controls.cancel')}}</a-button>
     </template>
     <a-tabs v-model="currentTab" class="inviting-tabs">
-      <a-tab-pane :tab="$t('common.conversation.inviteContact')" key="inviteUser">
+      <a-tab-pane :tab="$t('conversation.invite.inviteContact')" key="inviteUser">
         <div style="height: 420px;">
           <div class="flex h-full p-5">
             <transfer
@@ -47,7 +47,7 @@
           </div>
         </div>
       </a-tab-pane>
-      <a-tab-pane :tab="$t('common.invite.inviteOthers')" key="inviteOther">
+      <a-tab-pane :tab="$t('conversation.invite.inviteOthers')" key="inviteOther">
         <div style="height: 420px;">
           <div class="flex flex-col items-center justify-center h-full">
             <div class="flex">

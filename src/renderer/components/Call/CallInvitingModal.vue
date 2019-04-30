@@ -4,6 +4,7 @@
       :visible="visible"
       style="left: 32px"
       centered
+      destroy-on-close
       :width=728
       :closable=false
       :getContainer="getContainer"

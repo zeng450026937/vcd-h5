@@ -264,12 +264,12 @@ export default {
   watch : {
     currentEvent : {
       handler(val, oldVal) {
+        if (this.updateTimer) clearInterval(this.updateTimer);
         if (val.conferenceNumber && (!oldVal || !oldVal.conferenceNumber)) {
           this.updateTimer = setInterval(() => {
             this.currentEvent.updateStatus();
           }, 1000);
         }
-        else if (this.updateTimer) clearInterval(this.updateTimer);
       },
       immediate : true,
     },

@@ -44,19 +44,15 @@ const Picker = {
   },
 
   watch : {
-    value : function value(val) {
+    value(val) {
       this.setState({
         sValue : val,
       });
     },
   },
-  updated : function updated() {
-    this.focusTimeout = setTimeout(this.focusCalendar, 0);
+  updated() {
+    Promise.resolve().then(this.focusCalendar);
   },
-  beforeDestroy : function beforeDestroy() {
-    clearTimeout(this.focusTimeout);
-  },
-
   methods : {
     onCalendarSelect : function onCalendarSelect(value) {
       if (!hasProp(this, 'value')) {
@@ -88,7 +84,7 @@ const Picker = {
 
       return cloneElement(props.calendar, extraProps);
     },
-    focusCalendar : function focusCalendar() {
+    focusCalendar() {
       if (this.calendarInstance && this.calendarInstance.componentInstance) {
         this.calendarInstance.componentInstance.focus();
       }

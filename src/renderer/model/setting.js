@@ -48,6 +48,8 @@ model.provide({
       enableLocalVideo           : true,
       // p2p
       dnd                        : false,
+      //
+      showAdvanceSetting         : false,
     };
   },
 

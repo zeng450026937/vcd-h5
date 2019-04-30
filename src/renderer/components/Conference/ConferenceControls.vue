@@ -78,7 +78,7 @@ import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
 import ConferencePlateModal from './ConferencePlateModal.vue';
 import ConferenceMessage from './ConferenceMessage.vue';
-import {$t} from "../../i18n";
+import { $t } from '../../i18n';
 
 export default {
   name       : 'ConferenceControls',

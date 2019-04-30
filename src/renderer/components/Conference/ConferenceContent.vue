@@ -53,7 +53,6 @@
       <conference-inviting-modal ref="invitingModal"
                                  :getContainer="conferenceContent"/>
     </div>
-    <!--<hold-item-group/>-->
   </a-layout>
 </template>
 
@@ -63,7 +62,6 @@ import ConferenceRemoteVideo from './ConferenceRemoteVideo.vue';
 import ConferenceLocalVideo from './ConferenceLocalVideo.vue';
 import ConferenceShareVideo from './ConferenceShareVideo.vue';
 import ConferenceInvitingModal from './ConferenceInvitingModal.vue';
-// import HoldItemGroup from './HoldItemGroup.vue';
 import { CONFERENCE } from '../../router/constants';
 import { $t } from '../../i18n';
 
@@ -74,7 +72,6 @@ export default {
     ConferenceLocalVideo,
     ConferenceShareVideo,
     ConferenceInvitingModal,
-    // HoldItemGroup,
   },
   data() {
     return {
@@ -87,7 +84,9 @@ export default {
   sketch : [
     {
       ns    : 'conference.sketch',
-      props : [ 'hideControls', 'isShareInCenter', 'isShareWindowOpen', 'isInConferenceMain', 'currentTab', 'isVideoConference', 'updateHoldPosition' ],
+      props : [ 'hideControls', 'isShareInCenter',
+        'isShareWindowOpen', 'isInConferenceMain',
+        'currentTab', 'isVideoConference', 'updateHoldPosition' ],
     },
     {
       ns    : 'conference.member',
@@ -225,6 +224,7 @@ export default {
       }
       this.hideControlsTimer = setTimeout(() => {
         this.hideControls = !this.deviceException;
+        clearTimeout(this.hideControlsTimer);
       }, 6000);
     },
     shareScreenClicked() {
