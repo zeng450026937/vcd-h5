@@ -203,7 +203,7 @@ model.provide({
       this.isLocalUnmuteAudio = false;
     },
     onPermissionChanged(permission, oldPri) {
-      console.warn(permission, oldPri);
+      // console.warn(permission, oldPri);
       // 参会者状态 organizer：组织者， presenter：主持人，attendee：访客 castviewer: 广播方
       if (!oldPri || this.muteBlockBy === 'client') return;
 
@@ -215,7 +215,7 @@ model.provide({
       }
     },
     onDemostateChanged(role, oldRole) {
-      console.warn(role, oldRole);
+      // console.warn(role, oldRole);
       if (this.muteBlockBy === 'client') return;
       // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
       if (role === 'demonstrator' && oldRole === 'audience') {

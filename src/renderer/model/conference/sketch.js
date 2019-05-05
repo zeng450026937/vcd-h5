@@ -73,6 +73,26 @@ sketch.provide({
       return rtc.conference.status;
     },
   },
+  methods : {
+    updateConferenceType(isVideo) {
+      const { channel } = rtc.conference.mediaChannel;
+
+      if (!isVideo) {
+        const pc = channel.session.connection;
+
+        pc.getSenders().forEach((sender) => {
+          if (sender.track && sender.track.kind === 'video') {
+            sender.track.stop();
+            pc.removeTrack(sender);
+          }
+        });
+      }
+      channel.renegotiate({
+        rtcOfferConstraints : { offerToReceiveVideo: isVideo, offerToReceiveAudio: true },
+      },
+      () => channel[isVideo ? 'unmute' : 'mute']({ video: true }));
+    },
+  },
   watch : {
     conferenceStatus(val, oldVal) {
       if (val === 'disconnected') { // 退出会议之后重置当前状态
@@ -87,16 +107,7 @@ sketch.provide({
     },
     isVideoConference(val) { // TODO 失败了呢? -- 返回值
       if (this.conferenceStatus === 'disconnected') return;
-      rtc.conference.mediaChannel.channel.renegotiate(
-        {
-          rtcOfferConstraints :
-            { offerToReceiveVideo: val, offerToReceiveAudio: true },
-        }, () => {
-          const method = val ? 'unmute' : 'mute';
-
-          rtc.conference.mediaChannel.channel[method]({ video: true });
-        }
-      );
+      this.updateConferenceType(val);
     },
   },
 });

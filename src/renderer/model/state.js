@@ -175,7 +175,7 @@ model.provide({
     });
 
     rtc.conference.$on('call-record', async(info) => {
-      console.warn('rtc.conference.event', info);
+      // console.warn('rtc.conference.event', info);
       let record = await callRecordDB.getRecordById(info.id);
 
       if (!record) record = await createConferenceRecord(info);

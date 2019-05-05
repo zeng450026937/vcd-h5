@@ -109,9 +109,24 @@ model.provide({
     },
   },
   methods : {
-    switchCallType(video) {
-      rtc.call.localMedia.acquireDetachedStream(true, video)
+    async switchCallType(video) {
+      await rtc.call.localMedia.acquireDetachedStream(true, video)
         .then((s) => rtc.call.channel.replaceLocalStream(s));
+      if (!video) {
+        const { channel } = rtc.call;
+        const pc = channel.session.connection;
+
+        pc.getSenders().forEach((sender) => {
+          if (sender.track && sender.track.kind === 'video') {
+            sender.track.stop();
+            pc.removeTrack(sender);
+          }
+        });
+        channel.renegotiate({
+          rtcOfferConstraints : { offerToReceiveVideo: video, offerToReceiveAudio: true },
+        },
+        () => channel[video ? 'unmute' : 'mute']({ video: true }));
+      }
     },
   },
   watch : {

@@ -85,6 +85,9 @@ export default {
     source : {
       type    : String,
       default : 'conference', // conference call
+      validator(val) {
+        return [ 'conference', 'call' ].indexOf(val) !== -1;
+      },
     },
     getContainer : {
       type    : Function,

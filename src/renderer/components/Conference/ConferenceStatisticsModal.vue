@@ -68,7 +68,10 @@ export default {
   props : {
     content : {
       type    : String,
-      default : 'meeting', // meeting call
+      default : 'conference', // conference call
+      validator(val) {
+        return [ 'conference', 'call' ].indexOf(val) !== -1;
+      },
     },
   },
   data() {
@@ -80,10 +83,10 @@ export default {
   computed : {
     visible : {
       get() {
-        return this.$model.conference.sketch.isStatisticsVisible;
+        return this.$model[this.content].sketch.isStatisticsVisible;
       },
       set(val) {
-        this.$model.conference.sketch.isStatisticsVisible = val;
+        this.$model[this.content].sketch.isStatisticsVisible = val;
       },
     },
   },
@@ -91,7 +94,7 @@ export default {
   },
   methods : {
     async getStats() {
-      if (this.content === 'meeting') {
+      if (this.content === 'conference') {
         await this.$rtc.conference.getStats().then((val) => {
           this.statistics = this.$model.conference.statistics.getStatistics(val);
         });
