@@ -4,6 +4,7 @@
     <app-header title="新的会议"/>
 
     <div class="flex h-full new-meeting-content">
+      <div class="nav-card-content">
         <div class="left">
           <div class="menu yellow start-meeting" @click="enterMeeting">
             <div class="icon">
@@ -18,48 +19,49 @@
             <div class="title">预约会议</div>
           </div>
         </div>
-
-      <div class="right">
+        <div class="right">
           <div class="meeting-info">
 
             <div class="date-wrap">
               <div class="date-content">
-                  <div class="time">
-                    {{time}}
-                  </div>
-                  <div class="date">
-                    {{date | format}}
-                  </div>
+                <div class="time">
+                  {{time}}
+                </div>
+                <div class="date">
+                  {{date | format}}
+                </div>
               </div>
             </div>
 
             <div class="recent-meeting">
               <div class="recent-meeting-header">
-               {{tip}}
-                <a-button v-if="hasRecentScheduleEvent" type="primary" @click="join">加入</a-button>
+                下一场会议 <span class="start-time">{{tip}}</span>
               </div>
               <div class="recent-meeting-content">
-                <div class="card" v-if="hasRecentScheduleEvent">
+                <div v-if="hasRecentScheduleEvent">
                   <div class="card-content">
                     <div class="title item">
-                     {{recentScheduleEvent.subject}}
+                      {{recentScheduleEvent.subject}}
                     </div>
                     <div class="conference-id item">
                       ID : {{recentScheduleEvent.conferenceNumber}}
                     </div>
                     <div class="duration item">
-                     {{recentScheduleEvent.startTime}} ~ {{recentScheduleEvent.expiryTime}}
+                      {{recentScheduleEvent.startTime}} ~ {{recentScheduleEvent.expiryTime}}
+                      <a-button @click="goMeetingDetail">详情</a-button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="recent-meeting-footer" @click="goSchedule">
-                查看会议日程
+              <div class="recent-meeting-footer" v-if="hasRecentScheduleEvent" @click="join">
+                加入会议
               </div>
             </div>
 
           </div>
         </div>
+      </div>
+
 
     </div>
     <div class="flex flex-grow"></div>
@@ -116,9 +118,11 @@ export default {
 
       if (deltatime > 0) return '会议进行中';
 
-      const distance = deltatime / 1000 / 60;
+      const distance = Math.abs(Math.floor(deltatime / 1000 / 60));
 
-      return `下一场会议${Math.abs(Math.floor(distance))}分钟后开始`;
+      if (distance > 60) return '';
+
+      return `${distance}分钟后开始`;
     },
     hasRecentScheduleEvent() {
       return Object.keys(this.recentScheduleEvent).length > 0;
@@ -164,7 +168,19 @@ export default {
         initialAudio : true,
       });
     },
+    goMeetingDetail() {
+      this.$router.push({
+        name  : 'schedule',
+        query : {
+          planId : this.recentScheduleEvent['@planId'],
+        },
+      });
+      this.$dispatch('main.setCurrentSidebar', { name: 'schedule' });
+    },
 
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
   },
 };
 </script>
@@ -189,125 +205,137 @@ export default {
       padding: 40px;
       background: #fff;
       border: 1px solid #E0E0E0;
-      .left {
+      justify-content: center;
+      align-items: center;
+      .nav-card-content {
         display: flex;
-        width: 40%;
+        width: 100%;
         height: 100%;
-        flex-direction: column;
+        max-width: 1050px;
+        max-height: 550px;
         justify-content: center;
-        align-items: flex-end;
-        padding: 20px 0 20px 20px;
-        .menu {
-          min-width: 200px;
-          min-height: 200px;
-          width: 80%;
-          height: 80%;
-          border-radius: 4px;
-          color: #FFFFFF;
+        .left {
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          &:hover {
-            transform: scale(1.3);
-            transition: transform 0.3s;
-          }
-          .icon {
-            font-size: 60px;
-          }
-          .title {
-            font-size: 16px;
-            margin-top: 10px;
-          }
-        }
-      }
-      .right {
-        display: flex;
-        width: 60%;
-        height: 100%;
-        padding: 20px;
-        .meeting-info {
-          width: 100%;
           height: 100%;
-          display: flex;
           flex-direction: column;
-          border-radius: 4px;
-          overflow: hidden;
-          .date-wrap {
-            width: 100%;
-            height: calc(100% - 20px);
-            background-image: url("../../../assets/bg_meeting.png");
-            background-size: cover;
-            .date-content {
-              width: 100%;
-              height: 100%;
-              color: #FFFFFF;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              .time {
-                font-size: 38px;
-                margin-bottom: 10px;
-              }
-              .date {
-                font-size: 18px;
-              }
-            }
-          }
-          .recent-meeting {
-            width: 100%;
-            height: calc(100% + 20px);
-            border: 1px solid #e0e0e0;
+          justify-content: center;
+          align-items: flex-end;
+          padding: 20px 0 20px 20px;
+          .menu {
+            min-width: 200px;
+            min-height: 200px;
+            width: 80%;
+            height: 80%;
+            border-radius: 4px;
+            color: #FFFFFF;
             display: flex;
             flex-direction: column;
-            .recent-meeting-header {
-              height: 60px;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 0 20px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            &:hover {
+              opacity: 0.8;
             }
-            .recent-meeting-content {
-              height: calc(100% - 108px);
-              padding: 0 20px;
-              .card {
-                height: 90px;
+            .icon {
+              font-size: 60px;
+            }
+            .title {
+              font-size: 16px;
+              margin-top: 10px;
+            }
+          }
+        }
+        .right {
+          display: flex;
+          width: 60%;
+          height: 100%;
+          padding: 20px;
+          .meeting-info {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 4px;
+            overflow: hidden;
+            .date-wrap {
+              width: 100%;
+              height: calc(100% - 20px);
+              background-image: url("../../../assets/bg_meeting.png");
+              background-size: cover;
+              .date-content {
                 width: 100%;
-
+                height: 100%;
+                color: #FFFFFF;
                 display: flex;
                 flex-direction: column;
-                background: #FFFFFF;
-                box-shadow: 0 2px 8px 0 rgba(0,0,0,0.12);
-                border-radius: 4px;
                 justify-content: center;
-                .card-content {
-                  border-left: 4px solid #4A5FC4;
-                  display: flex;
-                  flex-direction: column;
-                  .item {
-                    align-items: center;
-                    display: flex;
-                    height: 24px;
-                    padding-left: 10px;
-                  }
+                align-items: center;
+                .time {
+                  font-size: 38px;
+                  margin-bottom: 10px;
+                }
+                .date {
+                  font-size: 18px;
                 }
               }
             }
-            .recent-meeting-footer {
-              height: 48px;
-              border-top: 1px solid #e0e0e0;
+            .recent-meeting {
+              width: 100%;
+              height: calc(100% + 20px);
+              border: 1px solid #e0e0e0;
               display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 16px;
-              cursor: pointer;
-            }
+              flex-direction: column;
+              .recent-meeting-header {
+                height: 60px;
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+                .start-time {
+                  color: #4A5FC4;
+                  margin-left: 8px;
+                }
+              }
+              .recent-meeting-content {
+                height: calc(100% - 108px);
+                padding: 0 10px;
+                .title {
+                  font-size: 16px;
+                }
+                .conference-id {
+                  font-size: 12px;
+                }
+                .duration {
+                  font-size: 12px;
+                  display: flex;
+                  justify-content : space-between;
+                  .ant-btn-default {
+                    padding: 6px;
+                  }
+                }
+                .item {
+                  align-items: center;
+                  display: flex;
+                  padding:0 10px 0 10px;
+                  height: 28px;
+                }
+              }
+              .recent-meeting-footer {
+                height: 48px;
+                border-top: 1px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                cursor: pointer;
+                background: #4A5FC4;
+                color: #ffffff;
+              }
 
+            }
           }
         }
       }
+
     }
   }
 </style>

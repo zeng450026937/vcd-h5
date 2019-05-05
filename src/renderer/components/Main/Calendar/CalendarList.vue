@@ -49,6 +49,11 @@ export default {
     props : [ 'currentEvent', 'currentDateEvents' ],
   },
   mounted() {
+    const { planId } = this.$route.query;
+
+    if (this.$route.name === 'schedule' && planId) {
+      this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
+    }
   },
   methods : {
     clickCalendar(event) {
@@ -65,6 +70,7 @@ export default {
       }
     },
   },
+
 };
 </script>
 

@@ -62,7 +62,7 @@ export default {
   },
   methods : {
     disabledStartDate(startValue) {
-      startValue = moment(`${startValue.format('YYYY-MM-DD')} 00:00`)
+      startValue = moment(`${startValue.format('YYYY-MM-DD')} 00:00`);
       const preWeek = new Date().setHours(-7 * 24);
       const afterWeek = new Date().setHours(7 * 24);
 
@@ -98,6 +98,13 @@ export default {
         }
       });
     },
+  },
+  mounted() {
+    const { planId } = this.$route.query;
+
+    if (this.$route.name === 'schedule' && planId) {
+      this.onToday();
+    }
   },
   watch : {
     eventList : {
