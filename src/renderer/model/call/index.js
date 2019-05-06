@@ -55,6 +55,8 @@ model.provide({
       return call.connect('send', ctx.payload.options).then(() => {
         this.prepareVideoCall = false;
         this.isVideoCall = ctx.payload.options.video;
+        this.callType = this.isVideoCall ? 'video' : 'audio';
+
         const setting = this.$getVM('setting');
 
         if (setting.enableLocalVideo) return;

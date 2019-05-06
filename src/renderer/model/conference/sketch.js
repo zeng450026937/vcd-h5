@@ -100,10 +100,15 @@ sketch.provide({
         Object.assign(this, initialDate());
         this.$getVM('call').callType = 'video';
       }
-      else if (val === 'connected' && rtc.conference.mediaChannel.channel._isRefer) {
-        const call = this.$getVM('call');
+      else if (val === 'connected') {
+        const { _isRefer, _isTransform, callInfo } = rtc.conference.mediaChannel.channel;
 
-        this.isVideoConference = call.callType === 'video';
+        if (_isRefer && !_isTransform) {
+          this.isVideoConference = this.$getVM('call').callType === 'video';
+        }
+        else if (_isTransform) {
+          this.isVideoConference = callInfo.video;
+        }
       }
     },
     isVideoConference(val) { // TODO 失败了呢? -- 返回值
