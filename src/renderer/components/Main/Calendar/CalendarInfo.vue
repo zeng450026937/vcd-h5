@@ -119,7 +119,7 @@
         <a-button class="w-1/3 mx-2" type="primary"
                   :disabled="!status.isReady"
                   :title="status.isReady ? '视频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
-                  @click="enterMeeting">
+                  @click="videoEnter">
           <a-iconfont type="icon-shipin"/>
           视频加入
         </a-button>
@@ -232,20 +232,16 @@ export default {
         video        : true,
         audio        : true,
       };
-      this.$dispatch('meeting.joinMeeting').then(() => {
+      
+      return this.$dispatch('meeting.joinMeeting');
+    },
+    videoEnter() {
+      this.enterMeeting().then(() => {
         this.isVideoConference = true;
       });
     },
     audioEnter() {
-      this.meetingRecord = {
-        number       : this.currentEvent.conferenceNumber,
-        pin          : this.currentEvent.attendeePin,
-        initialVideo : true,
-        initialAudio : true,
-        video        : false,
-        audio        : true,
-      };
-      this.$dispatch('meeting.joinMeeting').then(() => {
+      this.enterMeeting().then(() => {
         this.isVideoConference = false;
       });
     },

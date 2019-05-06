@@ -18,7 +18,7 @@ model.provide({
       isVideoCall      : true, // 标志当前会话
       prepareVideoCall : false, // 将要进行的会话
       callNumber       : '',
-      callType         : 'video',
+      callType         : 'video', // for upgrade
       mediaStatus      : { audio: false, video: false },
     };
   },

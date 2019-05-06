@@ -1,5 +1,5 @@
 <template>
-  <div id="main-nav-mini-video" class="bg-red-light">
+  <div id="main-nav-mini-video">
     <div class="relative main-nav-mini-video-inner" style="border: 1px solid #1D212F;">
       <div class="h-8 flex items-center absolute w-full z-10" style="background: rgba(0,0,0,0.65);">
         <span class="text-white text-xs mx-3 truncate leading-tight">{{conferenceTitle || '暂无'}}</span>
@@ -195,8 +195,8 @@ export default {
 <style lang="less">
 #main-nav-mini-video {
   .main-nav-mini-video-inner {
-    width: 240px;
-    height: 136px;
+    width: 100%;
+    min-height: 136px;
   }
   .video-controls {
     top: 100%;

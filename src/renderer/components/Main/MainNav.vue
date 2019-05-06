@@ -81,8 +81,8 @@ export default {
 
 <style lang="less" scoped>
   #main-nav {
-    min-width: 240px;
-    max-width: 260px;
+    /*min-width: 240px;*/
+    /*max-width: 320px;*/
     width: 100%;
     .global-search-content {
       height: calc( 100% - 56px);

@@ -98,6 +98,7 @@ sketch.provide({
       if (val === 'disconnected') { // 退出会议之后重置当前状态
         this.deviceExceptionNotice.close();
         Object.assign(this, initialDate());
+        this.$getVM('call').callType = 'video';
       }
       else if (val === 'connected' && rtc.conference.mediaChannel.channel._isRefer) {
         const call = this.$getVM('call');

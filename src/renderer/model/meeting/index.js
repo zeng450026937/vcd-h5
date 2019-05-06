@@ -150,6 +150,9 @@ meeting.provide({
 });
 
 meeting.use(async(ctx, next) => {
+  if ([ 'joinMeeting', 'meetnow', 'anonymousJoin' ].indexOf(ctx.method) !== -1) {
+    ctx.getVM('call').callType = 'video';
+  }
   if ((ctx.method === 'joinMeeting' || ctx.method === 'meetnow')
     && (!rtc.call.disconnected
       || (!rtc.conference.disconnected && !rtc.conference.connectFailed))) {

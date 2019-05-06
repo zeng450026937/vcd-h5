@@ -4,11 +4,13 @@
 
     <div class="h-full flex relative layout-main-content">
 
-      <router-view v-if="showNav" name="nav"/>
+      <div class="nav-content normal:w-nav-normal middle:w-nav-middle max:w-nav-max">
+        <router-view v-if="showNav" name="nav"/>
+      </div>
 
       <router-view/>
 
-      <div class="flex flex-col bg-under-painting mini-window-content absolute">
+      <div class="bg-under-painting mini-window-content absolute normal:w-nav-normal middle:w-nav-middle max:w-nav-max">
         <main-nav-mini-video v-if="showMiniVideo"/>
         <main-nav-mini-call v-if="showMiniCall"/>
       </div>
