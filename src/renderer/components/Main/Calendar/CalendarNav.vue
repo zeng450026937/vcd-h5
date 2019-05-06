@@ -17,7 +17,7 @@
         </template>
       </plain-calendar>
       <div class="text-center text-xs text-indigo">
-        <span class="cursor-pointer" @click="onToday">回到今天</span>
+        <span class="cursor-pointer" @click="onToday">{{$t('schedule.backToday')}}</span>
       </div>
     </div>
     <div class="flex flex-col items-center mt-4 px-3">
@@ -25,7 +25,7 @@
                 class="h-9"
                 @click="reserveMeeting">
         <a-iconfont type="icon-yuyuehuiyi" class="text-base"/>
-        预约会议
+        {{$t('schedule.reservation')}}
       </a-button>
     </div>
   </a-layout>

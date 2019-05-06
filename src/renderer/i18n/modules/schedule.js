@@ -24,6 +24,8 @@ module.exports = {
       ended           : '当前会议已经结束',
       confirmDel      : '确定删除该会议',
       emptySchedule   : '暂无会议日程',
+      backToday       : '回到今天',
+      reservation     : '预约会议',
     },
   },
 };

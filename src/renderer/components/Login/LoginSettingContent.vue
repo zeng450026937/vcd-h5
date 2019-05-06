@@ -2,33 +2,33 @@
   <div id="login-setting-content" class="flex flex-col bg-white shadow w-full">
     <div class="flex flex-grow">
       <a-tabs defaultActiveKey="1" class="w-full">
-        <a-tab-pane tab="基本设置" key="1">
+        <a-tab-pane :tab="$t('login.basicSetting')" key="1">
           <div class="flex flex-col px-20 pt-10">
-            <span class="mb-3 leading-normal">服务器设置</span>
-            <a-input maxlength="64" v-model="tmpServer" placeholder='服务器地址'>
+            <span class="mb-3 leading-normal">{{$t('login.serverSetting')}}</span>
+            <a-input maxlength="64" v-model="tmpServer" :placeholder="$t('login.serverSetting')">
             </a-input>
             <div class="mt-4"></div>
           </div>
           <div class="flex h-full flex-col px-20">
-            <span class="mb-3 leading-normal">代理服务器设置</span>
-            <a-input  maxlength="64"  v-model="tmpProxy" placeholder='代理服务器地址'>
+            <span class="mb-3 leading-normal">{{$t('login.proxyServerSetting')}}</span>
+            <a-input  maxlength="64"  v-model="tmpProxy" :placeholder="$t('login.proxyServerAddress')">
             </a-input>
             <div class="mt-4"></div>
-            <a-input v-model="tmpProxyPort" placeholder='端口'>
+            <a-input v-model="tmpProxyPort" :placeholder="$t('login.port')">
             </a-input>
           </div>
         </a-tab-pane>
-        <a-tab-pane tab="关于" key="2">
+        <a-tab-pane :tab="$t('login.about')" key="2">
           <update-panel></update-panel>
         </a-tab-pane>
       </a-tabs>
     </div>
     <div class="flex justify-center h-12 border-t items-center">
       <a-button type="primary" style="width: 68px" @click="handlerEnsure">
-        确定
+        {{$t('login.button.confirm')}}
       </a-button>
       <a-button class="ml-4" style="width: 68px" @click="closeSetting">
-        取消
+        {{$t('login.button.cancel')}}
       </a-button>
     </div>
   </div>

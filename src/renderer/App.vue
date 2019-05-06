@@ -8,6 +8,7 @@
 
 <script>
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import enUS from 'ant-design-vue/lib/locale-provider/en_US';
 import { getLocale } from './proxy/main-process-proxy';
 
 export default {
@@ -22,10 +23,17 @@ export default {
       props : [ 'offLine' ],
     },
   ],
-  data() {
-    return {
-      locale : zhCN,
-    };
+  computed : {
+    locale() {
+      switch (this.language) {
+        case 'zh':
+          return zhCN;
+        case 'en':
+          return enUS;
+        default:
+          return zhCN;
+      }
+    },
   },
   methods : {},
   watch   : {

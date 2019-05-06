@@ -11,6 +11,7 @@ const common = require('./common');
 const home = require('./home');
 const date = require('./date');
 const schedule = require('./schedule');
+const empty = require('./empty');
 
 module.exports = [
   login,
@@ -26,4 +27,5 @@ module.exports = [
   home,
   date,
   schedule,
+  empty,
 ];

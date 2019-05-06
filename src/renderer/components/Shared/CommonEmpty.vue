@@ -25,10 +25,10 @@ export default {
     },
     tip() {
       const NOTICE_MAP = {
-        'empty-calendar' : '暂无日程信息',
-        'empty-record'   : '暂无通话记录',
-        'empty-contact'  : '暂无联系人信息',
-        'empty-result'   : '暂无搜索结果',
+        'empty-calendar' : this.$t('empty.calendar'),
+        'empty-record'   : this.$t('empty.record'),
+        'empty-contact'  : this.$t('empty.contact'),
+        'empty-result'   : this.$t('empty.search'),
       };
       
       return this.text || NOTICE_MAP[this.image];

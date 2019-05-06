@@ -13,9 +13,9 @@
         <div v-if="useOperationBar" class="flex items-center mr-4 text-xs" :class="color">
           <a-dropdown v-if="useDropDown" v-model="menuStatus" :trigger="['click']">
             <a-menu slot="overlay" @click="handleMenuClick">
-              <a-menu-item key="cloud" class="py-2 text-xs">云服务版</a-menu-item>
+              <a-menu-item key="cloud" class="py-2 text-xs">{{$t('login.header.cloud')}}</a-menu-item>
 
-              <a-menu-item key="yms" class="py-2 text-xs">企业版</a-menu-item>
+              <a-menu-item key="yms" class="py-2 text-xs">{{$t('login.header.yms')}}</a-menu-item>
             </a-menu>
             <span class="ant-dropdown-link cursor-pointer text-xs leading-tight flex items-center">
               {{ serverText }}
@@ -27,11 +27,11 @@
 
           <a-dropdown v-if="useDropDown" v-model="helpStatus" :trigger="['click']">
             <a-menu slot="overlay" @click.self="handleHelpClick">
-              <a-menu-item key="cloud" class="px-6" @click="goHelp">帮助</a-menu-item>
-              <a-menu-item key="yms" class="px-6" @click="reportIssues">反馈</a-menu-item>
+              <a-menu-item key="cloud" class="px-6" @click="goHelp">{{$t('login.header.help')}}</a-menu-item>
+              <a-menu-item key="yms" class="px-6" @click="reportIssues">{{$t('login.header.feedback')}}</a-menu-item>
             </a-menu>
             <a-iconfont type="icon-fankui"
-                        title="反馈"
+                        :title="$t('login.header.feedback')"
                     class="ant-dropdown-link mr-8 text-base h-full flex items-center"></a-iconfont>
           </a-dropdown>
 
@@ -88,7 +88,9 @@ export default {
   },
   computed : {
     serverText() {
-      return this.serverType === 'cloud' ? '云服务版' : '企业版';
+      return this.serverType === 'cloud'
+        ? this.$t('login.header.cloud')
+        : this.$t('login.header.yms');
     },
   },
   methods : {

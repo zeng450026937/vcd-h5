@@ -1,11 +1,11 @@
 <template>
   <a-layout class="feedback-modal">
     <a-modal
-        title="意见反馈"
+        :title="$t('feedback.title')"
         v-model="visible"
         wrapClassName="feedback-modal"
-        okText="提交"
-        cancelText="取消"
+        :okText="$t('feedback.submit')"
+        :cancelText="$t('feedback.cancel')"
         @ok="submitFeedBack"
         @cancel="close"
         :okButtonProps="{props: {
@@ -15,16 +15,16 @@
     >
       <div class="flex flex-col">
         <div>
-          <div class="feedback-subtitle">问题描述 （必填）</div>
+          <div class="feedback-subtitle">{{$t('feedback.problemDescription')}}</div>
           <a-textarea
               maxlength="300"
               v-model="problemDescribe"
-              placeholder="请输入详细的问题描述"
+              :placeholder="$t('feedback.inputDescribe')"
               :autosize="{ minRows: 4, maxRows: 6 }"
           ></a-textarea>
         </div>
         <div class="mt-2 feedback-subtitle" v-if="useUploadImg">
-          <div>上传图片（可选）</div>
+          <div>{{$t('feedback.uploadImage')}}</div>
         </div>
         <div class="mt-1" v-if="useUploadImg">
           <a-upload
@@ -45,24 +45,26 @@
           <!--<a-input placeholder="请输入联系方式"/>-->
         <!--</div>-->
         <div>
-          <div class="feedback-subtitle">联系方式 （选填）</div>
+          <div class="feedback-subtitle">{{$t('feedback.contactWay')}}</div>
           <a-input
                   v-model="contactInfo"
-                  placeholder="请输入联系方式"
+                  :placeholder="$t('feedback.inputContactWay')"
           ></a-input>
         </div>
         <div class="mt-5 mb-12">
-          <a-checkbox :checked="isUploadLog" @change="isUploadLog = !isUploadLog">上传错误日志，帮助我们更好的定位错误</a-checkbox>
+          <a-checkbox :checked="isUploadLog" @change="isUploadLog = !isUploadLog">
+            {{$t('feedback.uploadLog')}}
+          </a-checkbox>
         </div>
         <div class="feedback-contact mt-8">
           <div class="tel">
-            电话客服：0592-570-2000
+            {{$t('feedback.customService')}}
           </div>
           <div class="website mb-4">
-            官方网站：www.yealink.com.cn
+            {{$t('feedback.officialWebsite')}}
           </div>
           <div class="support">
-            如需技术支持，请访问<a href="javascript:" @click="goHelp">帮助中心</a>
+            {{$t('feedback.helpDescript')}}<a href="javascript:" @click="goHelp">{{$t('feedback.helpCenter')}}</a>
           </div>
         </div>
       </div>
@@ -111,7 +113,7 @@ export default {
     },
     check() {
       if (!this.problemDescribe) {
-        this.$message.info('请输入问题描述！');
+        this.$message.info(this.$t('feedback.inputDescribe'));
 
         return false;
       }
@@ -171,7 +173,7 @@ export default {
         this.close();
       }
       catch (error) {
-        this.$message.info('上报反馈信息失败！');
+        this.$message.info(this.$t('feedback.uploadFailed'));
         this.uploading = false;
       }
     },

@@ -6,7 +6,7 @@
           <div class="flex items-center h-full px-4 text-base">
             <span>{{$t('contact.local.describe')}}</span>
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
-                        :title="$t('contact.local.add')"
+                        :title="$t('contact.local.title.add')"
                         type="icon-tianjialianxiren"
                         @click="addLocalContact"></a-iconfont>
           </div>

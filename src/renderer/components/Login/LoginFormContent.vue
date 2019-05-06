@@ -19,8 +19,8 @@
             <template v-if="searchedAccounts.length > 0" slot="dataSource">
               <a-select-opt-group>
                 <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                  <span>历史记录</span>
-                  <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
+                  <span>{{$t('login.history')}}</span>
+                  <span class="text-red cursor-pointer" @click="clearAccount">{{$t('login.clear')}}</span>
                 </div>
                 <a-select-option v-for="item in searchedAccounts"
                                  :key="item.account" :value="item.account" class="group">
@@ -36,7 +36,7 @@
                 </a-select-option>
               </a-select-opt-group>
             </template>
-            <a-input maxlength="64" placeholder='电话或电子邮件'>
+            <a-input maxlength="64" :placeholder="$t('login.placeholder.phoneOrEmail')">
               <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
             </a-input>
           </a-auto-complete>
@@ -48,14 +48,14 @@
               maxlength="64"
               @keypress="passwordInputted"
               type="password"
-              placeholder='密码'>
+              :placeholder="$t('login.placeholder.password')">
             <div slot="prefix">
               <a-tooltip
                   :visible="isCapsLockOn"
                   trigger="focus"
                   placement="bottomLeft">
                 <template slot="title">
-                  <span>大写锁定已打开</span>
+                  <span>{{$t('login.capitalLocked')}}</span>
                 </template>
                 <a-iconfont type='icon-mima' class="text-base text-black9"/>
               </a-tooltip>
@@ -66,22 +66,22 @@
           <a-checkbox class="text-xs text-black6"
                       :checked="rmbPassword"
                       @change="rmbPassword = !rmbPassword"
-          >记住密码
+          >{{$t('login.rememberPassword')}}
           </a-checkbox>
           <a-checkbox class="text-xs text-black6"
                       :checked="autoLogin"
                       @change="autoLogin = !autoLogin"
-          >自动登录
+          > {{$t('login.autoLogin')}}
           </a-checkbox>
         </div>
 
         <div class="mt-9">
           <div class="flex">
             <div class="w-1/2 mr-2">
-              <a-button type="primary" block @click="handleLogin">登录</a-button>
+              <a-button type="primary" block @click="handleLogin">{{$t('login.login')}}</a-button>
             </div>
             <div class="w-1/2 ml-2">
-              <a-button @click="toMeeting" block>加入会议</a-button>
+              <a-button @click="toMeeting" block>{{$t('login.join')}}</a-button>
             </div>
           </div>
         </div>
@@ -91,10 +91,10 @@
       <div class="text-xs text-center text-black6 mt-48px h-28px">
         <template v-if="serverType === 'cloud'">
           <span class="cursor-pointer leading-tight"
-                @click="toForget">忘记密码</span>
+                @click="toForget">{{$t('login.forgetPassword')}}</span>
           <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
           <span class="cursor-pointer leading-tight"
-                @click="toRegister">注册账号</span>
+                @click="toRegister">{{$t('login.regist')}}</span>
           <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
         </template>
         <a-tooltip
@@ -102,7 +102,7 @@
             placement="bottom"
             overlayClassName="first-start-tooltip">
           <template slot="title">
-            <span>首次登陆请先设置服务器</span>
+            <span>{{$t('login.firstLogin')}}</span>
           </template>
           <a-badge v-if="hasNewVersion">
               <span slot="count"
@@ -110,9 +110,13 @@
                     style="transform: translate(100%, -50%);font-size: 10px;width: 31px;">
                 <span class="leading-tightest">NEW</span>
               </span>
-            <span class="cursor-pointer leading-tight text-xs" @click="openSetting">服务器设置</span>
+            <span class="cursor-pointer leading-tight text-xs" @click="openSetting">
+              {{$t('login.serverSetting')}}
+            </span>
           </a-badge>
-          <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">服务器设置</span>
+          <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">
+            {{$t('login.serverSetting')}}
+          </span>
         </a-tooltip>
       </div>
 
@@ -120,10 +124,10 @@
     </div>
     <div class="login-footer flex  items-center">
       <div class="text-xs flex text-center leading-tight text-black9">
-        点击登录则代表您同意
-        <span class="text-indigo-light cursor-pointer">《用户协议》</span>
-        和
-        <span class="text-indigo-light cursor-pointer">《隐私政策》</span>
+        {{$t('login.clickAgree')}}
+        <span class="text-indigo-light cursor-pointer">{{$t('login.userProtocol')}}</span>
+        {{$t('login.and')}}
+        <span class="text-indigo-light cursor-pointer">{{$t('login.privacyPolicy')}}</span>
       </div>
     </div>
   </div>

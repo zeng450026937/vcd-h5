@@ -264,7 +264,11 @@ export default {
       this.dSearch(val.trim());
     },
     initRawAccounts() {
-      this.rawAccounts = (this.$storage.query(`MEETING_INFO_RECORD_${this.$rtc.account.username}`) || []); // 得到最初的登陆历史记录
+      let accounts = this.$storage.query(`MEETING_INFO_RECORD_${this.$rtc.account.username}`) || [];
+
+      if (!Array.isArray(accounts)) accounts = [];
+
+      this.rawAccounts = accounts; // 得到最初的登陆历史记录
       this.modifyAccounts();
     },
     modifyAccounts() {
