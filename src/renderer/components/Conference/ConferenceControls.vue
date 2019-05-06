@@ -28,7 +28,9 @@
                 shape="circle"
                 class="control-btn"
                 :class="{'bg-main-theme': hasLocalScreenStream}"
-                :title="hasLocalScreenStream ? '正在分享辅流' : $t('conversation.controls.screenShare')"
+                :title="hasLocalScreenStream
+                  ? $t('conversation.controls.screenSharing') :
+                  $t('conversation.controls.screenShare')"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -79,7 +81,6 @@ import ConferenceLeavingModal from './ConferenceLeavingModal.vue';
 import ScreenShareModal from './ScreenShareModal.vue';
 import ConferencePlateModal from './ConferencePlateModal.vue';
 import ConferenceMessage from './ConferenceMessage.vue';
-import { $t } from '../../i18n';
 
 export default {
   name       : 'ConferenceControls',
@@ -131,18 +132,18 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: $t('conversation.controls.turnOnMicrophone') },
-        unblock    : { icon: 'icon-maikefeng', color: '', title: $t('conversation.controls.turnOffMicrophone') },
-        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: $t('conversation.controls.cancelRaiseHangs') },
-        hand       : { icon: 'icon-jushou', color: '', title: $t('conversation.controls.raiseHangs') },
+        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnMicrophone') },
+        unblock    : { icon: 'icon-maikefeng', color: '', title: this.$t('conversation.controls.turnOffMicrophone') },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: this.$t('conversation.controls.cancelRaiseHangs') },
+        hand       : { icon: 'icon-jushou', color: '', title: this.$t('conversation.controls.raiseHangs') },
       };
 
       return iconMap[this.$model.conference.audioStatus || 'unblock'];
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: '', title: $t('conversation.controls.turnOffCamera') },
-        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: $t('conversation.controls.turnOnCamera') },
+        unblock : { icon: 'icon-shipin', color: '', title: this.$t('conversation.controls.turnOffCamera') },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnCamera') },
       };
 
       return iconMap[this.$model.conference.videoStatus];

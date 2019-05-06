@@ -21,7 +21,7 @@
             </a-select-option>
           </a-select>
           <a-input v-else
-                   value="无设备"
+                   :value="$t('conversation.setting.noDevice')"
                    disabled read-only
                    class="pl-4 mt-2 select-none text-black9 bg-white"/>
           <volume-progress />
@@ -42,7 +42,7 @@
             </a-select-option>
           </a-select>
           <a-input v-else
-                   value="无设备"
+                   :value="$t('conversation.setting.noDevice')"
                    disabled read-only
                    class="pl-4 mt-2 select-none text-black9 bg-white"/>
           <div class="mt-2 flex items-center text-indigo">

@@ -18,7 +18,7 @@
             </span>
             <span v-else>{{item.displayText}}</span>
           </span>
-          <span v-if="item.isCurrentUser()">（我）</span>
+          <span v-if="item.isCurrentUser()">（{{$t('conversation.member.me')}}）</span>
         </div>
         <span class="item-phone flex">
           <span v-if="displayPhone.indexOf(filterText) > -1" class="flex">
@@ -31,7 +31,7 @@
       </div>
       <div v-if="!isApplyGroup" class="group">
         <a-iconfont v-if="item.isSharing()"
-                    title="正在分享辅流"
+                    :title="$t('conversation.member.isSharing')"
                     type="icon-fuliu"
                     class="ml-4 text-base text-indigo"/>
 
@@ -53,7 +53,7 @@
                     overlayClassName="member-list-popover">
           <a class="ant-dropdown-link" href="#">
             <a-iconfont v-if="hasPermission"
-                        title="更多"
+                        :title="$t('conversation.controls.more')"
                         type="icon-gengduo1"
                         class="ml-4 text-indigo cursor-pointer text-base "/>
           </a>
@@ -71,19 +71,19 @@
 
             <a-menu-item v-if="hasSetAsWaiting" key="2" @click="setWaiting">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
-                <span class="text-xs">设为等待</span>
+                <span class="text-xs">{{$t('conversation.member.toWaiting')}}</span>
               </div>
             </a-menu-item>
 
             <a-menu-item v-if="hasDeviceInfo" key="3" @click="showDeviceInfo">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
-                <span class="text-xs">设备详情</span>
+                <span class="text-xs">{{$t('conversation.member.deviceInfo')}}</span>
               </div>
             </a-menu-item>
 
             <a-menu-item v-if="hasKickConference" key="4" @click="isShowKickOperation = true">
               <div class="h-8 px-3 w-full popover-content-item flex items-center">
-                <span class="text-xs">移出会议</span>
+                <span class="text-xs">{{$t('conversation.member.kickFromMeeting')}}</span>
               </div>
             </a-menu-item>
 
@@ -93,11 +93,15 @@
       <div v-else-if="currentIsPresenter">
         <a-iconfont type="icon-tongguo"
                     class="ml-4 text-base text-indigo cursor-pointer"
-                    :title="isAudioApplicant ? '允许发言' : '允许入会'"
+                    :title="isAudioApplicant
+                    ? $t('conversation.member.allowSpeak')
+                    : $t('conversation.member.allowConference')"
                     @click="handleApply(true)"/>
         <a-iconfont type="icon-yichu"
                     class="ml-4 text-base text-red cursor-pointer"
-                    :title="isAudioApplicant ? '拒绝发言' : '拒绝入会'"
+                    :title="isAudioApplicant
+                    ? $t('conversation.member.refuseSpeak')
+                    : $t('conversation.member.refuseConference')"
                     @click="handleApply(false)"/>
       </div>
     </div>
@@ -106,17 +110,17 @@
          style="height: 180px;">
       <div>
         <div class="flex h-8 items-center border-b px-4 text-xs leading-tight">
-          <span>终端类型：</span>
+          <span>{{$t('conversation.statistics.deviceType')}}：</span>
           <div class="flex flex-grow w-1 truncate">
             <span class="truncate">Yealink VC Desktop</span>
           </div>
           <a-iconfont type="icon-shuaxin"
-                      title="刷新设备信息"
+                      :title="$t('conversation.statistics.refreshDeviceInfo')"
                       class="text-base cursor-pointer text-black9"
                       :spin="isUpdating"
                       @click="updateDeviceInfo"></a-iconfont>
           <a-iconfont type="icon-guanbi"
-                      title="关闭设备详情"
+                      :title="$t('conversation.statistics.closeDeviceInfo')"
                       class="text-base cursor-pointer text-black9 ml-4"
                       @click="isShowDeviceInfo = false"></a-iconfont>
         </div>
@@ -124,20 +128,20 @@
       <div class="w-full h-full flex px-4 py-2 text-xs border-b">
         <div class="flex flex-col w-1/3 justify-between">
           <span class="opacity-0">/</span>
-          <span>带宽</span>
-          <span>分辨率</span>
-          <span>帧率</span>
-          <span>编码率</span>
+          <span>{{$t('conversation.statistics.bitrate')}}</span>
+          <span>{{$t('conversation.statistics.ratio')}}</span>
+          <span>{{$t('conversation.statistics.frameRate')}}</span>
+          <span>{{$t('conversation.statistics.codec')}}</span>
         </div>
         <div class="flex flex-col w-1/3 justify-between">
-          <span>接收</span>
+          <span>{{$t('conversation.statistics.send')}}</span>
           <span>{{deviceInfo.recv.bitrate}}</span>
           <span>{{deviceInfo.recv.ratio}}</span>
           <span>{{deviceInfo.recv.frameRate}}</span>
           <span>{{deviceInfo.recv.codec}}</span>
         </div>
         <div class="flex flex-col w-1/3 justify-between">
-          <span>发送</span>
+          <span>{{$t('conversation.statistics.receive')}}</span>
           <span>{{deviceInfo.send.bitrate}}</span>
           <span>{{deviceInfo.send.ratio}}</span>
           <span>{{deviceInfo.send.frameRate}}</span>
@@ -150,10 +154,10 @@
          class="flex w-full bg-under-painting justify-center items-center"
          style="height: 44px;">
       <a-button type="primary" class="h-7 w-12 p-0 text-xs" @click="applyAudioApply(true)">
-        <span style="letter-spacing: 0;margin-right: 0;">同意</span>
+        <span style="letter-spacing: 0;margin-right: 0;">{{$t('common.controls.allow')}}</span>
       </a-button>
       <a-button class="h-7 w-12 ml-3 p-0 text-xs" @click="applyAudioApply(false)">
-        <span style="letter-spacing: 0;margin-right: 0;">拒绝</span>
+        <span style="letter-spacing: 0;margin-right: 0;">{{$t('common.controls.refuse')}}</span>
       </a-button>
     </div>
 
@@ -161,10 +165,10 @@
          class="flex w-full bg-under-painting justify-center items-center"
          style="height: 44px;">
       <a-button type="primary" class="h-7 w-12 p-0 text-xs" @click="kickFromMeeting">
-        <span style="letter-spacing: 0;margin-right: 0;">确定</span>
+        <span style="letter-spacing: 0;margin-right: 0;">{{$t('common.controls.ensure')}}</span>
       </a-button>
       <a-button class="h-7 w-12 ml-3 p-0 text-xs" @click="isShowKickOperation = false">
-        <span style="letter-spacing: 0;margin-right: 0;">取消</span>
+        <span style="letter-spacing: 0;margin-right: 0;">{{$t('common.controls.cancel')}}</span>
       </a-button>
     </div>
 
@@ -268,14 +272,27 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red', title: '打开麦克风' },
-        unblock    : { icon: 'icon-maikefeng', color: 'indigo', title: '禁言麦克风' },
-        unblocking : { icon: 'icon-quxiaojushou', color: 'blue', title: '取消举手' },
-        hand       : { icon: 'icon-jushou', color: 'indigo', title: '举手' },
+        block : {
+          icon  : 'icon-maikefengjinyong',
+          color : 'red',
+          title : this.$t('conversation.controls.turnOnMicrophone'),
+        },
+        unblock : { icon  : 'icon-maikefeng',
+          color : 'indigo',
+          title : this.$t('conversation.controls.turnOffMicrophone') },
+        unblocking : { icon  : 'icon-quxiaojushou',
+          color : 'blue',
+          title : this.$t('conversation.controls.cancelRaiseHangs') },
+        hand : { icon  : 'icon-jushou',
+          color : 'indigo',
+          title : this.$t('conversation.controls.raiseHangs') },
       };
 
       if (this.currentIsPresenter) {
-        iconMap.unblocking = { icon: 'icon-jushou', color: 'green', title: '同意/拒绝' };
+        iconMap.unblocking = {
+          icon  : 'icon-jushou',
+          color : 'green',
+          title : this.$t('common.controls.allowOrRefuse') };
       }
       const iconStatus = iconMap[this.$model.conference.getUserAudioStatus(this.item)];
 
@@ -286,8 +303,12 @@ export default {
 
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: 'indigo', title: '禁用摄像头' },
-        block   : { icon: 'icon-shipinjinyong', color: 'red', title: '打开摄像头' },
+        unblock : { icon  : 'icon-shipin',
+          color : 'indigo',
+          title : this.$t('conversation.controls.turnOffCamera') },
+        block : { icon  : 'icon-shipinjinyong',
+          color : 'red',
+          title : this.$t('conversation.controls.turnOnCamera') },
       };
       const iconStatus = iconMap[this.$model.conference.getUserVideoStatus(this.item)];
 
@@ -296,14 +317,14 @@ export default {
       return iconStatus;
     },
     setAsPresenterText() {
-      return this.item.isPresenter() ? '设为访客' : '设为主持人';
+      return this.item.isPresenter()
+        ? this.$t('conversation.controls.toVisitor')
+        : this.$t('conversation.controls.toPresenter');
     },
     setAsSpeakerText() {
-      if (this.item.isDemonstrator()) {
-        return '取消演讲者';
-      }
-
-      return '设为演讲者';
+      return this.item.isDemonstrator()
+        ? this.$t('conversation.controls.cancelSpeaker')
+        : this.$t('conversation.controls.toSpeaker');
     },
   },
   methods : {
@@ -390,7 +411,7 @@ export default {
         this.deviceInfo.send.codec = videoInfo.send.codec;
         this.isUpdating = false;
       }).catch(() => {
-        this.$message.error('获取失败');
+        this.$message.error(this.$t('conversation.statistics.message.fetchFailed'));
         this.isUpdating = false;
       });
     },

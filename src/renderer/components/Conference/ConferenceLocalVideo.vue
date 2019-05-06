@@ -23,18 +23,22 @@
         <div class="flex px-4 justify-end pt-2">
           <a-iconfont v-if="current !== 0"
                       :type="current === 1 ? 'icon-fangda' : 'icon-suoxiao'"
-                      :title="current === 1 ? '放大' : '缩小'"
+                      :title="current === 1
+                        ? $t('common.controls.enlarge')
+                        : $t('common.controls.shrink')"
                       class="text-base text-white"
                       @click="switchShrinkOrExpand"/>
           <a-iconfont :type="current === 0 ? 'icon-zhankai' : 'icon-yincang'"
-                      :title="current === 0 ? '展开' : '隐藏'"
+                      :title="current === 0
+                        ? $t('common.controls.expand')
+                        : $t('common.controls.hide')"
                       class="text-base text-white ml-4"
                       @click="switchMaxOrMin"/>
         </div>
       </div>
       <div v-if="current === 0"
            class="video-title h-full flex items-center text-white mx-4">
-        <span class="z-10 text-xs">本地视频</span>
+        <span class="z-10 text-xs">{{$t('conversation.main.localVideo')}}</span>
       </div>
     </template>
   </div>

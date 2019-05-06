@@ -10,7 +10,11 @@
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5 opacity-50">{{isVideoCall ? '视频通话' : '音频通话'}}</span>
+        <span class="display-name mt-5 opacity-50"
+        >{{isVideoCall
+          ? $t('conversation.main.videoCall')
+          : $t('conversation.main.audioCall')}}
+        </span>
       </div>
       <div v-else-if="!showVideo || prepareVideoCall"
            slot="content"
@@ -21,7 +25,7 @@
             }">
         <a-avatar :size="160" class="text-3xl border-8">{{this.nickName}}</a-avatar>
         <div class="mt-5 w-full truncate display-name px-4">
-          <span class="max-h-full">正在呼叫 </span>
+          <span class="max-h-full">{{$t('conversation.title.calling')}} </span>
           <span class="max-w-1/2">{{this.userName}}</span>
           <span> …</span>
         </div>
@@ -124,7 +128,7 @@ export default {
       handler(val) {
         if (val) {
           this.step1Timer = setTimeout(() => {
-            this.connectNotice = this.$message.info('对方可能暂时不在或设备静音，建议稍后再次尝试！', 0);
+            this.connectNotice = this.$message.info(this.$t('conversation.tip.notOnLine'), 0);
           }, 10000);
           this.step2Timer = setTimeout(() => {
             if (typeof this.connectNotice === 'function') {
@@ -132,7 +136,7 @@ export default {
               this.connectNotice = null;
             }
             if (this.isConnecting) {
-              this.connectNotice = this.$message.info('对方长时间未接听，请稍后重试！', 0);
+              this.connectNotice = this.$message.info(this.$t('conversation.tip.willHangup'), 0);
               this.step3Timer = setTimeout(() => {
                 if (!this.$rtc.call.connected) {
                   this.$rtc.call.disconnect();

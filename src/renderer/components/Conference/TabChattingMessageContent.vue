@@ -17,7 +17,9 @@
                       :class="{'text-indigo': !message.isPrivate || message.type === 'send'}">
                   {{message.to}}
                 </span>
-                <span v-if="!message.toAll" class="text-red-light whitespace-no-wrap mx-1">(私聊)</span>
+                <span v-if="!message.toAll"
+                      class="text-red-light whitespace-no-wrap mx-1"
+                >({{$t('conversation.chat.privateChat')}})</span>
               </div>
               <span class="text-black6">{{message.date}}</span>
             </div>
@@ -41,8 +43,8 @@ export default {
   data() {
     return {
       message : {
-        from    : '我',
-        to      : '陌生人',
+        from    : this.$t('conversation.chat.me'),
+        to      : this.$t('conversation.chat.stranger'),
         content : '',
         date    : '18：24',
       },

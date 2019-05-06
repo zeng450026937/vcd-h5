@@ -6,6 +6,7 @@ module.exports = {
         conferenceDetail : '会议详情',
         callDetail       : '通话详情',
         dial             : '拨号',
+        dialPlate        : '拨号盘',
       },
       dialpad : {
         clear     : '清空',

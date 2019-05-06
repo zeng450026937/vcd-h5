@@ -8,11 +8,11 @@
              :class="{'opacity-0': hideControls}">
           <div class="flex items-center h-full text-white self-end px-4">
             <a-iconfont v-if="hasRemoteScreenStream && !isShareWindowOpen" type="icon-danchufuliu"
-                        title="弹出辅流"
+                        :title="$t('conversation.main.popSharing')"
                         class="cursor-pointer hover:text-indigo text-base"
                         @click="openShareWindow"/>
             <a-iconfont type="icon-quanping" class="ml-4 cursor-pointer hover:text-indigo text-base"
-                        title="最大化/最小化"
+                        :title="$t('conversation.main.maximizeOrMinimize')"
                         @click="maxCallContent"/>
             <template v-if="isInCallMain">
               <template v-if="isConnected">
@@ -111,13 +111,13 @@ export default {
     },
     callText() {
       const titleMap = {
-        connecting   : `正在呼叫 ${this.userName}`,
-        connected    : `正在与 ${this.userName} 进行通话`,
-        ringing      : `${this.userName} 正在来电`,
-        disconnected : `与 ${this.userName} 的通话已结束`,
+        connecting   : this.$t('conversation.title.connecting', { target: this.userName }),
+        connected    : this.$t('conversation.title.connected', { target: this.userName }),
+        ringing      : this.$t('conversation.title.ringing', { target: this.userName }),
+        disconnected : this.$t('conversation.title.disconnected', { target: this.userName }),
       };
 
-      return titleMap[this.callStatus] || '当前通话已失效';
+      return titleMap[this.callStatus] || this.$t('conversation.title.expired');
     },
     callStatus() {
       return this.$model.state.callStatus;
@@ -131,7 +131,7 @@ export default {
         || remoteIdentity.uri.user);
     },
     userName() {
-      return this.displayName || this.targetUser || '未知用户';
+      return this.displayName || this.targetUser || this.$t('conversation.title.unknownUser');
     },
     centerSource() {
       return this.isShareInCenter ? 'call-screen' : 'call-remote';
@@ -257,7 +257,7 @@ export default {
     shareStreamStatus(val) {
       if (this.hasScreenStream && !val) {
         // 分享的应用被关闭
-        this.$message.warn('由于共享的窗口被关闭，内容共享结束');
+        this.$message.warn(this.$t('conversation.share.message.sharingEnded'));
         this.$rtc.call.share.disconnect();
       }
     },

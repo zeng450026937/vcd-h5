@@ -2,7 +2,7 @@
   <a-layout id="tab-setting-media" :class="background">
     <div class="flex flex-col select-none px-4">
       <div class="flex flex-col">
-        <span class="leading-normal">摄像头</span>
+        <span class="leading-normal">{{$t('conversation.setting.camera')}}</span>
         <a-select v-if="videoInputDevices.length > 0"
                   v-model="videoInputDeviceId"
                   :getPopupContainer="selectContainer"
@@ -13,7 +13,7 @@
           </a-select-option>
         </a-select>
         <a-input v-else
-                 value="无设备"
+                 :value="$t('conversation.setting.noDevice')"
                  disabled read-only
                  class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <div v-if="showVideo"
@@ -27,7 +27,7 @@
       </div>
 
       <div class="flex flex-col mt-5">
-        <span class="leading-normal">麦克风</span>
+        <span class="leading-normal">{{$t('conversation.setting.microphone')}}</span>
         <a-select v-if="audioInputDevices.length > 0"
                   v-model="audioInputDeviceId"
                   :getPopupContainer="selectContainer"
@@ -38,15 +38,16 @@
           </a-select-option>
         </a-select>
         <a-input v-else
-                 value="无设备"
+                 :value="$t('conversation.setting.noDevice')"
                  disabled read-only
                  class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <volume-progress />
-        <span :class="textColor" class="test-mic-text leading-tight text-xs">麦克风测试</span>
+        <span :class="textColor"
+              class="test-mic-text leading-tight text-xs">{{$t('conversation.setting.microphoneTest')}}</span>
       </div>
 
       <div class="flex flex-col mt-5">
-        <span class="leading-normal">扬声器</span>
+        <span class="leading-normal">{{$t('conversation.setting.speaker')}}</span>
 
         <a-select v-if="audioOutputDevices.length > 0"
                   v-model="audioOutputDeviceId"
@@ -58,15 +59,15 @@
           </a-select-option>
         </a-select>
         <a-input v-else
-                 value="无设备"
+                 :value="$t('conversation.setting.noDevice')"
                  disabled read-only
                  class="pl-4 mt-2 select-none text-black9 bg-white"/>
         <div class="mt-2 flex items-center" :class="textColor !=='text-black6' ? textColor : 'text-indigo'">
           <a-iconfont :type="isPlaying ? 'icon-tingzhi' : 'icon-bofang'"
-                      title="播放测试音频"
+                      :title="$t('conversation.setting.playAudio')"
                       class="test-audio-text text-base cursor-pointer"
                       @click="playTestMusic"></a-iconfont>
-          <span class="test-audio-text ml-1 text-xs leading-tight" >播放测试音频</span>
+          <span class="test-audio-text ml-1 text-xs leading-tight" >{{$t('conversation.setting.playAudio')}}</span>
         </div>
       </div>
       <audio ref="testAudio" @ended="isPlaying = false" @playing="isPlaying = true">

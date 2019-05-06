@@ -13,13 +13,20 @@
       wrapClassName="conference-inviting-modal"
   >
     <template slot="footer">
-      <a-button key="submit" type="primary" :loading="confirmLoading" @click="handleOk">
-        确定
+      <a-button :loading="confirmLoading"
+                key="submit"
+                type="primary"
+                @click="handleOk">
+        {{$t('common.controls.ensure')}}
       </a-button>
-      <a-button key="back" @click="handleCancel" class="ml-4">取消</a-button>
+      <a-button key="back"
+                @click="handleCancel"
+                class="ml-4">
+        {{$t('common.controls.cancel')}}
+      </a-button>
     </template>
     <a-tabs v-model="currentTab" class="inviting-tabs">
-      <a-tab-pane tab="邀请联系人" key="inviteUser">
+      <a-tab-pane :tab="$t('conversation.invite.inviteContact')" key="inviteUser">
         <div style="height: 420px;">
           <div class="flex h-full p-5">
 
@@ -36,11 +43,11 @@
           </div>
         </div>
       </a-tab-pane>
-      <a-tab-pane tab="邀请其他" key="inviteOther">
+      <a-tab-pane :tab="$t('conversation.invite.inviteOthers')" key="inviteOther">
         <div style="height: 420px;">
           <div class="flex flex-col items-center justify-center h-full">
             <div class="flex">
-              <span class="leading-normal mt-1">协议</span>
+              <span class="leading-normal mt-1">{{$t('conversation.invite.protocol')}}</span>
               <div class="flex flex-col ml-5" style="width: 280px;">
                 <a-select v-model="protocol">
                   <a-select-option v-for="protocol in protocols" :key="protocol" :value="protocol">
@@ -133,17 +140,19 @@ export default {
       return this.store.originTree.filter((n) => !n.isVMR);
     },
     numberTitle() {
-      return this.protocol === 'RTMP' ? '地址' : '号码';
+      return this.protocol === 'RTMP'
+        ? this.$t('conversation.invite.address')
+        : this.$t('conversation.invite.number');
     },
     inputPlaceholder() {
       switch (this.protocol) {
         case 'SIP':
         case 'H.323':
-          return '请输入IP地址或者URI';
+          return this.$t('conversation.invite.inputIpOrUri');
         case 'RTMP':
-          return '地址以rtmp://或rtmps://开头';
+          return this.$t('conversation.invite.inputRTMP');
         case 'SFB(Lync)':
-          return '请输入SFB(Lync)账号信息';
+          return this.$t('conversation.invite.inputSFB');
         default:
           return '';
       }

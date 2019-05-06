@@ -15,16 +15,16 @@
         <div class="text-left flex flex-col justify-center h-full">
           <div>
             <a-checkbox class="text-xs">
-              共享电脑声音
+              {{$t('conversation.share.shareAudio')}}
             </a-checkbox>
           </div>
           <div class="flex items-center mt-1">
             <a-checkbox class="text-xs" :checked="shareSmoothMode" @change="shareSmoothMode = !shareSmoothMode">
-              视频流畅度优先
+              {{$t('conversation.share.preferVideoFluency')}}
             </a-checkbox>
             <a-tooltip placement="right" >
               <template slot="title">
-                <span>开启后可提升内容共享的视频流畅度，但会增加电脑的性能损耗和带宽</span>
+                <span>{{$t('conversation.share.preferVideoFluencyTips')}}</span>
               </template>
               <a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>
             </a-tooltip>
@@ -36,13 +36,15 @@
                 :loading="isSharing"
                 :disabled="!selectedWindow.id"
                 @click="handleShare">
-        确定
+        {{$t('common.controls.ensure')}}
       </a-button>
-      <a-button key="back" @click="handleCancel" class="ml-4">取消</a-button>
+      <a-button key="back"
+                @click="handleCancel"
+                class="ml-4">{{$t('common.controls.cancel')}}</a-button>
     </div>
     <div class="flex flex-col">
       <div class="flex justify-center items-center h-12 border-b">
-        <span class="text-base leading-loose text-black">选择一个您想要共享的窗口或程序</span>
+        <span class="text-base leading-loose text-black">{{$t('common.controls.title')}}</span>
       </div>
 
 

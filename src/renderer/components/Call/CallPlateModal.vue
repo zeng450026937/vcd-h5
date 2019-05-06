@@ -13,14 +13,16 @@
   >
     <div class="flex flex-col">
       <div class="flex h-12 border-b justify-center items-center">
-        <span class="text-base">拨号盘</span>
+        <span class="text-base">{{$t('dial.title.dialPlate')}}</span>
         <a-iconfont type="icon-guanbi"
                     class="absolute cursor-pointer hover:text-red"
                     style="right: 26px"
                     @click="visible = false"/>
       </div>
       <div style="padding: 0 50px; margin-top: 30px">
-        <a-input ref="numberInput" :value="plateContent" @input="inputPlateContent"/>
+        <a-input ref="numberInput" read-only
+                 :value="plateContent"
+                 @input="inputPlateContent"/>
       </div>
       <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
                      style="padding: 0 50px 18px 50px;"/>

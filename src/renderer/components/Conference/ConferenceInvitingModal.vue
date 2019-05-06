@@ -58,7 +58,6 @@
                     {{protocol}}
                   </a-select-option>
                 </a-select>
-                <!--<p class="mt-3 leading-tight text-xs">{{inputPlaceholder}}</p>-->
               </div>
             </div>
             <div class="flex items-center mt-10">
@@ -80,7 +79,6 @@
 /* eslint-disable no-loop-func */
 import copy from 'clipboard-copy';
 import transfer from '../transfer/index.vue';
-import { $t } from '../../i18n';
 
 export default {
   name  : 'ConferenceInvitingModal',
@@ -113,7 +111,7 @@ export default {
     protocols() {
       const protocols = [ 'SIP', 'H.323', 'RTMP', 'SFB(Lync)' ];
 
-      if (this.isCloud) protocols.push($t('conversation.invite.yealinkCloud'));
+      if (this.isCloud) protocols.push(this.$t('conversation.invite.yealinkCloud'));
       
       return protocols;
     },
@@ -154,20 +152,20 @@ export default {
     },
     numberTitle() {
       return this.protocol === 'RTMP'
-        ? $t('conversation.invite.address')
-        : $t('conversation.invite.number');
+        ? this.$t('conversation.invite.address')
+        : this.$t('conversation.invite.number');
     },
     inputPlaceholder() {
       switch (this.protocol) {
         case 'SIP':
         case 'H.323':
-          return $t('conversation.invite.inputIpOrUri');
-        case $t('conversation.invite.yealinkCloud'):
-          return $t('conversation.invite.inputCloudNumber');
+          return this.$t('conversation.invite.inputIpOrUri');
+        case this.$t('conversation.invite.yealinkCloud'):
+          return this.$t('conversation.invite.inputCloudNumber');
         case 'RTMP':
-          return $t('conversation.invite.inputRTMP');
+          return this.$t('conversation.invite.inputRTMP');
         case 'SFB(Lync)':
-          return $t('conversation.invite.inputSFB');
+          return this.$t('conversation.invite.inputSFB');
         default:
           return '';
       }
@@ -215,7 +213,7 @@ export default {
 
       this.$rtc.conference.conference.addUserBatch(users)
         .then(() => {
-          this.$message.info($t('conversation.invite.message.invited'));
+          this.$message.info(this.$t('conversation.invite.message.invited'));
           this.confirmLoading = false;
           this.visible = false;
         })
@@ -226,18 +224,18 @@ export default {
     },
     inviteOther() {
       if (this.$rtc.conference.information.users.user.findIndex((user) => user.phone === this.address) >= 0) {
-        this.$message.info($t('conversation.invite.message.alreadyExist'));
+        this.$message.info(this.$t('conversation.invite.message.alreadyExist'));
         this.confirmLoading = false;
         
         return;
       }
-      this.$message.info($t('conversation.invite.message.invited'));
+      this.$message.info(this.$t('conversation.invite.message.invited'));
       this.$dispatch('conference.invite.invite', { protocol: this.protocol, address: this.address }).then(() => {
-        this.$message.info($t('conversation.invite.message.inviteSucceed'));
+        this.$message.info(this.$t('conversation.invite.message.inviteSucceed'));
         this.confirmLoading = false;
         this.address = '';
       }).catch((err) => {
-        this.$message.info($t('conversation.invite.message.inviteFailed'));
+        this.$message.info(this.$t('conversation.invite.message.inviteFailed'));
         this.confirmLoading = false;
       });
     },

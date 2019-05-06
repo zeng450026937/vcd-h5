@@ -2,7 +2,9 @@
   <a-layout id="lock-conference" class="bg-white w-full">
     <div class="flex flex-col p-5">
       <p class="leading-normal">
-      {{isLocked ? '会议解锁后，新的参会成员可以直接进入会议。' : '会议锁定后，以下新的参会成员可直接进入会议，无需在会议大厅中等'}}
+      {{isLocked
+        ? $t('conversation.lock.unLockTips')
+        : $t('conversation.lock.lockTips')
       </p>
       <template v-if="!isLocked">
         <a-select v-model="selectedOptions"
@@ -16,13 +18,15 @@
         <a-checkbox class="mt-3"
                     :checked="attendeeLobbyBypass"
                     @change="attendeeLobbyBypass = !attendeeLobbyBypass"
-        >受邀人员</a-checkbox>
+        >{{$t('conversation.lock.invitedUser')}}</a-checkbox>
       </template>
       <a-button type="primary" class="mt-16"
                 :disabled="!currentIsPresenter"
                 @click="lockOrUnlockConference">
         <a-iconfont :type="isLocked ? 'icon-jiesuo' : 'icon-suoding'"/>
-      {{isLocked ? '解锁会议' : '锁定会议'}}
+      {{isLocked
+        ? $t('conversation.lock.unLock')
+        : $t('conversation.lock.lock')}}
       </a-button>
     </div>
   </a-layout>
@@ -34,8 +38,8 @@ export default {
   data() {
     return {
       allowedOptions : [
-        { label: '主持人', permission: 'closedAuthenticated' },
-        { label: '组织内所有人', permission: 'openAuthenticated' },
+        { label: this.$t('conversation.lock.presenter'), permission: 'closedAuthenticated' },
+        { label: this.$t('conversation.lock.all'), permission: 'openAuthenticated' },
       ],
     };
   },

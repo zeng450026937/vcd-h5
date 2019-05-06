@@ -9,7 +9,7 @@
            slot="content"
            class="absolute-center h-full flex flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
-        <span class="display-name mt-5">音频会议</span>
+        <span class="display-name mt-5">{{$t('conversation.main.audioConference')}}</span>
       </div>
       <conference-controls slot="controls" class="controls" :class="controlsClasses"/>
     </remote-video>

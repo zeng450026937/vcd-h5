@@ -8,7 +8,8 @@
         <div class="h-full p-3 flex flex-col">
           <div>
             <div class="flex items-center">
-              <span class="whitespace-no-wrap text-xs leading-tight">发给
+              <span class="whitespace-no-wrap text-xs leading-tight">
+                {{$t('conversation.chat.sendTo')}}
                 <span class="text-indigo">{{displayName}}</span>
               </span>
             </div>
@@ -16,10 +17,11 @@
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
               <a-textarea v-model="message"
-                          placeholder="请输入您将要发送的消息"
+                          :placeholder="$t('conversation.chat.inputMessage')"
                           class="h-full"
                           @keydown.enter.prevent=""
                           @keyup.enter.prevent = 'sendMessage'
+                          @change="onMessageInputed"
               />
             </div>
             <div class="w-1/6 bg-under-painting">
@@ -68,9 +70,16 @@ export default {
     },
   },
   methods : {
+    onMessageInputed(e) {
+      const { value } = e.target;
+
+      if (value.length <= 100) {
+        this.message = value;
+      }
+    },
     sendMessage() {
       if (this.isSendingDisabled || !this.message) return;
-      this.$model.call.chat.sendMessage('我', this.remoteIdentity.uri.user, this.message, 'send');
+      this.$model.call.chat.sendMessage(this.$t('conversation.chat.me'), this.remoteIdentity.uri.user, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {

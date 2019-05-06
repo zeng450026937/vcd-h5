@@ -23,7 +23,7 @@
               </a-select-option>
             </a-select>
             <a-input v-else
-                     value="无设备"
+                     :value="$t('conversation.setting.noDevice')"
                      disabled read-only
                      class="pl-4 mt-2 select-none text-black9 bg-white"/>
             <div class="flex items-end ml-2">
@@ -67,7 +67,7 @@
       </div>
       <div class="mt-3">
         <a-switch size="small" v-model="enableLocalVideo"/>
-        <span class="ml-5 setting-label">启用虚拟摄像头</span>
+        <span class="ml-5 setting-label">{{$t('setting.video.enableLocalVideo')}}</span>
       </div>
     </div>
   </a-layout>

@@ -4,8 +4,9 @@
 
     <div class="h-full flex relative layout-main-content">
 
-      <div class="nav-content normal:w-nav-normal middle:w-nav-middle max:w-nav-max">
-        <router-view v-if="showNav" name="nav"/>
+      <div v-if="showNav"
+           class="nav-content normal:w-nav-normal middle:w-nav-middle max:w-nav-max">
+        <router-view name="nav"/>
       </div>
 
       <router-view/>

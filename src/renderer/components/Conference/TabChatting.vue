@@ -8,7 +8,7 @@
         <div class="h-full p-3 flex flex-col">
           <div>
             <div class="flex items-center">
-              <span class="whitespace-no-wrap text-xs leading-tight">发给</span>
+              <span class="whitespace-no-wrap text-xs leading-tight">{{$t('conversation.chat.sendTo')}}</span>
               <a-select v-model="target" class="w-full ml-2">
                 <a-select-option v-for="(user, index) in targetList"
                                  :value="user.entity"
@@ -19,7 +19,7 @@
           <div class="flex mt-2 h-full">
             <div class="w-5/6 mr-2">
               <a-textarea :value="message"
-                          placeholder="请输入您将要发送的消息"
+                          :placeholder="$t('conversation.chat.inputMessage')"
                           @keydown.enter.prevent=""
                           @keyup.enter.prevent = 'sendMessage'
                           @change="onMessageInputed"
@@ -72,7 +72,7 @@ export default {
     targetList() {
       const targetList = [ {
         entity      : 'all',
-        displayText : '全体',
+        displayText : this.$t('conversation.chat.all'),
       } ];
 
       if (!this.isCastViewer) {
@@ -98,7 +98,7 @@ export default {
     },
     sendMessage(e) {
       if (this.isSendingDisabled || !this.message || this.isOnHold) return;
-      this.$model.conference.chat.sendMessage('我', this.target, this.message, 'send');
+      this.$model.conference.chat.sendMessage(this.$t('conversation.chat.me'), this.target, this.message, 'send');
       this.message = '';
       this.isSendingDisabled = true;
       this.sendingTimer = setInterval(() => {

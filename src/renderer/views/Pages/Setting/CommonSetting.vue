@@ -122,7 +122,7 @@ export default {
   
   data() {
     return {
-      addressErrorText     : '您输入的地址不合法！',
+      addressErrorText     : this.$t('setting.common.invalidAddress'),
       showAddPropertyInput : false,
       addPropertyText      : '',
       count                : 0,
@@ -214,11 +214,11 @@ export default {
       this.ytmsHostAddress = value;
     },
     handleAddProperty() {
-      if (this.addPropertyText.trim() === '') return this.$message.error(this.$t('setting.common.emptyPropertyNotice'));
+      if (this.addPropertyText.trim() === '') return this.$message.warning((this.$t('setting.common.emptyPropertyNotice')));
 
-      if (this.tags.length >= 20) return this.$message.error(this.$t('setting.common.fullPropertyNotice'));
+      if (this.tags.length >= 20) return this.$message.warning(this.$t('setting.common.fullPropertyNotice'));
 
-      if (this.tags.indexOf(this.addPropertyText) !== -1) return this.$message.error('已存在该标签');
+      if (this.tags.indexOf(this.addPropertyText) !== -1) return this.$message.warning((this.$t('setting.common.propertyExist')));
 
       this.showAddPropertyInput = false;
       this.tags.push(this.addPropertyText);

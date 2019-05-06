@@ -12,7 +12,7 @@
         <a-input v-show="isOpenSearch"
                  ref="memberSearchInput"
                  class="border-none"
-                 placeholder="搜索联系人"
+                 :placeholder="$t('conversation.member.searchContact')"
                  v-model="filterText">
           <a-iconfont v-show="filterText"
                       slot="suffix"
@@ -24,10 +24,18 @@
       </template>
       <template slot="operation">
         <div class="text-white" v-if="selectedGroup === '1'">
-          <a-iconfont :title="isOpenSearch ? '关闭搜索框': '打开搜索框'"
+          <a-iconfont :title="isOpenSearch
+            ? $t('conversation.member.closeSearchFrame')
+            : $t('conversation.member.openSearchFrame')"
                       type="icon-sousuo" class="ml-4 text-base" @click.stop="openSearch"/>
-          <a-iconfont title="解除全员禁言" type="icon-maikefeng" class="ml-4 text-base" @click.stop="unMuteAll"/>
-          <a-iconfont title="全员禁言" type="icon-maikefengjinyong" class="ml-4 text-base" @click.stop="muteAll"/>
+          <a-iconfont :title="$t('conversation.member.unMuteAll')"
+                      type="icon-maikefeng"
+                      class="ml-4 text-base"
+                      @click.stop="unMuteAll"/>
+          <a-iconfont :title="$t('conversation.member.muteAll')"
+                      type="icon-maikefengjinyong"
+                      class="ml-4 text-base"
+                      @click.stop="muteAll"/>
         </div>
       </template>
     </member-list-wrapper>
@@ -36,7 +44,7 @@
                          :class="{
                             [`waiting-panel-${activeGroupKey === '2' ? 'opened' : 'closed'}`] : true
                          }"
-                         :title="`会议大厅（${waitingList.length}）`" mkey="2"
+                         :title="`${$t('conversation.member.conferenceHall')}（${waitingList.length}）`" mkey="2"
                          :is-selected="selectedGroup === '2'"
                          :show-dot="hasNewMeetingApply"
                          @selected="selectGroup">
@@ -48,11 +56,11 @@
       <template slot="operation">
         <div class="text-white" v-if="selectedGroup === '2' && isPresenter && waitingList.length > 0">
           <a-iconfont type="icon-tongguo"
-                      title="全部允许"
+                      :title="$t('conversation.member.allowAll')"
                       class="ml-4 text-base cursor-pointer"
                       @click.stop="allowAllAttend"/>
           <a-iconfont type="icon-yichu"
-                      title="全部拒绝"
+                      :title="$t('conversation.member.refuseAll')"
                       class="ml-4 text-base cursor-pointer"
                       @click.stop="removeAllAttend"/>
         </div>
@@ -63,7 +71,7 @@
                          :class="{
                             [`apply-panel-${activeGroupKey === '3' ? 'opened' : 'closed'}`] : true
                          }"
-                         :title="`举手发言（${speakApplyList.length}）`" mkey="3"
+                         :title="`${$t('conversation.member.raiseHangs')}（${speakApplyList.length}）`" mkey="3"
                          :is-selected="selectedGroup === '3'"
                          :show-dot="hasNewSpeakApply"
                          @selected="selectGroup">
@@ -75,11 +83,11 @@
       <template slot="operation">
         <div class="text-white" v-if="selectedGroup === '3' && isPresenter && speakApplyList.length > 0">
           <a-iconfont type="icon-tongguo"
-                      title="全部允许"
+                      :title="$t('conversation.member.allowAll')"
                       class="ml-4 text-base cursor-pointer"
                       @click.stop="allowAllSpeak"/>
           <a-iconfont type="icon-yichu"
-                      title="全部拒绝"
+                      :title="$t('conversation.member.refuseAll')"
                       class="ml-4 text-base cursor-pointer"
                       @click.stop="removeAllSpeak"/>
         </div>
@@ -90,7 +98,7 @@
                          :class="{
                             [`inviting-panel-${activeGroupKey === '4' ? 'opened' : 'closed'}`] : true
                          }"
-                         :title="`第三方邀请（${inviteRecordList.length}）`" mkey="4"
+                         :title="`${$t('conversation.member.otherInvite')}（${inviteRecordList.length}）`" mkey="4"
                          :is-selected="selectedGroup === '4'"
                          @selected="selectGroup">
       <template slot="items">
@@ -105,7 +113,7 @@
 
             <a-iconfont  v-if="item.status === 'failed'"
                          type="icon-shuaxin"
-                        title="重新邀请"
+                         :title="$t('conversation.member.reInvite')"
                         class="text-sm cursor-pointer text-black9 ml-2"
                         @click="reInvite(item)"></a-iconfont>
             </span>
@@ -121,6 +129,7 @@
 import MemberListWrapper from './MemberListWrapper.vue';
 import MemberListInner from './MemberListInner.vue';
 import MemberListItem from './MemberListItem.vue';
+import { $t } from '../../i18n';
 
 export default {
   name       : 'MemberList',
@@ -231,9 +240,9 @@ export default {
   filters : {
     filterRecordStatus(status) {
       return {
-        inviting : '呼叫中...',
-        failed   : '邀请失败',
-        success  : '邀请成功',
+        inviting : $t('conversation.member.ringing'),
+        failed   : $t('conversation.member.inviteFailed'),
+        success  : $t('conversation.member.inviteSucceed'),
       }[status];
     },
   },

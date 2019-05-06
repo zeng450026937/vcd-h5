@@ -2,7 +2,7 @@
   <a-layout id="tab-setting-conference" class="bg-white">
     <div class="flex flex-col px-4">
       <div v-if="isDefault && isPresenter" class="flex flex-col mb-5">
-        <span class="text-sm leading-tight">画面布局</span>
+        <span class="text-sm leading-tight">{{$t('conversation.setting.layout')}}</span>
         <div class="flex mt-3 justify-between px-1">
           <div v-for="layout in layoutList" :key="layout.value"
                class="layout"
@@ -14,7 +14,7 @@
       </div>
       <div class="flex items-center">
         <a-switch size="small" v-model="showMessage"/>
-        <span class="text-sm leading-tight ml-3">入会和离开的提示</span>
+        <span class="text-sm leading-tight ml-3">{{$t('conversation.setting.conferenceTips')}}</span>
       </div>
     </div>
   </a-layout>

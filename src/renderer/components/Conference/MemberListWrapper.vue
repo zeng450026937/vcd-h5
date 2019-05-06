@@ -25,8 +25,8 @@ export default {
   name  : 'MemberListWrapper',
   props : {
     title : {
-      type    : String,
-      default : '已入会',
+      type     : String,
+      required : true,
     },
     mkey : {
       type    : [ String, Number ],

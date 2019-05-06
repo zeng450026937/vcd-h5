@@ -31,8 +31,8 @@ export default {
   data() {
     return {
       message : {
-        from    : '我',
-        to      : '陌生人',
+        from    : this.$t('conversation.chat.me'),
+        to      : this.$t('conversation.chat.stranger'),
         content : '',
         date    : '18：24',
       },

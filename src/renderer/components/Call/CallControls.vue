@@ -26,7 +26,9 @@
       <a-button v-if="(prepareVideoCall || isVideoCall ) && isConnected"
                 shape="circle"
                 class="control-btn"
-                :title="hasLocalScreenStream ? '关闭辅流' : '分享辅流'"
+                :title="hasLocalScreenStream
+                  ? $t('conversation.controls.screenSharing') :
+                  $t('conversation.controls.screenShare')"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->
@@ -41,22 +43,22 @@
                class="popover-content-item hover:bg-list-hover"
                @click="toAudioCall">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">切换为音频通话</span>
+            <span class="ml-3 text-xs">{{$t('conversation.controls.call')}}</span>
           </div>
           <div class="popover-content-item hover:bg-list-hover"
                @click="openPlateModal">
             <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">拨号盘</span>
+            <span class="ml-3 text-xs">{{$t('conversation.controls.plate')}}</span>
           </div>
         </div>
         <a-button shape="circle"
-                  title="更多"
+                  :title="$t('conversation.controls.more')"
                   class="control-btn"
                   @click="showMorePanel = !showMorePanel"
         ><a-iconfont type="icon-gengduo1"/></a-button>
       </a-popover>
       <a-button shape="circle"
-                title="挂断"
+                :title="$t('conversation.controls.hangUp')"
                 class="control-btn bg-red-light"
                 @click="hangUp"
       >
@@ -112,7 +114,7 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
+        unblock : { icon: 'icon-maikefeng', color: '', title: this.$t('conversation.controls.turnOnMicrophone')  },
         block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
       };
 
@@ -120,8 +122,8 @@ export default {
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
-        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
+        unblock : { icon: 'icon-shipin', color: '', title: this.$t('conversation.controls.turnOffCamera') },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnCamera') },
       };
 
       return iconMap[this.mediaStatus.video ? 'block' : 'unblock'];

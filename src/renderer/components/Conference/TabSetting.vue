@@ -1,10 +1,10 @@
 <template>
   <a-layout id="tab-setting" class="h-full w-full bg-white">
     <a-tabs defaultActiveKey="1" class="setting-tabs">
-      <a-tab-pane tab="会议" key="1">
+      <a-tab-pane :tab="$t('conversation.setting.conference')" key="1">
         <tab-setting-conference/>
       </a-tab-pane>
-      <a-tab-pane tab="音视频" key="2" forceRender>
+      <a-tab-pane :tab="$t('conversation.setting.media')" key="2" forceRender>
         <tab-setting-media/>
       </a-tab-pane>
     </a-tabs>

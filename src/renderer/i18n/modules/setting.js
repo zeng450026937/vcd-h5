@@ -53,6 +53,7 @@ module.exports = {
         enableHDVideo     : '启用超清视频',
         enableHWSpeed     : '启用硬件加速',
         enableMirroring   : '启用视频镜像效果',
+        enableLocalVideo  : '启用虚拟摄像头',
         disableVideo      : '加入会议时不开启摄像头',
         cameraNotice      : {
           open    : '请确认您的摄像头已经接通并开启。',
@@ -97,6 +98,14 @@ module.exports = {
         loginSelector                : '登录选项框',
         dndWhenCalling               : '通话中免打扰',
         advancedSetting              : '高级设置',
+        videoQuality                 : '视频质量',
+        superMode                    : '超清模式',
+        HDMode                       : '高清模式',
+        SDMode                       : '标清模式',
+
+        tipFor1080P : '充分发挥系统性能，展现最好视频画质，会占用较大系统与网络资源。',
+        tipFor720P  : '平衡系统流畅度与画质效果，适用于大多数场景。',
+        tipFor360P  : '调低带宽并降低视频质量，可以提高系统流畅度。',
       },
       common : {
         title                : '通用',
@@ -112,9 +121,11 @@ module.exports = {
         addProperty          : '添加标签',
         addPropertyNotice    : '添加标签成功！',
         fullPropertyNotice   : '当前标签已满，无法继续添加！',
+        propertyExist        : '当前标签已满，无法继续添加！',
         deletePropertyNotice : '标签删除成功！',
         emptyPropertyNotice  : '当前输入标签为空',
         propertyCreateAt     : '标签创建于',
+        invalidAddress       : '您输入的地址不合法！',
         updateChannelList    : {
           insiders : '内测',
           faster   : '快速',

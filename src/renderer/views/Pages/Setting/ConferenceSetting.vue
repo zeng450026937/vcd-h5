@@ -45,7 +45,7 @@
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
           </div>
           <div class="mt-3">
-            <div>视频质量</div>
+            <div>{{$t('setting.conference.videoQuality')}}</div>
             <a-select v-model="videoQuality" class="w-48 mt-3">
               <a-select-option v-for="(quality, index) in videoQualities" :key="index"
                                :value="quality.value"
@@ -81,18 +81,18 @@ export default {
     return {
       advancedSettingUrl : 'http://www.yealink.com',
       videoQualities     : [
-        { label: '超清模式', value: '1080P' },
-        { label: '高清模式', value: '720P' },
-        { label: '标清模式', value: '360P' },
+        { label: this.$t('setting.conference.superMode'), value: '1080P' },
+        { label: this.$t('setting.conference.HDMode'), value: '720P' },
+        { label: this.$t('setting.conference.SDMode'), value: '360P' },
       ],
     };
   },
   computed : {
     qualityTips() {
       const TIPS = {
-        '1080P' : '充分发挥系统性能，展现最好视频画质，会占用较大系统与网络资源。',
-        '720P'  : '平衡系统流畅度与画质效果，适用于大多数场景。',
-        '360P'  : '调低带宽并降低视频质量，可以提高系统流畅度。',
+        '1080P' : this.$t('setting.conference.tipFor1080P'),
+        '720P'  : this.$t('setting.conference.tipFor720P'),
+        '360P'  : this.$t('setting.conference.tipFor360P'),
       };
       
       return TIPS[this.videoQuality];

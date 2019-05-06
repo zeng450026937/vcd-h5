@@ -4,19 +4,19 @@
       <div class="flex items-center flex-grow dragable w-1 my-1 mr-12">
         <template v-if="callStatus === 'connected'">
           <a-iconfont type="icon-tonghuabaohu"
-                      title="通话保护"
+                      :title="$t('conversation.header.safeConversation')"
                       class="text-white text-base mr-4 no-dragable"/>
           <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
-                      title="信号"
+                      :title="$t('conversation.header.signal')"
                       class="text-white text-base mr-4 no-dragable cursor-pointer"
                       @click="showStatistics"/>
           <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         </template>
         <div class="text-white max-w-4/5 text-xs leading-tight truncate">
-          <span>与</span>
+          <span>{{$t('conversation.title.with')}}</span>
           <span class="truncate"> {{this.userName}} </span>
         </div>
-        <span class="text-white text-xs leading-tight">通话中</span>
+        <span class="text-white text-xs leading-tight">{{$t('conversation.title.communicating')}}</span>
       </div>
       <common-header class="text-white"/>
     </div>
@@ -51,7 +51,7 @@ export default {
       return remoteIdentity && remoteIdentity.uri.user;
     },
     userName() {
-      return this.displayName || this.targetUser || '未知用户';
+      return this.displayName || this.targetUser || this.$t('conversation.title.unknownUser');
     },
     duration() {
       return this.$model.call.state.duration;
