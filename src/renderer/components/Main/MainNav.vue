@@ -4,7 +4,7 @@
       <div class="flex px-3 h-full items-center border-b">
         <a-input
             v-model="searchText"
-            placeholder='搜索联系人'
+            :placeholder="$t('contact.placeholder.search')"
         >
           <a-iconfont v-if="!searchText"
                       slot="suffix"

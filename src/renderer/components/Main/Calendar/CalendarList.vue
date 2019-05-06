@@ -16,8 +16,8 @@
               <span class="truncate">{{event.subject}}</span>
             </div>
             <div class="ml-1 text-base text-indigo">
-              <a-iconfont v-if="event.isRecurrence" title="周期会议" type="icon-xunhuanhuiyi"/>
-              <a-iconfont v-if="event.isLive" title="直播" type="icon-zhibo" class="ml-3"/>
+              <a-iconfont v-if="event.isRecurrence" :title="$t('schedule.cycleMeeting')" type="icon-xunhuanhuiyi"/>
+              <a-iconfont v-if="event.isLive" :title="$t('schedule.live')" type="icon-zhibo" class="ml-3"/>
             </div>
           </div>
           <div class="mt-3 text-xs truncate">ID: {{event.conferenceNumber}}</div>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-if="!currentDateEvents || currentDateEvents.length <= 0" class="h-full flex items-center justify-center">
-        <common-empty class="text-grey" text="暂无会议日程"/>
+        <common-empty class="text-grey" :text="$t('schedule.emptySchedule')"/>
       </div>
     </div>
   </a-layout>

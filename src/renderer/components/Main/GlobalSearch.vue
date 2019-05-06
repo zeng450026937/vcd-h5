@@ -3,11 +3,11 @@
     <template v-if="hasContacts">
       <div class="flex flex-col">
         <div class="flex items-center h-7 px-3">
-          <span class="flex flex-grow text-xs">企业联系人</span>
+          <span class="flex flex-grow text-xs">{{$t('contact.corporate.describe')}}</span>
           <span v-if="showLoadMore"
                 class="text-xs text-indigo cursor-pointer"
                 @click="hasLoadMore = !hasLoadMore"
-          >{{hasLoadMore ? '收起' : '更多'}}</span>
+          >{{hasLoadMore ? $t('contact.button.pullUp') : $t('contact.button.more')}}</span>
         </div>
         <contact-list hide-popup
                       :highlightContent="searchText"

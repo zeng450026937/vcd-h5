@@ -44,6 +44,8 @@ export default {
     },
   },
   async created() {
+    this.$i18n.locale = this.language;
+
     const lang = await getLocale();
 
     this.$dispatch('i18n.setRendererLocale', { lang });

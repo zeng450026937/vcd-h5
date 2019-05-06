@@ -8,6 +8,9 @@ const join = require('./join');
 const nav = require('./nav');
 const conversation = require('./conversation');
 const common = require('./common');
+const home = require('./home');
+const date = require('./date');
+const schedule = require('./schedule');
 
 module.exports = [
   login,
@@ -20,4 +23,7 @@ module.exports = [
   nav,
   conversation,
   common,
+  home,
+  date,
+  schedule,
 ];

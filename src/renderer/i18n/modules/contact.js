@@ -54,6 +54,7 @@ module.exports = {
         inputAccount : '请输入账号',
         inputPhone   : '请输入手机号',
         inputEmail   : '请输入邮箱',
+        search       : '搜索联系人',
       },
       message : {
         success             : '操作成功！',
@@ -84,6 +85,8 @@ module.exports = {
         deleteContact : '删除该联系人',
         back          : '返回',
         meetingNow    : '立即开会',
+        pullUp        : '收起',
+        more          : '更多',
       },
       titles : {
         search    : '拨号搜素结果',

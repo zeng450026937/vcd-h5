@@ -10,21 +10,21 @@
                   <span class="truncate leading-loose">{{currentEvent.subject}}</span>
                 </div>
                 <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2"
-                      @click="copyShareUrl">复制信息</span>
+                      @click="copyShareUrl">{{$t('schedule.copyInfo')}}</span>
                 <a-popover placement="bottomRight" trigger="click"
                            overlayClassName="calendar-info-popover">
                   <template slot="content">
                     <div class="flex flex-col justify-between items-center p-3"
                          style="width: 144px;">
                       <div class="flex flex-col items-center h-full">
-                        <span class="text-xs leading-tight">分享会议</span>
+                        <span class="text-xs leading-tight">{{$t('schedule.share')}}</span>
                         <img style="width: 120px; height: 120px;"
                              class="mt-2"
                              :src="shareQRCode"/>
                       </div>
                       <div class="flex flex-col items-center select-none h-full mt-3"
                            v-if="currentEvent.isLive" >
-                        <span class="text-xs leading-tight">观看直播</span>
+                        <span class="text-xs leading-tight">{{$t('schedule.watchLive')}}</span>
                         <img style="width: 120px; height: 120px;"
                              class="mt-2"
                              :src="liveQRCode"/>
@@ -36,13 +36,13 @@
               </div>
               <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">时间</span>
+                  <span class="w-20 text-black6">{{$t('schedule.time')}}</span>
                   <span>{{currentEvent.startTime}} - {{currentEvent.expiryTime}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">周期</span>
+                  <span class="w-20 text-black6">{{$t('schedule.cycle')}}</span>
                   <div class="flex flex-col">
                     <span>{{currentEvent.pattern.title}}</span>
                     <span>{{currentEvent.pattern.time}}</span>
@@ -52,45 +52,45 @@
               <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
-                    <div class="w-20 text-black6">会议室</div>
+                    <div class="w-20 text-black6">{{$t('schedule.meetingRoom')}}</div>
                   </div>
                   <span style="word-break: break-all">{{currentEvent.locations.location.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">会议ID</span>
+                  <span class="w-20 text-black6">{{$t('schedule.conferenceId')}}</span>
                   <span>{{currentEvent.conferenceNumber}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">会议密码</span>
+                  <span class="w-20 text-black6">{{$t('schedule.password')}}</span>
                   <span>{{currentEvent.attendeePin}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isLive" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">直播链接</span>
+                  <span class="w-20 text-black6">{{$t('schedule.liveLink')}}</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
                     <a class="truncate" @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
                   <span class="text-xs text-indigo cursor-pointer ml-2"
-                        @click="copyLiveShareUrl">复制</span>
+                        @click="copyLiveShareUrl">{{$t('schedule.copy')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
-                    <div class="w-20 text-black6">备注</div>
+                    <div class="w-20 text-black6">{{$t('schedule.remark')}}</div>
                   </div>
-                  <span style="word-break: break-all">{{currentEvent.note || '当前会议的备注信息为空'}}</span>
+                  <span style="word-break: break-all">{{currentEvent.note || $t('schedule.emptyRemark')}}</span>
                 </div>
               </div>
             </div>
             <div class="flex flex-col text-xs my-5">
               <div class="flex w-full leading-tight">
-                <span class="w-20 text-black6">会议成员</span>
+                <span class="w-20 text-black6">{{$t('schedule.meetingMember')}}</span>
                 <div class="flex flex-col flex-grow">
                   <div class="w-full" v-if="currentEvent.invitees">
                     <template v-for="(item, index ) in sortedInvitee">
@@ -118,23 +118,31 @@
       <div class="my-2 flex justify-center items-center">
         <a-button class="w-1/3 mx-2" type="primary"
                   :disabled="!status.isReady"
-                  :title="status.isReady ? '视频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
+                  :title="status.isReady
+                    ? $t('schedule.videoJoin')
+                    : status.isPrepared
+                      ? $t('schedule.unStart')
+                      : $t('schedule.ended')"
                   @click="videoEnter">
           <a-iconfont type="icon-shipin"/>
-          视频加入
+          {{$t('schedule.videoJoin')}}
         </a-button>
         <a-button class="w-1/3 mx-2" type="primary"
                   :disabled="!status.isReady"
-                  :title="status.isReady ? '音频加入': status.isPrepared ? '当前会议尚未开始': '当前会议已经结束'"
+                  :title="status.isReady
+                   ? $t('schedule.audioJoin')
+                   : status.isPrepared
+                     ? $t('schedule.unStart')
+                     : $t('schedule.ended')"
                   @click="audioEnter">
           <a-iconfont type="icon-yuyin"/>
-          音频加入
+          {{$t('schedule.audioJoin')}}
         </a-button>
       </div>
       <div>
         <plain-modal ref="deleteModal"
                      type="warning"
-                     content="确定删除该会议"
+                     :content="$t('confirmDel')"
                      @ok="clickOk">
         </plain-modal>
       </div>

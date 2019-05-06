@@ -54,6 +54,10 @@
           </div>
         </div>
       </div>
+      <div class="record-empty-content"  v-if="currentRecords.length === 0">
+        <common-empty image="empty-record"></common-empty>
+      </div>
+
     </div>
 
   </div>
@@ -64,12 +68,14 @@ import { CallRecord } from '../../database/call-record';
 import { genDurationTime, genStartTime } from '../../utils/date';
 import { callIcon, callType } from '../../utils/filters';
 import ContactPopover from '../Main/Contact/ContactPopover.vue';
+import CommonEmpty from '../Shared/CommonEmpty.vue';
 import { $t } from '../../i18n';
 
 export default {
   name       : 'record',
   components : {
     ContactPopover,
+    CommonEmpty,
   },
   data() {
     return {
@@ -231,6 +237,13 @@ export default {
       height: calc( 100% - 80px);
       overflow-y: auto;
       width: calc( 100% + 6px);
+      .record-empty-content{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       .record-list {
         width: calc( 100% - 6px);
         .record-item {

@@ -80,26 +80,31 @@ export function genStartTime(time) {
 }
 
 const weekMap = {
-  0 : '星期日',
-  1 : '星期一',
-  2 : '星期二',
-  3 : '星期三',
-  4 : '星期四',
-  5 : '星期五',
-  6 : '星期六',
+  0 : 'date.Sunday',
+  1 : 'date.Monday',
+  2 : 'date.Tuesday',
+  3 : 'date.Wednesday',
+  4 : 'date.Thursday',
+  5 : 'date.Friday',
+  6 : 'date.Saturday',
 };
 
-export function formatDate(type, date) {
-  const map = {
-    '年-月-日' : (d) => {
-      const year = d.getFullYear();
-      const month = d.getMonth() + 1;
-      const day = d.getDate();
-      const week = weekMap[d.getDay()];
+const getWeek = (key) => $t(weekMap[key]);
 
-      return `${year}年${genDouble(month)}月${genDouble(day)}日 ${week}`;
-    },
-  };
+const getDateString = (year, month, day) => {
+  const yearKey = $t('date.year');
+  const monthKey = $t('date.month');
+  const dayKey = $t('date.day');
 
-  return map[type](date);
+  return `${year}${yearKey}${month}${monthKey}${day}${dayKey}`;
+};
+
+export function formatDate(d) {
+  const year = String(d.getFullYear());
+  const month = genDouble(d.getMonth() + 1);
+  const day = genDouble(d.getDate());
+  const week = getWeek(d.getDay());
+  const dateString = getDateString(year, month, day);
+
+  return `${dateString} ${week}`;
 }

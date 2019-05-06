@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full  w-full new-meeting">
 
-    <app-header title="新的会议"/>
+    <app-header :title="$t('home.newMeeting')"/>
 
     <div class="flex h-full new-meeting-content">
       <div class="nav-card-content">
@@ -10,13 +10,13 @@
             <div class="icon">
               <a-iconfont type="icon-shipin"></a-iconfont>
             </div>
-            <div class="title">发起会议</div>
+            <div class="title">{{$t('home.startMeeting')}}</div>
           </div>
           <div class="menu green reservation" @click="startReservation">
             <div class="icon">
               <a-iconfont type="icon-yuyuehuiyi"></a-iconfont>
             </div>
-            <div class="title">预约会议</div>
+            <div class="title">{{$t('home.reservation')}}</div>
           </div>
         </div>
         <div class="right">
@@ -28,7 +28,7 @@
                   {{time}}
                 </div>
                 <div class="date">
-                  {{date | format}}
+                  {{date | formatDate}}
                 </div>
               </div>
             </div>
@@ -36,7 +36,7 @@
             <div class="recent-meeting">
               <template v-if="hasRecentScheduleEvent">
                 <div class="recent-meeting-header">
-                  <span>下一场会议</span>
+                  <span>{{$t('home.nextMeeting')}}</span>
                   <span class="start-time">{{tip}}</span>
                 </div>
                 <div class="recent-meeting-content">
@@ -46,11 +46,11 @@
                       <a-iconfont
                           class="text-indigo"
                           v-if="recentScheduleEvent.isRecurrence"
-                          title="周期会议"
+                          :title="$t('home.cycleMeeting')"
                           type="icon-xunhuanhuiyi"></a-iconfont>
                       <a-iconfont
                           v-if="recentScheduleEvent.isLive"
-                          title="直播"
+                          :title="$t('home.live')"
                           type="icon-zhibo"
                           class="text-indigo ml-3">
                       </a-iconfont>
@@ -62,15 +62,15 @@
                   </div>
                   <div class="duration item">
                     {{recentScheduleEvent.startTime}} ~ {{recentScheduleEvent.expiryTime}}
-                    <a-button @click="goMeetingDetail">详情</a-button>
+                    <a-button @click="goMeetingDetail">{{$t('home.detail')}}</a-button>
                   </div>
                 </div>
                 <a-button class="recent-meeting-footer" :disabled="!status.isReady"  @click="join">
-                  加入会议
+                  {{$t('home.join')}}
                 </a-button>
               </template>
               <div v-else class="empty-content">
-                <common-empty text="今日无会议安排"></common-empty>
+                <common-empty :text="$t('home.noMeeting')" image="empty-calendar"></common-empty>
               </div>
 
             </div>
@@ -114,10 +114,7 @@ export default {
     this.startClock();
   },
   filters : {
-    format(date) {
-      return formatDate('年-月-日', date);
-    },
-
+    formatDate,
   },
   computed : {
     recentScheduleEvent() {
@@ -136,15 +133,15 @@ export default {
       if (!this.hasRecentScheduleEvent) return '';
 
       const now = this.date.valueOf();
-      const deltatime = now - this.getTimestamp(this.recentScheduleEvent.startTime);
+      const deltaTime = now - this.getTimestamp(this.recentScheduleEvent.startTime);
 
-      if (deltatime > 0) return '会议进行中';
+      if (deltaTime > 0) return this.$t('home.onGoing');
 
-      const distance = Math.abs(Math.floor(deltatime / 1000 / 60));
+      const distance = Math.abs(Math.floor(deltaTime / 1000 / 60));
 
       if (distance > 60) return '';
 
-      return `${distance}分钟后开始`;
+      return this.$t('home.distance', { distance });
     },
     hasRecentScheduleEvent() {
       return Object.keys(this.recentScheduleEvent).length > 0;
@@ -217,14 +214,13 @@ export default {
       background: #33B5B2;
     }
     .start-meeting {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
     .reservation {
-      margin-top: 10px;
+      margin-top: 20px;
     }
     .new-meeting-content {
       margin: 16px;
-      padding: 40px;
       background: #fff;
       border: 1px solid #E0E0E0;
       justify-content: center;
@@ -236,6 +232,7 @@ export default {
         max-width: 1050px;
         max-height: 550px;
         justify-content: center;
+        padding: 10px 0;
         .left {
           display: flex;
           height: 100%;
@@ -244,8 +241,8 @@ export default {
           align-items: flex-end;
           padding: 20px 0 20px 20px;
           .menu {
-            min-width: 200px;
-            min-height: 200px;
+            min-width: 220px;
+            min-height: 220px;
             width: 80%;
             height: 80%;
             border-radius: 4px;
@@ -271,7 +268,7 @@ export default {
           display: flex;
           width: 60%;
           height: 100%;
-          padding: 20px;
+          padding: 20px 0 20px 40px;
           .meeting-info {
             width: 100%;
             height: 100%;
@@ -281,7 +278,7 @@ export default {
             overflow: hidden;
             .date-wrap {
               width: 100%;
-              height: calc(100% - 20px);
+              height: calc(100% - 40px);
               background-image: url("../../../assets/bg_meeting.png");
               background-size: cover;
               .date-content {
@@ -303,7 +300,7 @@ export default {
             }
             .recent-meeting {
               width: 100%;
-              height: calc(100% + 20px);
+              height: calc(100% + 40px);
               border: 1px solid #e0e0e0;
               display: flex;
               flex-direction: column;

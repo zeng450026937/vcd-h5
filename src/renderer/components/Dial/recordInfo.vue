@@ -8,7 +8,7 @@
               {{contact.name}}
             </div>
             <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-              {{$('contact.label.unknownInfo')}}
+              {{$t('contact.label.unknownInfo')}}
             </div>
           </div>
           <div class="flex flex-grow"></div>
