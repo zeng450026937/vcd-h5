@@ -90,7 +90,7 @@ sketch.provide({
       channel.renegotiate({
         rtcOfferConstraints : { offerToReceiveVideo: isVideo, offerToReceiveAudio: true },
       },
-      () => channel[isVideo ? 'unmute' : 'mute']({ video: true }));
+      () => channel[isVideo ? 'unmute' : 'mute']({ video: true, audio: false }));
     },
   },
   watch : {

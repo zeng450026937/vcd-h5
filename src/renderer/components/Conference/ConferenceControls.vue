@@ -27,7 +27,8 @@
       <a-button v-if="isVideoConference && shareAvailable"
                 shape="circle"
                 class="control-btn"
-                :title="$t('conversation.controls.screenShare')"
+                :class="{'bg-main-theme': hasLocalScreenStream}"
+                :title="hasLocalScreenStream ? '正在分享辅流' : $t('conversation.controls.screenShare')"
                 @click="showScreenShareModal"
       ><a-iconfont type="icon-fuliu"/></a-button>
       <!--更多-->

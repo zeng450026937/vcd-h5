@@ -23,10 +23,10 @@ model.provide({
     },
     // 通话和会议的类型
     isVideoConference() {
-      return this.$parent.conference.sketch.isVideoConference;
+      return true;// this.$parent.conference.sketch.isVideoConference;
     },
     isVideoCall() {
-      return this.$parent.call.isVideoCall;
+      return true; // this.$parent.call.isVideoCall;
     },
     // 会议中是否需要获取本地视频流
     acquireStreamInConference() {

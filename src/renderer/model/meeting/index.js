@@ -34,10 +34,10 @@ meeting.provide({
       const {
         number,
         pin,
-        initialVideo,
-        initialAudio,
-        audio,
-        video,
+        initialVideo = true,
+        initialAudio = true,
+        audio = true,
+        video = true,
       } = ctx.payload.number ? ctx.payload : this.meetingRecord;
       const { conference } = rtc;
 
