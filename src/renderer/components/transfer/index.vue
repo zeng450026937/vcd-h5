@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import CommonEmpty from '../Shared/CommonEmpty.vue';
 import searchBar from './searchBar.vue';
 import Tree from '../tree/index.vue';
 import CheckedList from './checkedList.vue';
@@ -58,7 +57,6 @@ export default {
   components : {
     searchBar,
     Tree,
-    CommonEmpty,
     CheckedList,
     SearchList,
     LoadFailedPanel,

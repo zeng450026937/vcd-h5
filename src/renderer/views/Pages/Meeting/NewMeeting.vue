@@ -34,28 +34,45 @@
             </div>
 
             <div class="recent-meeting">
-              <div class="recent-meeting-header">
-                下一场会议 <span class="start-time">{{tip}}</span>
-              </div>
-              <div class="recent-meeting-content">
-                <div v-if="hasRecentScheduleEvent">
-                  <div class="card-content">
-                    <div class="title item">
-                      {{recentScheduleEvent.subject}}
+              <template v-if="hasRecentScheduleEvent">
+                <div class="recent-meeting-header">
+                  <span>下一场会议</span>
+                  <span class="start-time">{{tip}}</span>
+                </div>
+                <div class="recent-meeting-content">
+                  <div class="title item">
+                    {{recentScheduleEvent.subject}}
+                    <div>
+                      <a-iconfont
+                          class="text-indigo"
+                          v-if="recentScheduleEvent.isRecurrence"
+                          title="周期会议"
+                          type="icon-xunhuanhuiyi"></a-iconfont>
+                      <a-iconfont
+                          v-if="recentScheduleEvent.isLive"
+                          title="直播"
+                          type="icon-zhibo"
+                          class="text-indigo ml-3">
+                      </a-iconfont>
                     </div>
-                    <div class="conference-id item">
-                      ID : {{recentScheduleEvent.conferenceNumber}}
-                    </div>
-                    <div class="duration item">
-                      {{recentScheduleEvent.startTime}} ~ {{recentScheduleEvent.expiryTime}}
-                      <a-button @click="goMeetingDetail">详情</a-button>
-                    </div>
+
+                  </div>
+                  <div class="conference-id item">
+                    ID : {{recentScheduleEvent.conferenceNumber}}
+                  </div>
+                  <div class="duration item">
+                    {{recentScheduleEvent.startTime}} ~ {{recentScheduleEvent.expiryTime}}
+                    <a-button @click="goMeetingDetail">详情</a-button>
                   </div>
                 </div>
+                <a-button class="recent-meeting-footer" :disabled="!status.isReady"  @click="join">
+                  加入会议
+                </a-button>
+              </template>
+              <div v-else class="empty-content">
+                <common-empty text="今日无会议安排"></common-empty>
               </div>
-              <div class="recent-meeting-footer" v-if="hasRecentScheduleEvent" @click="join">
-                加入会议
-              </div>
+
             </div>
 
           </div>
@@ -73,12 +90,14 @@
 
 import { sortBy } from 'lodash';
 import AppHeader from '../../../components/Main/MainHeader.vue';
+import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
 import { formatDate } from '../../../utils/date';
 
 export default {
   name       : 'NewMeeting',
   components : {
     AppHeader,
+    CommonEmpty,
   },
   data() {
     return {
@@ -109,6 +128,9 @@ export default {
       noFinished = sortBy(noFinished, (n) => this.getTimestamp(n.startTime))[0] || {};
 
       return noFinished;
+    },
+    status() {
+      return this.recentScheduleEvent.status || {};
     },
     tip() {
       if (!this.hasRecentScheduleEvent) return '';
@@ -285,6 +307,13 @@ export default {
               border: 1px solid #e0e0e0;
               display: flex;
               flex-direction: column;
+              .empty-content {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
               .recent-meeting-header {
                 height: 60px;
                 display: flex;
@@ -300,6 +329,8 @@ export default {
                 padding: 0 10px;
                 .title {
                   font-size: 16px;
+                  display: flex;
+                  justify-content: space-between;
                 }
                 .conference-id {
                   font-size: 12px;
