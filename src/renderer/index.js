@@ -2,12 +2,12 @@ import '../logger/renderer/install';
 import '../ipc/ipc-proxy';
 
 import Vue from 'vue';
-import i18n from './i18n';
 import App from './App.vue';
+import i18n from './i18n';
 import router from './router';
+import kom from './model';
 import rtc from './rtc';
 import storage from './storage';
-import kom from './model';
 import popup from './popup';
 import './plugins/ant-design';
 import './plugins/electron';
@@ -19,9 +19,9 @@ new Vue({
   mixins : [
     AppWindowProxy,
   ],
-  i18n,
   router,
   kom,
+  i18n,
   rtc,
   storage,
   popup,

@@ -74,11 +74,6 @@ export default {
   components : {
     ContactAvatar,
   },
-  data() {
-    return {
-      contact : {},
-    };
-  },
   props : {
     info : {
       type : Object,
@@ -86,17 +81,14 @@ export default {
         return {};
       },
     },
-    pin : {
-      type : String,
+    contact : {
+      type : Object,
       default() {
-        return null;
+        return {};
       },
     },
   },
   computed : {
-    store() {
-      return this.$model.contact.phoneBookStore;
-    },
     loadMode() {
       return this.$model.contact.loadMode;
     },
@@ -104,50 +96,13 @@ export default {
       return this.$model.account.serverType === 'cloud';
     },
   },
-  watch : {
-    info() {
-      this.updateContactInfo();
-    },
-  },
   methods : {
-    async getContactInfo(val) {
-      let contact = this.store.getNodeByNumber(val);
-
-      if (!contact) {
-        if (this.loadMode === 'SPLIT' && !this.isCloud) {
-          const contacts = await this.$model.contact.findContacts(val).catch(() => Promise.resolve(null));
-
-          contact = contacts.find((n) => n.number === val);
-        }
-
-        if (contact) {
-          const parentNode = this.store.findParentNode(contact.id, contact.parentId);
-
-          contact.parentNode = parentNode.name;
-        }
-      }
-
-      if (!contact) {
-        contact = await this.$model.contact.local.search(val);
-        if (contact) contact.isLocal = true;
-      }
-
-      if (!contact) {
-        contact = { number: val, name: this.$t('contact.label.unknown'), unknown: true };
-      }
-
-      return contact;
-    },
     handleMeeting(type) {
       this.$emit('call', { info: this.info, type });
     },
-    async updateContactInfo() {
-      this.contact = await this.getContactInfo(this.info.otherId);
-      this.$emit('update-info', { id: this.info.otherId, contact: this.contact });
-    },
   },
   mounted() {
-    this.updateContactInfo();
+
   },
 };
 </script>
