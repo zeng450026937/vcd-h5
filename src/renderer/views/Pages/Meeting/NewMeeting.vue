@@ -177,6 +177,7 @@ export default {
       this.timer = setInterval(() => {
         this.time = this.getTime();
         this.date = new Date();
+        this.recentScheduleEvent.updateStatus();
       });
     },
     join() {
