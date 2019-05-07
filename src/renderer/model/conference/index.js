@@ -7,6 +7,7 @@ import chat from './chat';
 import invite from './invite';
 import statistics from './statistics';
 import rtc from '../../rtc';
+import { $t } from '../../i18n';
 
 const model = new Vuem();
 
@@ -23,19 +24,8 @@ model.provide({
     return {
       messageTextList    : [],
       isLocalUnmuteAudio : false,
-      holdList           : [
-        {
-          id       : '1',
-          subject  : '来自张三的视频会议',
-          interval : '12:00:03',
-        },
-        {
-          id       : '2',
-          subject  : '来自李四的视频会议',
-          interval : '12:00:03',
-        },
-      ],
-      staticStream : null,
+      holdList           : [],
+      staticStream       : null,
     };
   },
   computed : {
@@ -157,7 +147,7 @@ model.provide({
         lobby.allow(user.entity).then(() => {
           const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
 
-          this.messageTextList.push(`${text} 加入会议`);
+          this.messageTextList.push($t('conversation.main.message.joinMeeting', { target: text }));
         });
       }
       else {
@@ -173,29 +163,29 @@ model.provide({
         case 'block':
         case 'hand':
           if (this.muteBlockBy !== 'client' && oldStatus !== 'unblocking') {
-            this.$message.warning('您被主持人禁言');
+            this.$message.warning($t('conversation.main.message.mute'));
           }
           else if (this.profile === 'demonstrator' && oldStatus === 'unblocking') {
             if (this.isLocalUnmuteAudio) {
-              this.$message.info('您取消了发言申请');
+              this.$message.info($t('conversation.main.message.cancelSpeakApply'));
             }
             else {
-              this.$message.error('您的发言申请被拒绝');
+              this.$message.error($t('conversation.main.message.speakApplyRefused'));
             }
           }
           break;
         case 'unblock':
           if (this.muteBlockBy !== 'client' && !this.isLocalUnmuteAudio) {
             if (oldStatus === 'unblocking') {
-              this.$message.success('您的发言申请被允许');
+              this.$message.success($t('conversation.main.message.speakApplyAllowed'));
             }
             else {
-              this.$message.info('您被主持人解除禁言');
+              this.$message.info($t('conversation.main.message.unMute'));
             }
           }
           break;
         case 'unblocking':
-          this.$message.info('您正在申请发言');
+          this.$message.info($t('conversation.main.message.applying'));
           break;
         default:
           break;
@@ -208,10 +198,10 @@ model.provide({
       if (!oldPri || this.muteBlockBy === 'client') return;
 
       if (permission === 'presenter') {
-        this.$message.info('您被设置为主持人');
+        this.$message.info($t('conversation.main.message.toPresenter'));
       }
       else if (permission === 'attendee' || permission === 'castviewer') {
-        this.$message.info('您被设置为访客');
+        this.$message.info($t('conversation.main.message.toVisitor'));
       }
     },
     onDemostateChanged(role, oldRole) {
@@ -219,20 +209,20 @@ model.provide({
       if (this.muteBlockBy === 'client') return;
       // uaRolesDemo: UA的演讲角色 -- demonstrator: 演讲者 audience: 观众
       if (role === 'demonstrator' && oldRole === 'audience') {
-        this.$message.info('您被设置为演讲者');
+        this.$message.info($t('conversation.main.message.toSpeaker'));
       }
       else if (role === 'audience' && oldRole === 'demonstrator') {
-        this.$message.info('您被取消演讲权限');
+        this.$message.info($t('conversation.main.message.cancelSpeaker'));
       }
     },
     onRoleChanged(role, oldRole) {
-      if (oldRole && role === 'waiting') this.$message.info('您已被主持人移到会议大厅');
-      else if (role && oldRole === 'waiting') this.$message.info('您已被主持人批准进入会议');
+      if (oldRole && role === 'waiting') this.$message.info($t('conversation.main.message.toConferenceHall'));
+      else if (role && oldRole === 'waiting') this.$message.info($t('conversation.main.message.allowToConference'));
       else if (!role && oldRole) {
         const { reason } = rtc.conference;
 
         if (!reason || (reason.cause === 'User Deleted')) {
-          this.$message.info('您被移出会议');
+          this.$message.info($t('conversation.main.message.kickFromMeeting'));
         }
       }
     },
@@ -260,15 +250,16 @@ model.provide({
     role        : 'onRoleChanged',
     async addedUser(val) {
       await Promise.resolve();
-      // if (val.isOnHold()) return;
       const text = val.displayText.length > 10 ? `${val.displayText.slice(0, 10)}...` : val.displayText;
 
-      this.messageTextList.push(`${text} 加入会议`);
+      this.messageTextList.push(val.isOnHold()
+        ? $t('conversation.main.message.enterHall', { target: text })
+        : $t('conversation.main.message.enterHall', { target: text }));
     },
     deletedUser(val) {
       const text = val.displayText.length > 10 ? `${val.displayText.slice(0, 10)}...` : val.displayText;
 
-      this.messageTextList.push(`${text} 离开会议`);
+      this.messageTextList.push($t('conversation.main.message.exitMeeting', { target: text }));
     },
   },
 });

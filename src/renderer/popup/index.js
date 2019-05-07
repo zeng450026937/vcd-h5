@@ -4,6 +4,7 @@ import PlainModal from './plain-modal';
 import Popup from './lib';
 
 Vue.use(Popup);
+
 const popup = new Popup({
   popups : {
     loadingModal : {

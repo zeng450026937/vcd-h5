@@ -1,5 +1,6 @@
 import Vuem from '../vuem';
 import rtc from '../../rtc';
+import { $t } from '../../i18n';
 
 const sketch = new Vuem();
 
@@ -46,8 +47,10 @@ const initialDate = () => ({
       if (typeof this.instance === 'function') return;
       const h = ctx.$createElement;
 
-      const text = videoException ? '当前摄像头异常，请检查后重试'
-        : audioException ? '当前麦克风异常，请检查后重试' : '当前摄像头和麦克风异常，请检查后重试';
+      const text = videoException
+        ? $t('conversation.exception.video')
+        : audioException ? $t('conversation.exception.audio')
+          : $t('conversation.exception.both');
 
       const content = h('div', { class: 'inline-block no-dragable' }, [
         h('div', { class: 'inline-block' }, text),

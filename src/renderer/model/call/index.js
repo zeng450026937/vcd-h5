@@ -5,6 +5,7 @@ import chat from './chat';
 import state from './state';
 import sketch from './sketch';
 import popup from '../../popup';
+import { $t } from '../../i18n';
 
 const model = new Vuem();
 
@@ -90,10 +91,16 @@ model.provide({
       await next();
 
       const toAudio = !this.isVideoCall;
+
+      console.log($t('conversation.title.audioSubject', { target: rtc.account.username }));
+
+      const subject = toAudio
+        ? $t('conversation.title.audioSubject', { target: rtc.account.username })
+        : $t('conversation.title.videoSubject', { target: rtc.account.username });
       
       return rtc.call.upgrade(
         ctx.payload,
-        { subject: `${rtc.account.username} 的视频会议` },
+        { subject },
         { toAudio }
       ).then(() => {
         const conferenceSketch = this.$getVM('conference.sketch');
@@ -111,13 +118,17 @@ model.provide({
     },
   },
   methods : {
+    aaa() {
+      console.log($t('conversation.title.audioSubject', { target: rtc.account.username }));
+    },
     async switchCallType(video) {
       await rtc.call.localMedia.acquireDetachedStream(true, video)
         .then((s) => rtc.call.channel.replaceLocalStream(s));
       if (!video) {
         const { channel } = rtc.call;
-        const pc = channel.session.connection;
+        const pc = channel.session && channel.session.connection;
 
+        if (!pc) return;
         pc.getSenders().forEach((sender) => {
           if (sender.track && sender.track.kind === 'video') {
             sender.track.stop();
@@ -173,20 +184,20 @@ model.use(async(ctx, next) => {
     let ensureFn = null;
 
     if (!rtc.conference.disconnected && rtc.call.ringing) { // 会议中（即将进入和已经进入）来电即将接通
-      content = '接通来电将离开会议，请确认!';
+      content = $t('conversation.tip.answerInConference');
       ensureFn = rtc.conference.leave;
     }
     else if (!rtc.conference.disconnected) { // 会议中（即将进入和已经进入）呼叫
-      content = '拨打电话将离开会议，请确认!';
+      content = $t('conversation.tip.callInConference');
       ensureFn = rtc.conference.leave;
     }
     else if (rtc.call.ringing && rtc.call.status === 'confirmed') { // 通话中来电即将接通
-      content = '接通来电将挂断当前通话，请确认!';
+      content = $t('conversation.tip.answerInCall');
       // TODO NOT WORK ?
       // ensureFn = rtc.call.channel.disconnect;
     }
     else { // 通话中拨号
-      content = '拨打电话将挂断当前通话，请确认!';
+      content = $t('conversation.tip.callInCall');
       ensureFn = rtc.call.disconnect;
     }
     //

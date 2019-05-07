@@ -23,6 +23,7 @@ Vue.use(Vuem);
 
 const model = new Vuem();
 
+model.mount('i18n', i18n);
 model.mount('application', application);
 model.mount('setting', setting);
 model.mount('updater', updater);
@@ -38,7 +39,6 @@ model.mount('main', main);
 model.mount('call', call);
 model.mount('ui', ui);
 model.mount('streamManager', streamManager);
-model.mount('i18n', i18n);
 model.mount('notify', notify);
 
 // logging middleware must be the first one

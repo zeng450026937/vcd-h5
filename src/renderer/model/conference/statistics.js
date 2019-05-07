@@ -1,4 +1,5 @@
 import Vuem from '../vuem';
+import { $t } from '../../i18n';
 
 const statistics = new Vuem();
 
@@ -16,110 +17,110 @@ function formatStatistics(data) {
 
   const sectionInfo = [
     {
-      title    : '视频',
+      title    : $t('conversation.statistics.video'),
       sections : [
         {
-          name : '带宽',
+          name : $t('conversation.statistics.bitrate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '分辨率',
+          name : $t('conversation.statistics.ratio'),
           send : '--',
           recv : '--',
         },
         {
-          name : '帧率',
+          name : $t('conversation.statistics.frameRate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '编解码',
+          name : $t('conversation.statistics.codec'),
           send : '--',
           recv : '--',
         },
         {
-          name : '抖动',
+          name : $t('conversation.statistics.jitter'),
           send : '--',
           recv : '--',
         },
         {
-          name : '总丢包数',
+          name : $t('conversation.statistics.packetsLost'),
           send : 0,
           recv : 0,
         },
         {
-          name : '丢包率',
+          name : $t('conversation.statistics.packetsLostRate'),
           send : '0%',
           recv : '0%',
         },
       ],
     },
     {
-      title    : '辅流',
+      title    : $t('conversation.statistics.screen'),
       sections : [
         {
-          name : '带宽',
+          name : $t('conversation.statistics.bitrate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '分辨率',
+          name : $t('conversation.statistics.ratio'),
           send : '--',
           recv : '--',
         },
         {
-          name : '帧率',
+          name : $t('conversation.statistics.frameRate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '编解码',
+          name : $t('conversation.statistics.codec'),
           send : '--',
           recv : '--',
         },
         {
-          name : '抖动',
+          name : $t('conversation.statistics.jitter'),
           send : '--',
           recv : '--',
         },
         {
-          name : '总丢包数',
+          name : $t('conversation.statistics.packetsLost'),
           send : 0,
           recv : 0,
         },
         {
-          name : '丢包率',
+          name : $t('conversation.statistics.packetsLostRate'),
           send : '0%',
           recv : '0%',
         },
       ],
     },
     {
-      title    : '音频',
+      title    : $t('conversation.statistics.audio'),
       sections : [
         {
-          name : '带宽',
+          name : $t('conversation.statistics.bitrate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '编解码',
+          name : $t('conversation.statistics.codec'),
           send : '--',
           recv : '--',
         },
         {
-          name : '抖动',
+          name : $t('conversation.statistics.jitter'),
           send : '--',
           recv : '--',
         },
         {
-          name : '总丢包数',
+          name : $t('conversation.statistics.packetsLost'),
           send : 0,
           recv : 0,
         },
         {
-          name : '丢包率',
+          name : $t('conversation.statistics.packetsLostRate'),
           send : '0%',
           recv : '0%',
         },
@@ -128,19 +129,19 @@ function formatStatistics(data) {
   ];
   const statisticInfo = [
     {
-      name  : '网络',
+      name  : $t('conversation.statistics.network'),
       value : '--',
     },
     {
-      name  : '总带宽',
+      name  : $t('conversation.statistics.totalBitrate'),
       value : '--',
     },
     {
-      name  : 'IP地址',
+      name  : $t('conversation.statistics.ip'),
       value : '--',
     },
     {
-      name  : '协议类型',
+      name  : $t('conversation.statistics.protocolType'),
       value : '--',
     },
   ];
@@ -148,7 +149,12 @@ function formatStatistics(data) {
   // 网络
   const quality = data.media.quality - 1;
 
-  statisticInfo[0].value = [ '极差', '一般', '良好', '极佳' ][quality < 0 ? 0 : quality];
+  statisticInfo[0].value = [
+    $t('conversation.statistics.poor'),
+    $t('conversation.statistics.general'),
+    $t('conversation.statistics.good'),
+    $t('conversation.statistics.excellent'),
+  ][quality < 0 ? 0 : quality];
 
   // 总带宽
   result = getTotalOutgoingBitrate(data);
@@ -157,7 +163,11 @@ function formatStatistics(data) {
   result = getTotalIncomingBitrate(data);
   const totalRecvOutgoingBitrate = result ? `${Math.round(result)} kb/s` : DEFAULT_TEXT;
 
-  statisticInfo[1].value = `接收 ${totalRecvOutgoingBitrate} 发送${totalSendOutgoingBitrate}`;
+  statisticInfo[1].value = `
+    ${$t('conversation.statistics.send')}
+      ${totalRecvOutgoingBitrate} 
+    ${$t('conversation.statistics.receive')}
+     ${totalSendOutgoingBitrate}`;
 
   // IP地址
   if (statisticInfo[2].value === DEFAULT_TEXT) {

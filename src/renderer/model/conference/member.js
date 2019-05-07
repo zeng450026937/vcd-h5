@@ -1,5 +1,6 @@
 import Vuem from '../vuem';
 import rtc from '../../rtc';
+import { $t } from '../../i18n';
 
 const member = new Vuem();
 
@@ -39,12 +40,12 @@ member.provide({
 
       const memberList = [
         {
-          title : `主持人 (${presenterList.length})`,
+          title : $t('conversation.member.presenterTitle', { count: presenterList.length }),
           group : 'presenter',
           list  : presenterList,
         },
         {
-          title : `访客 (${visitorList.length})`,
+          title : $t('conversation.member.visitorTitle', { count: presenterList.length }),
           group : 'visitor',
           list  : visitorList,
         },
@@ -54,7 +55,7 @@ member.provide({
       if (broadcastCount > 0) {
         memberList.push(
           {
-            title : `广播方 (${broadcastCount})`,
+            title : $t('conversation.member.castViewerTitle', { count: broadcastCount }),
             group : 'castViewer',
             list  : castViewerList,
           }
