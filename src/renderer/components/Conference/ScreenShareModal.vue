@@ -44,7 +44,7 @@
     </div>
     <div class="flex flex-col">
       <div class="flex justify-center items-center h-12 border-b">
-        <span class="text-base leading-loose text-black">{{$t('common.controls.title')}}</span>
+        <span class="text-base leading-loose text-black">{{$t('conversation.share.title')}}</span>
       </div>
 
 

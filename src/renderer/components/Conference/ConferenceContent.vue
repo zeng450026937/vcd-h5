@@ -294,7 +294,7 @@ export default {
       if (val) this.isShareInCenter = false;
     },
     shareStreamStatus(val) {
-      if (this.hasScreenStream && !val) {
+      if (this.localScreenStream && !val) {
         // 分享的应用被关闭
         this.$message.warn($t('conversation.share.message.sharingEnded'));
         this.$rtc.conference.shareChannel.disconnect();
