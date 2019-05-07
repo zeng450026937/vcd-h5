@@ -45,7 +45,7 @@ member.provide({
           list  : presenterList,
         },
         {
-          title : $t('conversation.member.visitorTitle', { count: presenterList.length }),
+          title : $t('conversation.member.visitorTitle', { count: visitorList.length }),
           group : 'visitor',
           list  : visitorList,
         },
