@@ -1,5 +1,5 @@
 <template>
-  <div id="app-header" class="h-14 bg-white border-b">
+  <div id="app-header" class="h-14 bg-white border-b py-1">
     <div class="flex dragable h-full">
       <span v-if="title" class="font-semibold text-base flex self-center ml-4">{{title}}</span>
       <slot name="content"></slot>
