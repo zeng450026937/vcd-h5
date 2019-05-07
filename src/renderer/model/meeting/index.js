@@ -4,6 +4,7 @@ import storage from '../../storage';
 import { formatServers } from '../utils';
 import { LOGIN_STORAGE } from '../../storage/constants';
 import popup from '../../popup';
+import { $t } from '../../i18n';
 
 const meeting = new Vuem();
 
@@ -121,16 +122,20 @@ meeting.provide({
       }).catch((e) => {
         this.isPreparing = false;
         if (!e) {
-          this.$message.error('当前服务器无法访问');
+          this.$message.error($t('conversation.error.server'));
         }
         else throw e;
       });
     },
-    meetnow(ctx, next) {
-      const { users } = ctx.payload;
-      const subject = `${rtc.account.username} 的视频会议`;
+    async meetnow(ctx, next) {
+      await next();
 
-      return rtc.conference.meetnow(users, { subject });
+      const { users } = ctx.payload;
+      const subject = $t('conversation.title.videoSubject', { target: rtc.account.username });
+
+      return rtc.conference.meetnow(users, { subject }).then(() => {
+        this.$getVM('conference.sketch').isInstanceConference = true;
+      });
     },
   },
   watch : {
@@ -162,15 +167,15 @@ meeting.use(async(ctx, next) => {
     let ensureFn = null;
 
     if (rtc.call.connecting) { // 拨号中加入会议
-      content = '加入会议将终止呼叫，请确认!';
+      content = $t('conversation.tip.joinInCalling');
       ensureFn = rtc.call.disconnect;
     }
     else if (rtc.call.connected) { // 通话中加入会议
-      content = '加入会议将终止通话，请确认!';
+      content = $t('conversation.tip.joinInCall');
       ensureFn = rtc.call.disconnect;
     }
     else { // 会议中再次加入会议
-      content = '即将退出当前会议，请确认!';
+      content = $t('conversation.tip.joinInConference');
       ensureFn = rtc.conference.leave;
     }
     const ensurePopup = popup.prepared('ensureModal', { content });
@@ -179,15 +184,19 @@ meeting.use(async(ctx, next) => {
     ensurePopup.vm.$once('cancel', () => {
       popup.destroy(ensurePopup);
     });
+    
     await ensurePopup.vm.$once('ok', async() => {
       await ensureFn();
       popup.destroy(ensurePopup);
       await next();
     });
 
-    return;
+    // console.warn('FINISHED')
+    // return;
   }
-  await next();
+  else {
+    await next();
+  }
 });
 
 export default meeting;

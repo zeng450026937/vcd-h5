@@ -6,9 +6,9 @@ const sketch = new Vuem();
 
 const initialDate = () => ({
   // 一些可见性的Modal
-  isStatisticsVisible : false,
-  isSharingVisible    : false,
-
+  isStatisticsVisible   : false,
+  isSharingVisible      : false,
+  isInstanceConference  : false,
   hideControls          : false, // 是否隐藏会议页面底部和头部的控制按钮
   isShareInCenter       : false, // 辅流页面是否显示在主页面
   isShareWindowOpen     : false,
@@ -117,6 +117,14 @@ sketch.provide({
     isVideoConference(val) { // TODO 失败了呢? -- 返回值
       if (this.conferenceStatus === 'disconnected') return;
       this.updateConferenceType(val);
+    },
+    isInstanceConference(val) {
+      if (val) {
+        this.noticeTimeout = setTimeout(() => {
+          clearTimeout(this.noticeTimeout);
+          this.isInstanceConference = false;
+        }, 5000);
+      }
     },
   },
 });

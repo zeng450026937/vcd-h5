@@ -16,9 +16,19 @@
                         :title="$t('conversation.main.maximizeOrMinimize')"
                         @click="maxConferenceContent"/>
             <template v-if="isInConferenceMain">
-              <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo-light text-base"
-                          :title="$t('conversation.main.inviteMember')"
-                          @click="showInviteModal"/>
+              <a-tooltip
+                  :visible="isInstanceConference"
+                  placement="bottom"
+                  overlayClassName="instance-conference-tooltip">
+                <a-iconfont type="icon-tianjialianxiren"
+                            class="ml-4 cursor-pointer hover:text-indigo-light text-base"
+                            :title="$t('conversation.main.inviteMember')"
+                            @click="showInviteModal"/>
+                <template slot="title">
+                  <span>{{$t('conversation.tip.inviteMore')}}</span>
+                </template>
+              </a-tooltip>
+
               <div v-for="(tab, index) in tabList" :key="index">
                 <a-badge :numberStyle= "{backgroundColor: 'white', boxShadow : 'none'}"
                          class="shadow-none"
@@ -86,7 +96,8 @@ export default {
       ns    : 'conference.sketch',
       props : [ 'hideControls', 'isShareInCenter',
         'isShareWindowOpen', 'isInConferenceMain',
-        'currentTab', 'isVideoConference', 'updateHoldPosition' ],
+        'currentTab', 'isVideoConference',
+        'updateHoldPosition', 'isInstanceConference' ],
     },
     {
       ns    : 'conference.member',
@@ -113,7 +124,7 @@ export default {
       const { currentUser } = this.$model.conference;
 
       if (currentUser && currentUser.isCastViewer()) tabList.splice(1, 1); // 广播方
-      else if (currentUser && currentUser.isOnHold()) tabList.splice(2, 1); // 会议大厅
+      else if (currentUser && currentUser.isOnHold()) tabList.splice(1, 2); // 会议大厅
 
       return tabList;
     },
@@ -350,6 +361,20 @@ export default {
             height: 12px;
           }
         }
+      }
+    }
+  }
+  .instance-conference-tooltip {
+    .ant-tooltip-content {
+      .ant-tooltip-arrow {
+        border-bottom-color: #d7def3;
+      }
+      .ant-tooltip-inner {
+        background-color: #d7def3;
+        font-size: 12px;
+        color: #4A5FC4;
+        text-align: center;
+        line-height: 20px;
       }
     }
   }

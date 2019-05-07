@@ -254,7 +254,7 @@ model.provide({
 
       this.messageTextList.push(val.isOnHold()
         ? $t('conversation.main.message.enterHall', { target: text })
-        : $t('conversation.main.message.enterHall', { target: text }));
+        : $t('conversation.main.message.joinMeeting', { target: text }));
     },
     deletedUser(val) {
       const text = val.displayText.length > 10 ? `${val.displayText.slice(0, 10)}...` : val.displayText;

@@ -30,7 +30,7 @@ module.exports = {
           allowToConference : '您已被主持人批准进入会议',
           kickFromMeeting   : '您被移出会议',
           joinMeeting       : '{target} 加入会议',
-          enterHall         : '{target} 加入会议',
+          enterHall         : '{target} 加入会议大厅',
           exitMeeting       : '{target} 离开会议',
         },
       },
@@ -214,6 +214,13 @@ module.exports = {
         callInConference   : '拨打电话将离开会议，请确认!',
         answerInCall       : '接通来电将挂断当前通话，请确认!',
         callInCall         : '拨打电话将挂断当前通话，请确认!',
+        joinInCalling      : '加入会议将终止呼叫，请确认!',
+        joinInCall         : '加入会议将终止通话，请确认!',
+        joinInConference   : '即将退出当前会议，请确认!',
+        inviteMore         : '邀请更多人加入会议',
+      },
+      error : {
+        server : '当前服务器无法访问',
       },
     },
     en : {
