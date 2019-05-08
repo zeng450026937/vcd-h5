@@ -178,7 +178,9 @@ export default {
     },
     onOpen() {
       this.share.getSources();
-      this.timer = setInterval(() => this.share.getSources(), 3000);
+      this.timer = setInterval(() => {
+        this.share.getSources();
+      }, 3000);
     },
   },
   watch : {

@@ -112,7 +112,7 @@ member.provide({
           if (val.findIndex((v) => v.entity === user.entity) === -1
             && this.userList.findIndex((v) => v.entity === user.entity) !== -1) {
             const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
-            
+
             this.$parent.messageTextList.push($t('conversation.main.message.joinMeeting', { target: text }));
           }
         });

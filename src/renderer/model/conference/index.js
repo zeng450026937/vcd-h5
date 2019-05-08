@@ -144,10 +144,7 @@ model.provide({
       const { lobby } = rtc.conference.conference;
 
       if (status) {
-        lobby.allow(user.entity).then(() => {
-          // const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
-          // this.messageTextList.push($t('conversation.main.message.joinMeeting', { target: text }));
-        });
+        lobby.allow(user.entity).then(() => {});
       }
       else {
         lobby.refuse(user.entity);

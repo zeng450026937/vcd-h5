@@ -82,6 +82,8 @@ export default {
       const ele = document.getElementById(`plate-${val}`);
 
       if (ele) document.getElementById(`plate-${val}`).click();
+      
+      return !!ele;
     },
     clickPoint() {
       this.$emit('inputNumber', '.');
