@@ -11,8 +11,18 @@ function normalizePlatform(platform) {
       ? 'mac' : platform;
 }
 
+function findArtifactPath(artifactPaths = []) {
+  let artifact = artifactPaths.shift();
+
+  while (artifact && /blockmap$/.test(artifact)) {
+    artifact = artifactPaths.shift();
+  }
+
+  return artifact;
+}
+
 module.exports = async function(context) {
-  const artifact = context.artifactPaths[0];
+  const artifact = findArtifactPath(context.artifactPaths);
   const packageInfo = {};
   const version = semver.parse(pkg.version);
 
