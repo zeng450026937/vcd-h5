@@ -175,7 +175,7 @@ model.provide({
     });
 
     rtc.conference.$on('call-record', async(info) => {
-      // console.warn('rtc.conference.event', info);
+      console.warn('rtc.conference.event', info);
       let record = await callRecordDB.getRecordById(info.id);
 
       if (!record) record = await createConferenceRecord(info);
@@ -203,7 +203,7 @@ export default model;
 async function createConferenceRecord(info) {
   const { account, server } = storage.query('CURRENT_ACCOUNT');
 
-  if (info.media == null) info.media = { video: true };
+  if (info.media == null || Object.keys(info.media).length === 0) info.media = { video: true };
 
   const params = {
     subject          : info.subject,

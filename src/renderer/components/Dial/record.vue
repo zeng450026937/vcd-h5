@@ -19,6 +19,7 @@
             <div class="record-item" @click="toDetail(item)">
               <div class="record-subject">
                 <ContactPopoverAndSub :info="item" @call="handleCall"></ContactPopoverAndSub>
+                <span v-if="item.count>1">({{item.count}})</span>
               </div>
               <div class="record-info" >
                 <div class="record-info-status"
@@ -76,7 +77,7 @@ import { CallRecord } from '../../database/call-record';
 import { genDurationTime, genStartTime } from '../../utils/date';
 import { callIcon, callType } from '../../utils/filters';
 import ContactPopover from '../Main/Contact/ContactPopover.vue';
-import ContactPopoverAndSub from '../Main/Contact/ContactPopoverAndSub'
+import ContactPopoverAndSub from '../Main/Contact/ContactPopoverAndSub.vue';
 import CommonEmpty from '../Shared/CommonEmpty.vue';
 import { $t } from '../../i18n';
 
@@ -163,6 +164,7 @@ export default {
       const polymerization = [];
 
       records.forEach((record) => {
+        record.count = 1;
         if (polymerization.length === 0) return polymerization.push(record);
 
         const lastRecord = polymerization[polymerization.length - 1];
@@ -172,6 +174,7 @@ export default {
           && lastRecord.refuse === record.refuse
           && lastRecord.media === record.media
           && lastRecord.connected === record.connected) {
+          record.count = polymerization[polymerization.length - 1].count + 1;
           polymerization[polymerization.length - 1] = record;
         }
         else {

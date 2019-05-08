@@ -177,8 +177,8 @@ export default {
       this.timer = setInterval(() => {
         this.time = this.getTime();
         this.date = new Date();
-        this.recentScheduleEvent.updateStatus();
-      });
+        if (this.recentScheduleEvent && this.recentScheduleEvent.updateStatus) this.recentScheduleEvent.updateStatus();
+      }, 1000);
     },
     join() {
       this.$dispatch('meeting.joinMeeting', {
