@@ -1,19 +1,19 @@
 <template>
   <div id="login-content" class="h-full flex">
-    <div class="side">
+    <div class="h-full">
+      <div class="side h-full">
       <login-header class="header" :useOperationBar="false" />
       <img  ondragstart="return false;" class="bg" src="../../assets/login-bg.png"/>
       <div class="logo z-10">
         Yealink
       </div>
-
+    </div>
     </div>
     <div class="main">
       <login-header :use-drop-down="!showSetting" :background="'#ffffff'" :use-title="false" />
       <div class="w-full content" v-show="!showSetting">
         <login-form-content @openSetting="openSetting"/>
       </div>
-
       <div class="w-full content" v-if="showSetting">
         <login-setting-content  @closeSetting="closeSetting"/>
       </div>
