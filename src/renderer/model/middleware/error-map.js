@@ -5,6 +5,7 @@ const ERROR_MAP = {
   'Miss Book Info By ID'  : '会议号码错误，请重新输入！',
   'Invalid PIN'           : '密码错误，请重新输入！',
   Unavailable             : '对方正忙，请稍后再拨', // P2P 通话
+  Busy                    : '对方正忙，请稍后再拨', // 旧版vcd
   Locked                  : '该会议已被锁定，无法加入！',
   NoMpsAvailable          : '会议人数已达上限，请稍后再试！',
   'User Count Exceed'     : '会议人数已达上限，请稍后再试！',
