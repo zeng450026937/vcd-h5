@@ -67,7 +67,8 @@ export default {
     userList() {
       return this.$model.conference.member.userList.filter((user) => !user.isCurrentUser()
         && !user.isOnHold()
-        && !user.isCastViewer());
+        && !user.isCastViewer()
+        && user.endpoint.some((point) => point['@session-type'] === 'chat'));
     },
     targetList() {
       const targetList = [ {

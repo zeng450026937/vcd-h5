@@ -397,8 +397,10 @@ function analyzeReport(report = {}, direction = 'inbound') {
     statsAudio.track = safeValue(audio.track, statsAudio.track);
 
     statsAudio.bitrate = direction === 'inbound'
-      ? safeValue(audio.incomingBitrate, statsAudio.bitrate)
-      : safeValue(audio.outgoingBitrate, statsAudio.bitrate);
+      ? safeValue(audio.transport
+        ? audio.transport.incomingBitrate : audio.incomingBitrate, statsAudio.bitrate)
+      : safeValue(audio.transport
+        ? audio.transport.outgoingBitrate : audio.outgoingBitrate, statsAudio.bitrate);
   }
   if (video) {
     const { video:statsVideo } = stats;
@@ -410,8 +412,10 @@ function analyzeReport(report = {}, direction = 'inbound') {
     statsVideo.track = safeValue(video.track, statsVideo.track);
 
     statsVideo.bitrate = direction === 'inbound'
-      ? safeValue(video.incomingBitrate, statsVideo.bitrate)
-      : safeValue(video.outgoingBitrate, statsVideo.bitrate);
+      ? safeValue(video.transport
+        ? video.transport.incomingBitrate : video.incomingBitrate, statsVideo.bitrate)
+      : safeValue(video.transport
+        ? video.transport.outgoingBitrate : video.outgoingBitrate, statsVideo.bitrate);
   }
 
   function safeValue(value, fallback) {
@@ -439,24 +443,24 @@ function getTotalOutgoingBitrate(signalData) {
     const { audio, video } = media.outbound;
 
     if (audio) {
-      total += audio.outgoingBitrate;
-      // audio.transport ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
+      total += audio.transport
+        ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
     }
     if (video) {
-      total += video.outgoingBitrate;
-      // video.transport ? video.transport.outgoingBitrate : video.outgoingBitrate;
+      total += video.transport
+        ? video.transport.outgoingBitrate : video.outgoingBitrate;
     }
   }
   if (share && share.outbound) {
     const { audio, video } = share.outbound;
 
     if (audio) {
-      total += audio.outgoingBitrate;
-      // audio.transport ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
+      total += audio.transport
+        ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
     }
     if (video) {
-      total += video.outgoingBitrate;
-      // video.transport ? video.transport.outgoingBitrate : video.outgoingBitrate;
+      total += video.transport
+        ? video.transport.outgoingBitrate : video.outgoingBitrate;
     }
   }
 
@@ -477,24 +481,20 @@ function getTotalIncomingBitrate(signalData) {
     const { audio, video } = media.inbound;
 
     if (audio) {
-      total += audio.incomingBitrate;
-      // audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
+      total += audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
     }
     if (video) {
-      total += video.incomingBitrate;
-      // video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
+      total += video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
     }
   }
   if (share && share.inbound) {
     const { audio, video } = share.inbound;
 
     if (audio) {
-      total += audio.incomingBitrate;
-      // audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
+      total += audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
     }
     if (video) {
-      total += video.incomingBitrate;
-      // video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
+      total += video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
     }
   }
 

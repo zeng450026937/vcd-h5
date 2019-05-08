@@ -105,8 +105,18 @@ member.provide({
     },
   },
   watch : {
-    waitingList(val) {
+    waitingList(val, oldVal) {
       this.hasNewMeetingApply = this.currentUserIsPresenter && val && val.length > 0;
+      if (oldVal && oldVal.length > 0) {
+        oldVal.forEach((user) => {
+          if (val.findIndex((v) => v.entity === user.entity) === -1
+            && this.userList.findIndex((v) => v.entity === user.entity) !== -1) {
+            const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
+            
+            this.$parent.messageTextList.push($t('conversation.main.message.joinMeeting', { target: text }));
+          }
+        });
+      }
     },
     speakApplyList(val) {
       this.hasNewSpeakApply = this.currentUserIsPresenter && val && val.length > 0;

@@ -145,9 +145,8 @@ model.provide({
 
       if (status) {
         lobby.allow(user.entity).then(() => {
-          const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
-
-          this.messageTextList.push($t('conversation.main.message.joinMeeting', { target: text }));
+          // const text = user.displayText.length > 10 ? `${user.displayText.slice(0, 10)}...` : user.displayText;
+          // this.messageTextList.push($t('conversation.main.message.joinMeeting', { target: text }));
         });
       }
       else {
