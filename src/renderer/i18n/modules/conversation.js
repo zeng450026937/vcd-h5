@@ -62,7 +62,7 @@ module.exports = {
         packetsLostRate   : '丢包率',
         video             : '视频',
         audio             : '音频',
-        screen            : '音频',
+        screen            : '辅流',
         excellent         : '极佳',
         good              : '良好',
         general           : '一般',

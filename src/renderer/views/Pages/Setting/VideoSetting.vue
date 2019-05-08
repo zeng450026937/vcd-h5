@@ -25,7 +25,8 @@
             <a-input v-else
                      :value="$t('conversation.setting.noDevice')"
                      disabled read-only
-                     class="pl-4 mt-2 select-none text-black9 bg-white"/>
+                     class="pl-4 mt-2 select-none text-black9 bg-white"
+                     style="width: 320px;"/>
             <div class="flex items-end ml-2">
               <span class="text-xs opacity-75">{{$t('setting.video.noneCamera')}}</span>
               <a-popover placement="bottomLeft" trigger="click">

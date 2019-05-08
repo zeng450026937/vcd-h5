@@ -43,7 +43,7 @@
                class="popover-content-item hover:bg-list-hover"
                @click="toAudioCall">
             <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-            <span class="ml-3 text-xs">{{$t('conversation.controls.call')}}</span>
+            <span class="ml-3 text-xs">{{$t('conversation.controls.toAudioCall')}}</span>
           </div>
           <div class="popover-content-item hover:bg-list-hover"
                @click="openPlateModal">
