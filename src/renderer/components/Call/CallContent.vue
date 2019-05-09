@@ -98,6 +98,10 @@ export default {
       props : [ 'updateHoldPosition' ],
     },
     {
+      ns    : 'conference.share',
+      props : [ 'isSwitching' ],
+    },
+    {
       ns    : 'setting',
       props : [ 'maximizedWhenRemoteSharing', 'minimizedWhenLocalSharing' ],
     },
@@ -244,18 +248,18 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = this.hasRemoteScreenStream;
-      if (val) {
-        this.$rtc.media.screenMedia.acquireStream();
-      }
-      else {
-        this.$rtc.media.screenMedia.releaseStream();
-      }
+      // if (val) {
+      //   this.$rtc.media.screenMedia.acquireStream();
+      // }
+      // else {
+      //   this.$rtc.media.screenMedia.releaseStream();
+      // }
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
     },
     shareStreamStatus(val) {
-      if (this.hasLocalScreenStream && !val) {
+      if (!this.isSwitching && this.hasLocalScreenStream && !val) {
         // 分享的应用被关闭
         this.$message.warn(this.$t('conversation.share.message.sharingEnded'));
         this.$rtc.call.share.disconnect();

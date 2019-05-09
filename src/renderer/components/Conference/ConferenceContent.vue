@@ -278,12 +278,12 @@ export default {
 
       this.isShareInCenter = this.remoteScreenStream;
 
-      if (val) {
-        this.$rtc.media.screenMedia.acquireStream();
-      }
-      else {
-        this.$rtc.media.screenMedia.releaseStream();
-      }
+      // if (val) {
+      //   this.$rtc.media.screenMedia.acquireStream();
+      // }
+      // else {
+      //   this.$rtc.media.screenMedia.releaseStream();
+      // }
     },
     remoteScreenStream(val) {
       // 观看他人内容共享时自动最大化VCD窗口

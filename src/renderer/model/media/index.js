@@ -355,19 +355,33 @@ model.provide({
       'shareSmoothMode',
       (val) => {
         if (val) {
-          this.videoQuality.width = 1920;
-          this.videoQuality.height = 1080;
-          this.videoQuality.frameRate = 5;
-        }
-        else {
           this.videoQuality.width = 1280;
           this.videoQuality.height = 720;
           this.videoQuality.frameRate = 30;
+        }
+        else {
+          this.videoQuality.width = 1920;
+          this.videoQuality.height = 1080;
+          this.videoQuality.frameRate = 5;
         }
 
         rtc.media.screenMedia.videoQuality.width = this.videoQuality.width;
         rtc.media.screenMedia.videoQuality.height = this.videoQuality.height;
         rtc.media.screenMedia.videoQuality.frameRate = this.videoQuality.frameRate;
+
+        // 设置立即生效
+        let shareChannel = null;
+
+        if (rtc.conference.shareChannel.channel.localStream) {
+          shareChannel = rtc.conference.shareChannel.channel;
+        }
+        else if (rtc.call.share.channel.localStream) {
+          shareChannel = rtc.call.share.channel;
+        }
+        if (shareChannel) {
+          shareChannel.localStream.getTracks().forEach((t) => t.stop());
+          rtc.media.screenMedia.acquireDetachedStream().then((s) => shareChannel.replaceLocalStream(s));
+        }
       },
       { immediate: true }
     );

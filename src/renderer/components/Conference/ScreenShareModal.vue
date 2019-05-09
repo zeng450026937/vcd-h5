@@ -19,7 +19,7 @@
             </a-checkbox>
           </div>
           <div class="flex items-center mt-1">
-            <a-checkbox class="text-xs" :checked="shareSmoothMode" @change="shareSmoothMode = !shareSmoothMode">
+            <a-checkbox class="text-xs" :checked="smoothMode" @change="smoothMode = !smoothMode">
               {{$t('conversation.share.preferVideoFluency')}}
             </a-checkbox>
             <a-tooltip placement="right" >
@@ -71,10 +71,8 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
   </a-modal>
 </template>
@@ -101,6 +99,7 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
+      smoothMode      : false,
     };
   },
   sketch : [
@@ -143,6 +142,7 @@ export default {
       this.selectedWindow = item;
     },
     handleCancel() {
+      this.isSwitching = false;
       this.visible = false;
     },
     async handleShare() {
@@ -157,24 +157,31 @@ export default {
         .then((val) => {
           // TODO ///
           setTimeout(() => {
-            if (this.localScreenStream) {
-              this.isSwitching = false;
-              this.visible = false;
-            }
-            else if (this.source === 'conference') {
-              return this.$rtc.conference.shareChannel.connect().then(() => {
+            const shareChannel = this.source === 'conference' ? this.$rtc.conference.shareChannel : this.$rtc.call.share;
+
+            const reAcquire = this.shareSmoothMode === this.smoothMode;
+
+            this.shareSmoothMode = this.smoothMode;
+            if (!this.localScreenStream) {
+              return shareChannel.connect().then(() => {
                 this.isSwitching = false;
                 this.visible = false;
               }).catch((e) => {});
             }
+            if (reAcquire) {
+              this.$rtc.media.screenMedia.acquireDetachedStream()
+                .then((s) => shareChannel.channel.replaceLocalStream(s))
+                .then(() => {
+                  this.isSwitching = false;
+                  this.visible = false;
+                });
+            }
             else {
-              return this.$rtc.call.share.connect('send').then(() => {
-                this.isSwitching = false;
-                this.visible = false;
-              });
+              this.isSwitching = false;
+              this.visible = false;
             }
           }, 500);
-        });
+        }).catch(() => this.isSwitching = false);
     },
     onOpen() {
       this.share.getSources();
@@ -186,6 +193,7 @@ export default {
   watch : {
     visible(val) {
       if (val) {
+        this.smoothMode = this.shareSmoothMode;
         this.onOpen();
       }
       else {
