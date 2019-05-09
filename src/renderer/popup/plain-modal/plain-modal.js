@@ -19,6 +19,14 @@ const plainModal = {
       type    : Boolean,
       default : false,
     },
+    okText : {
+      type    : String,
+      default : '确认',
+    },
+    cancelText : {
+      type    : String,
+      default : '取消',
+    },
     hideCancel : {
       type    : Boolean,
       default : false,
@@ -104,25 +112,25 @@ const plainModal = {
 
       if (!this.hideOk) {
         children.push(h('a-button', {
-          staticClass : 'w-1/2 mx-2 border-red-light text-red-light rounded-sm',
+          staticClass : 'min-w-1/2 mx-2 border-red-light text-red-light rounded-sm',
           props       : {
             ghost : true,
           },
           on : {
             click : this.handleOk,
           },
-        }, '确认'));
+        }, this.okText));
       }
       if (!this.hideCancel) {
         children.push(h('a-button', {
-          staticClass : 'w-1/2 mx-2 border-grey-dark text-grey-dark rounded-sm',
+          staticClass : 'min-w-1/2 mx-2 border-grey-dark text-grey-dark rounded-sm',
           props       : {
             ghost : true,
           },
           on : {
             click : this.handleCancel,
           },
-        }, '取消'));
+        }, this.cancelText));
       }
 
       return children;

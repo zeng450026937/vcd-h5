@@ -28,8 +28,8 @@ export default class Popup {
     return Popup.ctx.$root.$createElement;
   }
 
-  genVNode({ tag, date, children }, params = {}) {
-    return Popup.rooth()(tag, date, Array.isArray(children)
+  genVNode({ tag, data, children }, params = {}) {
+    return Popup.rooth()(tag, data, Array.isArray(children)
       ? children.map((c) => this.genVNode(c, params)) : params[children] || children);
   }
 

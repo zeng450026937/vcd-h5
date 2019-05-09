@@ -70,7 +70,9 @@
 
                     <div class="flex flex-col px-5 py-3 text-xs">
                       <div class="flex items-center">
-                        <span class="mr-3 truncate text-black6">{{item.isUser ? $t('contact.label.account') : $t('contact.label.number')}}</span>
+                        <span class="mr-3 truncate text-black6">
+                          {{item.isUser ? $t('contact.label.account') : $t('contact.label.number')}}
+                        </span>
                         <span>{{item.number}}</span>
                         <div class="flex flex-grow"></div>
                         <a-iconfont type="icon-shipin"
@@ -156,6 +158,14 @@
       </div>
       <contact-modal :storeName="storeName" ref="contactModal" @confirm="startMeeting"></contact-modal>
     </div>
+    <plain-modal ref="inputModal" title="请输入密码"
+                 hide-cancel
+                 :ok-text="vmrInfo.pin ? '加入' : '没有密码，直接加入 >>'"
+                  @ok="joinVMR">
+      <div slot="content">
+        <a-input v-model="vmrInfo.pin"/>
+      </div>
+    </plain-modal>
   </a-layout>
 </template>
 
@@ -164,6 +174,8 @@ import { RecycleScroller } from 'vue-virtual-scroller';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import ContactModal from './ContactModal.vue';
+import PlainModal from '../../../popup/plain-modal';
+
 import { $t } from '../../../i18n';
 
 const LOAD_MODE = {
@@ -253,12 +265,17 @@ export default {
     RecycleScroller,
     CommonEmpty,
     ContactModal,
+    PlainModal,
   },
   data() {
     return {
       LOAD_MODE,
       enableScroll : false,
       pathList     : [],
+      vmrInfo      : {
+        number : '',
+        pin    : '',
+      },
     };
   },
   computed : {
@@ -300,22 +317,41 @@ export default {
       if (this.selfUnDeleted && item.isSelf) return;
       this.$emit('deleteContact', item);
     },
+    async joinVMR() {
+      this.$refs.inputModal.visible = false;
+      await this.$dispatch('meeting.joinMeeting', {
+        number : this.vmrInfo.number,
+        pin    : this.vmrInfo.pin,
+        ...this.vmrInfo.options,
+      });
+      this.vmrInfo = {
+        number : '',
+        pin    : '',
+      };
+    },
+    call(item, options) {
+      if (item.isVMR) {
+        this.$refs.inputModal.visible = true;
+        this.vmrInfo.number = item.number;
+        this.vmrInfo.options = options;
+      }
+      else {
+        this.$dispatch('call.call', {
+          number : item.number,
+          options,
+        });
+      }
+    },
     doVideo(item) {
-      this.$dispatch('call.call', {
-        number  : item.number,
-        options : {
-          audio : true,
-          video : true,
-        },
+      this.call(item, {
+        audio : true,
+        video : true,
       });
     },
     doAudio(item) {
-      this.$dispatch('call.call', {
-        number  : item.number,
-        options : {
-          audio : true,
-          video : false,
-        },
+      this.call(item, {
+        audio : true,
+        video : false,
       });
     },
     handleMeeting(item, type) {
