@@ -223,6 +223,7 @@ model.provide({
 
       const sorted = sortBy(this.merged, (n) => n['start-time'].valueOf());
 
+
       let index = start;
 
       while (index < sorted.length) {
@@ -246,7 +247,7 @@ model.provide({
         }
         else {
           /* eslint-disable no-loop-func */
-          this.notifyTimer = setTimeout(() => this.checkAndNotify(index + 1), waitingTime);
+          this.notifyTimer = setTimeout(() => this.checkAndNotify(index), waitingTime);
           /* eslint-enable no-loop-func */
 
           break;

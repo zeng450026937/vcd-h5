@@ -1,6 +1,7 @@
 import Vuem from '../vuem';
 import { secondsToHms } from '../../utils';
 import rtc from '../../rtc';
+import { $t } from '../../i18n';
 
 const state = new Vuem();
 
@@ -45,7 +46,7 @@ state.provide({
                   clearTimeout(noticeTimeout);
                   if (this.isConnected) {
                     isShowSignalWarning = true;
-                    this.warningNotice = this.$message.warning('当前网络状况不佳，建议切换为音频通话。', 0);
+                    this.warningNotice = this.$message.warning($t('conversation.tip.unstableNetwork '), 0);
                   }
                 }, 500);
               }

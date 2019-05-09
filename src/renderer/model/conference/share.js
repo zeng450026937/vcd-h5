@@ -47,6 +47,9 @@ export default new Vuem().provide({
                   break;
               }
             });
+            if (this.windowList.findIndex((window) => window.id === this.selectedWindow.id) === -1) {
+              this.selectedWindow = {};
+            }
             resolve({
               screenList      : this.screenList,
               applicationList : this.applicationList });

@@ -173,6 +173,7 @@ export class AppWindow extends BaseWindow {
           options.minHeight = 180;
           options.width = options.minWidth;
           options.height = options.minHeight;
+          options.resizable = false;
           break;
         case 'share-controls':
           options.minWidth = 614;
@@ -186,6 +187,7 @@ export class AppWindow extends BaseWindow {
         default:
           options.minWidth = 0;
           options.minHeight = 0;
+          options.resizable = false;
           break;
       }
 

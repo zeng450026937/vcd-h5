@@ -1,6 +1,7 @@
 import moment from 'moment';
 import Vuem from '../vuem';
 import rtc from '../../rtc';
+import { $t } from '../../i18n';
 
 const chat = new Vuem();
 
@@ -40,7 +41,7 @@ chat.provide({
 
       if (target === 'all') {
         conference.sendMessage(content);
-        messageObject.to = '所有人';
+        messageObject.to = $t('conversation.chat.all');
       }
       else {
         const user = conference.users.getUser(target);
@@ -59,11 +60,13 @@ chat.provide({
         this.hasNewMessage = true;
       }
       const messageObject = {
-        from      : val.user['@display-text'],
-        content   : val.msg,
-        date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
-        toAll     : !val['@is-private'],
-        to        : val['@is-private'] ? '我' : '所有人',
+        from    : val.user['@display-text'],
+        content : val.msg,
+        date    : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
+        toAll   : !val['@is-private'],
+        to      : val['@is-private']
+          ? $t('conversation.chat.me')
+          : $t('conversation.chat.all'),
         isPrivate : val['@is-private'],
         type      : 'receive',
       };

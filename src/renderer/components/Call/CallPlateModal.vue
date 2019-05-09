@@ -11,7 +11,8 @@
       wrapClassName="call-plate-modal"
       @cancel="visible = false"
   >
-    <div class="flex flex-col">
+    <div class="flex flex-col"
+         @keyup="onKeyUp">
       <div class="flex h-12 border-b justify-center items-center">
         <span class="text-base">{{$t('dial.title.dialPlate')}}</span>
         <a-iconfont type="icon-guanbi"
@@ -20,11 +21,13 @@
                     @click="visible = false"/>
       </div>
       <div style="padding: 0 50px; margin-top: 30px">
-        <a-input ref="numberInput" read-only
-                 :value="plateContent"
-                 @input="inputPlateContent"/>
+        <a-input ref="numberInput"
+                 read-only
+                 v-model="plateContent"/>
       </div>
-      <plate-content @inputNumber="clickNumber" hide-alpha class="mt-5"
+      <plate-content ref="plateContent"
+                     @inputNumber="clickNumber"
+                     hide-alpha class="mt-5"
                      style="padding: 0 50px 18px 50px;"/>
     </div>
   </a-modal>
@@ -51,15 +54,16 @@ export default {
     };
   },
   methods : {
-    inputPlateContent(e) {
-      this.plateContent = e.target.value.replace(/[^0-9*#]+/, '');
-      if (/[0-9*#]+/.test(e.data)) {
-        this.$rtc.call.sendDTMF(e.data);
-      }
-    },
     clickNumber(num) {
-      this.plateContent = this.plateContent === null ? num : this.plateContent += num;
+      this.$refs.numberInput.focus();
+      this.plateContent = (this.plateContent === null ? num : this.plateContent += num).substr(-24, 24);
       this.$rtc.call.sendDTMF(num);
+      this.$refs.plateContent.selectionStart = this.plateContent.length;
+    },
+    onKeyUp(event) {
+      if (this.$refs.plateContent.showClickAnimation(event.key)) {
+        this.clickNumber(event.key);
+      }
     },
   },
   watch : {

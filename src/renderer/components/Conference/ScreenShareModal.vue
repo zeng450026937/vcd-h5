@@ -44,7 +44,7 @@
     </div>
     <div class="flex flex-col">
       <div class="flex justify-center items-center h-12 border-b">
-        <span class="text-base leading-loose text-black">{{$t('common.controls.title')}}</span>
+        <span class="text-base leading-loose text-black">{{$t('conversation.share.title')}}</span>
       </div>
 
 
@@ -178,7 +178,9 @@ export default {
     },
     onOpen() {
       this.share.getSources();
-      this.timer = setInterval(() => this.share.getSources(), 3000);
+      this.timer = setInterval(() => {
+        this.share.getSources();
+      }, 3000);
     },
   },
   watch : {

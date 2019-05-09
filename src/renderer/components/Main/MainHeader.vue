@@ -3,7 +3,9 @@
     <div class="flex dragable h-full">
       <span v-if="title" class="font-semibold text-base flex self-center ml-4">{{title}}</span>
       <slot name="content"></slot>
-      <div class="flex flex-grow"></div>
+      <div class="flex flex-grow no-dragable py-1">
+        <div class="w-full h-full dragable"/>
+      </div>
       <div class="select-none">
         <div class="flex flex-row text-grey-darkest items-center justify-end cursor-pointer">
           <common-header class="text-grey-dark"/>

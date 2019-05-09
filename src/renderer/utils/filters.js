@@ -24,7 +24,7 @@ export function callIcon(record) {
 
   if (!record.connected && record.refuse === true && record.type === 'callout') return media[record.type];
 
-  if (!record.connected) return media.base;
+  // if (!record.connected) return media.base;
 
   return media[record.type];
 }

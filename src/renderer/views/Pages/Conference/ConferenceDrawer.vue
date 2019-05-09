@@ -78,7 +78,7 @@ export default {
       const { currentUser } = this.$model.conference;
 
       if (currentUser && currentUser.isCastViewer()) tabList.splice(1, 1); // 广播方
-      else if (currentUser && currentUser.isOnHold()) tabList.splice(2, 1); // 会议大厅
+      else if (currentUser && currentUser.isOnHold()) tabList.splice(1, 2); // 会议大厅
 
       return tabList;
     },

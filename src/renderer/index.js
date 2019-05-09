@@ -3,12 +3,12 @@ import '../ipc/ipc-proxy';
 
 import Vue from 'vue';
 import App from './App.vue';
+import i18n from './i18n';
 import router from './router';
+import kom from './model';
 import rtc from './rtc';
 import storage from './storage';
 import popup from './popup';
-import kom from './model';
-import i18n from './i18n';
 import './plugins/ant-design';
 import './plugins/electron';
 import { AppWindowProxy } from './proxy/app-window-proxy';

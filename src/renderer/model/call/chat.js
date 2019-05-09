@@ -1,6 +1,7 @@
 import moment from 'moment';
 import rtc from '../../rtc';
 import Vuem from '../vuem';
+import { $t } from '../../i18n';
 
 const chat = new Vuem();
 
@@ -47,7 +48,7 @@ chat.provide({
 
       const messageObject = {
         from      : raw.remote_identity.uri.user,
-        to        : '我',
+        to        : $t('conversation.chat.me'),
         content   : raw._request.body,
         date      : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
         isPrivate : true,

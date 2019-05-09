@@ -75,20 +75,29 @@ export default {
         ? this.$t('contact.modal.title.addGroup')
         : this.$t('contact.modal.title.updateGroup');
     },
+    isCloud() {
+      return this.$model.account.serverType === 'cloud';
+    },
     dataLoaded() {
-      return this.$model.contact.phoneBookLoaded;
+      if (this.isCloud) return this.$model.contact.phoneBookLoaded;
+
+      return this.$model.contact.phoneBookLoaded && this.$model.contact.favoriteLoaded;
     },
     dataLoadFailed() {
-      return this.$model.contact.phoneBookLoadFailed;
+      if (this.isCloud) return this.$model.contact.phoneBookLoadFailed;
+
+      return this.$model.contact.phoneBookLoadFailed || this.$model.contact.favoriteLoadFailed;
     },
     store() {
-      return this.$model.contact.phoneBookStore;
+      if (this.isCloud) return this.$model.contact.phoneBookStore;
+
+      return this.$model.contact.mixContactStore;
     },
     loadMode() {
       return this.$model.contact.loadMode;
     },
     contacts() {
-      return this.$model.contact.phoneBookStore.originTree;
+      return this.store.originTree.filter((n) => !n.isVMR);
     },
     favoriteStore() {
       return this.$model.contact.favoriteStore;

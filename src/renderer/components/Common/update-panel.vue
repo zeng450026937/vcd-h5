@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col h-full items-center">
+  <div class="flex flex-col h-full items-center justify-center">
     <div class="mt-4">
-      <img class="ml-2" src="../../assets/LOGO_VCD_2.png">
+      <img src="../../assets/LOGO_VCD_2.png">
     </div>
     <div class="mt-5 text-base leading-loose">
       {{$t('setting.about.aboutName')}}
@@ -9,13 +9,14 @@
     <div class="mt-1 text-black6 text-xs leading-tight">
       {{$t('setting.about.versionName')}}： {{currentVersion}}
     </div>
-    <div class="mt-1 text-black6 text-xs leading-tight">
-      {{$t(`setting.about.updateStatusMap.${statusName}`)}}
+    <div class="update-status-describe" v-if="status !==3">
+      <span class="tip">{{$t(`setting.about.updateStatusMap.${statusName}`)}}</span>
+      <div v-if="status===4 || status ===3">
+        <a-progress class="progress" :percent="percent" size="small" status="active" />
+      </div>
     </div>
-    <div v-if="status===4 || status ===3" class="mt-1 w-1/2">
-      <a-progress :percent="percent" size="small" status="active" />
-    </div>
-    <div class="mt-5 w-1/2 text-center">
+
+    <div class="mt-5 w-1/2 text-center" v-if="status === 3">
       <a-button
           v-if="status!==3"
           :disabled="status!==2"
@@ -43,16 +44,18 @@
       <a-divider class="mx-4" type="vertical"></a-divider>
       <span class="cursor-pointer" @click="handlePrivacy">{{$t('setting.about.privacy')}}</span>
     </div>
-    <p class="mt-5 text-xs leading-tight text-black9 mb-3">
-      Copyright © 2018 Yealink Inc. All rights reserved.
-    </p>
+    <copyright></copyright>
   </div>
 </template>
 
 <script>
-export default {
-  name : 'update-panel',
+import Copyright from './Copyright.vue';
 
+export default {
+  name       : 'update-panel',
+  components : {
+    Copyright,
+  },
   data() {
     return {
       statusNameList : [ 
@@ -79,7 +82,7 @@ export default {
     lastSuccessfulCheck() {
       return this.$model.updater.lastSuccessfulCheck;
     },
-    percent() {      
+    percent() {
       return this.progress 
         ? Math.ceil(this.progress.percent) 
         : this.status === 3 // ready
@@ -111,9 +114,38 @@ export default {
   },
 };
 </script>
-
-<style>
-.yealink-logo-color {
-  background-color:#06B676
-}
+<style lang="less">
+  .update-status-describe {
+    background: #F0F2F8;
+    border-radius: 4px;
+    width: 320px;
+    height: 36px;
+    font-size: 12px;
+    margin-top: 20px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .tip {
+      color: #333333;
+    }
+    .progress {
+      position: absolute;
+      left: -15px;
+      bottom: -4px;
+     .ant-progress-outer {
+       padding: 0;
+       .ant-progress-bg {
+         height: 4px !important;
+       }
+       .ant-progress-inner {
+         background: #D8D8D8;
+       }
+     }
+      .ant-progress-text {
+        display: none;
+      }
+    }
+  }
 </style>

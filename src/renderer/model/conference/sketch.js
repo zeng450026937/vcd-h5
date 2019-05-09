@@ -1,13 +1,14 @@
 import Vuem from '../vuem';
 import rtc from '../../rtc';
+import { $t } from '../../i18n';
 
 const sketch = new Vuem();
 
 const initialDate = () => ({
   // 一些可见性的Modal
-  isStatisticsVisible : false,
-  isSharingVisible    : false,
-
+  isStatisticsVisible   : false,
+  isSharingVisible      : false,
+  isInstanceConference  : false,
   hideControls          : false, // 是否隐藏会议页面底部和头部的控制按钮
   isShareInCenter       : false, // 辅流页面是否显示在主页面
   isShareWindowOpen     : false,
@@ -46,8 +47,10 @@ const initialDate = () => ({
       if (typeof this.instance === 'function') return;
       const h = ctx.$createElement;
 
-      const text = videoException ? '当前摄像头异常，请检查后重试'
-        : audioException ? '当前麦克风异常，请检查后重试' : '当前摄像头和麦克风异常，请检查后重试';
+      const text = videoException
+        ? $t('conversation.exception.video')
+        : audioException ? $t('conversation.exception.audio')
+          : $t('conversation.exception.both');
 
       const content = h('div', { class: 'inline-block no-dragable' }, [
         h('div', { class: 'inline-block' }, text),
@@ -114,6 +117,14 @@ sketch.provide({
     isVideoConference(val) { // TODO 失败了呢? -- 返回值
       if (this.conferenceStatus === 'disconnected') return;
       this.updateConferenceType(val);
+    },
+    isInstanceConference(val) {
+      if (val) {
+        this.noticeTimeout = setTimeout(() => {
+          clearTimeout(this.noticeTimeout);
+          this.isInstanceConference = false;
+        }, 5000);
+      }
     },
   },
 });

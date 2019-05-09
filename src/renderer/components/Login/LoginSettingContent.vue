@@ -1,7 +1,7 @@
 <template>
   <div id="login-setting-content" class="flex flex-col bg-white shadow w-full">
     <div class="flex flex-grow">
-      <a-tabs defaultActiveKey="1" class="w-full">
+      <a-tabs v-model="activeKey" class="w-full login-setting-tab">
         <a-tab-pane :tab="$t('login.basicSetting')" key="1">
           <div class="flex flex-col px-20 pt-10">
             <span class="mb-3 leading-normal">{{$t('login.serverSetting')}}</span>
@@ -19,7 +19,7 @@
           </div>
         </a-tab-pane>
         <a-tab-pane :tab="$t('login.about')" key="2">
-          <update-panel></update-panel>
+          <update-panel v-if="activeKey === '2'"></update-panel>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -49,6 +49,7 @@ export default {
       tmpProxyPort : '',
       tmpServer    : '',
       errorQueue   : Promise.resolve(),
+      activeKey    : '1',
     };
   },
   mounted() {
@@ -95,7 +96,11 @@ export default {
       text-align: center;
       margin: 0;
     }
-
+    .login-setting-tab {
+      .ant-tabs-content {
+        height: calc(100% - 46px);
+      }
+    }
     .ant-tabs-tab {
       height: 48px;
       font-size: 16px;

@@ -106,9 +106,9 @@
           </template>
           <a-badge v-if="hasNewVersion">
               <span slot="count"
-                    class="text-white bg-active rounded-lg h-4 leading-none"
-                    style="transform: translate(100%, -50%);font-size: 10px;width: 31px;">
-                <span class="leading-tightest">NEW</span>
+                    class="text-white bg-active rounded-lg h-2 leading-none"
+                    style="transform: translate(50%, -250%);font-size: 10px;width: 8px;">
+                <span class="leading-tightest"></span>
               </span>
             <span class="cursor-pointer leading-tight text-xs" @click="openSetting">
               {{$t('login.serverSetting')}}
@@ -179,9 +179,11 @@ export default {
     isAutoLogin() {
       return this.autoLogin && !this.autoLoginDisabled && this.rmbPassword;
     },
+    status() {
+      return this.$model.updater.status;
+    },
     hasNewVersion() {
-      // TODO check the status of update
-      return false;
+      return this.status === 1 || this.status === 3 || this.status === 4;
     },
   },
   methods : {
@@ -243,7 +245,7 @@ export default {
       this.isCapsLockOn = isCapsLockOn(event);
     },
     openSetting() {
-      this.$storage.update(this.$storage.FIRST_START, false)
+      this.$storage.update(this.$storage.FIRST_START, false);
       this.isFirstStart = false;
       this.isCapsLockOn = false;
       this.$emit('openSetting');
@@ -273,6 +275,9 @@ export default {
         this.rmbPassword = true;
       }
     },
+  },
+  beforeDestroy() {
+    this.isFirstStart = false;
   },
 };
 </script>

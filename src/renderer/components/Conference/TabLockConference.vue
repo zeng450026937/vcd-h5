@@ -4,7 +4,7 @@
       <p class="leading-normal">
       {{isLocked
         ? $t('conversation.lock.unLockTips')
-        : $t('conversation.lock.lockTips')
+        : $t('conversation.lock.lockTips')}}
       </p>
       <template v-if="!isLocked">
         <a-select v-model="selectedOptions"

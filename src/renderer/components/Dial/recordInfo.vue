@@ -227,7 +227,7 @@ export default {
       Object.keys(recordGroup).reverse().forEach((key) => {
         recordGroupList.push({
           time    : key,
-          records : recordGroup[key],
+          records : recordGroup[key].reverse(),
         });
       });
 

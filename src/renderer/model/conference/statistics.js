@@ -1,4 +1,5 @@
 import Vuem from '../vuem';
+import { $t } from '../../i18n';
 
 const statistics = new Vuem();
 
@@ -16,110 +17,110 @@ function formatStatistics(data) {
 
   const sectionInfo = [
     {
-      title    : '视频',
+      title    : $t('conversation.statistics.video'),
       sections : [
         {
-          name : '带宽',
+          name : $t('conversation.statistics.bitrate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '分辨率',
+          name : $t('conversation.statistics.ratio'),
           send : '--',
           recv : '--',
         },
         {
-          name : '帧率',
+          name : $t('conversation.statistics.frameRate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '编解码',
+          name : $t('conversation.statistics.codec'),
           send : '--',
           recv : '--',
         },
         {
-          name : '抖动',
+          name : $t('conversation.statistics.jitter'),
           send : '--',
           recv : '--',
         },
         {
-          name : '总丢包数',
+          name : $t('conversation.statistics.packetsLost'),
           send : 0,
           recv : 0,
         },
         {
-          name : '丢包率',
+          name : $t('conversation.statistics.packetsLostRate'),
           send : '0%',
           recv : '0%',
         },
       ],
     },
     {
-      title    : '辅流',
+      title    : $t('conversation.statistics.screen'),
       sections : [
         {
-          name : '带宽',
+          name : $t('conversation.statistics.bitrate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '分辨率',
+          name : $t('conversation.statistics.ratio'),
           send : '--',
           recv : '--',
         },
         {
-          name : '帧率',
+          name : $t('conversation.statistics.frameRate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '编解码',
+          name : $t('conversation.statistics.codec'),
           send : '--',
           recv : '--',
         },
         {
-          name : '抖动',
+          name : $t('conversation.statistics.jitter'),
           send : '--',
           recv : '--',
         },
         {
-          name : '总丢包数',
+          name : $t('conversation.statistics.packetsLost'),
           send : 0,
           recv : 0,
         },
         {
-          name : '丢包率',
+          name : $t('conversation.statistics.packetsLostRate'),
           send : '0%',
           recv : '0%',
         },
       ],
     },
     {
-      title    : '音频',
+      title    : $t('conversation.statistics.audio'),
       sections : [
         {
-          name : '带宽',
+          name : $t('conversation.statistics.bitrate'),
           send : '--',
           recv : '--',
         },
         {
-          name : '编解码',
+          name : $t('conversation.statistics.codec'),
           send : '--',
           recv : '--',
         },
         {
-          name : '抖动',
+          name : $t('conversation.statistics.jitter'),
           send : '--',
           recv : '--',
         },
         {
-          name : '总丢包数',
+          name : $t('conversation.statistics.packetsLost'),
           send : 0,
           recv : 0,
         },
         {
-          name : '丢包率',
+          name : $t('conversation.statistics.packetsLostRate'),
           send : '0%',
           recv : '0%',
         },
@@ -128,19 +129,19 @@ function formatStatistics(data) {
   ];
   const statisticInfo = [
     {
-      name  : '网络',
+      name  : $t('conversation.statistics.network'),
       value : '--',
     },
     {
-      name  : '总带宽',
+      name  : $t('conversation.statistics.totalBitrate'),
       value : '--',
     },
     {
-      name  : 'IP地址',
+      name  : $t('conversation.statistics.ip'),
       value : '--',
     },
     {
-      name  : '协议类型',
+      name  : $t('conversation.statistics.protocolType'),
       value : '--',
     },
   ];
@@ -148,7 +149,12 @@ function formatStatistics(data) {
   // 网络
   const quality = data.media.quality - 1;
 
-  statisticInfo[0].value = [ '极差', '一般', '良好', '极佳' ][quality < 0 ? 0 : quality];
+  statisticInfo[0].value = [
+    $t('conversation.statistics.poor'),
+    $t('conversation.statistics.general'),
+    $t('conversation.statistics.good'),
+    $t('conversation.statistics.excellent'),
+  ][quality < 0 ? 0 : quality];
 
   // 总带宽
   result = getTotalOutgoingBitrate(data);
@@ -157,7 +163,11 @@ function formatStatistics(data) {
   result = getTotalIncomingBitrate(data);
   const totalRecvOutgoingBitrate = result ? `${Math.round(result)} kb/s` : DEFAULT_TEXT;
 
-  statisticInfo[1].value = `接收 ${totalRecvOutgoingBitrate} 发送${totalSendOutgoingBitrate}`;
+  statisticInfo[1].value = `
+    ${$t('conversation.statistics.send')}
+      ${totalRecvOutgoingBitrate} 
+    ${$t('conversation.statistics.receive')}
+     ${totalSendOutgoingBitrate}`;
 
   // IP地址
   if (statisticInfo[2].value === DEFAULT_TEXT) {
@@ -387,8 +397,10 @@ function analyzeReport(report = {}, direction = 'inbound') {
     statsAudio.track = safeValue(audio.track, statsAudio.track);
 
     statsAudio.bitrate = direction === 'inbound'
-      ? safeValue(audio.incomingBitrate, statsAudio.bitrate)
-      : safeValue(audio.outgoingBitrate, statsAudio.bitrate);
+      ? safeValue(audio.transport
+        ? audio.transport.incomingBitrate : audio.incomingBitrate, statsAudio.bitrate)
+      : safeValue(audio.transport
+        ? audio.transport.outgoingBitrate : audio.outgoingBitrate, statsAudio.bitrate);
   }
   if (video) {
     const { video:statsVideo } = stats;
@@ -400,8 +412,10 @@ function analyzeReport(report = {}, direction = 'inbound') {
     statsVideo.track = safeValue(video.track, statsVideo.track);
 
     statsVideo.bitrate = direction === 'inbound'
-      ? safeValue(video.incomingBitrate, statsVideo.bitrate)
-      : safeValue(video.outgoingBitrate, statsVideo.bitrate);
+      ? safeValue(video.transport
+        ? video.transport.incomingBitrate : video.incomingBitrate, statsVideo.bitrate)
+      : safeValue(video.transport
+        ? video.transport.outgoingBitrate : video.outgoingBitrate, statsVideo.bitrate);
   }
 
   function safeValue(value, fallback) {
@@ -429,24 +443,24 @@ function getTotalOutgoingBitrate(signalData) {
     const { audio, video } = media.outbound;
 
     if (audio) {
-      total += audio.outgoingBitrate;
-      // audio.transport ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
+      total += audio.transport
+        ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
     }
     if (video) {
-      total += video.outgoingBitrate;
-      // video.transport ? video.transport.outgoingBitrate : video.outgoingBitrate;
+      total += video.transport
+        ? video.transport.outgoingBitrate : video.outgoingBitrate;
     }
   }
   if (share && share.outbound) {
     const { audio, video } = share.outbound;
 
     if (audio) {
-      total += audio.outgoingBitrate;
-      // audio.transport ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
+      total += audio.transport
+        ? audio.transport.outgoingBitrate : audio.outgoingBitrate;
     }
     if (video) {
-      total += video.outgoingBitrate;
-      // video.transport ? video.transport.outgoingBitrate : video.outgoingBitrate;
+      total += video.transport
+        ? video.transport.outgoingBitrate : video.outgoingBitrate;
     }
   }
 
@@ -467,24 +481,20 @@ function getTotalIncomingBitrate(signalData) {
     const { audio, video } = media.inbound;
 
     if (audio) {
-      total += audio.incomingBitrate;
-      // audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
+      total += audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
     }
     if (video) {
-      total += video.incomingBitrate;
-      // video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
+      total += video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
     }
   }
   if (share && share.inbound) {
     const { audio, video } = share.inbound;
 
     if (audio) {
-      total += audio.incomingBitrate;
-      // audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
+      total += audio.transport ? audio.transport.incomingBitrate : audio.incomingBitrate;
     }
     if (video) {
-      total += video.incomingBitrate;
-      // video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
+      total += video.transport ? video.transport.incomingBitrate : video.incomingBitrate;
     }
   }
 

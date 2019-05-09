@@ -318,13 +318,13 @@ export default {
     },
     setAsPresenterText() {
       return this.item.isPresenter()
-        ? this.$t('conversation.controls.toVisitor')
-        : this.$t('conversation.controls.toPresenter');
+        ? this.$t('conversation.member.toVisitor')
+        : this.$t('conversation.member.toPresenter');
     },
     setAsSpeakerText() {
       return this.item.isDemonstrator()
-        ? this.$t('conversation.controls.cancelSpeaker')
-        : this.$t('conversation.controls.toSpeaker');
+        ? this.$t('conversation.member.cancelSpeaker')
+        : this.$t('conversation.member.toSpeaker');
     },
   },
   methods : {

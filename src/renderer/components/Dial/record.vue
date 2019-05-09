@@ -10,49 +10,57 @@
 
     <div class="record-scroll-area">
       <div class="record-list">
-        <div class="record-item"
-             @click="toDetail(record)" v-for="(record, index) in currentRecords" :key="record.id + index">
-          <div class="record-subject">
-            <ContactPopover @update-info="handleUpdateInfo" @call="handleCall" :info="record"></ContactPopover>
-            <div class="subject">{{ record | recordName}}</div>
-          </div>
-          <div class="record-info" >
-            <div class="record-info-status"
-                 :class="{
-                  'text-red':!(!record.connected && record.refuse === true && record.type === 'callout')
-                  && (!record.connected)
+        <recycle-scroller :items="currentRecords"
+                          v-show="currentRecords.length>0"
+                          :buffer="20"
+                          :page-mode="false"
+                          key-field="id">
+          <template v-slot="{item, index}">
+            <div class="record-item" @click="toDetail(item)">
+              <div class="record-subject">
+                <ContactPopoverAndSub :info="item" @call="handleCall"></ContactPopoverAndSub>
+                <span v-if="item.count>1">({{item.count}})</span>
+              </div>
+              <div class="record-info" >
+                <div class="record-info-status"
+                     :class="{
+                  'text-red':!(!item.connected && item.refuse === true && item.type === 'callout')
+                  && (!item.connected)
                  }">
-              <a-iconfont :type='record|callIcon' class="text-sm mr-1" theme="filled"></a-iconfont>
-              <div>{{record|callType}}</div>
-            </div>
-            <div class="record-info-duration">
-              {{record|duration}}
-            </div>
-          </div>
-          <div class="record-operate">
-            <div class="record-date">
-              {{record.startTime|genStartTime}}
-            </div>
-            <div class="record-operate-btns">
-              <a-iconfont
-                  @click.stop="doVideo(record)"
-                  type='icon-shipin'
-                  class="text-indigo text-base cursor-pointer hover:text-blue">
-              </a-iconfont>
+                  <a-iconfont :type='item|callIcon' class="text-sm mr-1" theme="filled"></a-iconfont>
+                  <div>{{item|callType}}</div>
+                </div>
+                <div class="record-info-duration">
+                  {{item|duration}}
+                </div>
+              </div>
+              <div class="record-operate">
+                <div class="record-date">
+                  {{item.startTime|genStartTime}}
+                </div>
+                <div class="record-operate-btns">
+                  <a-iconfont
+                      @click.stop="doVideo(item)"
+                      type='icon-shipin'
+                      class="text-indigo text-base cursor-pointer hover:text-blue">
+                  </a-iconfont>
 
-              <a-iconfont
-                  @click.stop="doAudio(record)"
-                  type='icon-yuyin'
-                  class="text-indigo text-base cursor-pointer hover:text-blue mx-5">
-              </a-iconfont>
+                  <a-iconfont
+                      @click.stop="doAudio(item)"
+                      type='icon-yuyin'
+                      class="text-indigo text-base cursor-pointer hover:text-blue mx-5">
+                  </a-iconfont>
 
-              <a-iconfont type='icon-right'
-                          class="text-indigo text-base cursor-pointer hover:text-blue"
-                          @click="toDetail(record)">
-              </a-iconfont>
+                  <a-iconfont type='icon-right'
+                              class="text-indigo text-base cursor-pointer hover:text-blue"
+                              @click="toDetail(item)">
+                  </a-iconfont>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </template>
+        </recycle-scroller>
+
       </div>
       <div class="record-empty-content"  v-if="currentRecords.length === 0">
         <common-empty image="empty-record"></common-empty>
@@ -64,10 +72,12 @@
 </template>
 
 <script>
+import { RecycleScroller } from 'vue-virtual-scroller';
 import { CallRecord } from '../../database/call-record';
 import { genDurationTime, genStartTime } from '../../utils/date';
 import { callIcon, callType } from '../../utils/filters';
 import ContactPopover from '../Main/Contact/ContactPopover.vue';
+import ContactPopoverAndSub from '../Main/Contact/ContactPopoverAndSub.vue';
 import CommonEmpty from '../Shared/CommonEmpty.vue';
 import { $t } from '../../i18n';
 
@@ -75,7 +85,9 @@ export default {
   name       : 'record',
   components : {
     ContactPopover,
+    ContactPopoverAndSub,
     CommonEmpty,
+    RecycleScroller,
   },
   data() {
     return {
@@ -91,6 +103,8 @@ export default {
     currentRecords() {
       const type = this.recordType;
 
+      this.callRecord.forEach((item) => item.size = 48);
+      console.log(this.callRecord);
       if (type === 'all') return this.callRecord;
 
       if (type === 'missed') return this.callRecord.filter((record) => !record.connected && (record.type === 'incoming' || record.direction === 'incoming'));
@@ -150,6 +164,7 @@ export default {
       const polymerization = [];
 
       records.forEach((record) => {
+        record.count = 1;
         if (polymerization.length === 0) return polymerization.push(record);
 
         const lastRecord = polymerization[polymerization.length - 1];
@@ -159,6 +174,7 @@ export default {
           && lastRecord.refuse === record.refuse
           && lastRecord.media === record.media
           && lastRecord.connected === record.connected) {
+          record.count = polymerization[polymerization.length - 1].count + 1;
           polymerization[polymerization.length - 1] = record;
         }
         else {
@@ -175,14 +191,6 @@ export default {
       this.callRecord = this.classification(records);
       this.ready = true;
     },
-    handleUpdateInfo({ id, contact }) {
-      this.currentRecords.forEach((i) => {
-        if (i.otherId === id) {
-          i.contact = contact;
-        }
-      });
-      this.$forceUpdate();
-    },
   },
   filters : {
     callType,
@@ -198,7 +206,7 @@ export default {
     name(name) {
       return /^(.*)\(.*\)$/.test(name) ? RegExp.$1.substr(-2, 2) : name.substr(-2, 2);
     },
-    recordName(record) {
+    recordName(record = {}) {
       if (record.isConference) {
         if (!record.subject) return $t('contact.label.unknown');
 
@@ -271,13 +279,6 @@ export default {
             align-items: center;
             padding:0 20px 0 10px;
             overflow: hidden;
-            .subject {
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              flex-grow: 1;
-              padding-left: 10px;
-            }
           }
           .record-info {
             width: 20%;
