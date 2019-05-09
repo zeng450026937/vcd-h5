@@ -33,7 +33,7 @@
       </div>
       <a-button key="submit"
                 type="primary"
-                :loading="isSharing"
+                :loading="isSwitching"
                 :disabled="!selectedWindow.id"
                 @click="handleShare">
         {{$t('common.controls.ensure')}}
@@ -101,7 +101,6 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
-      isSharing       : false,
     };
   },
   sketch : [
@@ -111,7 +110,7 @@ export default {
     },
     {
       ns    : 'conference.share',
-      props : [ 'selectedWindow' ],
+      props : [ 'selectedWindow', 'isSwitching' ],
     },
   ],
 
@@ -130,6 +129,9 @@ export default {
         this.$model[this.source].sketch.isSharingVisible = val;
       },
     },
+    localScreenStream() {
+      return this.$rtc.conference.shareChannel.localStream;
+    },
   },
   mounted() {
     if (this.windowList.length > 0) {
@@ -146,13 +148,7 @@ export default {
     async handleShare() {
       if (!this.selectedWindow.id) return;
 
-      this.isSharing = true;
-      if (this.source === 'conference') {
-        await this.$rtc.conference.shareChannel.disconnect();
-      }
-      else {
-        await this.$rtc.call.share.disconnect();
-      }
+      this.isSwitching = true;
 
       // 分享辅流
       this.$rtc.media.selectScreen(
@@ -161,15 +157,19 @@ export default {
         .then((val) => {
           // TODO ///
           setTimeout(() => {
-            if (this.source === 'conference') {
+            if (this.localScreenStream) {
+              this.isSwitching = false;
+              this.visible = false;
+            }
+            else if (this.source === 'conference') {
               return this.$rtc.conference.shareChannel.connect().then(() => {
-                this.isSharing = false;
+                this.isSwitching = false;
                 this.visible = false;
               }).catch((e) => {});
             }
             else {
               return this.$rtc.call.share.connect('send').then(() => {
-                this.isSharing = false;
+                this.isSwitching = false;
                 this.visible = false;
               });
             }
@@ -192,6 +192,22 @@ export default {
         clearInterval(this.timer);
       }
     },
+    // windowList(val) {
+    //   const PPT_REG = /^(.*\.pptx?) - PowerPoint$/;
+    //
+    //   if (PPT_REG.test(this.selectedWindow && this.selectedWindow.name)) {
+    //     const pptName = RegExp.$1;
+    //     const FULL_PPT_REG = /^PowerPoint - \[(.*)\]/;
+    //
+    //     val.forEach((win) => {
+    //       if (FULL_PPT_REG.test(win.name)) {
+    //         if (pptName === RegExp.$1) {
+    //           this.$rtc.media.selectScreen(win.id, false, this.shareSmoothMode);
+    //         }
+    //       }
+    //     });
+    //   }
+    // },
   },
 };
 </script>
