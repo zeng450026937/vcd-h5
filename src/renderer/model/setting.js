@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import storage,{ SETTING_STORAGE } from '../storage';
+import storage, { SETTING_STORAGE } from '../storage';
 import Vuem from './vuem';
 
 // const storage = window.localStorage;
@@ -79,6 +79,8 @@ model.provide({
         logger.error('load setting failed, error: %s', error);
         saved = {};
       }
+      console.warn('----------1---------');
+      console.warn(saved);
 
       Object.keys(saved).forEach((key) => this[key] = saved[key]);
     },

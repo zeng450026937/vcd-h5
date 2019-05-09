@@ -19,7 +19,9 @@ function stringifyDeviceList(list) {
 
 // FIXME: maybe we should only check deviceId & groupId
 function isSameDevice(a, b) {
-  return stringifyDevice(a) === stringifyDevice(b);
+  return a.deviceId === b.deviceId
+    && a.label === b.label
+    && a.kind === b.kind;
 }
 
 const model = new Vuem();
@@ -61,10 +63,10 @@ model.provide({
       get() {
         if (!this.audioInputDevice) return null;
 
-        return this.audioInputDevice.deviceId + this.audioInputDevice.groupId;
+        return this.audioInputDevice.deviceId;
       },
       set(val) {
-        this.audioInputDevice = this.audioInputDevices.find((d) => d.deviceId + d.groupId === val);
+        this.audioInputDevice = this.audioInputDevices.find((d) => d.deviceId === val);
       },
     },
     audioInputDevices() {
@@ -76,10 +78,10 @@ model.provide({
       get() {
         if (!this.audioOutputDevice) return null;
 
-        return this.audioOutputDevice.deviceId + this.audioOutputDevice.groupId;
+        return this.audioOutputDevice.deviceId;
       },
       set(val) {
-        this.audioOutputDevice = this.audioOutputDevices.find((d) => d.deviceId + d.groupId === val);
+        this.audioOutputDevice = this.audioOutputDevices.find((d) => d.deviceId === val);
       },
     },
     audioOutputDevices() {
@@ -91,10 +93,10 @@ model.provide({
       get() {
         if (!this.videoInputDevice) return null;
 
-        return this.videoInputDevice.deviceId + this.videoInputDevice.groupId;
+        return this.videoInputDevice.deviceId;
       },
       set(val) {
-        this.videoInputDevice = this.videoInputDevices.find((d) => d.deviceId + d.groupId === val);
+        this.videoInputDevice = this.videoInputDevices.find((d) => d.deviceId === val);
       },
     },
     videoInputDevices() {
@@ -144,7 +146,7 @@ model.provide({
       const using = this.videoInputDevice;
 
       const hasUsing = using && devices.some((d) => isSameDevice(d, using));
-      
+
       // can't find setting device, use the first one
       if (!hasUsing) {
         this.videoInputDevice = device;

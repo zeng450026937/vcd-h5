@@ -18,7 +18,7 @@
                       v-model="videoInputDeviceId"
                       style="width: 320px;">
               <a-select-option v-for="videoInput in videoInputDevices"
-                               :key="videoInput.deviceId + videoInput.groupId"
+                               :key="videoInput.deviceId"
               >{{videoInput.label | filterLabel}}
               </a-select-option>
             </a-select>
