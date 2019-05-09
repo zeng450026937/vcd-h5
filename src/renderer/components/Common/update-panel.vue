@@ -40,9 +40,9 @@
       <span class="ml-2">{{$t('setting.about.autoUpdate')}}</span>
     </div>
     <div class="flex text-indigo mt-5 items-center text-xs">
-      <span class="cursor-pointer" @click="handleUserProtocol">{{$t('setting.about.userProtocol')}}</span>
+      <span class="cursor-pointer" @click="goUserProtocol">{{$t('setting.about.userProtocol')}}</span>
       <a-divider class="mx-4" type="vertical"></a-divider>
-      <span class="cursor-pointer" @click="handlePrivacy">{{$t('setting.about.privacy')}}</span>
+      <span class="cursor-pointer" @click="goPrivacy">{{$t('setting.about.privacy')}}</span>
     </div>
     <copyright></copyright>
   </div>
@@ -64,11 +64,16 @@ export default {
     };
   },
 
-  sketch : {
-    ns    : 'setting',
-    props : [ 'autoUpdate' ],
-  },
-
+  sketch : [
+    {
+      ns    : 'setting',
+      props : [ 'autoUpdate' ],
+    },
+    {
+      ns    : 'i18n',
+      props : [ 'language' ],
+    },
+  ],
   computed : {
     currentVersion() {
       return this.$model.application.version;
@@ -95,18 +100,27 @@ export default {
   },
 
   methods : {
+    goUserProtocol() {
+      const path = this.language === 'zh'
+        ? 'https://www.yealink.com.cn/onepage_30.html'
+        : 'https://www.yealink.com/onepage_67.html';
+
+      this.$dispatch('application.openExternal', { path });
+    },
+    goPrivacy() {
+      const path = this.language === 'zh'
+        ? 'https://www.yealink.com.cn/onepage_24.html'
+        : 'https://www.yealink.com/onepage_66.html';
+
+      this.$dispatch('application.openExternal', { path });
+    },
     checkUpdate() {
       this.$dispatch('updater.checkForUpdates');
     },
     quitAndInstall() {
       this.$dispatch('updater.quitAndInstallUpdate');
     },
-    handleUserProtocol() {
-      this.$message.warning('用户协议还没做好哦');
-    },
-    handlePrivacy() {
-      this.$message.warning('隐私政策还没做好哦');
-    },
+
   },
 
   mounted() {

@@ -125,9 +125,9 @@
     <div class="login-footer flex  items-center">
       <div class="text-xs flex text-center leading-tight text-black9">
         {{$t('login.clickAgree')}}
-        <span class="text-indigo-light cursor-pointer">{{$t('login.userProtocol')}}</span>
+        <span class="text-indigo-light cursor-pointer" @click="goUserProtocol">{{$t('login.userProtocol')}}</span>
         {{$t('login.and')}}
-        <span class="text-indigo-light cursor-pointer">{{$t('login.privacyPolicy')}}</span>
+        <span class="text-indigo-light cursor-pointer" @click="goPrivacy">{{$t('login.privacyPolicy')}}</span>
       </div>
     </div>
   </div>
@@ -165,16 +165,23 @@ export default {
       },
     };
   },
+
   async mounted() {
     this.initRawAccounts();
     await this.$nextTick();
     if (this.isAutoLogin) this.handleLogin();
     this.isFirstStart = this.$storage.query(this.$storage.FIRST_START);
   },
-  sketch : {
-    ns    : 'account',
-    props : [ 'serverType', 'rmbPassword', 'autoLogin', 'autoLoginDisabled', 'loginType' ],
-  },
+  sketch : [
+    {
+      ns    : 'account',
+      props : [ 'serverType', 'rmbPassword', 'autoLogin', 'autoLoginDisabled', 'loginType' ],
+    },
+    {
+      ns    : 'i18n',
+      props : [ 'language' ],
+    },
+  ],
   computed : {
     isAutoLogin() {
       return this.autoLogin && !this.autoLoginDisabled && this.rmbPassword;
@@ -191,10 +198,24 @@ export default {
       this.$dispatch('account.login', this.loginData);
     },
     toForget() { // 跳转到忘记密码页面
-      shell.openExternal('https://meeting.ylyun.com/meeting/forget');
+      this.$dispatch('application.openExternal', { path: 'https://meeting.ylyun.com/meeting/forget' });
     },
     toRegister() { // 跳转到注册页面
-      shell.openExternal('https://meeting.ylyun.com/enterprise/register');
+      this.$dispatch('application.openExternal', { path: 'https://meeting.ylyun.com/enterprise/register' });
+    },
+    goUserProtocol() {
+      const path = this.language === 'zh'
+        ? 'https://www.yealink.com.cn/onepage_30.html'
+        : 'https://www.yealink.com/onepage_67.html';
+
+      this.$dispatch('application.openExternal', { path });
+    },
+    goPrivacy() {
+      const path = this.language === 'zh'
+        ? 'https://www.yealink.com.cn/onepage_24.html'
+        : 'https://www.yealink.com/onepage_66.html';
+
+      this.$dispatch('application.openExternal', { path });
     },
     toMeeting() {
       this.loginType = 'meeting';
