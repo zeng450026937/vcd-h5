@@ -120,6 +120,9 @@ model.provide({
     isConnected() {
       return rtc.call.connected;
     },
+    isDisConnected(val) {
+      return rtc.call.disconnected;
+    },
   },
   methods : {
     async updateTarget(number) {
@@ -207,12 +210,16 @@ model.provide({
           name : rtc.call.channel.remoteIdentity.uri.user,
         };
       }
-      if (!val && rtc.call.disconnected) {
+      if (!val) {
         this.isVideoCall = true;
-        this.targetInfo = {};
       }
       else if (rtc.call.direction === 'outgoing') {
         rtc.call.channel.renegotiate();
+      }
+    },
+    isDisConnected(val) {
+      if (val) {
+        this.targetInfo = {};
       }
     },
   },

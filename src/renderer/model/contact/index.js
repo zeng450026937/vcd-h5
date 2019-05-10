@@ -154,6 +154,7 @@ model.provide({
   watch : {
     loginStatus(val) {
       if (val === 'disconnected') {
+        this.currentContact = null;
         this.favoriteStore.destroy();
         this.phoneBookStore.destroy();
       }
