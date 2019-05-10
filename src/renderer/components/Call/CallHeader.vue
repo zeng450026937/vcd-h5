@@ -12,11 +12,16 @@
                       @click="showStatistics"/>
           <span class="text-white text-xs leading-tight truncate mr-4">{{duration}}</span>
         </template>
+        <template v-if="userName">
         <div class="text-white max-w-4/5 text-xs leading-tight truncate">
           <span>{{$t('conversation.title.with')}}</span>
           <span class="truncate"> {{this.userName}} </span>
         </div>
-        <span class="text-white text-xs leading-tight">{{$t('conversation.title.communicating')}}</span>
+        <span class="text-white text-xs leading-tight ml-1">{{$t('conversation.title.communicating')}}</span>
+        </template>
+        <div v-else class="text-white text-xs leading-tight">
+          通话已结束
+        </div>
       </div>
       <common-header class="text-white"/>
     </div>
@@ -52,10 +57,7 @@ export default {
       return remoteIdentity && remoteIdentity.display_name;
     },
     userName() {
-      return (this.isIncoming
-        ? this.displayName
-        : this.targetInfo.name)
-        || this.$t('conversation.title.unknownUser');
+      return this.isIncoming ? this.displayName : this.targetInfo.name;
     },
     duration() {
       return this.$model.call.state.duration;
