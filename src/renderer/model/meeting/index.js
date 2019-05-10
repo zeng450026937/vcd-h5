@@ -131,7 +131,9 @@ meeting.provide({
       await next();
 
       const { users } = ctx.payload;
-      const subject = $t('conversation.title.videoSubject', { target: rtc.account.username });
+      const contact = this.$getVM('contact');
+
+      const subject = $t('conversation.title.videoSubject', { target: contact.currentContact.name || rtc.account.username });
 
       return rtc.conference.meetnow(users, { subject }).then(() => {
         this.$getVM('conference.sketch').isInstanceConference = true;

@@ -17,7 +17,7 @@
             <template v-if="isInCallMain">
               <template v-if="isConnected">
                 <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo text-base"
-                            @click="showInviteModal"/>
+                            @click="upgrade"/>
                 <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
                          class="shadow-none"
                          :dot="hasNewMessage">
@@ -48,8 +48,8 @@
             :source="leftSource"
             @video-clicked="shareScreenClicked"/>
       </div>
-      <call-inviting-modal ref="invitingModal"
-                           :getContainer="callContent"/>
+      <!--<call-inviting-modal ref="invitingModal"-->
+                           <!--:getContainer="callContent"/>-->
     </div>
     <!--<hold-item-group/>-->
   </a-layout>
@@ -107,9 +107,9 @@ export default {
     },
   ],
   computed : {
-    callContent() {
-      return () => document.getElementById('layout-call-content');
-    },
+    // callContent() {
+    //   return () => document.getElementById('layout-call-content');
+    // },
     isConnected() {
       return this.$rtc.call.connected;
     },
@@ -180,8 +180,8 @@ export default {
         }, 1000);
       };
     },
-    showInviteModal() {
-      this.$refs.invitingModal.visible = true;
+    upgrade() {
+      this.$dispatch('call.upgrade');
     },
     openDrawer(tab) {
       if (this.hasNewMessage && tab === 'TabChatting') {
@@ -224,12 +224,6 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = this.hasRemoteScreenStream;
-      // if (val) {
-      //   this.$rtc.media.screenMedia.acquireStream();
-      // }
-      // else {
-      //   this.$rtc.media.screenMedia.releaseStream();
-      // }
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;

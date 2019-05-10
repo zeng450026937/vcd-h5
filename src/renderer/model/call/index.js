@@ -47,15 +47,17 @@ model.provide({
         host = toIP(RegExp.$1);
       }
       if (host && target) {
+        this.targetInfo.name = target;
+
         return rtc.ipcall.connect({ host, target });
       }
       const { call } = rtc;
 
       call.target = number;
 
-      this.prepareVideoCall = ctx.payload.options.video;
+      await this.updateTarget(number);
 
-      await this.updateTarget(call.channel.target);
+      this.prepareVideoCall = ctx.payload.options.video;
 
       return call.connect('send', ctx.payload.options).then(() => {
         this.prepareVideoCall = false;
@@ -150,7 +152,9 @@ model.provide({
         }
       }
       if (!this.targetInfo) {
-        this.targetInfo = contact.local.search(number);
+        await contact.local.search(number).then((val) => {
+          this.targetInfo = val;
+        });
       }
       this.targetInfo = this.targetInfo || {
         name : number,
@@ -182,6 +186,7 @@ model.provide({
       if (val == null) return;
       if (this.isConnected) {
         this.callType = val ? 'video' : 'audio';
+        console.warn(`REFERING: ${rtc.call.refering}`);
         rtc.call.channel.callType = this.callType;
         rtc.call.channel.callInfo = {
           audio : true,
