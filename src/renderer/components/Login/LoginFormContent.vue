@@ -139,8 +139,6 @@ import { LOGIN_STORAGE } from '../../storage';
 import { isCapsLockOn } from '../../utils';
 import LoginHeader from './LoginHeader.vue';
 
-const { shell } = require('electron');
-
 export default {
   name       : 'YMSLoginFormContent',
   components : {
