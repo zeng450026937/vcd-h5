@@ -46,7 +46,7 @@ state.provide({
                   clearTimeout(noticeTimeout);
                   if (this.isConnected) {
                     isShowSignalWarning = true;
-                    this.warningNotice = this.$message.warning($t('conversation.tip.unstableNetwork '), 0);
+                    this.warningNotice = this.$message.warning($t('conversation.tip.unstableNetwork'), 0);
                   }
                 }, 500);
               }

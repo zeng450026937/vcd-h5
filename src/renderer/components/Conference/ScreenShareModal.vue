@@ -19,7 +19,7 @@
             </a-checkbox>
           </div>
           <div class="flex items-center mt-1">
-            <a-checkbox class="text-xs" :checked="shareSmoothMode" @change="shareSmoothMode = !shareSmoothMode">
+            <a-checkbox class="text-xs" :checked="smoothMode" @change="smoothMode = !smoothMode">
               {{$t('conversation.share.preferVideoFluency')}}
             </a-checkbox>
             <a-tooltip placement="right" >
@@ -33,7 +33,7 @@
       </div>
       <a-button key="submit"
                 type="primary"
-                :loading="isSharing"
+                :loading="isSwitching"
                 :disabled="!selectedWindow.id"
                 @click="handleShare">
         {{$t('common.controls.ensure')}}
@@ -71,10 +71,8 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
   </a-modal>
 </template>
@@ -101,7 +99,7 @@ export default {
       screenList      : [],
       applicationList : [],
       timer           : null,
-      isSharing       : false,
+      smoothMode      : false,
     };
   },
   sketch : [
@@ -111,7 +109,7 @@ export default {
     },
     {
       ns    : 'conference.share',
-      props : [ 'selectedWindow' ],
+      props : [ 'selectedWindow', 'isSwitching' ],
     },
   ],
 
@@ -130,6 +128,9 @@ export default {
         this.$model[this.source].sketch.isSharingVisible = val;
       },
     },
+    localScreenStream() {
+      return this.$rtc.conference.shareChannel.localStream;
+    },
   },
   mounted() {
     if (this.windowList.length > 0) {
@@ -141,18 +142,13 @@ export default {
       this.selectedWindow = item;
     },
     handleCancel() {
+      this.isSwitching = false;
       this.visible = false;
     },
     async handleShare() {
       if (!this.selectedWindow.id) return;
 
-      this.isSharing = true;
-      if (this.source === 'conference') {
-        await this.$rtc.conference.shareChannel.disconnect();
-      }
-      else {
-        await this.$rtc.call.share.disconnect();
-      }
+      this.isSwitching = true;
 
       // 分享辅流
       this.$rtc.media.selectScreen(
@@ -161,20 +157,31 @@ export default {
         .then((val) => {
           // TODO ///
           setTimeout(() => {
-            if (this.source === 'conference') {
-              return this.$rtc.conference.shareChannel.connect().then(() => {
-                this.isSharing = false;
+            const shareChannel = this.source === 'conference' ? this.$rtc.conference.shareChannel : this.$rtc.call.share;
+
+            const reAcquire = this.shareSmoothMode === this.smoothMode;
+
+            this.shareSmoothMode = this.smoothMode;
+            if (!this.localScreenStream) {
+              return shareChannel.connect().then(() => {
+                this.isSwitching = false;
                 this.visible = false;
               }).catch((e) => {});
             }
+            if (reAcquire) {
+              this.$rtc.media.screenMedia.acquireDetachedStream()
+                .then((s) => shareChannel.channel.replaceLocalStream(s))
+                .then(() => {
+                  this.isSwitching = false;
+                  this.visible = false;
+                });
+            }
             else {
-              return this.$rtc.call.share.connect('send').then(() => {
-                this.isSharing = false;
-                this.visible = false;
-              });
+              this.isSwitching = false;
+              this.visible = false;
             }
           }, 500);
-        });
+        }).catch(() => this.isSwitching = false);
     },
     onOpen() {
       this.share.getSources();
@@ -186,12 +193,29 @@ export default {
   watch : {
     visible(val) {
       if (val) {
+        this.smoothMode = this.shareSmoothMode;
         this.onOpen();
       }
       else {
         clearInterval(this.timer);
       }
     },
+    // windowList(val) {
+    //   const PPT_REG = /^(.*\.pptx?) - PowerPoint$/;
+    //
+    //   if (PPT_REG.test(this.selectedWindow && this.selectedWindow.name)) {
+    //     const pptName = RegExp.$1;
+    //     const FULL_PPT_REG = /^PowerPoint - \[(.*)\]/;
+    //
+    //     val.forEach((win) => {
+    //       if (FULL_PPT_REG.test(win.name)) {
+    //         if (pptName === RegExp.$1) {
+    //           this.$rtc.media.selectScreen(win.id, false, this.shareSmoothMode);
+    //         }
+    //       }
+    //     });
+    //   }
+    // },
   },
 };
 </script>

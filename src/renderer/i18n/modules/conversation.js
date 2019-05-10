@@ -48,7 +48,7 @@ module.exports = {
         videoSubject  : '{target} 的视频会议',
       },
       statistics : {
-        send              : '接受',
+        send              : '接收',
         receive           : '发送',
         deviceType        : '终端类型',
         refreshDeviceInfo : '刷新设备信息',

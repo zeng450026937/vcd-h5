@@ -17,7 +17,7 @@
             <template v-if="isInCallMain">
               <template v-if="isConnected">
                 <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo text-base"
-                            @click="showInviteModal"/>
+                            @click="upgrade"/>
                 <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
                          class="shadow-none"
                          :dot="hasNewMessage">
@@ -48,8 +48,8 @@
             :source="leftSource"
             @video-clicked="shareScreenClicked"/>
       </div>
-      <call-inviting-modal ref="invitingModal"
-                           :getContainer="callContent"/>
+      <!--<call-inviting-modal ref="invitingModal"-->
+                           <!--:getContainer="callContent"/>-->
     </div>
     <!--<hold-item-group/>-->
   </a-layout>
@@ -98,40 +98,23 @@ export default {
       props : [ 'updateHoldPosition' ],
     },
     {
+      ns    : 'conference.share',
+      props : [ 'isSwitching' ],
+    },
+    {
       ns    : 'setting',
       props : [ 'maximizedWhenRemoteSharing', 'minimizedWhenLocalSharing' ],
     },
   ],
   computed : {
-    callContent() {
-      return () => document.getElementById('layout-call-content');
-    },
+    // callContent() {
+    //   return () => document.getElementById('layout-call-content');
+    // },
     isConnected() {
       return this.$rtc.call.connected;
     },
-    callText() {
-      const titleMap = {
-        connecting   : this.$t('conversation.title.connecting', { target: this.userName }),
-        connected    : this.$t('conversation.title.connected', { target: this.userName }),
-        ringing      : this.$t('conversation.title.ringing', { target: this.userName }),
-        disconnected : this.$t('conversation.title.disconnected', { target: this.userName }),
-      };
-
-      return titleMap[this.callStatus] || this.$t('conversation.title.expired');
-    },
     callStatus() {
       return this.$model.state.callStatus;
-    },
-    displayName() {
-      const remoteIdentity = this.callStatus !== 'disconnected'
-        ? this.$rtc.call.remoteIdentity
-        || this.$rtc.call.incoming[0].remoteIdentity : null;
-
-      return remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user);
-    },
-    userName() {
-      return this.displayName || this.targetUser || this.$t('conversation.title.unknownUser');
     },
     centerSource() {
       return this.isShareInCenter ? 'call-screen' : 'call-remote';
@@ -197,8 +180,8 @@ export default {
         }, 1000);
       };
     },
-    showInviteModal() {
-      this.$refs.invitingModal.visible = true;
+    upgrade() {
+      this.$dispatch('call.upgrade');
     },
     openDrawer(tab) {
       if (this.hasNewMessage && tab === 'TabChatting') {
@@ -227,9 +210,6 @@ export default {
     },
   },
   watch : {
-    displayName(cur, once) {
-      this.targetUser = cur || once;
-    },
     isInCallMain : {
       handler(val) {
         if (val) {
@@ -244,18 +224,12 @@ export default {
     hasScreenStream(val) {
       // 第一次打开辅流将其显示在主页面
       this.isShareInCenter = this.hasRemoteScreenStream;
-      if (val) {
-        this.$rtc.media.screenMedia.acquireStream();
-      }
-      else {
-        this.$rtc.media.screenMedia.releaseStream();
-      }
     },
     isShareWindowOpen(val) {
       if (val) this.isShareInCenter = false;
     },
     shareStreamStatus(val) {
-      if (this.hasLocalScreenStream && !val) {
+      if (!this.isSwitching && this.hasLocalScreenStream && !val) {
         // 分享的应用被关闭
         this.$message.warn(this.$t('conversation.share.message.sharingEnded'));
         this.$rtc.call.share.disconnect();

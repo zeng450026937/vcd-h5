@@ -12,7 +12,7 @@ const popup = new Popup({
       components : [
         PlainModal,
       ],
-      date : {
+      data : {
         ref   : 'loadingModal',
         props : {
           hideOk         : true,
@@ -23,7 +23,7 @@ const popup = new Popup({
       children : [
         {
           tag  : 'div',
-          date : {
+          data : {
             staticClass : 'flex flex-col items-center select-none',
             slot        : 'content',
           },
@@ -47,7 +47,7 @@ const popup = new Popup({
       components : [
         PlainModal,
       ],
-      date : {
+      data : {
         ref   : 'ensureModal',
         props : {
           maskClosable   : false,
@@ -57,7 +57,7 @@ const popup = new Popup({
       children : [
         {
           tag  : 'div',
-          date : {
+          data : {
             staticClass : 'flex flex-col items-center select-none',
             slot        : 'content',
           },

@@ -167,9 +167,11 @@ model.provide({
       }
     },
     isCallDisConnected(val) {
-      if (val && this.isConferenceDisConnected) {
-        router.push(this.isRegistered ? this.currentNav.path : LOGIN.LOGIN_CONTENT);
-      }
+      setTimeout(() => {
+        if (val && this.isConferenceDisConnected) {
+          router.push(this.isRegistered ? this.currentNav.path : LOGIN.LOGIN_CONTENT);
+        }
+      }, 3000);
     },
     isInMiniConference(val) {
       if (val) {

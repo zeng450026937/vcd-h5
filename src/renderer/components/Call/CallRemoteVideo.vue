@@ -26,7 +26,7 @@
         <a-avatar :size="160" class="text-3xl border-8">{{this.nickName}}</a-avatar>
         <div class="mt-5 w-full truncate display-name px-4">
           <span class="max-h-full">{{$t('conversation.title.calling')}} </span>
-          <span class="max-w-1/2">{{this.userName}}</span>
+          <span class="max-w-1/2">{{this.targetInfo.name}}</span>
           <span> …</span>
         </div>
       </div>
@@ -83,16 +83,13 @@ export default {
     }
   },
   computed : {
-    userName() {
-      const remoteIdentity = this.callStatus !== 'disconnected'
-        ? this.$rtc.call.remoteIdentity
-        || this.$rtc.call.incoming[0].remoteIdentity : null;
-
-      return remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user);
+    targetInfo() {
+      return this.$model.call.targetInfo;
     },
     nickName() {
-      return /^(.*)\(.*\)$/.test(this.userName) ? RegExp.$1.substr(-2, 2) : this.userName.substr(-2, 2);
+      if (!this.targetInfo.name) return '';
+      
+      return /^(.*)\(.*\)$/.test(this.targetInfo.name) ? RegExp.$1.substr(-2, 2) : this.targetInfo.name.substr(-2, 2);
     },
     isConnecting() {
       return this.$rtc.call.connecting;
@@ -114,6 +111,7 @@ export default {
     },
   },
   methods : {
+
     videoDblClick() {
       this.$emit('video-dblclick');
     },

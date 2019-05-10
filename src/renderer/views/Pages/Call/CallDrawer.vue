@@ -13,7 +13,7 @@
             <a-iconfont v-if="isConnected"
                         type="icon-tianjialianxiren"
                         class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
-                        @click="showInviteModal"/>
+                        @click="upgrade"/>
             <template v-for="(tab, index) in tabList">
               <a-badge :key="index"
                        :numberStyle="{backgroundColor: 'red', boxShadow : 'none'}"
@@ -82,9 +82,8 @@ export default {
     },
   },
   methods : {
-    showInviteModal() {
-      // FIXME modify
-      this.$parent.$children[0].showInviteModal();
+    upgrade() {
+      this.$dispatch('call.upgrade');
     },
     closeDrawer() {
       this.isInCallMain = true;

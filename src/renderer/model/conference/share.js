@@ -9,6 +9,7 @@ export default new Vuem().provide({
       screenList      : [], // 屏幕列表
       applicationList : [], // 应用列表
       selectedWindow  : {},
+      isSwitching     : false,
     };
   },
   computed : {

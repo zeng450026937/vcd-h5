@@ -19,7 +19,9 @@ function stringifyDeviceList(list) {
 
 // FIXME: maybe we should only check deviceId & groupId
 function isSameDevice(a, b) {
-  return stringifyDevice(a) === stringifyDevice(b);
+  return a.deviceId === b.deviceId
+    && a.label === b.label
+    && a.kind === b.kind;
 }
 
 const model = new Vuem();
@@ -61,10 +63,10 @@ model.provide({
       get() {
         if (!this.audioInputDevice) return null;
 
-        return this.audioInputDevice.deviceId + this.audioInputDevice.groupId;
+        return this.audioInputDevice.deviceId;
       },
       set(val) {
-        this.audioInputDevice = this.audioInputDevices.find((d) => d.deviceId + d.groupId === val);
+        this.audioInputDevice = this.audioInputDevices.find((d) => d.deviceId === val);
       },
     },
     audioInputDevices() {
@@ -76,10 +78,10 @@ model.provide({
       get() {
         if (!this.audioOutputDevice) return null;
 
-        return this.audioOutputDevice.deviceId + this.audioOutputDevice.groupId;
+        return this.audioOutputDevice.deviceId;
       },
       set(val) {
-        this.audioOutputDevice = this.audioOutputDevices.find((d) => d.deviceId + d.groupId === val);
+        this.audioOutputDevice = this.audioOutputDevices.find((d) => d.deviceId === val);
       },
     },
     audioOutputDevices() {
@@ -91,10 +93,10 @@ model.provide({
       get() {
         if (!this.videoInputDevice) return null;
 
-        return this.videoInputDevice.deviceId + this.videoInputDevice.groupId;
+        return this.videoInputDevice.deviceId;
       },
       set(val) {
-        this.videoInputDevice = this.videoInputDevices.find((d) => d.deviceId + d.groupId === val);
+        this.videoInputDevice = this.videoInputDevices.find((d) => d.deviceId === val);
       },
     },
     videoInputDevices() {
@@ -144,7 +146,7 @@ model.provide({
       const using = this.videoInputDevice;
 
       const hasUsing = using && devices.some((d) => isSameDevice(d, using));
-      
+
       // can't find setting device, use the first one
       if (!hasUsing) {
         this.videoInputDevice = device;
@@ -355,19 +357,33 @@ model.provide({
       'shareSmoothMode',
       (val) => {
         if (val) {
-          this.videoQuality.width = 1920;
-          this.videoQuality.height = 1080;
-          this.videoQuality.frameRate = 5;
-        }
-        else {
           this.videoQuality.width = 1280;
           this.videoQuality.height = 720;
           this.videoQuality.frameRate = 30;
+        }
+        else {
+          this.videoQuality.width = 1920;
+          this.videoQuality.height = 1080;
+          this.videoQuality.frameRate = 5;
         }
 
         rtc.media.screenMedia.videoQuality.width = this.videoQuality.width;
         rtc.media.screenMedia.videoQuality.height = this.videoQuality.height;
         rtc.media.screenMedia.videoQuality.frameRate = this.videoQuality.frameRate;
+
+        // 设置立即生效
+        let shareChannel = null;
+
+        if (rtc.conference.shareChannel.channel.localStream) {
+          shareChannel = rtc.conference.shareChannel.channel;
+        }
+        else if (rtc.call.share.channel.localStream) {
+          shareChannel = rtc.call.share.channel;
+        }
+        if (shareChannel) {
+          shareChannel.localStream.getTracks().forEach((t) => t.stop());
+          rtc.media.screenMedia.acquireDetachedStream().then((s) => shareChannel.replaceLocalStream(s));
+        }
       },
       { immediate: true }
     );

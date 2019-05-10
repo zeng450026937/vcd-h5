@@ -16,7 +16,7 @@
           <a-select v-if="audioInputDevices.length > 0"
                     v-model="audioInputDeviceId" class="mt-2">
             <a-select-option v-for="audioInput in audioInputDevices"
-                             :key="audioInput.deviceId + audioInput.groupId"
+                             :key="audioInput.deviceId"
             >{{audioInput.label | filterLabel}}
             </a-select-option>
           </a-select>
@@ -37,7 +37,7 @@
           <a-select v-if="audioOutputDevices.length > 0"
                     v-model="audioOutputDeviceId" class="mt-2">
             <a-select-option v-for="audioOutput in audioOutputDevices"
-                             :key="audioOutput.deviceId + audioOutput.groupId"
+                             :key="audioOutput.deviceId"
             >{{audioOutput.label}}
             </a-select-option>
           </a-select>
@@ -98,9 +98,19 @@ export default {
       ],
     },
   ],
+  computed : {
+    audioOutputDevice() {
+      return this.$model.media.audioOutputDevice;
+    },
+  },
   methods : {
     playTestMusic() {
       this.$refs.testAudio.play().then(() => {});
+    },
+  },
+  watch : {
+    audioOutputDevice(val) {
+      this.$refs.testAudio.setSinkId(val.deviceId);
     },
   },
   filters : {

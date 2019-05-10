@@ -296,6 +296,7 @@ export default {
     },
   },
   beforeDestroy() {
+    this.$storage.update(this.$storage.FIRST_START, false);
     this.isFirstStart = false;
   },
 };

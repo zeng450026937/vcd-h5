@@ -84,7 +84,7 @@ export default {
       }
 
       if (!contact) {
-        contact = { number: val, name: this.$t('contact.label.unknown'), unknown: true };
+        contact = { number: val, name: $t('contact.label.unknown'), unknown: true };
       }
 
       return this.contact = contact;

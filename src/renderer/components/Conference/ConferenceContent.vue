@@ -108,6 +108,10 @@ export default {
       props : [ 'hasNewMessage' ],
     },
     {
+      ns    : 'conference.share',
+      props : [ 'isSwitching' ],
+    },
+    {
       ns    : 'setting',
       props : [ 'maximizedWhenRemoteSharing', 'minimizedWhenLocalSharing' ],
     },
@@ -274,12 +278,12 @@ export default {
 
       this.isShareInCenter = this.remoteScreenStream;
 
-      if (val) {
-        this.$rtc.media.screenMedia.acquireStream();
-      }
-      else {
-        this.$rtc.media.screenMedia.releaseStream();
-      }
+      // if (val) {
+      //   this.$rtc.media.screenMedia.acquireStream();
+      // }
+      // else {
+      //   this.$rtc.media.screenMedia.releaseStream();
+      // }
     },
     remoteScreenStream(val) {
       // 观看他人内容共享时自动最大化VCD窗口
@@ -294,7 +298,7 @@ export default {
       if (val) this.isShareInCenter = false;
     },
     shareStreamStatus(val) {
-      if (this.localScreenStream && !val) {
+      if (!this.isSwitching && this.localScreenStream && !val) {
         // 分享的应用被关闭
         this.$message.warn($t('conversation.share.message.sharingEnded'));
         this.$rtc.conference.shareChannel.disconnect();
