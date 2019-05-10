@@ -34,24 +34,28 @@ export default {
     CommonHeader,
     ConferenceStatisticsModal,
   },
-  data() {
-    return {
-      targetUser : '',
-    };
-  },
   computed : {
     callStatus() {
       return this.$model.state.callStatus;
+    },
+    targetInfo() {
+      return this.$model.call.targetInfo;
+    },
+    isIncoming() { // 来电
+      return this.$rtc.call.direction === 'incoming';
     },
     displayName() {
       const remoteIdentity = this.callStatus !== 'disconnected'
         ? this.$rtc.call.remoteIdentity
         || this.$rtc.call.incoming[0].remoteIdentity : null;
 
-      return remoteIdentity && remoteIdentity.uri.user;
+      return remoteIdentity && remoteIdentity.display_name;
     },
     userName() {
-      return this.displayName || this.targetUser || this.$t('conversation.title.unknownUser');
+      return (this.isIncoming
+        ? this.displayName
+        : this.targetInfo.name)
+        || this.$t('conversation.title.unknownUser');
     },
     duration() {
       return this.$model.call.state.duration;
@@ -63,11 +67,6 @@ export default {
   methods : {
     showStatistics() {
       this.$refs.statisticsModal.visible = true;
-    },
-  },
-  watch : {
-    displayName(cur, once) {
-      this.targetUser = cur || once;
     },
   },
 };

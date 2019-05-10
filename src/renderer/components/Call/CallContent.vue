@@ -113,29 +113,8 @@ export default {
     isConnected() {
       return this.$rtc.call.connected;
     },
-    callText() {
-      const titleMap = {
-        connecting   : this.$t('conversation.title.connecting', { target: this.userName }),
-        connected    : this.$t('conversation.title.connected', { target: this.userName }),
-        ringing      : this.$t('conversation.title.ringing', { target: this.userName }),
-        disconnected : this.$t('conversation.title.disconnected', { target: this.userName }),
-      };
-
-      return titleMap[this.callStatus] || this.$t('conversation.title.expired');
-    },
     callStatus() {
       return this.$model.state.callStatus;
-    },
-    displayName() {
-      const remoteIdentity = this.callStatus !== 'disconnected'
-        ? this.$rtc.call.remoteIdentity
-        || this.$rtc.call.incoming[0].remoteIdentity : null;
-
-      return remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user);
-    },
-    userName() {
-      return this.displayName || this.targetUser || this.$t('conversation.title.unknownUser');
     },
     centerSource() {
       return this.isShareInCenter ? 'call-screen' : 'call-remote';
@@ -231,9 +210,6 @@ export default {
     },
   },
   watch : {
-    displayName(cur, once) {
-      this.targetUser = cur || once;
-    },
     isInCallMain : {
       handler(val) {
         if (val) {

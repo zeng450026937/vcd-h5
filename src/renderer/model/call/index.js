@@ -21,10 +21,12 @@ model.provide({
       callNumber       : '',
       callType         : 'video', // for upgrade
       mediaStatus      : { audio: false, video: false },
+      targetInfo       : {},
     };
   },
   middleware : {
-    call(ctx) {
+    async call(ctx, next) {
+      await next();
       const { number } = ctx.payload;
 
       let host;
@@ -52,6 +54,8 @@ model.provide({
       call.target = number;
 
       this.prepareVideoCall = ctx.payload.options.video;
+
+      await this.updateTarget(call.channel.target);
 
       return call.connect('send', ctx.payload.options).then(() => {
         this.prepareVideoCall = false;
@@ -118,8 +122,36 @@ model.provide({
     },
   },
   methods : {
-    aaa() {
-      console.log($t('conversation.title.audioSubject', { target: rtc.account.username }));
+    async updateTarget(number) {
+      if (this.targetInfo.number === number) return;
+      const contact = this.$getVM('contact');
+      const { phoneBookStore } = contact;
+
+      this.targetInfo = phoneBookStore.getNodeByNumber(number);
+      if (!this.targetInfo) {
+        const account = this.$getVM('account');
+
+        if (contact.loadMode === 'SPLIT' && account.serverType !== 'cloud') {
+          contact.findContacts(number).then((val) => {
+            if (val && val.length === 1) {
+              this.targetInfo = val[0];
+            }
+            else if (val.length > 1) {
+              val.forEach((c) => {
+                if (c.number === number) {
+                  this.targetInfo = c;
+                }
+              });
+            }
+          });
+        }
+      }
+      if (!this.targetInfo) {
+        this.targetInfo = contact.local.search(number);
+      }
+      this.targetInfo = this.targetInfo || {
+        name : number,
+      };
     },
     async switchCallType(video) {
       await rtc.call.localMedia.acquireDetachedStream(true, video)
@@ -147,6 +179,11 @@ model.provide({
       if (val == null) return;
       if (this.isConnected) {
         this.callType = val ? 'video' : 'audio';
+        rtc.call.channel.callType = this.callType;
+        rtc.call.channel.callInfo = {
+          audio : true,
+          video : val,
+        };
       }
       this.switchCallType(val);
       if (!val) { // 不是视频通话 有辅流则关闭辅流
@@ -165,8 +202,14 @@ model.provide({
       }
     },
     isConnected(val) {
-      if (!val) {
+      if (rtc.call.refering) {
+        this.targetInfo = {
+          name : rtc.call.channel.remoteIdentity.uri.user,
+        };
+      }
+      if (!val && rtc.call.disconnected) {
         this.isVideoCall = true;
+        this.targetInfo = {};
       }
       else if (rtc.call.direction === 'outgoing') {
         rtc.call.channel.renegotiate();
