@@ -56,6 +56,8 @@ export class AppWindow extends BaseWindow {
 
     this.tray.on('click', () => this.restoreWindow());
 
+    ipcMain.on('request-restore-window', () => this.restoreWindow());
+
     ipcMain.on(
       'menu-event',
       (event) => {

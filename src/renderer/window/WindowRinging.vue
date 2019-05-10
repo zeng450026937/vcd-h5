@@ -1,7 +1,12 @@
 <template>
   <a-layout id="window" class="h-full bg-white">
-    <div class="flex flex-col p-5 h-full">
-      <div class="flex flex-grow mt-5">
+    <div class="flex flex-col h-full wrapper">
+      <div class="header">
+        <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
+                    title="关闭"
+                    @click="close"></a-iconfont>
+      </div>
+      <div class="flex flex-grow content mt-3">
         <div class="flex h-12">
           <a-avatar :size="48" class="target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
           <div class="flex flex-col ml-5">
@@ -11,7 +16,7 @@
         </div>
       </div>
 
-      <div class="flex justify-center mt-4 self-end">
+      <div class="flex justify-center mt-4 self-end mb-4 mr-4">
         <!--麦克风（接听）-->
         <a-button v-if="isVideoCall || conferenceInviter" class="text-base w-36"
                   @click="transferToAudio">
@@ -103,6 +108,7 @@ export default {
     close() {
       const notify = this.kom.vm.$getVM('notify');
 
+      this.hangUp();
       window.close();
       notify.$emit('ringing-close', window.id);
     },
@@ -111,4 +117,27 @@ export default {
 </script>
 
 <style lang="less">
+  #window {
+    .wrapper {
+      .content{
+        padding: 0 20px 20px 20px ;
+      }
+
+      .header {
+        height: 35px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        .header-control {
+          color: #666666;
+          &:hover {
+            background: #e5e5e5;
+            color: #000000;
+          }
+          transition: all .2s ease-in-out;
+          @apply text-base w-12 cursor-pointer flex items-center justify-center;
+        }
+      }
+    }
+  }
 </style>

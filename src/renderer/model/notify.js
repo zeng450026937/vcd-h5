@@ -1,5 +1,7 @@
 import Vuem from './vuem';
 import rtc from '../rtc';
+import router from '../router';
+import { restoreWindow } from '../proxy/main-process-proxy';
 
 const model = new Vuem();
 
@@ -118,6 +120,17 @@ model.provide({
           this.openNotify(this.scheduleEvents[0]);
         }, 500);
       }
+    });
+
+    this.$on('to-detail', ({ conference }) => {
+      router.push({
+        name  : 'schedule',
+        query : {
+          planId : conference['@plan-id'],
+        },
+      });
+      this.$dispatch('main.setCurrentSidebar', { name: 'schedule' });
+      restoreWindow();
     });
 
     this.$on('ringing-close', (id) => {

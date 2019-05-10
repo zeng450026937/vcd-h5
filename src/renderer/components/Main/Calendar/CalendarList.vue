@@ -53,6 +53,7 @@ export default {
 
     if (this.$route.name === 'schedule' && planId) {
       this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
+      console.warn(this.currentEvent);
     }
   },
   methods : {
@@ -67,6 +68,15 @@ export default {
       }
       else if (!val || val.length <= 0) {
         this.currentEvent = {};
+      }
+    },
+    $route(val) {
+      const { planId } = val.query;
+
+      debugger;
+      if (val.name === 'schedule' && planId) {
+        this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
+        console.warn(this.currentEvent)
       }
     },
   },
