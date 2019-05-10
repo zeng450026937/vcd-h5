@@ -57,7 +57,7 @@ stages:
 
 # ---------   build stage ---------
 build_linux:
-  image: registry.yealinkops.com/common/node:10.15.3
+  image: registry.yealinkops.com/common/node:yarn1.16.0
   stage: build
   <<: *only_run_merge_requests_or_tag
   cache:
