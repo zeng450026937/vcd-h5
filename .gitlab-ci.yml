@@ -57,7 +57,7 @@ stages:
 
 # ---------   build stage ---------
 build_linux:
-  image: registry.yealinkops.com/common/node:yarn1.16.0
+#  image: registry.yealinkops.com/common/node:yarn1.16.0
   stage: build
   <<: *only_run_merge_requests_or_tag
   cache:
@@ -68,7 +68,7 @@ build_linux:
     - yarn run build:prod
   # tags 用来匹配跑该 job 的 gitlab runner
   tags:
-    - devops_docker_runner
+    - centos7.5_231 
   # artifacts 定义需要在整个 pipeline 的 stage job 之间传递的制品
   # 制品会在 job 结束时上传到 gitlab 上， 在接下来的其他 job 开始恢复到原目录位置
   # 下述定义了  $TGZ_PACKAGE_PATH_LINUX 这个 linux 平台的制品在gitlab 上保留 60 分钟
