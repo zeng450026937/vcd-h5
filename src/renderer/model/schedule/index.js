@@ -95,9 +95,9 @@ model.provide({
   
         // const finded = !!await this.db.templates.where('@plan-id').equals(planId).count();
 
-        const finded = !!this.templates[planId];
-
-        if (finded) return;
+        // const finded = !!this.templates[planId];
+        //
+        // if (finded) return;
 
         tasks.push(
           this.fetchTemplate(planId)
