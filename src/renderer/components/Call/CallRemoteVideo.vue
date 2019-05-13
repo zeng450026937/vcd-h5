@@ -11,9 +11,7 @@
            class="absolute-center h-full flex flex-col items-center justify-center">
         <a-iconfont type="icon-huiyishi" class="display-icon"/>
         <span class="display-name mt-5 opacity-50"
-        >{{isVideoCall
-          ? $t('conversation.main.videoCall')
-          : $t('conversation.main.audioCall')}}
+        >{{displayText}}
         </span>
       </div>
       <div v-else-if="!showVideo || prepareVideoCall"
@@ -83,6 +81,13 @@ export default {
     }
   },
   computed : {
+    displayText() {
+      if (this.isDisconnected) return '正在结束通话';
+      
+      return this.isVideoCall
+        ? this.$t('conversation.main.videoCall')
+        : this.$t('conversation.main.audioCall');
+    },
     targetInfo() {
       return this.$model.call.targetInfo;
     },
@@ -93,6 +98,9 @@ export default {
     },
     isConnecting() {
       return this.$rtc.call.connecting;
+    },
+    isDisconnected() {
+      return this.$rtc.call.disconnected;
     },
     showVideo() {
       return this.isVideoCall && (this.$rtc.call.connected || this.prepareVideoCall);
@@ -111,7 +119,6 @@ export default {
     },
   },
   methods : {
-
     videoDblClick() {
       this.$emit('video-dblclick');
     },

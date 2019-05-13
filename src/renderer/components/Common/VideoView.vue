@@ -126,14 +126,19 @@ export default {
   },
   methods : {
     captureStream() {
-      this.staticStream = this.videoElement.captureStream();
+      // FIXME 会议中平凡启用虚拟摄像头任然会黑屏
+      this.videoElement.removeEventListener('canplay', this.captureStream);
+      let channel = null;
+
       if (this.$rtc.conference.connected) {
-        this.$rtc.conference.mediaChannel.channel.replaceLocalStream(this.staticStream);
+        channel = this.$rtc.conference.mediaChannel.channel;
       }
       else if (this.$rtc.call.connected) {
-        this.$rtc.call.channel.replaceLocalStream(this.staticStream);
+        channel = this.$rtc.call.channel;
       }
-      this.videoElement.removeEventListener('canplay', this.captureStream);
+      if (!channel) return;
+      channel.replaceLocalStream(this.staticStream);
+      this.staticStream = this.videoElement.captureStream();
     },
     videoClicked() {
       this.$emit('video-clicked');
@@ -152,10 +157,12 @@ export default {
         if (!this.isRemoteStream) return;
       }
       if (this.enableLocalVideo) {
+        this.videoElement.srcObject = null;
         this.videoElement.src = this.localVideoPath;
         this.videoElement.addEventListener('canplay', this.captureStream);
       }
       else if (this.videoElement && this.videoElement.srcObject !== stream) {
+        this.videoElement.src = '';
         this.videoElement.srcObject = stream;
       }
     },

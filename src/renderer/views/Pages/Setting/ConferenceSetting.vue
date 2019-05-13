@@ -44,24 +44,24 @@
             <a-switch size="small" v-model="dnd"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
           </div>
-          <div class="mt-3">
+          <div class="mt-3 flex flex-col">
             <div>{{$t('setting.conference.videoQuality')}}</div>
             <a-select v-model="videoQuality" class="w-48 mt-3">
               <a-select-option v-for="(quality, index) in videoQualities" :key="index"
                                :value="quality.value"
               >{{quality.label}}</a-select-option>
             </a-select>
-            <span class="text-black6 text-xs ml-4">{{qualityTips}}</span>
+            <span class="text-black6 text-xs mt-2">{{qualityTips}}</span>
           </div>
         </div>
       </div>
-      <div>
-        <div class="mt-10">
-          <a-button type="primary"  @click="handleAdvancedSetting">
-            <span class="leading-tight px-1">{{$t('setting.conference.advancedSetting')}}</span>
-          </a-button>
-        </div>
-      </div>
+      <!--<div>-->
+        <!--<div class="mt-10">-->
+          <!--<a-button type="primary"  @click="handleAdvancedSetting">-->
+            <!--<span class="leading-tight px-1">{{$t('setting.conference.advancedSetting')}}</span>-->
+          <!--</a-button>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
   </a-layout>
 </template>

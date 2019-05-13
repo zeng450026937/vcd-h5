@@ -79,8 +79,6 @@ model.provide({
         logger.error('load setting failed, error: %s', error);
         saved = {};
       }
-      console.warn('----------1---------');
-      console.warn(saved);
 
       Object.keys(saved).forEach((key) => this[key] = saved[key]);
     },

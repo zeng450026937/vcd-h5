@@ -32,6 +32,9 @@ model.provide({
     acquireStreamInConference() {
       return this.isVideoConference && rtc.conference.connecting;
     },
+    acquireDetachedStreamInConference() {
+      return this.isVideoConference && rtc.conference.connected;
+    },
     // 会议中是否需要释放本地视频流
     releaseStreamInConference() {
       return (!this.isVideoConference && rtc.conference.connected) // 视频会议 转 音频会议
@@ -50,25 +53,36 @@ model.provide({
     acquireStreamInConference(val) {
       if (val && !this.enableLocalVideo) {
         rtc.media.localMedia.acquireStream();
-        console.warn('获取会议视频流');
+      }
+    },
+    acquireDetachedStreamInConference(val) {
+      if (val) {
+        // FIXME TMP SOLUTION
+        setTimeout(() => {
+          rtc.media.localMedia.acquireDetachedStream().then((s) => {
+            rtc.conference.mediaChannel.channel.replaceLocalStream(s);
+          });
+        }, 8000);
       }
     },
     releaseStreamInConference(val) {
       if (val && !this.enableLocalVideo) {
         if (val) rtc.media.localMedia.releaseStream();
-        console.warn('释放会议视频流');
       }
     },
     acquireStreamInCall(val) {
       if (val && !this.enableLocalVideo) {
         rtc.media.localMedia.acquireStream();
-        console.warn('获取通话视频流');
+        setTimeout(() => {
+          rtc.media.localMedia.acquireDetachedStream().then((s) => {
+            rtc.call.channel.replaceLocalStream(s);
+          });
+        }, 8000);
       }
     },
     releaseStreamInCall(val) {
       if (val && !this.enableLocalVideo) {
         if (val) rtc.media.localMedia.releaseStream();
-        console.warn('释放通话视频流');
       }
     },
     enableLocalVideo(val) {
@@ -80,11 +94,9 @@ model.provide({
       if (!hasStream) return;
 
       if (val) {
-        console.warn('释放视频流');
         rtc.media.localMedia.releaseStream();
       }
       else {
-        console.warn('获取视频流');
         rtc.media.localMedia.acquireStream();
       }
     },
