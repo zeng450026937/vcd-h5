@@ -16,7 +16,7 @@ model.provide({
       hardwareAcceleration       : true, // consider to be removed, currently not work
       autoStart                  : false,
       autoUpdate                 : true,
-      updateChannel              : 'stable',
+      updateChannel              : 'insiders', // 切换版本需要修改此默认值 比如 alpha 对应 insiders
       hideWhenClose              : false,
       tags                       : [],
       // ytms

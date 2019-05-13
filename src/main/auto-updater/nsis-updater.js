@@ -36,7 +36,7 @@ export class NSISUpdater extends AppUpdater {
       packageFile,
       silent,
       runAfter,
-      adminRequired, 
+      adminRequired,
     } = option;
     const args = [ '--updated' ];
 
@@ -52,14 +52,14 @@ export class NSISUpdater extends AppUpdater {
       args.push(`--package-file=${packageFile}`);
     }
 
-    if (adminRequired) {
-      const elevate = resolvePath.join(process.resourcesPath, 'elevate.exe');
+    if (true || adminRequired) {
+      const elevate = resolvePath(process.resourcesPath, 'elevate.exe');
 
       await exec(elevate, [ installer ].concat(args));
 
       return;
     }
 
-    exec(installer, args);
+    await exec(installer, args);
   }
 }

@@ -90,7 +90,7 @@ export class AppUpdater extends EventEmitter {
     return this.provider.download();
   }
 
-  quitAndInstall(silent = false, runAfter = false) {
+  async quitAndInstall(silent = false, runAfter = false) {
     if (this.installing) return;
     if (!this.provider.latestVersionDownloaded) return;
 
@@ -99,7 +99,7 @@ export class AppUpdater extends EventEmitter {
     this.installing = true;
 
     try {
-      this.install({
+      await this.install({
         installer     : latestFile.path,
         silent,
         runAfter,
