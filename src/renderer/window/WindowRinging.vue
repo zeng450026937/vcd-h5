@@ -4,7 +4,7 @@
       <div class="header">
         <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
                     title="关闭"
-                    @click="close"></a-iconfont>
+                    @click="hangUp"></a-iconfont>
       </div>
       <div class="flex flex-grow content mt-3">
         <div class="flex h-12">
@@ -76,7 +76,7 @@ export default {
     window.updatePosition = this.updatePosition;
     setInterval(() => {
       this.checkStatus();
-    }, 1000);
+    }, 500);
   },
   beforeDestroy() {
     window.updatePosition = null;
@@ -95,7 +95,6 @@ export default {
     },
     answerCall(toAudio = false) {
       this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall, isInvite: this.conferenceInviter });
-      this.close();
     },
     transferToAudio() {
       this.answerCall(true);
@@ -108,7 +107,6 @@ export default {
     close() {
       const notify = this.kom.vm.$getVM('notify');
 
-      this.hangUp();
       window.close();
       notify.$emit('ringing-close', window.id);
     },
