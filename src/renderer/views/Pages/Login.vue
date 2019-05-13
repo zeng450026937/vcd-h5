@@ -75,7 +75,7 @@ export default {
       user-select: none;
     }
     .bg {
-      object-fit: none;
+      object-fit: cover;
       object-position: 50% 50%;
       height: 100%;
       width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div id="common-header" class="flex items-center z-20 no-dragable">
+  <div v-if="show" id="common-header" class="flex items-center z-20 no-dragable">
     <a-iconfont type="icon-zuixiaohua"
                 title="最小化"
                 class="header-control"
@@ -15,7 +15,12 @@
 
 <script>
 export default {
-  name    : 'CommonHeader',
+  name : 'CommonHeader',
+  data() {
+    return {
+      show : process.platform !== 'darwin',
+    };
+  },
   methods : {
     clickMinimize() {
       this.$dispatch('application.minimize');

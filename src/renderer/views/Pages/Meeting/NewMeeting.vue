@@ -240,7 +240,7 @@ export default {
           flex-direction: column;
           justify-content: center;
           align-items: flex-end;
-          padding: 20px 0 20px 20px;
+          padding: 20px 0;
           .menu {
             min-width: 220px;
             min-height: 220px;
