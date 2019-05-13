@@ -28,10 +28,10 @@
             <a-switch size="small" v-model="shareSmoothMode"/>
             <span class="setting-label">{{$t('setting.conference.preferredPictureFluency')}}</span>
           </div> 
-          <div class="mt-3">
-            <a-switch size="small" v-model="shareWithSound"/>
-            <span class="setting-label">{{$t('setting.conference.shareComputerSound')}}</span>
-          </div>
+          <!--<div class="mt-3">-->
+            <!--<a-switch size="small" v-model="shareWithSound"/>-->
+            <!--<span class="setting-label">{{$t('setting.conference.shareComputerSound')}}</span>-->
+          <!--</div>-->
         </div>
       </div>
       <div>

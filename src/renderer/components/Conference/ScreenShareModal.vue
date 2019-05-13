@@ -13,11 +13,11 @@
     <div class="h-14 flex items-center justify-center" slot="footer">
       <div class="absolute pin-t pin-l ml-5 h-full">
         <div class="text-left flex flex-col justify-center h-full">
-          <div>
-            <a-checkbox class="text-xs">
-              {{$t('conversation.share.shareAudio')}}
-            </a-checkbox>
-          </div>
+          <!--<div>-->
+            <!--<a-checkbox class="text-xs">-->
+              <!--{{$t('conversation.share.shareAudio')}}-->
+            <!--</a-checkbox>-->
+          <!--</div>-->
           <div class="flex items-center mt-1">
             <a-checkbox class="text-xs" :checked="smoothMode" @change="smoothMode = !smoothMode">
               {{$t('conversation.share.preferVideoFluency')}}
