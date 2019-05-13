@@ -30,7 +30,7 @@
     "dev": "yarn serve:electron",
     "sync": "node script/sync.js",
     "toExcel": "node ./src/renderer/i18n/bin/to-excel.js",
-    "excelTo": "node ./src/renderer/i18n/bin/to-json.js && npm run lint --fix --ext .js src/renderer/i18n"
+    "excelTo": "node ./src/renderer/i18n/bin/to-json.js && yarn lint --fix --ext .js src/renderer/i18n/modules"
   },
   "dependencies": {
     "ant-design-vue": "^1.3.8",

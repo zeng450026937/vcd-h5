@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-3-19 15:53:06 
+// 最新导入时间为 2019-5-13 19:32:48 
 module.exports = {
   name : 'login',
   lang : {
@@ -18,18 +18,18 @@ module.exports = {
       proxyServerAddress : '代理服务器地址',
       port               : '端口',
       about              : '关于',
-      clickAgree         : '点击登录则代表您同意',
+      clickAgree         : '您已阅读并同意亿联',
       userProtocol       : '《用户协议》',
       privacyPolicy      : '《隐私政策》',
       and                : '和',
       basicSetting       : '基本设置',
       placeholder        : {
-        phoneOrEmail : '电话或电子邮件',
+        phoneOrEmail : '手机/邮箱/云账号',
         password     : '密码',
       },
       header : {
-        cloud    : '云服务版',
-        yms      : '企业版',
+        cloud    : '亿联云服务',
+        yms      : '亿联YMS',
         help     : '帮助',
         feedback : '反馈',
       },
@@ -38,6 +38,41 @@ module.exports = {
         cancel  : '取消',
       },
     },
-
+    en : {
+      history            : 'History',
+      clear              : 'Clear',
+      capitalLocked      : 'Caps Lock is On',
+      rememberPassword   : 'Save Password',
+      autoLogin          : 'Auto Login',
+      login              : 'Login',
+      join               : 'Join a Meeting',
+      forgetPassword     : 'Forgot Password',
+      regist             : 'Register',
+      firstLogin         : 'Please set up server for first time login',
+      serverSetting      : 'Server Settings',
+      proxyServerSetting : 'Proxy Server Settings',
+      proxyServerAddress : 'Proxy Server Address',
+      port               : 'Port',
+      about              : 'About',
+      clickAgree         : 'You have read and agreed Yealink',
+      userProtocol       : '《User Agreement》',
+      privacyPolicy      : '《Privacy Policy》',
+      and                : 'and',
+      basicSetting       : 'Basic Settings',
+      placeholder        : {
+        phoneOrEmail : 'Phone/Email/ Cloud Account',
+        password     : 'Password',
+      },
+      header : {
+        cloud    : 'Yealink Cloud',
+        yms      : 'Yealink Meeting Server',
+        help     : 'Help',
+        feedback : 'Feedback',
+      },
+      button : {
+        confirm : 'Ok',
+        cancel  : 'Cancel',
+      },
+    },
   },
 };

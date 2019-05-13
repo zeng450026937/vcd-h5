@@ -76,7 +76,10 @@ try {
   });
   
   // 输出模块的集成文件 /modules/index.js
-  writeFile(path.resolve(getI18nDirPath(), modulesDirPath, 'index.js'), `${langModuleList.map((item) => `const ${item.name} = require('./${item.name}');\n`).join('')}module.exports=[${langModuleList.map((item) => item.name).join(',')}]`);
+  // writeFile(
+  //   path.resolve(getI18nDirPath(), modulesDirPath, 'index.js'),
+  //   `${langModuleList.map((item) => `const ${item.name} = require('./${item.name}');\n`).join('')}module.exports=[${langModuleList.map((item) => item.name).join(',')}]`
+  // );
 }
 catch (error) {
   console.log(error);

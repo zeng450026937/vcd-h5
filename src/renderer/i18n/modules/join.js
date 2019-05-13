@@ -1,3 +1,4 @@
+// 最新导入时间为 2019-5-13 19:32:48 
 module.exports = {
   name : 'join',
   lang : {
@@ -6,11 +7,12 @@ module.exports = {
         joinMeeting       : '加入会议',
         back              : '返回',
         join              : '加入',
-        inputConferenceId : '输入会议号码',
+        inputConferenceId : '请输入会议号码',
         startMeeting      : '开始会议',
+        InitiateMeeting   : '新的会议',
       },
       placeholder : {
-        conferenceId : '会议 ID',
+        conferenceId : '会议号码',
         password     : '会议密码',
       },
       account : {
@@ -18,23 +20,46 @@ module.exports = {
         clear   : '清空',
       },
       message : {
-        conferenceIdNoEmpty : '会议ID不能为空',
-        idNoMore64          : '会议ID最多为64位',
-        ymsIdNoMore5        : 'YMS账号会议ID仅支持五位数字输入',
-        cloudIdNoMore10     : 'Cloud账号会议ID仅支持5位或者10位数字输入',
+        conferenceIdNoEmpty : '会议号码不能为空',
+        idNoMore64          : '会议号码最多为64位数字',
+        ymsIdNoMore5        : ' ',
+        cloudIdNoMore10     : ' ',
       },
       button : {
         openMic     : '打开麦克风',
         closeMic    : '关闭麦克风',
         openCamera  : '打开摄像头',
         closeCamera : '关闭摄像头',
-
       },
-
     },
     en : {
       title : {
-        InitiateMeeting : 'Meeting Now',
+        joinMeeting       : 'Join a Meeting',
+        back              : 'Back',
+        join              : 'Join   ',
+        inputConferenceId : 'Please enter meeting ID',
+        startMeeting      : 'Start Meeting',
+        InitiateMeeting   : 'New Meeting',
+      },
+      placeholder : {
+        conferenceId : 'Meeting ID',
+        password     : 'Meeting Password',
+      },
+      account : {
+        history : 'History',
+        clear   : 'Clear',
+      },
+      message : {
+        conferenceIdNoEmpty : 'Meeting ID is required',
+        idNoMore64          : 'Meeting ID cannot be more than 64 digits',
+        ymsIdNoMore5        : ' ',
+        cloudIdNoMore10     : ' ',
+      },
+      button : {
+        openMic     : 'Turn on microphone',
+        closeMic    : 'Turn off microphone',
+        openCamera  : 'Turn on camera',
+        closeCamera : 'Turn off camera',
       },
     },
   },

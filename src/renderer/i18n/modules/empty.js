@@ -1,3 +1,4 @@
+// 最新导入时间为 2019-5-13 19:32:48 
 module.exports = {
   name : 'empty',
   lang : {
@@ -8,7 +9,10 @@ module.exports = {
       search   : '暂无搜索结果',
     },
     en : {
-
+      calendar : 'No scheduled meetings',
+      record   : 'No recent calls',
+      contact  : 'No contact info',
+      search   : 'No search result',
     },
   },
 };

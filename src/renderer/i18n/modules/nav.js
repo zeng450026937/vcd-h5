@@ -1,3 +1,4 @@
+// 最新导入时间为 2019-5-13 19:32:48 
 module.exports = {
   name : 'nav',
   lang : {
@@ -23,7 +24,25 @@ module.exports = {
       feedback        : '反馈',
     },
     en : {
-      meeting : 'Meeting',
+      meeting         : 'Meeting',
+      schedule        : 'Calendar',
+      contact         : 'Contacts',
+      setting         : 'Settings',
+      newMeeting      : 'New Meeting',
+      InitiateMeeting : 'Start Meeting',
+      joinMeeting     : 'Join a Meeting',
+      dial            : 'Dial',
+      corporate       : 'Enterprise Directory',
+      frequent        : 'Frequent Contacts',
+      local           : 'Local Contacts',
+      account         : 'My Profile',
+      common          : 'General',
+      conference      : 'Meeting',
+      audio           : 'Audio',
+      video           : 'Video',
+      about           : 'About',
+      logout          : 'Log Out',
+      feedback        : 'Feedback',
     },
   },
 };

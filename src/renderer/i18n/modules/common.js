@@ -1,3 +1,4 @@
+// 最新导入时间为 2019-5-13 19:32:48 
 module.exports = {
   name : 'common',
   lang : {
@@ -23,21 +24,22 @@ module.exports = {
     },
     en : {
       controls : {
-        ensure   : 'ensure',
-        cancel   : 'cancel',
-        close    : 'close',
-        enlarge  : 'enlarge',
-        shrink   : 'shrink',
-        expand   : 'expand',
-        hide     : 'hide',
-        maximize : 'maximize',
-        minimize : 'minimize',
-        allow    : 'allow',
-        refuse   : 'refuse',
+        ensure        : 'Ok',
+        cancel        : 'Cancel',
+        close         : 'Close',
+        enlarge       : 'Zoom in',
+        shrink        : 'Zoom out',
+        expand        : 'Expand',
+        hide          : 'Hide',
+        maximize      : 'Maximize',
+        minimize      : 'Minimize',
+        allow         : 'Allow',
+        refuse        : 'Refuse',
+        allowOrRefuse : 'Allow/Refuse',
       },
       message : {
-        passwordError : 'Password Error',
-        accountError  : 'Account Error',
+        passwordError : 'Wrong password',
+        accountError  : 'Wrong account',
       },
     },
   },
