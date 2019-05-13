@@ -71,17 +71,27 @@
     <div v-else class="flex justify-center h-full">
       <group-info :group="group"/>
     </div>
+    <plain-modal ref="inputModal" title="请输入密码"
+                 hide-cancel
+                 :ok-text="vmrInfo.pin ? '加入' : '没有密码，直接加入 >>'"
+                 @ok="joinVMR">
+      <div slot="content">
+        <a-input v-model="vmrInfo.pin"/>
+      </div>
+    </plain-modal>
   </div>
 </template>
 
 <script>
 import GroupInfo from './ContactGroupInfo.vue';
 import { $t } from '../../../i18n';
+import PlainModal from '../../../popup/plain-modal';
 
 export default {
   name       : 'ContactInfo',
   components : {
     GroupInfo,
+    PlainModal,
   },
   props : {
     user : {
@@ -103,7 +113,10 @@ export default {
   },
   data() {
     return {
-      // ensureModal : null,
+      vmrInfo : {
+        number : '',
+        pin    : '',
+      },
     };
   },
   computed : {
@@ -129,22 +142,41 @@ export default {
     clickAudio() {
       this.$dispatch('call.doAudioCall', this.user.number);
     },
+    async joinVMR() {
+      this.$refs.inputModal.visible = false;
+      await this.$dispatch('meeting.joinMeeting', {
+        number : this.vmrInfo.number,
+        pin    : this.vmrInfo.pin,
+        ...this.vmrInfo.options,
+      });
+      this.vmrInfo = {
+        number : '',
+        pin    : '',
+      };
+    },
+    call(item, options) {
+      if (item.isVMR) {
+        this.$refs.inputModal.visible = true;
+        this.vmrInfo.number = item.number;
+        this.vmrInfo.options = options;
+      }
+      else {
+        this.$dispatch('call.call', {
+          number : item.number,
+          options,
+        });
+      }
+    },
     doVideo() {
-      this.$dispatch('call.call', {
-        number  : this.user.number,
-        options : {
-          audio : true,
-          video : true,
-        },
+      this.call(this.user, {
+        audio : true,
+        video : true,
       });
     },
     doAudio() {
-      this.$dispatch('call.call', {
-        number  : this.user.number,
-        options : {
-          audio : true,
-          video : false,
-        },
+      this.call(this.user, {
+        audio : true,
+        video : false,
       });
     },
   },
