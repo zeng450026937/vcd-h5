@@ -97,7 +97,6 @@ export default {
     },
     answerCall(toAudio = false) {
       this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall, isInvite: this.conferenceInviter });
-      window.close();
     },
     transferToAudio() {
       this.answerCall(true);
