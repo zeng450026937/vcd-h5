@@ -40,8 +40,8 @@
                   <a-divider></a-divider>
                   <div class="text-xs mt-1 leading-tight">
                     {{$t('setting.video.questionNotice')}}
-                    <span 
-                      class="text-indigo cursor-pointer" 
+                    <span
+                      class="text-indigo cursor-pointer"
                       @click="handleTechCenter">
                       {{$t('setting.video.techniqueCenter')}}
                     </span>。
@@ -53,10 +53,9 @@
           </div>
         </div>
         <div class="mt-3 relative bg-media" style="height: 180px;width: 320px;">
-          <video-view 
+          <video-view
             muted
             class="w-full h-full bg-white"
-            position="absolute"
             object-fit="cover"/>
         </div>
       </div>
@@ -119,12 +118,21 @@ export default {
       return /^(.*)\(.*\)$/.test(val) ? RegExp.$1 : val;
     },
   },
+
+  mounted() {
+
+    console.warn('mounted');
+  },
+  updated() {
+    console.warn('updated');
+  },
+
   deactivated() {
-    this.$dispatch('setting.save');
+    //this.$dispatch('setting.save');
   },
 
   destroyed() {
-    this.$dispatch('setting.save');
+    //this.$dispatch('setting.save');
   },
 };
 </script>

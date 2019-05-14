@@ -4,7 +4,7 @@
       <div class="text-center mt-3 no-dragable">
 
         <a-popover placement="leftTop"
-                   :trigger="['hover', 'click']"
+                   :trigger="['click']"
                    :mouseEnterDelay="1"
                    overlayClassName="main-sidebar-popover">
           <template slot="content">
@@ -22,7 +22,7 @@
               </div>
 
               <div class="mt-10">
-                <a-button class="w-16" @click="clickLogout">{{$t('nav.logout')}}</a-button>
+                <a-button @click="clickLogout">{{$t('nav.logout')}}</a-button>
               </div>
 
               <div class="text-center absolute mt-10">

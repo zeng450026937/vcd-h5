@@ -66,7 +66,7 @@
               <div class="mt-3 flex flex-col">
                 <template v-if="tags.length < 20">
                   <a-tag v-if="!showAddPropertyInput"
-                         class="w-60 h-8 flex items-center justify-center"
+                         class="w-48 h-8 flex items-center justify-center"
                          style="borderStyle: dashed;"
                          @click="addProperty">
                     <div>

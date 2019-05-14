@@ -61,10 +61,6 @@ export default {
       videoElement : null,
     };
   },
-  sketch : {
-    ns    : 'conference',
-    props : [ 'staticStream' ],
-  },
   async mounted() {
     await this.$nextTick();
 
@@ -74,7 +70,6 @@ export default {
   beforeDestroy() {
     if (this.enableLocalVideo) {
       this.videoElement.removeEventListener('canplay', this.captureStream);
-      this.staticStream = null;
     }
     else {
       switch (this.source) {
@@ -90,6 +85,7 @@ export default {
       }
     }
     this.videoElement = null;
+    if (this.captureTimeout) clearTimeout(this.captureTimeout);
   },
   computed : {
     audioOutputDevice() {
@@ -123,11 +119,7 @@ export default {
     localVideoPath() {
       return path.resolve(__static, 'video/default-video.webm');
     },
-  },
-  methods : {
-    captureStream() {
-      // FIXME 会议中平凡启用虚拟摄像头任然会黑屏
-      this.videoElement.removeEventListener('canplay', this.captureStream);
+    localMediaChannel() {
       let channel = null;
 
       if (this.$rtc.conference.connected) {
@@ -136,9 +128,20 @@ export default {
       else if (this.$rtc.call.connected) {
         channel = this.$rtc.call.channel;
       }
-      if (!channel) return;
-      channel.replaceLocalStream(this.staticStream);
-      this.staticStream = this.videoElement.captureStream();
+
+      return channel;
+    },
+  },
+  methods : {
+    captureStream() {
+      // FIXME TMP SOLUTION http://bugfree.yealink.com/Bug.php?BugID=188676
+      this.videoElement.removeEventListener('canplay', this.captureStream);
+      if (!this.localMediaChannel) return;
+      if (this.captureTimeout) clearTimeout(this.captureTimeout);
+      this.captureTimeout = setTimeout(async() => {
+        if (!this.enableLocalVideo) return clearTimeout(this.captureTimeout);
+        await this.localMediaChannel.replaceLocalStream(this.videoElement.captureStream());
+      }, 1000);
     },
     videoClicked() {
       this.$emit('video-clicked');
@@ -149,7 +152,7 @@ export default {
     async onVideoStreamChanged(stream) {
       if (!stream) return;
       await this.$nextTick();
-      if (!this.videoElement) { // TODO update DOM to refs
+      if (!this.videoElement) {
         this.videoElement = this.$refs.videoContent;
       }
       if (this.hideVideo) {
@@ -164,6 +167,7 @@ export default {
       else if (this.videoElement && this.videoElement.srcObject !== stream) {
         this.videoElement.src = '';
         this.videoElement.srcObject = stream;
+        // this.localMediaChannel.replaceLocalStream(stream);
       }
     },
     initStream() {
