@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import storage, { SETTING_STORAGE } from '../storage';
 import Vuem from './vuem';
+import rtc from '../rtc';
 
 // const storage = window.localStorage;
 //
@@ -47,10 +48,21 @@ model.provide({
       noticeSound                : false,
       enableLocalVideo           : true,
       // p2p
-      dnd                        : false,
+      // dnd                        : false,
       //
       showAdvanceSetting         : false,
     };
+  },
+
+  computed : {
+    dnd : {
+      get() {
+        return rtc.call.enableDND;
+      },
+      set(val) {
+        rtc.call.enableDND = val;
+      },
+    },
   },
 
   middleware : {
