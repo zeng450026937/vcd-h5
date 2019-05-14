@@ -45,8 +45,10 @@ meeting.provide({
       conference.number = number;
       conference.pin = pin;
 
+      const setting = this.$getVM('setting');
+
       return conference.join({
-        initialVideo,
+        initialVideo : setting.muteVideoWhenJoin ? false : initialVideo,
         initialAudio,
         audio,
         video,
@@ -135,7 +137,7 @@ meeting.provide({
 
       const subject = $t('conversation.title.videoSubject', { target: contact.currentContact.name || rtc.account.username });
 
-      return rtc.conference.meetnow(users, { subject }).then(() => {
+      return rtc.conference.meetnow(users, { subject }, { initialVideo: !this.$getVM('setting').muteVideoWhenJoin }).then(() => {
         this.$getVM('conference.sketch').isInstanceConference = true;
       });
     },
