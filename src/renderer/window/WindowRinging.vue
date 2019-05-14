@@ -7,10 +7,12 @@
                     @click="hangUp"></a-iconfont>
       </div>
       <div class="flex flex-grow content mt-3">
-        <div class="flex h-12">
+        <div class="flex h-12 w-full">
           <a-avatar :size="48" class="target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
-          <div class="flex flex-col ml-5">
-            <span class="text-base leading-none font-bold">{{this.displayName}}</span>
+          <div class="flex flex-col ml-5 truncate w-1 flex-grow">
+            <div class="truncate text-base leading-none font-bold">
+              {{this.displayName}}
+            </div>
             <span class="text-base leading-none mt-4">{{ringText}}</span>
           </div>
         </div>
@@ -76,7 +78,7 @@ export default {
     window.updatePosition = this.updatePosition;
     setInterval(() => {
       this.checkStatus();
-    }, 500);
+    }, 1000);
   },
   beforeDestroy() {
     window.updatePosition = null;
@@ -95,13 +97,19 @@ export default {
     },
     answerCall(toAudio = false) {
       this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall, isInvite: this.conferenceInviter });
+      window.close();
     },
     transferToAudio() {
       this.answerCall(true);
     },
     checkStatus() {
-      if (!this.rtc.call.ringing) {
-        this.close();
+      try {
+        if (!this.rtc.call.ringing) {
+          this.close();
+        }
+      }
+      catch (e) {
+        window.close();
       }
     },
     close() {

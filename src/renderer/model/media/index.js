@@ -346,10 +346,11 @@ model.provide({
         rtc.media.localMedia.videoQuality.width = this.videoQuality.width;
         rtc.media.localMedia.videoQuality.height = this.videoQuality.height;
 
-        const id = this.audioInputDeviceId;
+        let channel = null;
 
-        this.audioInputDeviceId = null;
-        this.audioInputDeviceId = id;
+        if (rtc.call.connected) channel = rtc.call.channel;
+        if (rtc.conference.connected) channel = rtc.conference.mediaChannel.channel;
+        if (channel) rtc.media.localMedia.acquireDetachedStream().then((s) => channel.replaceLocalStream(s));
       },
       { immediate: true }
     );
