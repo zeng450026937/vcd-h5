@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-13 19:32:48 
+// 最新导入时间为 2019-5-14 16:40:42 
 module.exports = {
   name : 'main',
   lang : {
@@ -13,7 +13,7 @@ module.exports = {
       showWindow     : 'Open',
       quit           : 'Exit',
       joinConference : 'Join a Meeting',
-      logout         : 'Log out',
+      logout         : 'Log Out',
       language       : 'Switch Languages',
     },
   },

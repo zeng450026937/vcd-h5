@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-13 19:32:48 
+// 最新导入时间为 2019-5-14 16:40:42 
 module.exports = {
   name : 'common',
   lang : {
@@ -24,13 +24,13 @@ module.exports = {
     },
     en : {
       controls : {
-        ensure        : 'Ok',
+        ensure        : 'OK',
         cancel        : 'Cancel',
         close         : 'Close',
-        enlarge       : 'Zoom in',
-        shrink        : 'Zoom out',
+        enlarge       : 'Zoom In',
+        shrink        : 'Zoom Out',
         expand        : 'Expand',
-        hide          : 'Hide',
+        hide          : 'Collapse',
         maximize      : 'Maximize',
         minimize      : 'Minimize',
         allow         : 'Allow',
@@ -38,8 +38,8 @@ module.exports = {
         allowOrRefuse : 'Allow/Refuse',
       },
       message : {
-        passwordError : 'Wrong password',
-        accountError  : 'Wrong account',
+        passwordError : 'Incorrect Password',
+        accountError  : 'Incorrect Account',
       },
     },
   },

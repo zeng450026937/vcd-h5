@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-13 19:32:48 
+// 最新导入时间为 2019-5-14 16:40:42 
 module.exports = {
   name : 'nav',
   lang : {
@@ -29,7 +29,7 @@ module.exports = {
       contact         : 'Contacts',
       setting         : 'Settings',
       newMeeting      : 'New Meeting',
-      InitiateMeeting : 'Start Meeting',
+      InitiateMeeting : 'Meet Now',
       joinMeeting     : 'Join a Meeting',
       dial            : 'Dial',
       corporate       : 'Enterprise Directory',

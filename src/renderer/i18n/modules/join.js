@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-13 19:32:48 
+// 最新导入时间为 2019-5-14 16:40:42 
 module.exports = {
   name : 'join',
   lang : {
@@ -13,7 +13,7 @@ module.exports = {
       },
       placeholder : {
         conferenceId : '会议号码',
-        password     : '会议密码',
+        password     : '会议密码（选填）',
       },
       account : {
         history : '历史记录',
@@ -38,12 +38,12 @@ module.exports = {
         back              : 'Back',
         join              : 'Join   ',
         inputConferenceId : 'Please enter meeting ID',
-        startMeeting      : 'Start Meeting',
+        startMeeting      : 'Meet Now',
         InitiateMeeting   : 'New Meeting',
       },
       placeholder : {
         conferenceId : 'Meeting ID',
-        password     : 'Meeting Password',
+        password     : 'Password (Optional)',
       },
       account : {
         history : 'History',

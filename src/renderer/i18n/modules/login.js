@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-13 19:32:48 
+// 最新导入时间为 2019-5-14 16:40:42 
 module.exports = {
   name : 'login',
   lang : {
@@ -18,7 +18,7 @@ module.exports = {
       proxyServerAddress : '代理服务器地址',
       port               : '端口',
       about              : '关于',
-      clickAgree         : '您已阅读并同意亿联',
+      clickAgree         : '我已阅读并同意亿联',
       userProtocol       : '《用户协议》',
       privacyPolicy      : '《隐私政策》',
       and                : '和',
@@ -54,13 +54,13 @@ module.exports = {
       proxyServerAddress : 'Proxy Server Address',
       port               : 'Port',
       about              : 'About',
-      clickAgree         : 'You have read and agreed Yealink',
+      clickAgree         : 'I confirm that I have read and agreed Yealink',
       userProtocol       : '《User Agreement》',
       privacyPolicy      : '《Privacy Policy》',
-      and                : 'and',
+      and                : '&',
       basicSetting       : 'Basic Settings',
       placeholder        : {
-        phoneOrEmail : 'Phone/Email/ Cloud Account',
+        phoneOrEmail : 'Phone/Email/Cloud Account',
         password     : 'Password',
       },
       header : {
@@ -70,7 +70,7 @@ module.exports = {
         feedback : 'Feedback',
       },
       button : {
-        confirm : 'Ok',
+        confirm : 'OK',
         cancel  : 'Cancel',
       },
     },

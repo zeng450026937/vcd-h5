@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-13 19:32:48 
+// 最新导入时间为 2019-5-14 16:40:42 
 module.exports = {
   name : 'feedback',
   lang : {
@@ -16,27 +16,27 @@ module.exports = {
       helpDescript       : '如需技术支持，请访问',
       helpCenter         : '帮助中心',
       inputDescribe      : '亿联感谢您提出的所有想法、评论和建议。',
-      inputContactWay    : '请输入您的联系方式',
+      inputContactWay    : '请输入您的手机或邮箱',
       uploadLog          : '上传日志',
-      uploadFailed       : '提交失败！',
+      uploadFailed       : '提交失败',
     },
     en : {
-      title              : 'Provide feedback',
+      title              : 'Submit Feedback',
       submit             : 'Submit  ',
       cancel             : 'Cancel',
       problemDescription : 'How can we make Yealink better? (Required)',
-      contactWay         : 'Contact Information(Optional)',
-      uploadImage        : 'Upload Images(Optional)',
+      contactWay         : 'Contact Information (Optional)',
+      uploadImage        : 'Upload Images (Optional)',
       requried           : 'Required',
       optional           : 'Optional',
       customService      : 'Customer Service: 0592-570-2000',
-      officialWebsite    : 'Website: www.yealink.com',
+      officialWebsite    : 'Official Website: www.yealink.com',
       helpDescript       : 'For technical support, please visit ',
       helpCenter         : 'Support Center',
-      inputDescribe      : 'Yealink appreciates your ideas, comments and suggestions.',
-      inputContactWay    : 'Please enter your contact info',
-      uploadLog          : 'Upload logs',
-      uploadFailed       : 'Submission failed!',
+      inputDescribe      : 'We appreciate your ideas, comments and suggestions.',
+      inputContactWay    : 'Please enter your phone number or email',
+      uploadLog          : 'Upload Logs',
+      uploadFailed       : 'Submission Failed',
     },
   },
 };
