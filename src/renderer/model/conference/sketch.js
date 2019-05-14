@@ -78,18 +78,17 @@ sketch.provide({
   },
   methods : {
     updateConferenceType(isVideo) {
+      if (isVideo) return;
       const { channel } = rtc.conference.mediaChannel;
 
-      if (!isVideo) {
-        const pc = channel.session.connection;
+      const pc = channel.session.connection;
 
-        pc.getSenders().forEach((sender) => {
-          if (sender.track && sender.track.kind === 'video') {
-            sender.track.stop();
-            pc.removeTrack(sender);
-          }
-        });
-      }
+      pc.getSenders().forEach((sender) => {
+        if (sender.track && sender.track.kind === 'video') {
+          sender.track.stop();
+          pc.removeTrack(sender);
+        }
+      });
       channel.renegotiate({
         rtcOfferConstraints : { offerToReceiveVideo: isVideo, offerToReceiveAudio: true },
       },

@@ -13,12 +13,14 @@ export default {
     MemberList,
   },
   computed : {
-    isOnHold() {
-      return this.$model.conference.currentUser.isOnHold();
+    closeTab() {
+      const { currentUser } = this.$model.conference;
+
+      return currentUser.isOnHold() || currentUser.isCastViewer();
     },
   },
   watch : {
-    isOnHold : {
+    closeTab : {
       handler(val) {
         if (val) {
           this.$model.conference.sketch.isInConferenceMain = true;
