@@ -186,12 +186,11 @@ model.provide({
       if (val == null) return;
       if (this.isConnected) {
         this.callType = val ? 'video' : 'audio';
-        console.warn(`REFERING: ${rtc.call.refering}`);
-        rtc.call.channel.callType = this.callType;
-        rtc.call.channel.callInfo = {
-          audio : true,
-          video : val,
-        };
+        // rtc.call.channel.callType = this.callType;
+        // rtc.call.channel.callInfo = {
+        //   audio : true,
+        //   video : val,
+        // };
       }
       this.switchCallType(val);
       if (!val) { // 不是视频通话 有辅流则关闭辅流

@@ -106,7 +106,7 @@ sketch.provide({
       else if (val === 'connected') {
         const { _isRefer, _isTransform, callInfo } = rtc.conference.mediaChannel.channel;
 
-        if (_isRefer && !_isTransform) {
+        if (rtc.call.connected || (_isRefer && !_isTransform)) {
           this.isVideoConference = this.$getVM('call').callType === 'video';
         }
         else if (_isTransform) {
