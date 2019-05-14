@@ -33,7 +33,7 @@ model.provide({
       return this.isVideoConference && rtc.conference.connecting;
     },
     acquireDetachedStreamInConference() {
-      return this.isVideoConference && rtc.conference.connected;
+      return this.$parent.conference.sketch.isVideoConference && rtc.conference.connected;
     },
     // 会议中是否需要释放本地视频流
     releaseStreamInConference() {
@@ -59,9 +59,11 @@ model.provide({
       if (val) {
         // FIXME TMP SOLUTION
         setTimeout(() => {
-          rtc.media.localMedia.acquireDetachedStream().then((s) => {
-            rtc.conference.mediaChannel.channel.replaceLocalStream(s);
-          });
+          if (this.isVideoConference) {
+            rtc.media.localMedia.acquireDetachedStream().then((s) => {
+              rtc.conference.mediaChannel.channel.replaceLocalStream(s);
+            });
+          }
         }, 8000);
       }
     },
@@ -74,9 +76,11 @@ model.provide({
       if (val && !this.enableLocalVideo) {
         rtc.media.localMedia.acquireStream();
         setTimeout(() => {
-          rtc.media.localMedia.acquireDetachedStream().then((s) => {
-            rtc.call.channel.replaceLocalStream(s);
-          });
+          if (this.$parent.call.isVideoCall) {
+            rtc.media.localMedia.acquireDetachedStream().then((s) => {
+              rtc.call.channel.replaceLocalStream(s);
+            });
+          }
         }, 8000);
       }
     },
