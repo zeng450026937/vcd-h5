@@ -103,8 +103,8 @@ build_windows:
     - $CACHE_PATH/
   script:
     - chcp 65001
-    - yarn install --force
-    - yarn run build:prod
+    - call yarn install --force
+    - call yarn run build:prod
   tags:
     - win10_233
   artifacts:
