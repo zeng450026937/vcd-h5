@@ -2,10 +2,16 @@
   <a-layout id="member-list" class="h-full bg-white">
 
     <member-list-wrapper class="list-panel"
+                         Meeting
+                         Calendar
+                         Contacts
+                         Settings
+                         Feedback
+
                          :class="{
                             [`member-panel-${activeGroupKey === '1' ? 'opened' : 'closed'}`] : true
                          }"
-                         :title="`已入会（${memberNum}）`" mkey="1"
+                         :title="`${$t('conversation.member.alreadyInConference')}（${memberNum}）`" mkey="1"
                          :is-selected="selectedGroup === '1'"
                          @selected="selectGroup">
       <template slot="items">
