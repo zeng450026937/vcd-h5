@@ -122,7 +122,7 @@ export default {
       });
       if (this.checkItem) {
         if (this.LoadMode === LOAD_MODE.SPLIT) {
-          const childs = await this.$model.contact.getAsyncChildNodes({ parentId : this.checkItem.id });
+          const childs = await this.$model.contact.getAsyncChildNodes({ parentId: this.checkItem.id });
 
           this.$refs.transfer.setCheckedList(childs);
         }

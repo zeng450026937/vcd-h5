@@ -2,6 +2,7 @@ import * as Path from 'path';
 import { app } from 'electron';
 
 let logDirectoryPath = null;
+
 let netLogDirectoryPath = null;
 
 export function getLogDirectoryPath() {

@@ -46,7 +46,9 @@ const shutdown = (callback) => {
 
   const appendersToCheck = Array.from(appenders.values());
   const shutdownFunctions = appendersToCheck.reduceRight((comp, next) => (next.shutdown ? comp + 1 : comp), 0);
+
   let completed = 0;
+
   let error;
 
   const complete = (err) => {

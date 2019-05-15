@@ -31,7 +31,7 @@ model.provide({
     // ....
     an() {
 
-    }
+    },
 
   },
 
@@ -50,4 +50,4 @@ model.provide({
 
 export default model;
 
-call.mute()
+call.mute();

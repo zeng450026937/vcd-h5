@@ -65,6 +65,7 @@ export function emittable(target) {
       if (fn) {
       // specific handler
         let cb;
+
         let i = cbs.length;
 
         while (i--) {

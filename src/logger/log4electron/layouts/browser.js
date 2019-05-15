@@ -111,6 +111,7 @@ const genLogContent = (contents) => {
 
 const genFormatContent = (contents) => {
   const unFormatContent = contents[0];
+
   let start = 0;
   const resultList = [];
 

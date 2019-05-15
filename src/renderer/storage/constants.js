@@ -14,4 +14,4 @@ export const CONTACT_STORAGE = {
 
 export const SETTING_STORAGE = {
   SETTING : 'APP_SETTING',
-}
+};

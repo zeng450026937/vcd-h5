@@ -120,7 +120,6 @@ export default {
   },
 
   mounted() {
-
     console.warn('mounted');
   },
   updated() {
@@ -128,11 +127,11 @@ export default {
   },
 
   deactivated() {
-    //this.$dispatch('setting.save');
+    // this.$dispatch('setting.save');
   },
 
   destroyed() {
-    //this.$dispatch('setting.save');
+    // this.$dispatch('setting.save');
   },
 };
 </script>

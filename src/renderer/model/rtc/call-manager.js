@@ -5,8 +5,8 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      lastSendTime : null,
-      lastRecvTime : null,
+      lastSendTime   : null,
+      lastRecvTime   : null,
       currentChannel : null,
     };
   },

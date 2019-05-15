@@ -1,4 +1,4 @@
-import { $t } from '../i18n'
+import { $t } from '../i18n';
 
 export function callType(record) {
   if (!record.connected && record.refuse === true && record.type === 'callout') return $t('dial.record.callOut');

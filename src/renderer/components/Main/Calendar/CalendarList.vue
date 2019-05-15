@@ -76,7 +76,7 @@ export default {
       debugger;
       if (val.name === 'schedule' && planId) {
         this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
-        console.warn(this.currentEvent)
+        console.warn(this.currentEvent);
       }
     },
   },

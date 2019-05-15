@@ -8,7 +8,9 @@ const debug = require('debug')('log4electron:clustering');
 const listeners = [];
 
 let disabled = false;
+
 let pm2 = false;
+
 let pm2InstanceVar = 'NODE_APP_INSTANCE';
 const LOG_FOR_ELECTRON = 'log4electron:message';
 

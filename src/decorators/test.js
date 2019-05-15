@@ -3,7 +3,6 @@ import { observable } from './observable';
 
 @emittable
 class MyClass {
-
   @observable
   name = 'initialized'
 
