@@ -59,7 +59,7 @@ model.provide({
       if (val) {
         // FIXME TMP SOLUTION
         setTimeout(() => {
-          if (this.isVideoConference) {
+          if (this.$parent.conference.sketch.isVideoConference) {
             rtc.media.localMedia.acquireDetachedStream().then((s) => {
               rtc.conference.mediaChannel.channel.replaceLocalStream(s);
             });
