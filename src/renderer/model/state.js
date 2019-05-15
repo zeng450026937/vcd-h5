@@ -90,7 +90,8 @@ model.provide({
     async handleCall(val, once) {
       if (val === 'ringing') { // 来电
         // 通话中免打扰
-        if (rtc.call.status === 'confirmed' && this.$parent.setting.dnd) {
+        console.warn(rtc.call.status);
+        if (rtc.call.status === 'confirmed' && this.$parent.setting.dndWhenCalling) {
           rtc.call.decline();
 
           return;

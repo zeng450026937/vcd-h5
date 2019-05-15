@@ -75,6 +75,7 @@ model.provide({
     acquireStreamInCall(val) {
       if (val && !this.enableLocalVideo) {
         rtc.media.localMedia.acquireStream();
+        console.warn('获取通话视频流');
         setTimeout(() => {
           if (this.$parent.call.isVideoCall) {
             rtc.media.localMedia.acquireDetachedStream().then((s) => {
@@ -86,7 +87,8 @@ model.provide({
     },
     releaseStreamInCall(val) {
       if (val && !this.enableLocalVideo) {
-        if (val) rtc.media.localMedia.releaseStream();
+        rtc.media.localMedia.releaseStream();
+        console.warn('释放通话视频流');
       }
     },
     enableLocalVideo(val) {

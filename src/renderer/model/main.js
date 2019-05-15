@@ -159,7 +159,7 @@ model.provide({
       immediate : true,
     },
     isConferenceDisConnected(val) {
-      if (val && this.isCallDisConnected) {
+      if (this.isConferenceDisConnected && this.isCallDisConnected) {
         const { loginType } = this.$parent.account;
         const route = loginType === 'login' ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
 
@@ -168,7 +168,7 @@ model.provide({
     },
     isCallDisConnected(val) {
       setTimeout(() => {
-        if (val && this.isConferenceDisConnected) {
+        if (this.isCallDisConnected && this.isConferenceDisConnected) {
           router.push(this.isRegistered ? this.currentNav.path : LOGIN.LOGIN_CONTENT);
         }
       }, 3000);

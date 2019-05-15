@@ -48,21 +48,13 @@ model.provide({
       noticeSound                : false,
       enableLocalVideo           : true,
       // p2p
-      // dnd                        : false,
+      dndWhenCalling             : false,
       //
       showAdvanceSetting         : false,
     };
   },
 
   computed : {
-    dnd : {
-      get() {
-        return rtc.call.enableDND;
-      },
-      set(val) {
-        rtc.call.enableDND = val;
-      },
-    },
   },
 
   middleware : {

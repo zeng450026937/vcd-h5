@@ -41,7 +41,7 @@
             <span class="setting-title">{{$t('setting.conference.baseSetting')}}</span>
           </div>
           <div class="mt-3">
-            <a-switch size="small" v-model="dnd"/>
+            <a-switch size="small" v-model="dndWhenCalling"/>
             <span class="setting-label">{{$t('setting.conference.dndWhenCalling')}}</span>
           </div>
           <div class="mt-3 flex flex-col">
@@ -108,7 +108,7 @@ export default {
         'maximizedWhenRemoteSharing',
         'shareWithSound',
         'shareSmoothMode',
-        'dnd',
+        'dndWhenCalling',
         'enableLocalVideo',
         'videoQuality',
       ],
