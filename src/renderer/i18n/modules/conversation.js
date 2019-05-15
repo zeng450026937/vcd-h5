@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-14 16:40:42 
+// 最新导入时间为 2019-5-15 09:01:17 
 module.exports = {
   name : 'conversation',
   lang : {
@@ -16,6 +16,7 @@ module.exports = {
         audioConference    : '音频会议',
         audioCall          : '音频通话',
         videoCall          : '视频通话',
+        videoConference    : '视频会议',
         message            : {
           mute              : '您被主持人禁言',
           unMute            : '您被主持人解除禁言',
@@ -34,7 +35,6 @@ module.exports = {
           enterHall         : '{target} 加入会议大厅',
           exitMeeting       : '{target} 离开会议',
         },
-        videoConference : '视频会议',
       },
       title : {
         calling       : '正在呼叫',
@@ -238,6 +238,7 @@ module.exports = {
         audioConference    : 'Audio Meeting',
         audioCall          : 'Audio Call',
         videoCall          : 'Video Call',
+        videoConference    : 'Video Meeting',
         message            : {
           mute              : 'You have been muted by the moderator',
           unMute            : 'You have been unmuted by the moderator',
@@ -256,7 +257,6 @@ module.exports = {
           enterHall         : '{target} enters the lobby',
           exitMeeting       : '{target} leaves the meeting',
         },
-        videoConference : 'Video Meeting',
       },
       title : {
         calling       : 'Calling',
@@ -274,7 +274,7 @@ module.exports = {
       statistics : {
         send              : 'Sent             ',
         receive           : 'Received         ',
-        deviceType        : 'Endpoint Type       ',
+        deviceType        : 'Device   ',
         refreshDeviceInfo : 'Refresh Statistics',
         closeDeviceInfo   : 'Close Statistics',
         bitrate           : 'Bandwidth      ',
@@ -292,7 +292,7 @@ module.exports = {
         general           : 'Fair       ',
         poor              : 'Poor             ',
         network           : 'Network Quality       ',
-        totalBitrate      : 'Total Bandwidth',
+        totalBitrate      : 'Bandwidth',
         ip                : 'IP Address            ',
         protocolType      : 'Protocol Type',
         message           : {
@@ -331,7 +331,7 @@ module.exports = {
         copySucceed        : 'Copied',
         inviteContact      : 'Invite by Contacts',
         inviteOthers       : 'Invite Others',
-        protocol           : 'Endpoint Type       ',
+        protocol           : 'Endpoint   ',
         yealinkCloud       : 'Yealink Cloud Account',
         address            : 'Address    ',
         number             : 'Account',
@@ -373,7 +373,7 @@ module.exports = {
         allowAll            : 'Allow All',
         refuseAll           : 'Refuse All',
         raiseHangs          : 'Raising Hands',
-        otherInvite         : 'Invitation history',
+        otherInvite         : 'Invitation History',
         reInvite            : 'Invite',
         ringing             : 'Inviting',
         inviteFailed        : 'Failed',

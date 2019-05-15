@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-14 16:40:42 
+// 最新导入时间为 2019-5-15 09:01:17 
 module.exports = {
   name : 'contact',
   lang : {
@@ -170,7 +170,7 @@ module.exports = {
         inputAccount : ' ',
         inputPhone   : ' ',
         inputEmail   : ' ',
-        search       : 'Search',
+        search       : 'Search Contacts',
       },
       message : {
         success             : 'Added Successfully',

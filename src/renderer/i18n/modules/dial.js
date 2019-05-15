@@ -1,9 +1,12 @@
-// 最新导入时间为 2019-5-14 16:40:42 
+// 最新导入时间为 2019-5-15 09:01:17 
 module.exports = {
   name : 'dial',
   lang : {
     zh : {
-      title : {
+      conferenceDetail : '会议详情',
+      callDetail       : '通话详情',
+      dial             : '拨号',
+      title            : {
         conferenceDetail : '会议详情',
         callDetail       : '通话详情',
         dial             : '拨号',
@@ -32,12 +35,12 @@ module.exports = {
         video : '视频通话',
         audio : '音频通话',
       },
-      conferenceDetail : '会议详情',
-      callDetail       : '通话详情',
-      dial             : '拨号',
     },
     en : {
-      title : {
+      conferenceDetail : 'Meeting Details',
+      callDetail       : 'Call Details ',
+      dial             : 'Dial',
+      title            : {
         conferenceDetail : 'Meeting Details',
         callDetail       : 'Call Details',
         dial             : 'Dial',
@@ -66,9 +69,6 @@ module.exports = {
         video : 'Video Call',
         audio : 'Audio Call',
       },
-      conferenceDetail : 'Meeting Details',
-      callDetail       : 'Call Details ',
-      dial             : 'Dial',
     },
   },
 };
