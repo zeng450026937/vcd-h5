@@ -47,12 +47,14 @@
                   </div>
                 </div>
                 <a-button shape="circle"
+                          :title="$t('conversation.controls.exitConference')"
                           class="text-white mx-2 border-transparent"
                           @click="showMorePanel = !showMorePanel"
                 ><a-iconfont type="icon-gengduo1"/></a-button>
               </a-popover>
 
               <a-button shape="circle"
+                        :title="$t('conversation.controls.hangUp')"
                         class="text-white mx-2 bg-red-light border-transparent"
                         @click="hangUp"
               ><a-iconfont type="icon-guaduan"/></a-button>
@@ -62,7 +64,7 @@
       </div>
 
       <video-view class="nav-mini-video bg-white cursor-pointer h-full"
-                  title="双击回到视频会议界面"
+                  :title="$t('conversation.controls.dbClickToCallView')"
                   source="call-remote"
                   object-fit="cover"
                   position="relative"
@@ -113,16 +115,6 @@ export default {
     this.mediaStatus = this.$rtc.call.channel.isMuted();
   },
   computed : {
-    callText() {
-      const titleMap = {
-        connecting   : `正在呼叫 ${this.userName}`,
-        connected    : `正在与 ${this.userName} 进行通话`,
-        ringing      : `${this.userName} 正在来电`,
-        disconnected : `与 ${this.userName} 的通话已结束`,
-      };
-
-      return titleMap[this.callStatus] || '当前通话已失效';
-    },
     displayName() {
       const remoteIdentity = this.callStatus !== 'disconnected'
         ? this.$rtc.call.remoteIdentity
@@ -130,9 +122,6 @@ export default {
 
       return remoteIdentity && (remoteIdentity.display_name
           || remoteIdentity.uri.user);
-    },
-    userName() {
-      return this.displayName || this.targetUser || '未知用户';
     },
     callStatus() {
       return this.$model.state.callStatus;
@@ -145,16 +134,16 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
-        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
+        unblock : { icon: 'icon-maikefeng', color: '', title: this.$t('conversation.controls.turnOffMicrophone') },
+        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnMicrophone')  },
       };
 
       return iconMap[this.mediaStatus.audio ? 'block' : 'unblock'];
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
-        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
+        unblock : { icon: 'icon-shipin', color: '', title: this.$t('conversation.controls.turnOffCamera') },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnCamera') },
       };
 
       return iconMap[this.mediaStatus.video ? 'block' : 'unblock'];

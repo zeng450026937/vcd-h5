@@ -114,8 +114,8 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-maikefeng', color: '', title: this.$t('conversation.controls.turnOnMicrophone') },
-        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
+        unblock : { icon: 'icon-maikefeng', color: '', title: this.$t('conversation.controls.turnOffMicrophone') },
+        block   : { icon: 'icon-maikefengjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnMicrophone') },
       };
 
       return iconMap[this.mediaStatus.audio ? 'block' : 'unblock'];

@@ -3,7 +3,7 @@
     <div class="relative w-full normal:h-nav-normal middle:h-nav-middle max:h-nav-max"
          style="border: 1px solid #1D212F;">
       <div class="h-8 flex items-center absolute w-full z-10" style="background: rgba(0,0,0,0.65);">
-        <span class="text-white text-xs mx-3 truncate leading-tight">{{conferenceTitle || '暂无'}}</span>
+        <span class="text-white text-xs mx-3 truncate leading-tight">{{conferenceTitle || 'Loading'}}</span>
       </div>
       <div class="video-controls absolute w-full">
         <div class="h-full w-full flex flex-col">
@@ -43,16 +43,16 @@
                        class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                        @click="toAudioConference">
                     <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-                    <span class="ml-3 text-xs">切换为音频会议</span>
+                    <span class="ml-3 text-xs">{{$t('conversation.controls.toAudioConference')}}</span>
                   </div>
                   <div class="h-8 w-full px-3 popover-content-item flex items-center hover:bg-list-hover"
                        @click="openPlateModal">
                     <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
-                    <span class="ml-3 text-xs">拨号盘</span>
+                    <span class="ml-3 text-xs">{{$t('conversation.controls.plate')}}</span>
                   </div>
                 </div>
                 <a-button shape="circle"
-                          title="更多"
+                          :title="$t('conversation.controls.more')"
                           class="text-white mx-2 border-transparent"
                           @click="showMorePanel = !showMorePanel"
                 >
@@ -60,7 +60,7 @@
                 </a-button>
               </a-popover>
               <a-button shape="circle"
-                        title="退出"
+                        :title="$t('conversation.controls.exitConference')"
                         class="text-white mx-2 bg-red-light border-transparent"
                         @click="showLeaveModal"
               >
@@ -72,7 +72,7 @@
       </div>
       <video-view class="nav-mini-video bg-white cursor-pointer h-full"
                   :class="{'video-mirroring': horizontalMirroring}"
-                  title="双击回到视频会议界面"
+                  :title="$t('conversation.controls.dbClickToConferenceView')"
                   :source="isShareInCenter ? 'screen': 'remote'"
                   object-fit="cover"
                   position="relative"
@@ -82,7 +82,7 @@
              slot="content"
              class="absolute-center h-full flex flex-col items-center justify-center">
           <a-iconfont type="icon-huiyishi" class="display-icon"/>
-          <span class="display-name">音频会议</span>
+          <span class="display-name">{{$t('conversation.main.audioConference')}}</span>
         </div>
       </video-view>
     </div>
@@ -151,18 +151,18 @@ export default {
     },
     audioIcon() {
       const iconMap = {
-        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: '打开麦克风' },
-        unblock    : { icon: 'icon-maikefeng', color: '', title: '关闭麦克风' },
-        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: '取消举手' },
-        hand       : { icon: 'icon-jushou', color: '', title: '举手' },
+        block      : { icon: 'icon-maikefengjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnMicrophone') },
+        unblock    : { icon: 'icon-maikefeng', color: '', title: this.$t('conversation.controls.turnOffMicrophone') },
+        unblocking : { icon: 'icon-quxiaojushou', color: 'red-light', title: this.$t('conversation.controls.cancelRaiseHangs') },
+        hand       : { icon: 'icon-jushou', color: '', title: this.$t('conversation.controls.raiseHangs') },
       };
 
       return iconMap[this.$model.conference.audioStatus || 'unblock'];
     },
     videoIcon() {
       const iconMap = {
-        unblock : { icon: 'icon-shipin', color: '', title: '关闭摄像头' },
-        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: '打开摄像头' },
+        unblock : { icon: 'icon-shipin', color: '', title: this.$t('conversation.controls.turnOffCamera') },
+        block   : { icon: 'icon-shipinjinyong', color: 'red-light', title: this.$t('conversation.controls.turnOnCamera') },
       };
 
       return iconMap[this.$model.conference.videoStatus];
