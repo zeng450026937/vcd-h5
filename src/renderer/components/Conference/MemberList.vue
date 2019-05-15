@@ -2,12 +2,6 @@
   <a-layout id="member-list" class="h-full bg-white">
 
     <member-list-wrapper class="list-panel"
-                         Meeting
-                         Calendar
-                         Contacts
-                         Settings
-                         Feedback
-
                          :class="{
                             [`member-panel-${activeGroupKey === '1' ? 'opened' : 'closed'}`] : true
                          }"
@@ -34,14 +28,16 @@
             ? $t('conversation.member.closeSearchFrame')
             : $t('conversation.member.openSearchFrame')"
                       type="icon-sousuo" class="ml-4 text-base" @click.stop="openSearch"/>
-          <a-iconfont :title="$t('conversation.member.unMuteAll')"
-                      type="icon-maikefeng"
-                      class="ml-4 text-base"
-                      @click.stop="unMuteAll"/>
-          <a-iconfont :title="$t('conversation.member.muteAll')"
-                      type="icon-maikefengjinyong"
-                      class="ml-4 text-base"
-                      @click.stop="muteAll"/>
+          <template v-if="isPresenter">
+            <a-iconfont :title="$t('conversation.member.unMuteAll')"
+                        type="icon-maikefeng"
+                        class="ml-4 text-base"
+                        @click.stop="unMuteAll"/>
+            <a-iconfont :title="$t('conversation.member.muteAll')"
+                        type="icon-maikefengjinyong"
+                        class="ml-4 text-base"
+                        @click.stop="muteAll"/>
+          </template>
         </div>
       </template>
     </member-list-wrapper>

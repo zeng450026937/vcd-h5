@@ -109,7 +109,7 @@ const plainModal = {
 
       if (!this.hideOk) {
         children.push(h('a-button', {
-          staticClass : 'mx-2 bg-red-light border-red-light text-white rounded',
+          staticClass : 'mx-2 min-w-35% bg-red-light border-red-light text-white rounded',
           props       : {
             ghost : true,
           },
@@ -120,7 +120,7 @@ const plainModal = {
       }
       if (!this.hideCancel) {
         children.push(h('a-button', {
-          staticClass : 'mx-2 border-grey text-black3 rounded',
+          staticClass : 'mx-2 min-w-35% border-grey text-black3 rounded',
           props       : {
             ghost : true,
           },
