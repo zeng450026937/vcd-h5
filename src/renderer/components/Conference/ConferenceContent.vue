@@ -30,7 +30,7 @@
               </a-tooltip>
 
               <div v-for="(tab, index) in tabList" :key="index">
-                <a-badge :numberStyle= "{backgroundColor: 'white', boxShadow : 'none'}"
+                <a-badge :numberStyle= "{backgroundColor: 'red', boxShadow : 'none'}"
                          class="shadow-none"
                          :dot="(hasNewApply && tab.comp === 'TabMemberView')
                           || (hasNewMessage && tab.comp === 'TabChatting')">

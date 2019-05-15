@@ -7,15 +7,18 @@
             <div class="flex items-center text-xs leading-tight select-none">
               <div style="max-width: 120px" class="truncate">
                 <span class="truncate"
-                      :title="message.from"
-                      :class="{'text-indigo': message.type === 'receive'}">{{message.from}}</span>
+                      :title="message.from.displayText"
+                      :class="{'cursor-pointer text-indigo': message.type === 'receive'}"
+                      @click="selectTarget(message.from, message.type === 'receive', 'from', message)"
+                >{{message.from.displayText}}</span>
               </div>
               <span style="margin: 0 6px">@</span>
               <div class="w-1 flex flex-grow">
                 <span class="truncate"
-                      :title="message.to"
-                      :class="{'text-indigo': !message.isPrivate || message.type === 'send'}">
-                  {{message.to}}
+                      :title="message.to.displayText"
+                      @click="selectTarget(message.to, !message.isPrivate || message.type === 'send', 'to', message)"
+                      :class="{'cursor-pointer text-indigo': !message.isPrivate || message.type === 'send'}">
+                  {{message.to.displayText}}
                 </span>
                 <span v-if="!message.toAll"
                       class="text-red-light whitespace-no-wrap mx-1"
@@ -43,16 +46,24 @@ export default {
   data() {
     return {
       message : {
-        from    : this.$t('conversation.chat.me'),
-        to      : this.$t('conversation.chat.stranger'),
+        from    : {},
+        to      : {},
         content : '',
-        date    : '18：24',
+        date    : null,
       },
     };
   },
   computed : {
     messageRecordList() {
       return cloneDeep(this.$model.conference.chat.messageRecordList).reverse();
+    },
+  },
+  methods : {
+    selectTarget(target, isOthers, direction, targetInfo) {
+      if (!isOthers) return;
+      const isAll = targetInfo.toAll && direction === 'to';
+
+      this.$emit('select-target', isAll ? 'all' : target.entity);
     },
   },
 };

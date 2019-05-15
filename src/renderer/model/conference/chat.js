@@ -31,8 +31,11 @@ chat.provide({
       const { conference } = rtc.conference;
       const startTime = moment(new Date(), 'YYYYMMDD').format('HH:mm');
       const messageObject = {
-        toAll     : target === 'all',
-        from,
+        toAll : target === 'all',
+        from  : {
+          entity      : '',
+          displayText : from,
+        },
         content,
         date      : startTime,
         type,
@@ -41,13 +44,19 @@ chat.provide({
 
       if (target === 'all') {
         conference.sendMessage(content);
-        messageObject.to = $t('conversation.chat.all');
+        messageObject.to = {
+          entity      : '',
+          displayText : $t('conversation.chat.all'),
+        };
       }
       else {
         const user = conference.users.getUser(target);
 
         conference.sendMessage(content, [ user.entity ]);
-        messageObject.to = user.displayText;
+        messageObject.to = {
+          entity      : user.entity,
+          displayText : user.displayText,
+        };
       }
 
       this.messageRecordList.push(messageObject);
@@ -59,14 +68,21 @@ chat.provide({
       if (this.currentTab !== 'TabChatting') {
         this.hasNewMessage = true;
       }
+      console.warn(val);
       const messageObject = {
-        from    : val.user['@display-text'],
+        from : {
+          entity      : val.user['@entity'],
+          displayText : val.user['@display-text'],
+        },
         content : val.msg,
         date    : moment(new Date(), 'YYYYMMDD').format('HH:mm'),
         toAll   : !val['@is-private'],
-        to      : val['@is-private']
-          ? $t('conversation.chat.me')
-          : $t('conversation.chat.all'),
+        to      : {
+          entity      : '',
+          displayText : val['@is-private']
+            ? $t('conversation.chat.me')
+            : $t('conversation.chat.all'),
+        },
         isPrivate : val['@is-private'],
         type      : 'receive',
       };

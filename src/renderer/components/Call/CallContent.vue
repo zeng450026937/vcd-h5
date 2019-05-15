@@ -18,7 +18,7 @@
               <template v-if="isConnected">
                 <a-iconfont type="icon-tianjialianxiren" class="ml-4 cursor-pointer hover:text-indigo text-base"
                             @click="upgrade"/>
-                <a-badge :numberStyle="{backgroundColor: 'white', boxShadow : 'none'}"
+                <a-badge :numberStyle="{backgroundColor: 'red', boxShadow : 'none'}"
                          class="shadow-none"
                          :dot="hasNewMessage">
                   <a-iconfont type="icon-liaotian" class="ml-4 cursor-pointer hover:text-indigo text-base"
