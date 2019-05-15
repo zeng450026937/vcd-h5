@@ -4,7 +4,7 @@
       <div class="text-center mt-3 no-dragable">
 
         <a-popover placement="leftTop"
-                   :trigger="['click']"
+                   :trigger="['hover', 'click']"
                    :mouseEnterDelay="1"
                    overlayClassName="main-sidebar-popover">
           <template slot="content">
@@ -26,12 +26,12 @@
               </div>
 
               <div class="text-center absolute mt-10">
-                <a-avatar :size="72" :src="randomAvatar()"></a-avatar>
+                <a-avatar :size="72" class="text-xl">{{userInfo.name | filterName}}</a-avatar>
               </div>
             </div>
           </template>
           <div class="cursor-pointer">
-            <a-avatar :size="32" :src="randomAvatar()"></a-avatar>
+            <a-avatar :size="32" class="text-xs">{{userInfo.name | filterName}}</a-avatar>
           </div>
         </a-popover>
 
@@ -65,18 +65,6 @@
 <script>
 import CommonAvatar from '../Shared/CommonAvatar.vue';
 import FeedbackModal from '../Login/FeedbackModal.vue';
-
-const avatarList = [
-  'http://img2.touxiang.cn/file/20170614/03130f686db2220fc3a252eec01d2eb6.jpg',
-  'http://img2.touxiang.cn/file/20170614/67058cc84dcd9c68ec2367073a7b098a.jpg',
-  'http://img2.touxiang.cn/file/20170614/7e5717b1ca44b3c22794ceb55ff9dfa0.jpg',
-  'http://img2.touxiang.cn/file/20170614/cd3c756eaf54e20172c7d36f5c029320.jpg',
-  'http://img2.touxiang.cn/file/20170614/ce471bee343843b4b6a1b9e0b7615957.jpg',
-  'http://img2.touxiang.cn/file/20170616/9b732f6fecbbbad8006f8c8c7b8be392.jpg',
-  'http://img2.touxiang.cn/file/20170616/33c46a5d4ed3c2ee7b7fb6a9256ba8f2.jpg',
-  'http://img2.touxiang.cn/file/20170616/a86490ed047755f9280213c8554f65af.jpg',
-  'http://img2.touxiang.cn/file/20170616/0b01a74167c13eed138d698aba43fe20.jpg',
-];
 
 export default {
   name       : 'MainSidebar',
@@ -129,9 +117,6 @@ export default {
     },
   },
   methods : {
-    randomAvatar() {
-      return avatarList[5];
-    },
     clickMenu(sidebar, index) {
       if (this.currentSidebar !== sidebar) {
         this.currentSidebar = sidebar;
@@ -148,6 +133,11 @@ export default {
     },
     openFeedback() {
       this.$refs.feedbackModal.visible = true;
+    },
+  },
+  filters : {
+    filterName(val) {
+      return /^(.*)['(', '（'].*[')', '）']|（$/.test(val) ? RegExp.$1.substr(-2, 2) : val.substr(-2, 2);
     },
   },
 };
