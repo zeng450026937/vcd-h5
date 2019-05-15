@@ -38,12 +38,12 @@
                        class="popover-content-item hover:bg-list-hover"
                        @click="toAudioCall">
                     <a-iconfont type="icon-yuyin" class="text-lg text-indigo"/>
-                    <span class="ml-3 text-xs">切换为音频通话</span>
+                    <span class="ml-3 text-xs">{{$t('conversation.controls.toAudioCall')}}</span>
                   </div>
                   <div class="popover-content-item hover:bg-list-hover"
                        @click="openPlateModal">
                     <a-iconfont type="icon-bohao" theme="filled" class="text-lg text-indigo"/>
-                    <span class="ml-3 text-xs">拨号盘</span>
+                    <span class="ml-3 text-xs">{{$t('conversation.controls.plate')}}</span>
                   </div>
                 </div>
                 <a-button shape="circle"
@@ -73,7 +73,7 @@
              class="absolute-center h-full flex flex-col items-center justify-center"
              style="top: 40%">
           <a-iconfont type="icon-huiyishi" class="display-icon"/>
-          <span class="display-name">音频通话</span>
+          <span class="display-name">{{$t('conversation.main.audioCall')}}</span>
         </div>
       </video-view>
 

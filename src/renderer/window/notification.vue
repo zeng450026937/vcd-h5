@@ -3,7 +3,7 @@
     <div class="flex flex-col h-full wrapper">
       <div class="header">
         <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
-                    :title="$('common.controls.close')"
+                    :title="$t('common.controls.close')"
                     @click="close"></a-iconfont>
       </div>
       <div class="flex flex-grow mt-5 content">

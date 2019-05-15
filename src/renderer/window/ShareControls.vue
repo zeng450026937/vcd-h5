@@ -6,16 +6,16 @@
                   class="text-white text-base cursor-pointer no-dragable"
                   @click="showStatisticsModal"/>
       <span>ID: {{targetId}}</span>
-      <span class="mr-2">{{$('conversation.share.shareTime')}}: {{duration}}</span>
+      <span class="mr-2">{{$t('conversation.share.shareTime')}}: {{duration}}</span>
       <a-button class="ml-2 bg-transparent border-white text-white no-dragable"
                 @click="showSharingModal">
         <a-iconfont type="icon-qiehuan"></a-iconfont>
-        {{$('conversation.share.switchShare')}}
+        {{$t('conversation.share.switchShare')}}
       </a-button>
       <a-button @click="terminateSharing"
                 class="bg-red-light border-transparent text-white no-dragable">
         <a-iconfont type="icon-tingzhi" class="text-white"></a-iconfont>
-        {{$('conversation.share.terminateShare')}}
+        {{$t('conversation.share.terminateShare')}}
       </a-button>
     </div>
   </div>

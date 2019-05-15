@@ -3,7 +3,7 @@
     <div class="flex flex-col h-full wrapper">
       <div class="header">
         <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
-                    :title="$('common.controls.close')"
+                    :title="$t('common.controls.close')"
                     @click="hangUp"></a-iconfont>
       </div>
       <div class="flex flex-grow content mt-3">
@@ -23,7 +23,7 @@
         <a-button v-if="isVideoCall || conferenceInviter" class="text-base w-36"
                   @click="transferToAudio">
           <a-iconfont type="icon-qiehuan"/>
-          {{$('conversation.controls.changeToAudio')}}
+          {{$t('conversation.controls.changeToAudio')}}
         </a-button>
         <!--麦克风（接听）-->
         <a-button class="text-base w-14 ml-3 text-white border-transparent"
@@ -64,7 +64,7 @@ export default {
       const { remoteIdentity } = this.rtc.call.incoming[0];
 
       return (remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user)) || this.$('conversation.title.unknownUser');
+        || remoteIdentity.uri.user)) || this.$t('conversation.title.unknownUser');
     },
     isVideoCall() {
       if (this.conferenceInviter) return false;
