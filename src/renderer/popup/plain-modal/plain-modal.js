@@ -1,3 +1,4 @@
+import { $t } from '../../i18n';
 import './plain-modal.less';
 
 const plainModal = {
@@ -21,13 +22,17 @@ const plainModal = {
     },
     okText : {
       type    : String,
-      default : '确认',
+      default : '',
     },
     cancelText : {
       type    : String,
-      default : '取消',
+      default : '',
     },
     hideCancel : {
+      type    : Boolean,
+      default : false,
+    },
+    hideTile : {
       type    : Boolean,
       default : false,
     },
@@ -112,25 +117,25 @@ const plainModal = {
 
       if (!this.hideOk) {
         children.push(h('a-button', {
-          staticClass : 'min-w-1/2 mx-2 border-red-light text-red-light rounded-sm',
+          staticClass : 'mx-2 border-red-light text-red-light rounded-sm',
           props       : {
             ghost : true,
           },
           on : {
             click : this.handleOk,
           },
-        }, this.okText));
+        }, this.okText || $t('common.controls.ensure')));
       }
       if (!this.hideCancel) {
         children.push(h('a-button', {
-          staticClass : 'min-w-1/2 mx-2 border-grey-dark text-grey-dark rounded-sm',
+          staticClass : 'mx-2 border-grey text-black3 rounded-sm',
           props       : {
             ghost : true,
           },
           on : {
             click : this.handleCancel,
           },
-        }, this.cancelText));
+        }, this.cancelText || $t('common.controls.cancel')));
       }
 
       return children;
@@ -138,19 +143,23 @@ const plainModal = {
   },
   render(h) {
     const children = [];
-    const titleSlot = h('div', {
-      staticClass : 'flex items-center',
-      slot        : 'title',
-    }, this.genTitle());
+
+    if (!this.hideTile) {
+      const titleSlot = h('div', {
+        staticClass : 'flex items-center',
+        slot        : 'title',
+      }, this.genTitle());
+
+      children.push(titleSlot);
+    }
 
     const footerSlot = h('div', {
-      staticClass : 'flex justify-around',
+      staticClass : 'flex justify-center',
       slot        : 'footer',
     }, this.genFooter());
 
     const content = this.content ? h('div', { staticClass: 'text-center' }, this.content) : '';
 
-    children.push(titleSlot);
     children.push(footerSlot);
     if (content) children.push(content);
     children.push(this.$slots.content);

@@ -15,6 +15,7 @@ const popup = new Popup({
       data : {
         ref   : 'loadingModal',
         props : {
+          hideTile       : true,
           hideOk         : true,
           maskClosable   : false,
           destroyOnClose : true,
@@ -32,7 +33,10 @@ const popup = new Popup({
               tag : 'a-spin',
             },
             {
-              tag      : 'span',
+              tag  : 'span',
+              data : {
+                staticClass : 'mt-2',
+              },
               children : 'content',
             },
           ],
@@ -50,6 +54,7 @@ const popup = new Popup({
       data : {
         ref   : 'ensureModal',
         props : {
+          hideTile       : true,
           maskClosable   : false,
           destroyOnClose : true,
         },
@@ -63,8 +68,9 @@ const popup = new Popup({
           },
           children : [
             {
-              tag      : 'span',
-              children : 'content',
+              tag         : 'span',
+              staticClass : 'mt-2',
+              children    : 'content',
             },
           ],
         },

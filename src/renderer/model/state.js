@@ -5,6 +5,7 @@ import router from '../router';
 import { CONFERENCE, CALL } from '../router/constants';
 import storage from '../storage';
 import { CallRecord } from '../database/call-record';
+import { $t } from '../i18n';
 
 
 const callRecordDB = CallRecord.Create();
@@ -56,7 +57,7 @@ model.provide({
     async handleLogin(val, once) {
       if (val === 'connecting' || val === 'registering') { // 正在登录状态
         if (!this.loginPopup || this.loginPopup._isDestroyed) {
-          this.loginPopup = popup.prepared('loadingModal', { content: '登录中...' }).display();
+          this.loginPopup = popup.prepared('loadingModal', { content: $t('login.tips.isLogin') }).display();
           this.loginPopup.vm.$once('cancel', () => {
             rtc.account.signout();
             popup.destroy(this.loginPopup);
@@ -69,7 +70,7 @@ model.provide({
       this.isPreparing = false;
       if (val === 'connecting') { // 正在入会状态
         if (!this.enterPopup || this.enterPopup._isDestroyed) {
-          this.enterPopup = popup.prepared('loadingModal', { content: '正在进入会议...' }).display();
+          this.enterPopup = popup.prepared('loadingModal', { content: $t('join.title.connectMeeting') }).display();
           this.enterPopup.vm.$once('cancel', () => {
             rtc.conference.leave();
             popup.destroy(this.enterPopup);
