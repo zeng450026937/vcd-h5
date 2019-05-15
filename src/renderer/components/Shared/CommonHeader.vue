@@ -1,14 +1,14 @@
 <template>
   <div v-if="show" id="common-header" class="flex items-center z-20 no-dragable">
     <a-iconfont type="icon-zuixiaohua"
-                title="最小化"
+                :title="$t('common.controls.minimize')"
                 class="header-control"
                 @click="clickMinimize"></a-iconfont>
     <a-iconfont type="icon-zuidahua" class="maximize header-control"
-                title="最大化"
+                :title="$t('common.controls.maximize')"
                 @click="clickMaximize"></a-iconfont>
     <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
-                title="关闭"
+                :title="$t('common.controls.close')"
                 @click="clickClose"></a-iconfont>
   </div>
 </template>

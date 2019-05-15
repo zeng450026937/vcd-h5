@@ -71,11 +71,13 @@
     <div v-else class="flex justify-center h-full">
       <group-info :group="group"/>
     </div>
-    <plain-modal ref="inputModal" title="请输入密码"
-                 hide-cancel
-                 :ok-text="vmrInfo.pin ? '加入' : '没有密码，直接加入 >>'"
+    <plain-modal ref="inputModal"
+                 type="error"
+                 title="请输入会议密码"
+                 cancel-text="取消"
+                 ok-text="加入"
                  @ok="joinVMR">
-      <div slot="content">
+      <div slot="content" class="px-4">
         <a-input v-model="vmrInfo.pin"/>
       </div>
     </plain-modal>
@@ -148,17 +150,29 @@ export default {
         number : this.vmrInfo.number,
         pin    : this.vmrInfo.pin,
         ...this.vmrInfo.options,
-      });
+      })
+
       this.vmrInfo = {
         number : '',
         pin    : '',
       };
     },
-    call(item, options) {
+    async call(item, options) {
       if (item.isVMR) {
-        this.$refs.inputModal.visible = true;
         this.vmrInfo.number = item.number;
         this.vmrInfo.options = options;
+        try {
+          await this.$dispatch('meeting.joinMeeting', {
+            number : this.vmrInfo.number,
+            pin    : this.vmrInfo.pin,
+            ...this.vmrInfo.options,
+          });
+        }
+        catch (e) {
+          if (e.cause === 'Invalid PIN') {
+            this.$refs.inputModal.visible = true;
+          }
+        }
       }
       else {
         this.$dispatch('call.call', {

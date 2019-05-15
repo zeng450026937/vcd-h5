@@ -3,6 +3,7 @@ import AutoLaunch from 'auto-launch';
 import Vuem from './vuem';
 import rtc from '../rtc';
 import popup from '../popup';
+import { $t } from '../i18n';
 
 function dumpConnection() {
   const connection = navigator;
@@ -193,7 +194,10 @@ model.use(async(ctx, next) => {
     const showPopup = rtc.conference.connected || rtc.call.connected || rtc.call.connecting;
 
     if (showPopup) {
-      const ensurePopup = popup.prepared('ensureModal', { content: '关闭窗口会结束当前通话，确认关闭吗？' });
+      const ensurePopup = popup.prepared('ensureModal',
+        {
+          content : $t('conversation.tip.closeWindowInConference'),
+        });
 
       ensurePopup.display();
       ensurePopup.vm.$once('cancel', async() => popup.destroy(ensurePopup));

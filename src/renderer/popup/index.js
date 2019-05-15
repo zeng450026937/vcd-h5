@@ -35,7 +35,7 @@ const popup = new Popup({
             {
               tag  : 'span',
               data : {
-                staticClass : 'mt-2',
+                staticClass : 'mt-2 text-center',
               },
               children : 'content',
             },
@@ -68,9 +68,11 @@ const popup = new Popup({
           },
           children : [
             {
-              tag         : 'span',
-              staticClass : 'mt-2',
-              children    : 'content',
+              tag  : 'span',
+              data : {
+                staticClass : 'mb-4 w-40 text-center',
+              },
+              children : 'content',
             },
           ],
         },

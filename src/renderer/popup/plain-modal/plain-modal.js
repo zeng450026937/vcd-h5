@@ -57,28 +57,20 @@ const plainModal = {
     modalType() {
       const typeMap = {
         info : {
-          class : {
-            'anticon-info-circle' : true,
-          },
-          icon : 'info-circle',
+          class : 'anticon-info-circle',
+          icon  : 'info-circle',
         },
         success : {
-          class : {
-            'anticon-check-circle' : true,
-          },
-          icon : 'check-circle',
+          class : 'anticon-check-circle',
+          icon  : 'check-circle',
         },
         error : {
-          class : {
-            'anticon-close-circle' : true,
-          },
-          icon : 'close-circle',
+          class : 'anticon-close-circle',
+          icon  : 'close-circle',
         },
         warning : {
-          class : {
-            'anticon-exclamation-circle' : true,
-          },
-          icon : 'exclamation-circle',
+          class : 'anticon-exclamation-circle',
+          icon  : 'exclamation-circle',
         },
       };
 
@@ -99,7 +91,7 @@ const plainModal = {
 
       if (this.showIcon) {
         children.push(h('a-icon', {
-          staticClass : 'text-base text-indigo',
+          staticClass : `ext-base ${this.modalType.class}`,
           props       : {
             type : this.modalType.icon,
           },
@@ -117,7 +109,7 @@ const plainModal = {
 
       if (!this.hideOk) {
         children.push(h('a-button', {
-          staticClass : 'mx-2 border-red-light text-red-light rounded-sm',
+          staticClass : 'mx-2 bg-red-light border-red-light text-white rounded',
           props       : {
             ghost : true,
           },
@@ -128,7 +120,7 @@ const plainModal = {
       }
       if (!this.hideCancel) {
         children.push(h('a-button', {
-          staticClass : 'mx-2 border-grey text-black3 rounded-sm',
+          staticClass : 'mx-2 border-grey text-black3 rounded',
           props       : {
             ghost : true,
           },
