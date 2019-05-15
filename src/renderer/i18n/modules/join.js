@@ -10,6 +10,7 @@ module.exports = {
         inputConferenceId : '请输入会议号码',
         startMeeting      : '开始会议',
         InitiateMeeting   : '新的会议',
+        connectMeeting    : '正在进入会议...',
       },
       placeholder : {
         conferenceId : '会议号码',
@@ -40,6 +41,7 @@ module.exports = {
         inputConferenceId : 'Please enter meeting ID',
         startMeeting      : 'Meet Now',
         InitiateMeeting   : 'New Meeting',
+        connectMeeting    : 'Connecting...',
       },
       placeholder : {
         conferenceId : 'Meeting ID',

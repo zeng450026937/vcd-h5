@@ -15,7 +15,7 @@ const popup = new Popup({
       data : {
         ref   : 'loadingModal',
         props : {
-          hideTile       : true,
+          hideTitle      : true,
           hideOk         : true,
           maskClosable   : false,
           destroyOnClose : true,
@@ -54,7 +54,7 @@ const popup = new Popup({
       data : {
         ref   : 'ensureModal',
         props : {
-          hideTile       : true,
+          hideTitle      : true,
           maskClosable   : false,
           destroyOnClose : true,
         },

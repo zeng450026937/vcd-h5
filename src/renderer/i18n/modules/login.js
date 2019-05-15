@@ -37,6 +37,9 @@ module.exports = {
         confirm : '确定',
         cancel  : '取消',
       },
+      tips : {
+        isLogin : '登陆中...',
+      },
     },
     en : {
       history            : 'History',
@@ -72,6 +75,9 @@ module.exports = {
       button : {
         confirm : 'OK',
         cancel  : 'Cancel',
+      },
+      tips : {
+        isLogin : 'Connecting...',
       },
     },
   },

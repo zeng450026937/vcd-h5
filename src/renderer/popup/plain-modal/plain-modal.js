@@ -32,7 +32,7 @@ const plainModal = {
       type    : Boolean,
       default : false,
     },
-    hideTile : {
+    hideTitle : {
       type    : Boolean,
       default : false,
     },
@@ -144,7 +144,7 @@ const plainModal = {
   render(h) {
     const children = [];
 
-    if (!this.hideTile) {
+    if (!this.hideTitle) {
       const titleSlot = h('div', {
         staticClass : 'flex items-center',
         slot        : 'title',
