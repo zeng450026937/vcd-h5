@@ -3,7 +3,7 @@
     <div class="flex flex-col h-full wrapper">
       <div class="header">
         <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
-                    title="关闭"
+                    :title="$('common.controls.close')"
                     @click="close"></a-iconfont>
       </div>
       <div class="flex flex-grow mt-5 content">
@@ -39,7 +39,7 @@
           <a-iconfont type="icon-yuyin"/>
         </a-button>
         <a-button @click="toDetail" class="text-base ml-3">
-          详情
+          {{$t('home.details')}}
         </a-button>
       </div>
     </div>

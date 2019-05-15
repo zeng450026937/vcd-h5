@@ -6,16 +6,16 @@
                   class="text-white text-base cursor-pointer no-dragable"
                   @click="showStatisticsModal"/>
       <span>ID: {{targetId}}</span>
-      <span class="mr-2">共享时长: {{duration}}</span>
+      <span class="mr-2">{{$('conversation.share.shareTime')}}: {{duration}}</span>
       <a-button class="ml-2 bg-transparent border-white text-white no-dragable"
                 @click="showSharingModal">
         <a-iconfont type="icon-qiehuan"></a-iconfont>
-        切换共享
+        {{$('conversation.share.switchShare')}}
       </a-button>
       <a-button @click="terminateSharing"
                 class="bg-red-light border-transparent text-white no-dragable">
         <a-iconfont type="icon-tingzhi" class="text-white"></a-iconfont>
-        停止共享
+        {{$('conversation.share.terminateShare')}}
       </a-button>
     </div>
   </div>

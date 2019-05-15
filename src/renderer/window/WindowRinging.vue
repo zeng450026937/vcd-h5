@@ -3,7 +3,7 @@
     <div class="flex flex-col h-full wrapper">
       <div class="header">
         <a-iconfont type="icon-guanbi" class="close hover:bg-red-light hover:text-white header-control"
-                    title="关闭"
+                    :title="$('common.controls.close')"
                     @click="hangUp"></a-iconfont>
       </div>
       <div class="flex flex-grow content mt-3">
@@ -23,7 +23,7 @@
         <a-button v-if="isVideoCall || conferenceInviter" class="text-base w-36"
                   @click="transferToAudio">
           <a-iconfont type="icon-qiehuan"/>
-          转语音通话
+          {{$('conversation.controls.changeToAudio')}}
         </a-button>
         <!--麦克风（接听）-->
         <a-button class="text-base w-14 ml-3 text-white border-transparent"
@@ -48,7 +48,11 @@ export default {
   name     : 'WindowRinging',
   computed : {
     ringText() {
-      return this.conferenceInviter ? '邀请您参加视频会议' : this.isVideoCall ? '邀请您进行视频通话' : '邀请您参加语音通话';
+      return this.conferenceInviter
+        ? this.$t('conversation.invite.videoConferenceInvite')
+        : this.isVideoCall
+          ? this.$t('conversation.invite.videoCallInvite')
+          : this.$t('conversation.invite.audioCallInvite');
     },
     rtc() {
       return (window.opener && window.opener.rtc) || window.rtc;
@@ -60,7 +64,7 @@ export default {
       const { remoteIdentity } = this.rtc.call.incoming[0];
 
       return (remoteIdentity && (remoteIdentity.display_name
-        || remoteIdentity.uri.user)) || '未知用户';
+        || remoteIdentity.uri.user)) || this.$('conversation.title.unknownUser');
     },
     isVideoCall() {
       if (this.conferenceInviter) return false;
