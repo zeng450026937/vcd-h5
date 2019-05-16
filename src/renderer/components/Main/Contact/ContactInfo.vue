@@ -73,9 +73,9 @@
     </div>
     <plain-modal ref="inputModal"
                  type="error"
-                 title="请输入会议密码"
-                 cancel-text="取消"
-                 ok-text="加入"
+                 :title="$t('conversation.tip.inputConferencePassword')"
+                 :cancel-text="$t('common.controls.cancel')"
+                 :ok-text="$t('common.controls.enter')"
                  @ok="joinVMR">
       <div slot="content" class="px-4">
         <a-input v-model="vmrInfo.pin"/>

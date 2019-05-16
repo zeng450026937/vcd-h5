@@ -56,6 +56,11 @@ export default {
       scheduleEvents : [],
     };
   },
+  created : {
+    $t() {
+      return this.kom.vm.i18n.t;
+    },
+  },
   filters : {
     tipMsg(startTime) {
       if (!startTime) return '';
@@ -63,11 +68,12 @@ export default {
       const now = Date.now();
       const start = startTime.valueOf();
 
-      if (start - now > 1000 * 60 * 4) return '会议5分钟后开始';
-
-      if (start - now < 1000 * 60 * 4 && start - now > 0) return '会议即将开始';
-
-      if (start - now < 0) return '会议进行中';
+      switch (true) {
+        case start - now > 1000 * 60 * 4: return this.$t('schedule.tip.confStartFiveMin');
+        case start - now < 1000 * 60 * 4 && start - now > 0: return this.$t('schedule.tip.confStartFiveMin');
+        case start - now < 0: return this.$t('schedule.tip.confIsRunning');
+        default: break;
+      }
     },
   },
   computed : {

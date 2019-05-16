@@ -2,7 +2,7 @@
   <div id="window" ref="controls" class="share-controls px-2 py-2">
     <div class="flex controls-wrapper w-full h-full justify-between px-2 items-center select-none dragable">
       <a-iconfont :type="`icon-wangluozhuangtai_${signal}`"
-                  title="信号"
+                  :title="$t('conversation.statistics.network')"
                   class="text-white text-base cursor-pointer no-dragable"
                   @click="showStatisticsModal"/>
       <span>ID: {{targetId}}</span>
@@ -47,6 +47,9 @@ export default {
     },
     kom() {
       return (window.opener && window.opener.kom) || window.kom;
+    },
+    $t() {
+      return this.kom.vm.i18n.t;
     },
     origin() {
       return {

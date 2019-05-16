@@ -57,6 +57,9 @@ export default {
     rtc() {
       return (window.opener && window.opener.rtc) || window.rtc;
     },
+    $t() {
+      return this.kom.vm.i18n.t;
+    },
     kom() {
       return (window.opener && window.opener.kom) || window.kom;
     },

@@ -27,6 +27,11 @@ module.exports = {
       emptySchedule   : '暂无会议日程',
       backToday       : '回到今天',
       reservation     : '预约会议',
+      tip             : {
+        confStartFiveMin : '会议5分钟后开始',
+        confStartNow     : '会议即将开始',
+        confIsRunning    : '会议进行中',
+      },
     },
     en : {
       meetingSchedule : 'Calendar',

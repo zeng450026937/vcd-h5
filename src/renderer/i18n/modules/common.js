@@ -5,6 +5,7 @@ module.exports = {
     zh : {
       controls : {
         ensure        : '确定',
+        enter         : '加入',
         cancel        : '取消',
         close         : '关闭',
         enlarge       : '放大',
@@ -48,6 +49,7 @@ module.exports = {
       controls : {
         ensure        : 'OK',
         cancel        : 'Cancel',
+        enter         : 'Enter',
         close         : 'Close',
         enlarge       : 'Zoom In',
         shrink        : 'Zoom Out',
