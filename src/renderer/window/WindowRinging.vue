@@ -100,7 +100,13 @@ export default {
       this.kom.dispatch('call.decline');
     },
     answerCall(toAudio = false) {
-      this.kom.dispatch('call.answer', { toAudio, isVideoCall: this.isVideoCall, isInvite: this.conferenceInviter });
+      if (!this.rtc.call.ringing) return;
+      this.kom.dispatch('call.answer',
+        {
+          toAudio,
+          isVideoCall : this.isVideoCall,
+          isInvite    : this.conferenceInviter,
+        });
     },
     transferToAudio() {
       this.answerCall(true);
