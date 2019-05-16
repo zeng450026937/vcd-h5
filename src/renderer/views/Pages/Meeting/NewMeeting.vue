@@ -41,8 +41,11 @@
                 </div>
                 <div class="recent-meeting-content">
                   <div class="title item">
-                    {{recentScheduleEvent.subject}}
-                    <div>
+                    <div class="flex-grow w-1 truncate select-none"
+                         :title="recentScheduleEvent.subject">
+                      {{recentScheduleEvent.subject}}
+                    </div>
+                    <div class="ml-2">
                       <a-iconfont
                           class="text-indigo"
                           v-if="recentScheduleEvent.isRecurrence"
@@ -65,7 +68,11 @@
                     <a-button @click="goMeetingDetail">{{$t('home.detail')}}</a-button>
                   </div>
                 </div>
-                <a-button class="recent-meeting-footer" :disabled="!status.isReady"  @click="join">
+                <a-button class="recent-meeting-footer"
+                          :class="{'cursor-not-allowed': !status.isReady}"
+                          :disabled="!status.isReady"
+                          :title="!status.isReady ? $t('schedule.unStart') : $t('home.join')"
+                          @click="join">
                   {{$t('home.join')}}
                 </a-button>
               </template>
@@ -123,7 +130,7 @@ export default {
 
       noFinished = sortBy(noFinished, (n) => this.getTimestamp(n.startTime))[0] || {};
 
-      return noFinished;
+      return noFinished || {};
     },
     status() {
       return this.recentScheduleEvent.status || {};
@@ -176,7 +183,8 @@ export default {
       const setTime = () => {
         this.time = this.getTime();
         this.date = new Date();
-        if (this.recentScheduleEvent && this.recentScheduleEvent.updateStatus) this.recentScheduleEvent.updateStatus();
+        if (!this.recentScheduleEvent.updateStatus) return;
+        this.recentScheduleEvent.updateStatus();
       };
 
       this.timer = setInterval(setTime, 1000);
