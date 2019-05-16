@@ -4,7 +4,7 @@
         :class="videoClasses"
         :muted="prepareVideoCall"
         :hide-video="!showVideo"
-        :source="prepareVideoCall ? 'local' : source"
+        :source="prepareVideoCall || isDisconnected ? 'local' : source"
         @video-dblclick="videoDblClick">
       <div v-if="!showVideo && !isConnecting"
            slot="content"
@@ -28,7 +28,10 @@
           <span> …</span>
         </div>
       </div>
-      <call-controls slot="controls" class="controls" :class="controlsClasses"/>
+      <call-controls v-if="!isDisconnected"
+                     slot="controls"
+                     class="controls"
+                     :class="controlsClasses"/>
     </remote-video>
 
   </div>

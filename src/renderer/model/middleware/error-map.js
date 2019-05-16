@@ -25,7 +25,7 @@ const ERROR_MAP = {
   PASSWORD_NOT_EMPTY                : 'common.message.passwordNotEmpty',
   PASSWORD_TOO_LONG                 : 'common.message.passwordTooLong',
   SERVER_NOT_EMPTY                  : 'common.message.serverNotEmpty',
-  SERVER_FORMAT_ERROR               : 'common.message.serverFormatError'
+  SERVER_FORMAT_ERROR               : 'common.message.serverFormatError',
   // 会议
 };
 

@@ -52,6 +52,7 @@ model.provide({
   watch : {
     acquireStreamInConference(val) {
       if (val && !this.enableLocalVideo) {
+        console.warn('获取会议视频流');
         rtc.media.localMedia.acquireStream();
       }
     },
@@ -69,6 +70,7 @@ model.provide({
     },
     releaseStreamInConference(val) {
       if (val && !this.enableLocalVideo) {
+        console.warn('释放会议视频流');
         if (val) rtc.media.localMedia.releaseStream();
       }
     },
@@ -101,9 +103,11 @@ model.provide({
 
       if (val) {
         rtc.media.localMedia.releaseStream();
+        console.warn('释放视频流');
       }
       else {
         rtc.media.localMedia.acquireStream();
+        console.warn('获取视频流');
       }
     },
   },
