@@ -61,6 +61,7 @@ meeting.provide({
           }, 'number', true, true);
         })
         .catch((e) => {
+          e.origin = 'conference';
           throw e;
         });
     },
@@ -95,6 +96,7 @@ meeting.provide({
       }
       catch (e) {
         this.isPreparing = false;
+        e.origin = 'conference';
         throw e;
       }
 

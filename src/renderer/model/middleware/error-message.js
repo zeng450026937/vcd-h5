@@ -1,5 +1,6 @@
 import { debounce } from 'lodash';
 import ERROR_MAP from './error-map';
+import { $t } from '../../i18n';
 
 let ERROR_QUEUE = Promise.resolve();
 
@@ -22,7 +23,7 @@ export default async function errorMessage(ctx, next) {
       key = 'ENOTFOUND';
     }
     if (ERROR_MAP[key]) {
-      debounceNotice(ctx.vm, ERROR_MAP[key]);
+      debounceNotice(ctx.vm, $t(ERROR_MAP[key][error.origin] || ERROR_MAP[key]));
     }
     
     throw error;

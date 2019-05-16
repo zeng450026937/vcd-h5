@@ -70,6 +70,7 @@ model.provide({
         this.switchCallType(this.isVideoCall);
       }).catch((e) => {
         this.prepareVideoCall = false;
+        e.origin = 'call';
         throw e;
       });
     },
