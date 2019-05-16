@@ -148,7 +148,6 @@ model.provide({
       async handler(val) {
         this.sidebar = val ? initialSidebar() : [];
         this.currentSidebar = val ? this.sidebarMap.meeting : {};
-
         if (!val) {
           this.searchText = '';
           this.hasLoadMore = false;

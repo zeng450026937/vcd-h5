@@ -52,6 +52,9 @@ model.provide({
       else if (rtc.call.connected) return 'connected';
       else return 'disconnected';
     },
+    currentContact() {
+      return this.$parent.contact.currentContact;
+    },
   },
   methods : {
     async handleLogin(val, once) {
@@ -64,7 +67,7 @@ model.provide({
           });
         }
       }
-      else if (this.loginPopup) popup.destroy(this.loginPopup);
+      // else if (this.loginPopup) popup.destroy(this.loginPopup);
     },
     handleEnterMeeting(val, once) {
       this.isPreparing = false;
@@ -127,6 +130,10 @@ model.provide({
     callStatus : {
       handler   : 'handleCall',
       immediate : true,
+    },
+    currentContact(val) {
+      if (!val || !val.number) return;
+      if (this.loginPopup)popup.destroy(this.loginPopup);
     },
   },
   async created() {
