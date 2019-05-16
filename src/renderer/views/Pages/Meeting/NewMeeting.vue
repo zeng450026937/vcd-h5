@@ -101,8 +101,7 @@ export default {
   },
   data() {
     return {
-
-      time : '00:00',
+      time : '--:--',
       date : new Date(),
     };
   },
@@ -110,7 +109,7 @@ export default {
     ns    : 'schedule',
     props : [ 'calendar' ],
   },
-  mounted() {
+  created() {
     this.startClock();
   },
   filters : {
@@ -173,12 +172,15 @@ export default {
       return `${hour}:${minutes}:${seconds}`;
     },
     startClock() {
-      clearInterval(this.timer);
-      this.timer = setInterval(() => {
+      if (this.timer) clearInterval(this.timer);
+      const setTime = () => {
         this.time = this.getTime();
         this.date = new Date();
         if (this.recentScheduleEvent && this.recentScheduleEvent.updateStatus) this.recentScheduleEvent.updateStatus();
-      }, 1000);
+      };
+
+      this.timer = setInterval(setTime, 1000);
+      setTime();
     },
     join() {
       this.$dispatch('meeting.joinMeeting', {

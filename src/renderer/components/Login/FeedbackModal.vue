@@ -59,9 +59,12 @@
         <div class="feedback-contact mt-8">
           <div class="tel">
             {{$t('feedback.customService')}}
+            <span>0592-570-2000</span>
           </div>
           <div class="website mb-4">
             {{$t('feedback.officialWebsite')}}
+            <span class="text-indigo cursor-pointer"
+                  @click="toOfficialWebsite">www.yealink.com.cn</span>
           </div>
           <div class="support">
             {{$t('feedback.helpDescript')}}<a href="javascript:" @click="goHelp">{{$t('feedback.helpCenter')}}</a>
@@ -93,6 +96,9 @@ export default {
     };
   },
   methods : {
+    toOfficialWebsite() {
+      this.$dispatch('application.openExternal', { path: 'http://www.yealink.com.cn' });
+    },
     goHelp() {
       this.$dispatch('application.openExternal', { path: 'http://support.yealink.com' });
     },

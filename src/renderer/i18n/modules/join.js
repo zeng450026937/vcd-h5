@@ -21,10 +21,10 @@ module.exports = {
         clear   : '清空',
       },
       message : {
-        conferenceIdNoEmpty : '会议号码不能为空',
-        idNoMore64          : '会议号码最多为64位数字',
-        ymsIdNoMore5        : ' ',
-        cloudIdNoMore10     : ' ',
+        idNoMore64           : '会议号码最多为64位数字',
+        conferenceIdNoEmpty  : '会议号码不能为空',
+        serverAddressNoEmpty : '服务器地址不能未空',
+        displayNameNoEmpty   : '入会名称不能未空',
       },
       button : {
         openMic     : '打开麦克风',

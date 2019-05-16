@@ -185,12 +185,12 @@ export default {
       isInSetting         : false,
       isProxyPanelVisible : false,
       meetingInfo         : {
-        number       : '20017',
-        pin          : '548194',
-        displayName  : 'AAA',
-        server       : 'academia.com',
-        proxy        : '10.200.112.165',
-        proxyPort    : '5061',
+        number       : '',
+        pin          : '',
+        displayName  : '',
+        server       : '',
+        proxy        : '',
+        proxyPort    : '',
         initialVideo : true,
         initialAudio : false,
       },
@@ -249,13 +249,19 @@ export default {
     checkMeetingInfo() {
       let errorNotice = '';
 
-      const { length } = this.meetingInfo.number || '';
+      switch (true) {
+        case !this.meetingInfo.number:
+          errorNotice = this.$t('join.message.conferenceIdNoEmpty');
+          break;
+        case !this.meetingInfo.server:
+          errorNotice = this.$t('join.message.conferenceIdNoEmpty');
+          break;
+        case !this.meetingInfo.displayName:
+          errorNotice = this.$t('join.message.conferenceIdNoEmpty');
+          break;
+        default: break;
+      }
 
-      if (length === 0) errorNotice = '会议ID不能为空';
-      else if (length > 64) errorNotice = '会议ID最多为64位';
-      else if (!this.isCloud && length !== 5) errorNotice = 'YMS账号会议ID仅支持五位数字输入';
-      else if (this.isCloud && length !== 5 && length !== 10) errorNotice = 'Cloud账号会议ID仅支持5位或者10位数字输入';
-      else if (!this.meetingInfo.server) errorNotice = '服务器地址不能未空';
       if (errorNotice) debounceNotice(this, errorNotice);
 
       return !errorNotice;

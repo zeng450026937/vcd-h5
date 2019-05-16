@@ -34,7 +34,7 @@ export const language = {
   id      : 'language',
   submenu : [
     {
-      label   : '中文',
+      label   : '简体中文',
       type    : 'radio',
       id      : 'language',
       checked : false,

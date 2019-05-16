@@ -199,12 +199,7 @@ export default {
     checkNumber() {
       let errorNotice = '';
 
-      const { length } = this.meetingInfo.number || '';
-
-      if (length === 0) errorNotice = this.$t('join.message.conferenceIdNoEmpty');
-      else if (length > 64) errorNotice = this.$t('join.message.idNoMore64');
-      else if (!this.isCloud && length !== 5) errorNotice = this.$t('join.message.ymsIdNoMore5');
-      else if (this.isCloud && length !== 5 && length !== 10) errorNotice = this.$t('join.message.cloudIdNoMore10');
+      if (!this.meetingInfo.number) errorNotice = this.$t('join.message.conferenceIdNoEmpty');
       if (errorNotice) debounceNotice(this, errorNotice);
       
       return !errorNotice;
