@@ -141,6 +141,9 @@ meeting.provide({
 
       return rtc.conference.meetnow(users, { subject }, { initialVideo: !this.$getVM('setting').muteVideoWhenJoin }).then(() => {
         this.$getVM('conference.sketch').isInstanceConference = true;
+      }).catch((e) => {
+        e.origin = 'conference';
+        throw e;
       });
     },
   },

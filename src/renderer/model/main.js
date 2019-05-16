@@ -146,14 +146,19 @@ model.provide({
   watch : {
     isRegistered : {
       async handler(val) {
-        this.sidebar = val ? initialSidebar() : [];
-        this.currentSidebar = val ? this.sidebarMap.meeting : {};
-        if (!val) {
-          this.searchText = '';
-          this.hasLoadMore = false;
-          this.searchResults = [];
-          router.push(LOGIN.LOGIN_CONTENT);
+        if (val) {
+          return setTimeout(() => { // 增加登陆时间
+            this.sidebar = initialSidebar();
+            this.currentSidebar = this.sidebarMap.meeting;
+          }, 2000);
         }
+
+        this.sidebar = [];
+        this.currentSidebar = [];
+        this.searchText = '';
+        this.hasLoadMore = false;
+        this.searchResults = [];
+        router.push(LOGIN.LOGIN_CONTENT);
       },
       immediate : true,
     },

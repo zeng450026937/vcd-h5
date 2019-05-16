@@ -17,15 +17,18 @@ const ERROR_MAP = {
   'User No Exist'                   : 'common.message.accountError',
   'Number Resource Limit'           : 'common.message.numberResourceLimit',
   ENOTFOUND                         : 'common.message.serverAddressError',
-  Canceled                          : 'common.message.canceled',
-  'User not register'               : 'common.message.userNotRegister',
-  'Not Found'                       : 'common.message.callNotFound',
-  ACCOUNT_NOT_EMPTY                 : 'common.message.accountNotEmpty',
-  ACCOUNT_TOO_LONG                  : 'common.message.accountTooLong',
-  PASSWORD_NOT_EMPTY                : 'common.message.passwordNotEmpty',
-  PASSWORD_TOO_LONG                 : 'common.message.passwordTooLong',
-  SERVER_NOT_EMPTY                  : 'common.message.serverNotEmpty',
-  SERVER_FORMAT_ERROR               : 'common.message.serverFormatError',
+  Canceled                          : {
+    call       : 'common.message.callCanceled',
+    conference : 'common.message.conferenceCanceled',
+  },
+  'User not register' : 'common.message.userNotRegister',
+  'Not Found'         : 'common.message.callNotFound',
+  ACCOUNT_NOT_EMPTY   : 'common.message.accountNotEmpty',
+  ACCOUNT_TOO_LONG    : 'common.message.accountTooLong',
+  PASSWORD_NOT_EMPTY  : 'common.message.passwordNotEmpty',
+  PASSWORD_TOO_LONG   : 'common.message.passwordTooLong',
+  SERVER_NOT_EMPTY    : 'common.message.serverNotEmpty',
+  SERVER_FORMAT_ERROR : 'common.message.serverFormatError',
   // 会议
 };
 
