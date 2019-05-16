@@ -18,6 +18,7 @@ import streamManager from './stream-manager';
 import errorMessage from './middleware/error-message';
 import i18n from './i18n';
 import notify from './notify';
+import fetchContact from './fetchContact';
 
 Vue.use(Vuem);
 
@@ -40,6 +41,7 @@ model.mount('call', call);
 model.mount('ui', ui);
 model.mount('streamManager', streamManager);
 model.mount('notify', notify);
+model.mount('fetchContact', fetchContact);
 
 // logging middleware must be the first one
 model.use(async(ctx, next) => {

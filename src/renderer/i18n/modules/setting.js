@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-15 09:01:17 
+// 最新导入时间为 2019-5-16 17:46:09 
 module.exports = {
   name : 'setting',
   lang : {
@@ -118,7 +118,7 @@ module.exports = {
         property             : '标签',
         langChangeNotice     : '语言已切换至{lang}',
         addProperty          : '添加标签',
-        addPropertyNotice    : '标签添加成功',
+        addPropertyNotice    : '添加成功',
         fullPropertyNotice   : '您最多可添加20个标签',
         propertyExist        : '该标签已存在',
         deletePropertyNotice : '删除成功',

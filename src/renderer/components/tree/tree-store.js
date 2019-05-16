@@ -164,7 +164,7 @@ export default class TreeStore {
   async toggle(id, getChildAsync, useAsync) {
     const node = this.getNode(id);
 
-    if (this.getNodeType(node).indexOf('ORG') === -1) return;
+    if (this.getNodeType(node).indexOf('ORG') === -1 && this.getNodeType(node).indexOf('GROUP') === -1) return;
 
     return node.expand ? this.collapse(id) : this.expand(id, getChildAsync, useAsync);
   }
@@ -508,7 +508,7 @@ export default class TreeStore {
   isORG(node) {
     const type = this.getNodeType(node);
 
-    return type.indexOf('ORG') > -1;
+    return type.indexOf('ORG') > -1 || type.indexOf('GROUP') > -1;
   }
 
   getChecked() {

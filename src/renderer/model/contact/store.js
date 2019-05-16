@@ -36,6 +36,10 @@ const groupMap = {
     name       : '常用联系人',
     isFavorite : true,
   },
+  'phone.book.meeting.root.name' : {
+    name          : '会议室',
+    isMeetingRoom : true,
+  },
 };
 
 const userType = {
@@ -170,7 +174,7 @@ export default class Store {
   }
 
   formatContact(node) {
-    node.isGroup = /ORG/.test(node.node.type);
+    node.isGroup = /ORG/.test(node.node.type) || /GROUP/.test(node.node.type);
     node.name = node.attributes.name || '';
     node.number = node.attributes.number || '';
     if (!node.isGroup) {

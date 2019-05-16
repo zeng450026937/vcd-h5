@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-15 09:01:17 
+// 最新导入时间为 2019-5-16 17:46:09 
 module.exports = {
   name : 'home',
   lang : {
@@ -20,7 +20,7 @@ module.exports = {
       startMeeting : 'Meet Now',
       reservation  : 'Schedule Meeting',
       nextMeeting  : 'Next Meeting',
-      cycleMeeting : 'Recurring Meeting',
+      cycleMeeting : 'Recurring',
       live         : 'RTMP Live',
       detail       : 'Details',
       join         : 'Join',

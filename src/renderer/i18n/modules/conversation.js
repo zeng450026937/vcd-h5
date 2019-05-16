@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-15 09:01:17 
+// 最新导入时间为 2019-5-16 17:46:09 
 module.exports = {
   name : 'conversation',
   lang : {
@@ -47,8 +47,8 @@ module.exports = {
         with          : '与',
         communicating : '通话中',
         unknownUser   : '未知用户',
-        audioSubject  : '{target} 的音频会议',
-        videoSubject  : '{target} 的视频会议',
+        audioSubject  : '{target} 的会议',
+        videoSubject  : '{target} 的会议',
       },
       statistics : {
         send              : '发送',
@@ -240,7 +240,7 @@ module.exports = {
     },
     en : {
       main : {
-        maximizeOrMinimize : 'Full Screen/Exit full screen',
+        maximizeOrMinimize : 'Full Screen/Exit Full Screen',
         inviteMember       : 'Invite',
         lockConference     : 'Lock Meeting',
         memberList         : 'Participants',
@@ -279,18 +279,18 @@ module.exports = {
         ringing       : 'Incoming call from {target}',
         disconnected  : 'Meeting with {target} ends',
         expired       : 'Current meeting is expired',
-        with          : 'with',
-        communicating : 'Meeting',
+        with          : 'Call with ',
+        communicating : ' ',
         unknownUser   : 'Unknown user',
-        audioSubject  : "{target}'s audio meeting",
-        videoSubject  : "{target}'s video meeting",
+        audioSubject  : "{target}'s meeting",
+        videoSubject  : "{target}'s meeting",
       },
       statistics : {
         send              : 'Sent',
         receive           : 'Received',
         deviceType        : 'Device',
-        refreshDeviceInfo : 'Refresh Statistics',
-        closeDeviceInfo   : 'Close Statistics',
+        refreshDeviceInfo : 'Refresh',
+        closeDeviceInfo   : 'Close',
         bitrate           : 'Bandwidth',
         ratio             : 'Resolution',
         frameRate         : 'Frame Rate',
@@ -306,7 +306,7 @@ module.exports = {
         general           : 'Fair',
         poor              : 'Poor',
         network           : 'Network Quality',
-        totalBitrate      : 'Bandwidth',
+        totalBitrate      : 'Total Bandwidth',
         ip                : 'IP Address',
         protocolType      : 'Protocol Type',
         message           : {
@@ -316,7 +316,7 @@ module.exports = {
       header : {
         conferenceLocked : 'Meeting is locked',
         safeConversation : 'Meeting is encrypted',
-        signal           : 'Network quality',
+        signal           : 'Network Quality',
       },
       controls : {
         turnOffCamera       : 'Turn off camera',
@@ -404,10 +404,10 @@ module.exports = {
         toSpeaker           : 'Set as lecturer',
         cancelSpeaker       : 'Cancel the lecturer',
         kickFromMeeting     : 'Remove',
-        allowSpeak          : 'Allow to talk',
-        allowConference     : 'Allow to join',
-        refuseSpeak         : 'Refuse to talk',
-        refuseConference    : 'Refuse to join',
+        allowSpeak          : 'Allow',
+        allowConference     : 'Allow',
+        refuseSpeak         : 'Refuse',
+        refuseConference    : 'Refuse',
         allowOrRefuse       : 'Allow/Refuse',
       },
       chat : {

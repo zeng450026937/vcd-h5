@@ -122,10 +122,14 @@ export default {
       };
     },
     currentGroupName() {
-      return this.store.getNode(this.currentGroup).name;
+      const node = this.store.getNode(this.currentGroup) || {};
+
+      return node.name;
     },
     currentGroupAmount() {
-      return this.store.getNode(this.currentGroup).amount;
+      const node = this.store.getNode(this.currentGroup) || {};
+
+      return node.amount;
     },
     selectedGroup() {
       return this.store.getNode(this.currentGroup);
@@ -190,6 +194,8 @@ export default {
     currentGroup : {
       handler(val) {
         const group = this.store.getNode(val);
+
+        if (!group) return [];
 
         this.breadcrumbs = this.store.findBranchWithSelf(group).map((i) => ({
           text : i.name,

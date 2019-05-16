@@ -18,6 +18,9 @@ const userType = {
   DEVICE : {
     isDevice : true,
   },
+  THIRD_PARTY_DEVICE : {
+    isExternal : true,
+  },
 
 };
 
@@ -40,6 +43,7 @@ model.provide({
       formattedPhoneBook : null,
       formattedFavorite  : null,
       currentContact     : null,
+      token              : null,
     };
   },
   computed : {
@@ -50,29 +54,39 @@ model.provide({
       return rtc.account.username;
     },
     loginStatus : () => rtc.account.status,
+    isCloud() {
+      const account = this.$getVM('account');
+
+      return account.serverType === 'cloud';
+    },
+    contact() {
+      const fetchContact = this.$getVM('fetchContact');
+
+      return this.isCloud ? fetchContact || {} : rtc.contact;
+    },
     loadMode() {
-      return rtc.contact.loadMode;
+      return this.contact.loadMode;
     },
     currentUser() {
       return this.currentContact;
     },
     phoneBookLoaded() {
-      return rtc.contact.phonebook.dataLoaded;
+      return this.contact.phonebook.dataLoaded;
     },
     phoneBookLoadFailed() {
-      return rtc.contact.phonebook.loadFailed || false;
+      return this.contact.phonebook.loadFailed || false;
     },
     favoriteLoaded() {
-      return rtc.contact.favorite.dataLoaded;
+      return this.contact.favorite.dataLoaded;
     },
     favoriteLoadFailed() {
-      return rtc.contact.favorite.loadFailed;
+      return this.contact.favorite.loadFailed;
     },
     dataLoaded() {
       return this.favoriteLoaded && this.phoneBookLoaded;
     },
     favorite() {
-      const tree = rtc.contact.favorite.list || [];
+      const tree = this.contact.favorite.list || [];
 
       this.replaceId('favorite', tree);
 
@@ -80,8 +94,8 @@ model.provide({
     },
     phoneBook() {
       return this.loadMode === LOAD_MODE.SPLIT
-        ? rtc.contact.phonebook.org.list
-        : rtc.contact.phonebook.list;
+        ? this.contact.phonebook.org.list
+        : this.contact.phonebook.list;
     },
     phoneBookStore() {
       phoneBookStore = new Store([], this.loadMode);
@@ -123,9 +137,16 @@ model.provide({
         n.node.parentId = rootNode.node.id;
       });
     },
+    search(params) {
+      return this.isCloud
+        ? this.contact.$phonebook.search(params)
+        : this.contact.phonebook.search(params);
+    },
     async findContacts(val) {
-      return rtc.contact.phonebook.search({ key: val }).then((result) => (result.data || result)
+      return this.search({ key: val }).then((result) => (result.data || result)
         .map((c) => {
+          if (c.attributes.number == null) c.attributes.number = c.attributes.name;
+
           if (c.attributes.number === this.username) {
             c.attributes.isSelf = true;
           }
@@ -151,6 +172,8 @@ model.provide({
       return userType[type];
     },
   },
+
+
   watch : {
     loginStatus(val) {
       if (val === 'disconnected') {

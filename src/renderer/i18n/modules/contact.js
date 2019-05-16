@@ -1,10 +1,10 @@
-// 最新导入时间为 2019-5-15 09:01:17 
+// 最新导入时间为 2019-5-16 17:46:09 
 module.exports = {
   name : 'contact',
   lang : {
     zh : {
       common : {
-        add    : '添加联系人',
+        add    : '添加本地联系人',
         more   : '更多',
         person : '联系人',
       },
@@ -119,7 +119,7 @@ module.exports = {
     },
     en : {
       common : {
-        add    : 'Add New Contact',
+        add    : 'Add Local Contact',
         more   : 'More',
         person : 'contacts',
       },
