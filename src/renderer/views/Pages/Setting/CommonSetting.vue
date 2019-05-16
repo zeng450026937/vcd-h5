@@ -1,14 +1,11 @@
 <template>
   <a-layout id="common-setting" class="h-full">
-    <div class="h-14 border-b">
-      <div class="flex bg-white dragable h-full">
-        <div class="flex items-center h-full px-4 text-base">
-          <span class="no-dragable select-none" @click="openAdvanceSetting">{{$t('setting.common.title')}}</span>
-        </div>
-        <div class="flex flex-grow"></div>
-        <app-header/>
-      </div>
-    </div>
+    <app-header>
+      <span slot="title"
+            class="no-dragable select-none"
+            @click="openAdvanceSetting">{{$t('setting.common.title')}}</span>
+    </app-header>
+
     <div class="flex flex-col border h-full m-4 bg-white p-5 overflow-y-auto">
       <div>
         <div>

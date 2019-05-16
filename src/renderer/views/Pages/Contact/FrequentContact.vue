@@ -7,9 +7,9 @@
           <div class="flex items-center h-full px-4 text-base">
             <a-iconfont v-if="currentGroup !== 'rootNode'" type="icon-left"
                         :title="$t('contact.button.back')"
-                        class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-purple-dark"
+                        class="text-grey-dark text-xs mr-2 no-dragable cursor-pointer hover:text-indigo-dark"
                         @click="goBack"></a-iconfont>
-            <span>{{currentGroupName}}</span>
+            <span class="font-semibold">{{currentGroupName}}</span>
             <a-iconfont v-if="currentGroup === 'rootNode' && rootGroup.length<100"
                         :title="$t('contact.frequent.addFrequentGroup')"
                         class="ml-4 text-indigo cursor-pointer no-dragable"

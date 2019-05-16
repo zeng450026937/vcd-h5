@@ -1,14 +1,6 @@
 <template>
   <a-layout id="video-setting" class="h-full">
-    <div class="h-14 border-b">
-      <div class="flex bg-white dragable h-full">
-        <div class="flex items-center h-full px-4 text-base">
-          <span>{{$t('setting.video.title')}}</span>
-        </div>
-        <div class="flex flex-grow"></div>
-        <app-header/>
-      </div>
-    </div>
+    <app-header :title="$t('setting.video.title')"/>
     <div class=" border h-full m-4 bg-white p-5 overflow-y-auto">
       <div class="flex flex-col">
         <div class="flex flex-col">

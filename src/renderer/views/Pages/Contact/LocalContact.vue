@@ -4,7 +4,7 @@
       <div class="h-14 border-b">
         <div class="flex bg-white dragable h-full">
           <div class="flex items-center h-full px-4 text-base">
-            <span>{{$t('contact.local.describe')}}</span>
+            <span class="font-semibold">{{$t('contact.local.describe')}}</span>
             <a-iconfont class="ml-4 text-indigo cursor-pointer no-dragable"
                         :title="$t('contact.local.title.add')"
                         type="icon-tianjialianxiren"

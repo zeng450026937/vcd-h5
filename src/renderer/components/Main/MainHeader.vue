@@ -1,7 +1,12 @@
 <template>
   <div id="app-header" class="h-14 bg-white border-b">
     <div class="flex dragable h-full">
-      <span v-if="title" class="font-semibold text-base flex self-center ml-4">{{title}}</span>
+      <span v-if="title" class="title-content">
+        {{title}}
+      </span>
+      <span v-else class="title-content">
+        <slot name="title"></slot>
+      </span>
       <slot name="content"></slot>
       <div class="flex flex-grow no-dragable py-1">
         <div class="w-full h-full dragable"/>
@@ -42,3 +47,10 @@ export default {
   },
 };
 </script>
+<style lang="less">
+  #app-header {
+    .title-content {
+      @apply font-semibold text-base flex self-center ml-4;
+    }
+  }
+</style>

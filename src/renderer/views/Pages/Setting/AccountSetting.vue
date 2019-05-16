@@ -1,14 +1,6 @@
 <template>
 <a-layout id="account-setting" class="h-full">
-  <div class="h-14 border-b">
-    <div class="flex bg-white dragable h-full">
-      <div class="flex items-center h-full px-4 text-base">
-        <span>{{$t('setting.account.personalData')}}</span>
-      </div>
-      <div class="flex flex-grow"></div>
-      <app-header/>
-    </div>
-  </div>
+  <app-header :title="$t('setting.account.personalData')"/>
   <div class="flex flex-col border items-center bg-white h-full m-4">
     <div v-if="user" class="mt-5" style="width: 520px;">
       <div class="flex mt-2 mb-5 items-center w-full">
