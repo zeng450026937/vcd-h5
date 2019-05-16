@@ -1,6 +1,4 @@
 import Axios from 'axios';
-import URL from 'url';
-import { BaseContact } from '../rtc/contact/base-contact';
 
 const protocol = 'http://';
 const address = '10.5.200.209';
@@ -62,8 +60,7 @@ export class Phonebook {
     if (this.acceptVersion !== phoneBookVersion) {
       this.acceptVersion = apiVersion;
     }
-
-
+    
     return {
       phoneBookUrl,
       apiVersion,
@@ -113,7 +110,6 @@ export class Phonebook {
         return this.sync();
       }
     }
-
 
     if (res.data.ret < 0) return Promise.reject(res);
 
