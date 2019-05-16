@@ -7,6 +7,7 @@ const sketch = new Vuem();
 const initialDate = () => ({
   // 一些可见性的Modal
   isStatisticsVisible   : false,
+  isInviteVisible       : false,
   isSharingVisible      : false,
   isInstanceConference  : false,
   hideControls          : false, // 是否隐藏会议页面底部和头部的控制按钮

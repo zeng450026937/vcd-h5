@@ -93,7 +93,7 @@ export default {
   },
   data() {
     return {
-      visible         : false,
+      // visible         : false,
       confirmLoading  : false,
       checkedKeys     : [],
       selectedContact : [],
@@ -105,6 +105,14 @@ export default {
     };
   },
   computed : {
+    visible : {
+      get() {
+        return this.$model.conference.sketch.isInviteVisible;
+      },
+      set(val) {
+        this.$model.conference.sketch.isInviteVisible = val;
+      },
+    },
     isCloud() {
       return this.$model.account.serverType === 'cloud';
     },

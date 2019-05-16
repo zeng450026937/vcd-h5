@@ -113,6 +113,12 @@ model.provide({
         const conferenceSketch = this.$getVM('conference.sketch');
 
         conferenceSketch.isVideoConference = !toAudio;
+        conferenceSketch.isInviteVisible = true;
+      }).catch(() => {
+        const conferenceSketch = this.$getVM('conference.sketch');
+
+        conferenceSketch.isVideoConference = !toAudio;
+        conferenceSketch.isInviteVisible = true;
       });
     },
   },
