@@ -102,6 +102,7 @@ sketch.provide({
         this.deviceExceptionNotice.close();
         Object.assign(this, initialDate());
         this.$getVM('call').callType = 'video';
+        this.$parent.messageTextList = [];
       }
       else if (val === 'connected') {
         const { _isRefer, _isTransform, callInfo } = rtc.conference.mediaChannel.channel;
