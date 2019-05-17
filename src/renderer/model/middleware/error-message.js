@@ -15,17 +15,18 @@ export default async function errorMessage(ctx, next) {
     ret = await next();
   }
   catch (error) {
-    if (!error) throw new Error('undefined');
+    if (!error) debounceNotice(ctx.vm, $t('common.message.unKnownError'));
+    else {
+      let key = error.cause || (error.data && error.data.cause) || error.message;
 
-    let key = error.cause || (error.data && error.data.cause) || error.message;
+      if (key.startsWith('getaddrinfo ENOTFOUND')) {
+        key = 'ENOTFOUND';
+      }
+      if (ERROR_MAP[key]) {
+        debounceNotice(ctx.vm, $t(ERROR_MAP[key][error.origin] || ERROR_MAP[key]));
+      }
+    }
 
-    if (key.startsWith('getaddrinfo ENOTFOUND')) {
-      key = 'ENOTFOUND';
-    }
-    if (ERROR_MAP[key]) {
-      debounceNotice(ctx.vm, $t(ERROR_MAP[key][error.origin] || ERROR_MAP[key]));
-    }
-    
     throw error;
   }
 

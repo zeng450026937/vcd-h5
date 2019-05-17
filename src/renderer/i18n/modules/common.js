@@ -44,6 +44,7 @@ module.exports = {
         passwordTooLong              : '无法输入超过128个字符',
         serverNotEmpty               : '服务器地址不能为空',
         serverFormatError            : '服务器地址格式错误',
+        unKnownError                 : '未知错误',
       },
     },
     en : {
