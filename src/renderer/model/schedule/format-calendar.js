@@ -27,7 +27,7 @@ const DAY_MAP = {
 
 const INDEX_MAP = [ '', '第一个', '第二个', '第三个', '第四个' ];
 
-const MONTH_LIST = [ '', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十一' ];
+const MONTH_LIST = [ '', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二' ];
 
 const genPattern = (decurs, recurrencePattern) => {
   const interval = recurrencePattern['@interval'] === 1 ? '' : recurrencePattern['@interval'];
