@@ -7,12 +7,12 @@
         <div v-if="!isInSetting" class="enter-meeting-content mr-5 self-end rounded-sm">
           <div class="flex justify-end">
             <a-iconfont type='icon-kongzhi'
-                        title="设置"
+                        :title="$t('nav.setting')"
                         class="text-lg cursor-pointer text-white"
                         @click="isInSetting = true"/>
           </div>
           <div class="p-4">
-            <h2 class="text-white">加入会议</h2>
+            <h2 class="text-white">{{$t('nav.joinMeeting')}}</h2>
             <div class="mt-10 flex flex-col">
               <div class="input-with-icon">
 
@@ -28,8 +28,8 @@
                   <template v-if="searchedAccounts.length > 0" slot="dataSource">
                     <a-select-opt-group>
                       <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                        <span>历史记录</span>
-                        <span class="text-red cursor-pointer" @click="clearAccount">清空</span>
+                        <span>{{$t('login.account.history')}}</span>
+                        <span class="text-red cursor-pointer" @click="clearAccount">{{$t('login.clear')}}</span>
                       </div>
                       <a-select-option v-for="item in searchedAccounts"
                                        :key="item.number" :value="item.number" class="group">
@@ -45,9 +45,10 @@
                       </a-select-option>
                     </a-select-opt-group>
                   </template>
-                  <a-input placeholder='会议ID'
-                           maxlength="64"
-                           :class="{'meeting-error': meetingInfoError}">
+                  <a-input
+                      :placeholder="$t('join.placeholder.conferenceId')"
+                      maxlength="64"
+                      :class="{'meeting-error': meetingInfoError}">
                     <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
                   </a-input>
                 </a-auto-complete>
@@ -55,7 +56,7 @@
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    placeholder='会议密码'
+                    :placeholder="$t('join.placeholder.password')"
                     maxlength="64"
                     type='password'
                     :value="meetingInfo.pin"
@@ -68,14 +69,14 @@
                 <a-input
                     v-model="meetingInfo.server"
                     maxlength="64"
-                    placeholder='服务器地址'
+                    :placeholder="$t('join.placeholder.serverAddress')"
                 >
                   <a-iconfont slot="prefix" type='icon-fuwuqi' class="text-base text-black9"/>
                 </a-input>
               </div>
               <div class="mt-4 input-with-icon">
                 <a-input
-                    placeholder='您在会议中的名称'
+                    :placeholder="$t('join.placeholder.displayName')"
                     maxlength="64"
                     :value="meetingInfo.displayName"
                     @change="onDisplayNameChange"
@@ -87,7 +88,7 @@
               <div class="mt-5 input-with-icon">
                 <div class="flex text-white justify-end items-center">
                   <div class="cursor-pointer" @click="isProxyPanelVisible = !isProxyPanelVisible">
-                    <span>代理服务器</span>
+                    <span>{{$t('join.title.proxyServer')}}</span>
                     <a-iconfont :type="isProxyPanelVisible ? 'icon-up' : 'icon-down'" class="ml-2"></a-iconfont>
                   </div>
                 </div>
@@ -97,14 +98,14 @@
                 <a-input
                     v-model="meetingInfo.proxy"
                     maxlength="64"
-                    placeholder='代理服务器地址'
+                    :placeholder="$t('join.placeholder.proxyAddress')"
                     style="width: 188px;"
                 >
                 </a-input>
                 <a-input
                     :value="meetingInfo.proxyPort"
                     @change="onProxyPortChange"
-                    placeholder='端口'
+                    :placeholder="$t('join.placeholder.port')"
                     style="width: 76px;"
                 >
                 </a-input>
@@ -113,15 +114,15 @@
             </div>
             <div class="mt-5 flex flex-col">
               <a-button type="primary"
-                        @click="joinMeeting">加入</a-button>
-              <a-button block class="mt-4" @click="returnLogin">返回登录</a-button>
+                        @click="joinMeeting">{{$t('join.title.join')}}</a-button>
+              <a-button block class="mt-4" @click="returnLogin">{{$t('join.title.backToLogin')}}</a-button>
             </div>
           </div>
         </div>
         <div v-else class="setting-content self-end rounded-sm mr-5">
           <div class="text-white">
             <a-iconfont type="icon-left"
-                        title="返回"
+                        :title="$t('join.title.back')"
                         class="cursor-pointer text-base"
                         @click="isInSetting = false"/>
           </div>
@@ -219,21 +220,22 @@ export default {
     },
     videoIcon() {
       return this.meetingInfo.initialVideo ? {
-        title : '关闭摄像头',
+        title : this.$t('conversation.controls.turnOffCamera'),
         icon  : 'icon-shipin',
         color : '',
       } : {
-        title : '打开摄像头',
+        title : this.$t('conversation.controls.turnOnCamera'),
         icon  : 'icon-shipinjinyong',
         color : 'red-light',
       };
     },
     audioIcon() {
       return this.meetingInfo.initialAudio ? {
-        title : '关闭麦克风',
+        title : this.$t('conversation.controls.turnOffMicrophone'),
         icon  : 'icon-maikefeng',
-        color : '' } : {
-        title : '打开麦克风',
+        color : '',
+      } : {
+        title : this.$t('conversation.controls.turnOnMicrophone'),
         icon  : 'icon-maikefengjinyong',
         color : 'red-light',
       };

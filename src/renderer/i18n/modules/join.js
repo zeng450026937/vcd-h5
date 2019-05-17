@@ -11,10 +11,16 @@ module.exports = {
         startMeeting      : '开始会议',
         InitiateMeeting   : '新的会议',
         connectMeeting    : '正在进入会议...',
+        proxyServer       : '代理服务器',
+        backToLogin       : '返回登录',
       },
       placeholder : {
-        conferenceId : '会议号码',
-        password     : '会议密码（选填）',
+        conferenceId  : '会议号码',
+        password      : '会议密码（选填）',
+        serverAddress : '会议密码（选填）',
+        displayName   : '您在会议中的名称',
+        proxyAddress  : '代理服务器地址',
+        port          : '端口',
       },
       account : {
         history : '历史记录',
