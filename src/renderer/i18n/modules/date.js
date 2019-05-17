@@ -24,6 +24,7 @@ module.exports = {
       Saturday  : 'Saturday',
       year      : '/',
       month     : '/',
+      day       : '',
     },
   },
 };
