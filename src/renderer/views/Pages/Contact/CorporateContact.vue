@@ -15,8 +15,8 @@
               <app-header class="text-grey-dark"/>
             </div>
           </div>
-          <div>
-            <div class="ml-4 mt-2 mb-2">
+          <div class="flex">
+            <div class="ml-4 mt-2 mb-2 flex w-1 flex-grow">
               <a-breadcrumb>
                 <a-breadcrumb-item v-for="(crumb,index) in breadcrumbs"
                                    :key="crumb.id"

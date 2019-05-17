@@ -115,8 +115,8 @@ export default {
     return {
       visible         : false,
       form            : this.$form.createForm(this),
-      labelCol        : { span: 5 },
-      wrapperCol      : { span: 19 },
+      labelCol        : { span: 6 },
+      wrapperCol      : { span: 18 },
       newLocalContact : {},
       editedContact   : {},
     };
