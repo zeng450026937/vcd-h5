@@ -65,6 +65,7 @@ export default {
     await this.$nextTick();
 
     this.videoElement = this.$refs.videoContent;
+    this.videoElement.setSinkId(this.audioOutputDevice.deviceId);
     this.initStream();
   },
   beforeDestroy() {
@@ -190,10 +191,10 @@ export default {
   },
   watch : {
     audioOutputDevice : {
-      handler(val) {
+      async handler(val) {
         this.videoElement.setSinkId(val.deviceId);
       },
-      immediate : true,
+      immediate : false,
     },
     videoStream : {
       handler   : 'onVideoStreamChanged',

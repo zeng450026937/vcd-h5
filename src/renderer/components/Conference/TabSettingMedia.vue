@@ -131,7 +131,8 @@ export default {
   },
   watch : {
     audioOutputDevice : {
-      handler(val) {
+      async handler(val) {
+        await this.$nextTick();
         this.$refs.testAudio.setSinkId(val.deviceId);
       },
       immediate : true,
