@@ -189,8 +189,11 @@ export default {
     },
   },
   watch : {
-    audioOutputDevice(val) {
-      this.videoElement.setSinkId(val.deviceId);
+    audioOutputDevice : {
+      handler(val) {
+        this.videoElement.setSinkId(val.deviceId);
+      },
+      immediate : true,
     },
     videoStream : {
       handler   : 'onVideoStreamChanged',

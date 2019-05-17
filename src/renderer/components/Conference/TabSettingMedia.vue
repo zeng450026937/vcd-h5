@@ -130,8 +130,11 @@ export default {
     },
   },
   watch : {
-    audioOutputDevice(val) {
-      this.$refs.testAudio.setSinkId(val.deviceId);
+    audioOutputDevice : {
+      handler(val) {
+        this.$refs.testAudio.setSinkId(val.deviceId);
+      },
+      immediate : true,
     },
   },
   methods : {
