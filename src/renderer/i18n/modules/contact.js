@@ -19,12 +19,14 @@ module.exports = {
       },
       frequent : {
         noFrequent       : '暂无常用联系人',
+        addAs            : '添加为常用联系人',
         addFrequentGroup : '添加常用联系人分组',
         addGroup         : '添加常用联系人分组',
         editGroup        : '编辑分组',
         deleteGroup      : '删除分组',
         moveContact      : '移动该联系人至',
         noOtherGroup     : '暂无其他分组',
+        noGroup          : '暂无分组',
         removeContact    : '移除',
       },
       corporate : {
@@ -134,6 +136,8 @@ module.exports = {
       },
       frequent : {
         noFrequent       : 'No frequent contacts yet',
+        addAs            : 'Add to a frequent contacts',
+        noGroup          : '',
         addFrequentGroup : 'Add new frequent contacts group',
         addGroup         : 'Add New Frequent Contacts Group',
         editGroup        : 'Edit Group',

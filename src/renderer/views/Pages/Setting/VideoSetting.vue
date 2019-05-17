@@ -23,11 +23,23 @@
               <span class="text-xs opacity-75">{{$t('setting.video.noneCamera')}}</span>
               <a-popover placement="bottomLeft" trigger="click">
                 <div slot="content" style="width: 250px">
-                  <div class="text-xs leading-tight">
-                    <div>· {{$t('setting.video.cameraNotice.open')}}</div>
-                    <div>· {{$t('setting.video.cameraNotice.correct')}}</div>
-                    <div>· {{$t('setting.video.cameraNotice.single')}}</div>
-                    <div>· {{$t('setting.video.cameraNotice.restart')}}</div>
+                  <div class="text-xs leading-tight flex flex-col">
+                    <div class="flex">
+                      <div class="mr-1">·</div>
+                      {{$t('setting.video.cameraNotice.open')}}
+                    </div>
+                    <div class="flex">
+                      <div class="mr-1">·</div>
+                      {{$t('setting.video.cameraNotice.correct')}}
+                    </div>
+                    <div class="flex">
+                      <div class="mr-1">·</div>
+                      {{$t('setting.video.cameraNotice.single')}}
+                    </div>
+                    <div class="flex">
+                      <div class="mr-1">·</div>
+                      {{$t('setting.video.cameraNotice.restart')}}
+                    </div>
                   </div>
                   <a-divider></a-divider>
                   <div class="text-xs mt-1 leading-tight">
@@ -36,7 +48,7 @@
                       class="text-indigo cursor-pointer"
                       @click="handleTechCenter">
                       {{$t('setting.video.techniqueCenter')}}
-                    </span>。
+                    </span>
                   </div>
                 </div>
                 <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>

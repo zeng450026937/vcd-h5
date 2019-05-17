@@ -20,32 +20,27 @@
         </div>
       </div>
       <a-divider class="my-0"/>
-      <div class="mt-5 leading-normal">
-        <span class="text-black6">{{$t('setting.account.username')}}</span>
-        <span class="ml-3">{{user.number}}</span>
-      </div>
-      <div v-if="user.phone" class="mt-5 leading-normal">
-        <span class="text-black6">{{$t('setting.account.phone')}}</span>
-        <span class="ml-3">{{user.phone}}</span>
-      </div>
-      <div v-if="user.email" class="mt-5 leading-normal">
-        <span class="text-black6">{{$t('setting.account.email')}}</span>
-        <span class="ml-3">{{user.email}}</span>
-      </div>
-      <template v-if="fullPath && fullPath.length > 0">
-        <div class="mt-5 flex items-start leading-normal">
-          <span class="whitespace-no-wrap text-black6">{{$t('setting.account.group')}}</span>
-          <span class="ml-3">{{fullPath | fullName}}</span>
+      <div class="flex">
+        <div class="flex flex-col">
+          <span class="text-black6 account-item">{{$t('setting.account.username')}}</span>
+          <span class="text-black6 account-item">{{$t('setting.account.phone')}}</span>
+          <span v-if="user.email" class="text-black6 account-item">{{$t('setting.account.email')}}</span>
+          <template v-if="fullPath && fullPath.length > 0">
+            <span class="whitespace-no-wrap text-black6 account-item">{{$t('setting.account.group')}}</span>
+            <span class="text-black6 account-item">{{$t('setting.account.enterprise')}}</span>
+          </template>
         </div>
-
-        <div class="mt-5 leading-normal">
-          <span class="text-black6">{{$t('setting.account.enterprise')}}</span>
-          <span class="ml-3">{{fullPath[0].text}}</span>
+        <div class="flex flex-col">
+          <span class="ml-3 account-item">{{user.number}}</span>
+          <span class="ml-3 account-item">{{user.phone}}</span>
+          <span v-if="user.email" class="ml-3 account-item">{{user.email}}</span>
+          <template v-if="fullPath && fullPath.length > 0">
+            <span class="ml-3 account-item">{{fullPath | fullName}}</span>
+            <span class="ml-3 account-item">{{fullPath[0].text}}</span>
+          </template>
         </div>
-      </template>
+      </div>
       <div class="mt-20">
-        <!-- <a-button type="primary">{{$t('setting.account.switchEnterprise')}}</a-button>
-        <a-button class="ml-4">{{$t('setting.account.edit')}}</a-button> -->
         <a-button @click="onSignOutClicked">{{$t('setting.account.logout')}}</a-button>
       </div>
     </div>
@@ -138,3 +133,11 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+  #account-setting {
+    .account-item {
+      @apply mt-5 leading-normal;
+    }
+  }
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="calendar-info" class="bg-white h-full">
+  <a-layout id="calendar-info" class="bg-white h-full select-none">
     <div v-if="hasEvent" class="h-full flex flex-col">
       <div class="h-full flex flex-grow">
         <div class="w-full">
@@ -7,7 +7,8 @@
             <div class="py-5 border-b">
               <div class="flex items-center">
                 <div class="w-1 text-base text-black flex flex-grow truncate">
-                  <span class="truncate leading-loose">{{currentEvent.subject}}</span>
+                  <span class="truncate leading-loose"
+                        :title="currentEvent.subject">{{currentEvent.subject}}</span>
                 </div>
                 <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2"
                       @click="copyShareUrl">{{$t('schedule.copyInfo')}}</span>
@@ -60,13 +61,13 @@
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.conferenceId')}}</span>
-                  <span>{{currentEvent.conferenceNumber}}</span>
+                  <span class="select-text">{{currentEvent.conferenceNumber}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.password')}}</span>
-                  <span>{{currentEvent.attendeePin}}</span>
+                  <span class="select-text">{{currentEvent.attendeePin}}</span>
                 </div>
               </div>
               <div v-if="currentEvent.isLive" class="flex flex-col text-xs mt-4">

@@ -48,14 +48,16 @@
                 <a-iconfont type="icon-gengduo1"
                             class="mr-2 text-indigo cursor-pointer text-sm"></a-iconfont>
                 <a-menu slot="overlay">
-                  <a-sub-menu title="添加为常用联系人" key="test">
+                  <a-sub-menu :title="$t('contact.frequent.addAs')" key="test">
                     <template v-if="favoriteGroup.length > 0">
                       <a-menu-item v-for="(group, index) in favoriteGroup"
                                    :key="index"
                                    @click="addToFavorite(group, item)">{{group.name}}
                       </a-menu-item>
                     </template>
-                    <a-menu-item class="cursor-not-allowed text-black9" v-else>暂无分组</a-menu-item>
+                    <a-menu-item v-else
+                                 class="cursor-not-allowed text-black9"
+                    >{{$t('contact.frequent.noGroup')}}</a-menu-item>
                   </a-sub-menu>
                 </a-menu>
               </a-dropdown>

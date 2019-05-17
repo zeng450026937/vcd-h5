@@ -13,7 +13,8 @@
              @click="clickCalendar(event)">
           <div class="text-sm flex w-full">
             <div class="flex flex-grow w-1">
-              <span class="truncate">{{event.subject}}</span>
+              <span class="truncate"
+                    :title="event.subject">{{event.subject}}</span>
             </div>
             <div class="ml-1 text-base text-indigo">
               <a-iconfont v-if="event.isRecurrence" :title="$t('schedule.cycleMeeting')" type="icon-xunhuanhuiyi"/>
@@ -73,7 +74,6 @@ export default {
     $route(val) {
       const { planId } = val.query;
 
-      debugger;
       if (val.name === 'schedule' && planId) {
         this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
         console.warn(this.currentEvent);
