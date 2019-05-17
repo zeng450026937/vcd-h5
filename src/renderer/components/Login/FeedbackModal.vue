@@ -176,6 +176,7 @@ export default {
         await this.$dispatch('ytms.doFeedback', { formdata });
         this.visible = false;
         this.uploading = false;
+        this.$message.info(this.$t('feedback.uploadSucceed'));
         this.close();
       }
       catch (error) {

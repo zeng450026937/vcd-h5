@@ -156,11 +156,19 @@ export default {
       return this.store.getChild(this.currentGroup);
     },
     currentGroupName() {
-      if (this.currentGroup === 'rootNode') return this.rootNode.name;
+      if (this.currentGroup === 'rootNode') {
+        if (this.rootNode.i18n) return this.$t(this.rootNode.i18n);
+
+        return this.rootNode.name;
+      }
 
       const currentGroup = this.store.getNode(this.currentGroup);
 
       if (!currentGroup) return '';
+
+      const group = this.store.getNode(this.currentGroup);
+
+      if (group.i18n) return this.$t(group.i18n);
 
       return this.store.getNode(this.currentGroup).name;
     },

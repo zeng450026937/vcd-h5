@@ -22,7 +22,9 @@
               <div slot="title" class="truncate">
                 <div class="flex flex-col justify-center">
                   <div class="flex items-center">
-                    <span class="text-sm leading-none truncate" style="height: 16px">{{item.name}}</span>
+                    <span class="text-sm leading-none truncate" style="height: 16px">
+                      {{item.i18n? $t(item.i18n) : item.name}}
+                    </span>
                     <template v-if="item.isGroup && loadMode !== LOAD_MODE.SPLIT">（{{item.amount}}）</template>
                   </div>
                   <span v-if="!item.isGroup"

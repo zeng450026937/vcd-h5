@@ -19,6 +19,7 @@ module.exports = {
       inputContactWay    : '请输入您的手机或邮箱',
       uploadLog          : '上传日志',
       uploadFailed       : '提交失败',
+      uploadSucceed      : '提交成功，感谢您的反馈',
     },
     en : {
       title              : 'Submit Feedback',
@@ -37,6 +38,7 @@ module.exports = {
       inputContactWay    : 'Please enter your phone number or email',
       uploadLog          : 'Upload Logs',
       uploadFailed       : 'Submission Failed',
+      uploadSucceed      : 'Submitted successfully, thank you for your feedback',
     },
   },
 };

@@ -240,6 +240,10 @@ export default {
       padding: 12px 0;
       border-bottom: 1px solid #e0e0e0;
       width: 100%;
+      .ant-radio-button-wrapper {
+        min-width: 60px;
+        text-align: center;
+      }
     }
     .record-scroll-area {
       height: calc( 100% - 80px);

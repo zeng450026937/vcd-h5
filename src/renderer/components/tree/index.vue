@@ -33,7 +33,17 @@ export default {
       },
     },
   },
-
+  sketch : [
+    {
+      ns    : 'i18n',
+      props : [ 'language', ],
+    },
+  ],
+  watch : {
+    language() {
+      this.updateTreeViews();
+    },
+  },
   data() {
     return {
       tree     : [],
@@ -158,7 +168,7 @@ export default {
         <div class="group-node" node-id="${row.node.id}" node-type="${row.node.type}" style="${this.createStyleString(styles)}">
           <div class="${row.expand ? 'triangle-down' : 'triangle-right'}" node-type="${row.node.type}" node-id="${row.node.id}"></div>
           ${this.loadMode === LOAD_MODE.SPLIT ? '' : input}
-           ${row.name} ${this.loadMode === LOAD_MODE.SPLIT ? '' : `(${row.amount})`}
+           ${row.i18n ? this.$t(row.i18n) : row.name} ${this.loadMode === LOAD_MODE.SPLIT ? '' : `(${row.amount})`}
         </div>
       `;
     },

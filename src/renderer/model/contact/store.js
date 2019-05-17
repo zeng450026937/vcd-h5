@@ -14,30 +14,37 @@ const LOAD_MODE = {
 const groupMap = {
   'phone.book.staff.root.name' : {
     name   : '联系人',
+    i18n   : 'contact.label.staff',
     isUser : true,
   },
   'phone.book.device.root.name' : {
     name     : '会议室设备',
+    i18n     : 'contact.label.device',
     isDevice : true,
   },
   'phone.book.externalcontacts.root.name' : {
     name       : '其他联系人',
+    i18n       : 'contact.label.others',
     isExternal : true,
   },
   'phone.book.vmr.root.name' : {
     name  : '虚拟会议室',
+    i18n  : 'contact.label.vmr',
     isVMR : true,
   },
   'phone.book.servicenumber.root.name' : {
     name      : '服务号',
+    i18n      : 'contact.label.servicenumber',
     isService : true,
   },
   'phone.book.favoritecontacts.root.name' : {
     name       : '常用联系人',
+    i18n       : 'contact.label.favoritecontacts',
     isFavorite : true,
   },
   'phone.book.meeting.root.name' : {
     name          : '会议室',
+    i18n          : 'contact.label.meetingRoom',
     isMeetingRoom : true,
   },
 };
