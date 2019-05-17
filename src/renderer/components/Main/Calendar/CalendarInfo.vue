@@ -84,7 +84,8 @@
                   <div>
                     <div class="w-20 text-black6">{{$t('schedule.remark')}}</div>
                   </div>
-                  <span style="word-break: break-all">{{currentEvent.note || $t('schedule.emptyRemark')}}</span>
+                  <span style="word-break: break-all"
+                        class="w-1 flex flex-grow">{{currentEvent.note || $t('schedule.emptyRemark')}}</span>
                 </div>
               </div>
             </div>
