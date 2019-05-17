@@ -60,7 +60,7 @@ export class Phonebook {
     if (this.acceptVersion !== phoneBookVersion) {
       this.acceptVersion = apiVersion;
     }
-    
+
     return {
       phoneBookUrl,
       apiVersion,

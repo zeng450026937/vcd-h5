@@ -77,22 +77,22 @@ model.provide({
       });
     },
     async initNegotiate() {
-      this.phonebook.dataLoaded = false;
-      this.phonebook.dataLoadFailed = false;
-
-      if (this.isCloud) {
-        this.$phonebook.negotiate();
-
-        return this.$phonebook.sync()
-          .then((list) => {
-            list._isVue = true;
-            this.format(list);
-            this.phonebook.list = list;
-            this.phonebook.dataLoaded = true;
-          }).catch((e) => {
-            this.phonebook.dataLoadFailed = false;
-          });
-      }
+      // this.phonebook.dataLoaded = false;
+      // this.phonebook.dataLoadFailed = false;
+      //
+      // if (this.isCloud) {
+      //   this.$phonebook.negotiate();
+      //
+      //   return this.$phonebook.sync()
+      //     .then((list) => {
+      //       list._isVue = true;
+      //       this.format(list);
+      //       this.phonebook.list = list;
+      //       this.phonebook.dataLoaded = true;
+      //     }).catch((e) => {
+      //       this.phonebook.dataLoadFailed = true;
+      //     });
+      // }
 
       return rtc.contact.initNegotiate().catch(() => {});
     },

@@ -60,9 +60,11 @@ model.provide({
       return account.serverType === 'cloud';
     },
     contact() {
-      const fetchContact = this.$getVM('fetchContact');
+      return rtc.contact;
 
-      return this.isCloud ? fetchContact || {} : rtc.contact;
+      // const fetchContact = this.$getVM('fetchContact');
+      //
+      // return this.isCloud ? fetchContact || {} : rtc.contact;
     },
     loadMode() {
       return this.contact.loadMode;
@@ -138,9 +140,11 @@ model.provide({
       });
     },
     search(params) {
-      return this.isCloud
-        ? this.contact.$phonebook.search(params)
-        : this.contact.phonebook.search(params);
+      return this.contact.phonebook.search(params);
+
+      // return this.isCloud
+      //   ? this.contact.$phonebook.search(params)
+      //   : this.contact.phonebook.search(params);
     },
     async findContacts(val) {
       return this.search({ key: val }).then((result) => (result.data || result)

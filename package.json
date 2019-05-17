@@ -46,6 +46,7 @@
     "fs-extra": "^7.0.1",
     "jr-qrcode": "^1.1.4",
     "lodash": "^4.17.11",
+    "md5": "^2.2.1",
     "moment": "^2.24.0",
     "register-service-worker": "^1.6.2",
     "screenfull": "^4.2.0",
