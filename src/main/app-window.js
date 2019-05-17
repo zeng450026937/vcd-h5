@@ -41,7 +41,10 @@ export class AppWindow extends BaseWindow {
 
     this.blocker = powerSaveBlocker.start('prevent-app-suspension');
     // setup tray
-    this.tray = new Tray(resolve(__public, 'favicon.png'));
+    this.tray = new Tray(resolve(__public,
+      process.platform === 'darwin'
+        ? 'favicon.icns'
+        : 'favicon.png'));
 
     this.tray.setToolTip(process.env.VUE_APP_TITLE);
 

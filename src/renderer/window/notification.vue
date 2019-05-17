@@ -39,7 +39,7 @@
           <a-iconfont type="icon-yuyin"/>
         </a-button>
         <a-button @click="toDetail" class="text-base ml-3">
-          {{$t('home.details')}}
+          {{$t('home.detail')}}
         </a-button>
       </div>
     </div>
