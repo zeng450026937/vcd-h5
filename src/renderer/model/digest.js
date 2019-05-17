@@ -15,17 +15,19 @@ model.provide({
       port     : '9998',
       reqCount : 0,
       cnonce   : uuid.v4().replace(/-/g, ''),
+      token    : null,
 
     };
   },
   methods : {
-    loadAccount(username, password, realm, nonce, nc, response) {
+    async loadAccount(username, password, realm, nonce, nc, response) {
       const uri = '/user/api/v1/external/digest/login';
 
       let res;
 
       try {
-        res = Axios({
+        this.count++;
+        res = await Axios({
           method  : 'post',
           url     : `${this.protocol}${this.address}${this.port}${uri}`,
           headers : {
@@ -34,7 +36,11 @@ model.provide({
         });
       }
       catch (e) {
-        if (e.response.status !== 401 || this.count >= 10) return Promise.reject(e);
+        if (e.response.status !== 401 || this.count >= 10) {
+          this.count = 0;
+
+          return Promise.reject(e);
+        }
 
         const info = this.genDigestInfo(e.response.headers['WWW-Authenticate']);
         const HA1 = this.getHA1(username, password, realm);
@@ -52,11 +58,59 @@ model.provide({
       }
 
       this.count = 0;
+      this.accountInfos = res.data.data.accountInfos;
 
       return res;
     },
-    getToken() {
+    async selectAccount(id) {
+      const account = this.accountInfos.find((acc) => acc.id === id);
 
+      this.token = await this.getToken(account);
+    },
+
+    async getToken(account, username, password, realm, nonce, nc, response) {
+      const uri = '/user/api/v1/external/digest/selectAccount';
+
+      let res;
+
+      try {
+        this.count++;
+        res = await Axios({
+          method : 'post',
+          url    : `${this.protocol}${this.address}${this.port}${uri}`,
+          params : {
+            partyId   : account.partyId,
+            subjectId : account.subjectId,
+          },
+          headers : {
+            'WWW-Authenticate' : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
+          },
+        });
+      }
+      catch (e) {
+        if (e.response.status !== 401 || this.count >= 10) {
+          this.count = 0;
+
+          return Promise.reject(e);
+        }
+
+        const info = this.genDigestInfo(e.response.headers['WWW-Authenticate']);
+        const HA1 = this.getHA1(username, password, realm);
+        const HA2 = this.getHA2(uri);
+
+        return this.getToken(
+          account,
+          username,
+          info.realm,
+          info.nonce,
+          uri,
+          this.cnonce,
+          this.nc,
+          this.getResponse(HA1, nonce, this.nc, this.cnonce, info.qop, HA2)
+        );
+      }
+
+      return res;
     },
 
     genDigestInfo(digestInfo) {
@@ -85,7 +139,7 @@ model.provide({
       return md5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);
     },
     getHA2(uri) {
-      return md5(`GET:${uri}`);
+      return md5(`POST:${uri}`);
     },
     getHA1(username, password, realm) {
       return md5(`${username}:${realm}:${password}`);
