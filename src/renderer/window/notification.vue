@@ -56,11 +56,6 @@ export default {
       scheduleEvents : [],
     };
   },
-  created : {
-    $t() {
-      return this.kom.vm.i18n.t;
-    },
-  },
   filters : {
     tipMsg(startTime) {
       if (!startTime) return '';
@@ -77,6 +72,9 @@ export default {
     },
   },
   computed : {
+    $t() {
+      return this.kom.vm.i18n.t;
+    },
     kom() {
       return (window.opener && window.opener.kom) || window.kom;
     },

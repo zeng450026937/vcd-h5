@@ -2,38 +2,41 @@
   <div class="h-full w-full">
     <div class="h-full  bg-white flex items-center flex-col" v-if="ready">
       <div class="flex w-3/4 flex-col h-full">
-        <div class="flex py-5 items-center w-full border-b" v-if="!this.recordInfo.isConference">
-          <div class="flex flex-col truncate" style="max-width: 600px">
-            <div class="font-semibold leading-normal text-base items-center truncate">
-              {{contact.name}}
+        <div v-if="!this.recordInfo.isConference">
+          <div class="flex py-5 items-center w-full border-b">
+            <div class="flex flex-col truncate" style="max-width: 600px">
+              <div class="font-semibold leading-normal text-base items-center truncate">
+                {{contact.name}}
+              </div>
+              <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
+                {{$t('contact.label.unknownInfo')}}
+              </div>
             </div>
-            <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-              {{$t('contact.label.unknownInfo')}}
+            <div class="flex flex-grow"></div>
+            <div class="ml-16">
+              <a-avatar :size="72" v-if="!contact.unknown">
+                <span class="text-lg">{{contact.name}}</span>
+              </a-avatar>
+              <a-avatar :size="72" v-else class="bg-indigo" icon="team"></a-avatar>
             </div>
-          </div>
-          <div class="flex flex-grow"></div>
-          <div class="ml-16" >
-            <a-avatar :size="72" v-if="!contact.unknown">
-              <span class="text-lg">{{contact.name}}</span>
-            </a-avatar>
-            <a-avatar :size="72" v-else class="bg-indigo" icon="team"></a-avatar>
           </div>
         </div>
-
-        <div class="flex py-5 items-center w-full border-b" v-else>
-          <div class="flex flex-col truncate" style="max-width: 600px">
-            <div class="font-semibold leading-normal text-base items-center truncate">
-              {{recordInfo.subject}}
+        <div v-else>
+          <div class="flex py-5 items-center w-full border-b">
+            <div class="flex flex-col truncate" style="max-width: 600px">
+              <div class="font-semibold leading-normal text-base items-center truncate">
+                {{recordInfo.subject}}
+              </div>
+              <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
+                {{$t('contact.label.videoConference')}}
+              </div>
             </div>
-            <div class="mt-2 text-xs leading-tight text-black-lightest opacity-75 whitespace-normal">
-              {{$t('contact.label.videoConference')}}
+            <div class="flex flex-grow"></div>
+            <div class="ml-16">
+              <a-avatar :size="72" class="bg-indigo">
+                <a-iconfont class="text-3xl" type="icon-huiyishi"></a-iconfont>
+              </a-avatar>
             </div>
-          </div>
-          <div class="flex flex-grow"></div>
-          <div class="ml-16" >
-            <a-avatar :size="72" class="bg-indigo">
-              <a-iconfont class="text-3xl" type="icon-huiyishi"></a-iconfont>
-            </a-avatar>
           </div>
         </div>
 

@@ -139,13 +139,14 @@ export default {
         this.newLocalContact.nick = /^(.*)\(.*\)$/.test(values.name) ? RegExp.$1.substr(-2, 2) : values.name.substr(-2, 2);
         if (this.type === 'add' || this.type === 'add-as') {
           await this.$dispatch('contact.local.insertData', this.newLocalContact);
+          this.$message.success(this.$t('contact.message.success'));
         }
         else {
           this.newLocalContact.id = this.editedContact.id;
           await this.$dispatch('contact.local.updateData', this.newLocalContact);
+          this.$message.success(this.$t('contact.message.editSucceed'));
         }
         this.visible = false;
-        this.$message.success(this.$t('contact.message.success'));
         this.$emit('submit-success');
       });
     },

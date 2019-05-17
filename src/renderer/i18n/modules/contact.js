@@ -61,6 +61,7 @@ module.exports = {
       },
       message : {
         success             : '添加成功',
+        editSucceed         : '编辑成功',
         inputName           : '请输入名称',
         inputAccount        : '请输入账号',
         nameNoLess64        : '名称不能超过64位',
