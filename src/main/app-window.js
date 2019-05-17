@@ -1,4 +1,4 @@
-import { ipcMain, Menu, Tray, app, powerSaveBlocker } from 'electron';
+import { ipcMain, Menu, Tray, app, powerSaveBlocker, nativeImage } from 'electron';
 import { resolve } from 'path';
 import { BaseWindow } from './base-window';
 import { PopupWindow } from './popup-window';
@@ -41,10 +41,9 @@ export class AppWindow extends BaseWindow {
 
     this.blocker = powerSaveBlocker.start('prevent-app-suspension');
     // setup tray
-    this.tray = new Tray(resolve(__public,
-      process.platform === 'darwin'
-        ? 'favicon.icns'
-        : 'favicon.png'));
+    const imageName = process.platform === 'darwin' ? 'favicon_darwin.png' : 'favicon.png';
+
+    this.tray = new Tray(resolve(__public, imageName));
 
     this.tray.setToolTip(process.env.VUE_APP_TITLE);
 
