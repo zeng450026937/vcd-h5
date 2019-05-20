@@ -67,7 +67,8 @@
                 </a-menu-item>
               </a-menu>
               <a-menu slot="overlay" v-else>
-                <a-sub-menu :title="$t('contact.frequent.moveContact')" key="test">
+                <a-sub-menu key="test">
+                  <span slot="title">{{$t('contact.frequent.moveContact')}}</span>
                   <template v-if="groupList.length > 1">
                     <a-menu-item v-for="(group, index) in groupList"
                                  v-if="group.id !== currentGroup"

@@ -48,7 +48,8 @@
                 <a-iconfont type="icon-gengduo1"
                             class="mr-2 text-indigo cursor-pointer text-sm"></a-iconfont>
                 <a-menu slot="overlay">
-                  <a-sub-menu :title="$t('contact.frequent.addAs')" key="test">
+                  <a-sub-menu key="test">
+                    <span slot="title">{{$t('contact.frequent.addAs')}}</span>
                     <template v-if="favoriteGroup.length > 0">
                       <a-menu-item v-for="(group, index) in favoriteGroup"
                                    :key="index"
