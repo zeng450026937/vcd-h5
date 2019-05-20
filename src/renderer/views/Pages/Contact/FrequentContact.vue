@@ -140,7 +140,7 @@ export default {
     },
     groupInfo() {
       return {
-        company : this.rootNode.name,
+        company : this.rootNode.i18n ? this.$t(this.rootNode.i18n) : this.rootNode.name,
         group   : this.currentGroupName,
         amount  : this.getAmount(this.currentGroup),
       };
@@ -171,7 +171,7 @@ export default {
 
       if (group.i18n) return this.$t(group.i18n);
 
-      return this.store.getNode(this.currentGroup).name;
+      return group.name;
     },
     frequentContacts() {
       return this.$model.contact.favorite;

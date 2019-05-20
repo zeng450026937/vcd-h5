@@ -152,8 +152,6 @@ export default class Store {
     if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) { // 常用联系人
       const groupInfo = this.clone(groupMap[this.rootNode.attributes.name]);
 
-      delete groupInfo.i18n;
-
       this.originTree.forEach((n) => {
         n = { ...groupInfo, ...n };
       });

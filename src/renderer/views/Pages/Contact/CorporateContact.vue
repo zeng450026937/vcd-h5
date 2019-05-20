@@ -127,7 +127,7 @@ export default {
     currentGroupName() {
       const node = this.store.getNode(this.currentGroup) || {};
 
-      return node.name;
+      return node.i18n ? this.$t(node.i18n) : node.name;
     },
     currentGroupAmount() {
       const node = this.store.getNode(this.currentGroup) || {};
@@ -201,7 +201,7 @@ export default {
         if (!group) return [];
 
         this.breadcrumbs = this.store.findBranchWithSelf(group).map((i) => ({
-          text : i.name,
+          text : i.i18n ? this.$t(i.i18n) : i.name,
           id   : i.id,
         })).reverse();
       },
