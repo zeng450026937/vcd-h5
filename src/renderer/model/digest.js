@@ -10,130 +10,162 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      address  : '10.200.112.137',
-      protocol : 'http://',
-      port     : '9998',
-      reqCount : 0,
-      cnonce   : uuid.v4().replace(/-/g, ''),
-      token    : null,
+      address       : '10.200.112.137',
+      protocol      : 'http://',
+      port          : '9998',
+      count         : 0,
+      cnonce        : uuid.v4().replace(/-/g, ''),
+      token         : null,
+      accounts      : [],
+      activeAccount : null,
 
     };
   },
+  middleware : {
+    async loadAccount(ctx, next) {
+      await next();
+
+      const { username, password } = ctx.payload;
+
+      return this.loadAccount(username, password);
+    },
+    async getToken(ctx, next) {
+      await next();
+
+      const { id } = ctx.payload;
+      const { username, password, account } = this.selectAccount(id);
+
+      return this.getToken(account, username, password);
+    },
+  },
   methods : {
-    async loadAccount(username, password, realm, nonce, nc, response) {
-      const uri = '/user/api/v1/external/digest/login';
-
-      let res;
-
-      try {
-        this.count++;
-        res = await Axios({
-          method  : 'post',
-          url     : `${this.protocol}${this.address}${this.port}${uri}`,
-          headers : {
-            'WWW-Authenticate' : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
-          },
-        });
-      }
-      catch (e) {
-        if (e.response.status !== 401 || this.count >= 10) {
-          this.count = 0;
-
-          return Promise.reject(e);
-        }
-
-        const info = this.genDigestInfo(e.response.headers['WWW-Authenticate']);
-        const HA1 = this.getHA1(username, password, realm);
-        const HA2 = this.getHA2(uri);
-
-        return this.loadAccount(
-          username,
-          info.realm,
-          info.nonce,
-          uri,
-          this.cnonce,
-          this.nc,
-          this.getResponse(HA1, nonce, this.nc, this.cnonce, info.qop, HA2)
-        );
-      }
-
-      this.count = 0;
-      this.accountInfos = res.data.data.accountInfos;
-
-      return res;
-    },
-    async selectAccount(id) {
-      const account = this.accountInfos.find((acc) => acc.id === id);
-
-      this.token = await this.getToken(account);
-    },
-
-    async getToken(account, username, password, realm, nonce, nc, response) {
+    async getToken(account, username, password, realm, nonce, response = '') {
       const uri = '/user/api/v1/external/digest/selectAccount';
 
       let res;
 
       try {
-        this.count++;
         res = await Axios({
           method : 'post',
-          url    : `${this.protocol}${this.address}${this.port}${uri}`,
-          params : {
+          url    : `${this.protocol}${this.address}:${this.port}${uri}`,
+          data   : {
             partyId   : account.partyId,
             subjectId : account.subjectId,
           },
           headers : {
-            'WWW-Authenticate' : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
+            Authorization : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
           },
         });
+
+        this.count++;
       }
       catch (e) {
-        if (e.response.status !== 401 || this.count >= 10) {
+        if (e.response.status !== 401 || this.count > 10) {
           this.count = 0;
 
           return Promise.reject(e);
         }
 
-        const info = this.genDigestInfo(e.response.headers['WWW-Authenticate']);
-        const HA1 = this.getHA1(username, password, realm);
+        const info = this.genDigestInfo(e.response.headers['www-authenticate']);
+        const HA1 = this.getHA1(username, password, info.realm);
         const HA2 = this.getHA2(uri);
 
         return this.getToken(
           account,
           username,
+          password,
           info.realm,
           info.nonce,
-          uri,
-          this.cnonce,
-          this.nc,
-          this.getResponse(HA1, nonce, this.nc, this.cnonce, info.qop, HA2)
+          this.getResponse(HA1, info.nonce, this.nc, this.cnonce, info.qop, HA2)
+        );
+      }
+      this.count = 0;
+
+      if (res.data.ret < 0) return Promise.reject(res.data);
+
+      this.token = res.data.data.token;
+
+      return this.token;
+    },
+    async loadAccount(username, password, realm, nonce, response = '') {
+      const uri = '/user/api/v1/external/digest/login';
+
+      let res;
+
+      try {
+        res = await Axios({
+          method  : 'post',
+          url     : `${this.protocol}${this.address}:${this.port}${uri}`,
+          headers : {
+            Authorization : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
+          },
+        });
+
+        this.count++;
+      }
+      catch (error) {
+        if (error.response.status !== 401 || this.count >= 10) {
+          this.count = 0;
+
+          return Promise.reject(error);
+        }
+
+        const info = this.genDigestInfo(error.response.headers['www-authenticate']);
+        const HA1 = this.getHA1(username, password, info.realm);
+        const HA2 = this.getHA2(uri);
+
+        return this.loadAccount(
+          username,
+          password,
+          info.realm,
+          info.nonce,
+          this.getResponse(HA1, info.nonce, this.nc, this.cnonce, info.qop, HA2)
         );
       }
 
+      this.count = 0;
+
+      if (res.data.ret < 0) return Promise.reject(res.data);
+
+      this.accounts = {
+        username,
+        password,
+        accountInfos : res.data.data.accountInfos,
+      };
+
       return res;
     },
+    selectAccount(id) {
+      const account = this.accounts.accountInfos.find((acc) => acc.accountInfo.id === id);
 
-    genDigestInfo(digestInfo) {
-      const getQuery = this.getParams(digestInfo);
+      this.activeAccount = {
+        partyId   : account.partyInfo.id,
+        subjectId : account.subjectInfo.id,
+      };
 
       return {
-        realm : getQuery('realm'),
-        nonce : getQuery('nonce'),
-        qop   : getQuery('qop'),
+        username : this.accounts.username,
+        password : this.accounts.password,
+        account  : this.activeAccount,
       };
     },
-    getParams(info) {
-      const list = info.replace(new RegExp(/Digest /g), '')
-        .replace(/"/g, '')
-        .split(', ')
-        .map((i) => i.split('='))
-        .map((i) => ({ [i[0]]: i[1] }));
+    getQueryStr(name) {
+      const reg = new RegExp(`${name}=([\\'"]?)(.*?)\\1`, 'i');
 
-      const params = {};
+      return (info) => {
+        const match = info.match(reg);
 
-      list.forEach((i) => { Object.assign(params, i); });
+        if (match) return match[2];
 
-      return (query) => params[query];
+        return null;
+      };
+    },
+    genDigestInfo(digestInfo) {
+      return {
+        realm : this.getQueryStr('realm')(digestInfo),
+        nonce : this.getQueryStr('nonce')(digestInfo),
+        qop   : this.getQueryStr('qop')(digestInfo),
+      };
     },
     getResponse(HA1, nonce, nc, cnonce, qop, HA2) {
       return md5(`${HA1}:${nonce}:${nc}:${cnonce}:${qop}:${HA2}`);
@@ -145,7 +177,7 @@ model.provide({
       return md5(`${username}:${realm}:${password}`);
     },
     createDigest(username, realm, nonce, uri, cnonce, nc, response) {
-      return `Digest username="${username}", realm="${realm}", nonce="${nonce}", uri="${uri}", cnonce="${cnonce}", nc="${nc}", response="${response}, qop=auth"`;
+      return `Digest username="${username}", realm="${realm}", nonce="${nonce}", uri="${uri}", cnonce="${cnonce}", nc="${nc}", response="${response}", qop="auth"`;
     },
     updateCnonce() {
       this.timer = setInterval(() => {
@@ -162,7 +194,7 @@ model.provide({
       return `${this.protocol}${this.address}${this.port}`;
     },
     nc() {
-      const str = String(this.reqCount);
+      const str = String(this.count);
 
       return Array((8 - str.length))
         .fill(0)
