@@ -174,9 +174,9 @@ export default {
       const time = new Date();
       const hour = this.genDouble(time.getHours());
       const minutes = this.genDouble(time.getMinutes());
-      const seconds = this.genDouble(time.getSeconds());
+      // const seconds = this.genDouble(time.getSeconds());
 
-      return `${hour}:${minutes}:${seconds}`;
+      return `${hour}:${minutes}`;
     },
     startClock() {
       if (this.timer) clearInterval(this.timer);
