@@ -14,7 +14,7 @@
         }}"
     >
       <div class="flex flex-col">
-        <div>
+        <div class="relative">
           <div class="feedback-subtitle">{{$t('feedback.problemDescription')}}</div>
           <a-textarea
               maxlength="300"
@@ -22,6 +22,7 @@
               :placeholder="$t('feedback.inputDescribe')"
               :autosize="{ minRows: 4, maxRows: 6 }"
           ></a-textarea>
+          <div class="text-right text-xs">{{problemDescribe.length}} / 300</div>
         </div>
         <div class="mt-2 feedback-subtitle" v-if="useUploadImg">
           <div>{{$t('feedback.uploadImage')}}</div>
