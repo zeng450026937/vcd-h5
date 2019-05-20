@@ -148,8 +148,10 @@ model.provide({
       async handler(val) {
         if (val) {
           return setTimeout(() => { // 增加登陆时间
-            this.sidebar = initialSidebar();
-            this.currentSidebar = this.sidebarMap.meeting;
+            if (this.isRegistered) { // 防止中途退出
+              this.sidebar = initialSidebar();
+              this.currentSidebar = this.sidebarMap.meeting;
+            }
           }, 2000);
         }
 
