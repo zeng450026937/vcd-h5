@@ -32,7 +32,6 @@ model.provide({
       audioQuality               : null,
       videoQuality               : '720P',
       screenQuality              : null,
-      noiseSuppression           : true,
       highProfile                : false,
       horizontalMirroring        : false,
       // conference
@@ -55,6 +54,14 @@ model.provide({
   },
 
   computed : {
+    noiseSuppression : {
+      get() {
+        return rtc.media.localMedia.audioQuality.noiseSuppression;
+      },
+      set(val) {
+        rtc.media.localMedia.audioQuality.noiseSuppression = !!val;
+      },
+    },
   },
 
   middleware : {

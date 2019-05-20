@@ -19,10 +19,10 @@
           <volume-progress />
           <span class="test-mic-text leading-tight text-xs text-black6">{{$t('setting.audio.microphoneTest')}}</span>
         </div>
-        <!--<div class="mt-5">-->
-          <!--<a-switch size="small" v-model="noiseSuppression"/>-->
-          <!--<span class="ml-5">{{$t('setting.audio.clearNoise')}}</span>-->
-        <!--</div>-->
+        <div class="mt-5">
+          <a-switch size="small" v-model="noiseSuppression"/>
+          <span class="ml-5">{{$t('setting.audio.clearNoise')}}</span>
+        </div>
         <div class="flex flex-col mt-5">
           <span class="leading-normal">{{$t('setting.audio.audioOutput')}}</span>
 
