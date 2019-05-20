@@ -7,12 +7,12 @@
         <div class="header no-dragable flex w-full h-full border-b px-4">
           <div class="flex flex-grow h-full items-center">
             <a-iconfont type="icon-guanbi" class="cursor-pointer hover:text-red text-base"
-                        title="关闭"
+                        :title="$t('common.controls.close')"
                         @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
             <a-iconfont type="icon-tianjialianxiren"
-                        title="邀请成员"
+                        :title="$t('conversation.main.inviteMember')"
                         class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                         @click="showInviteModal"/>
             <div v-for="(tab, index) in tabList" :key="index">
@@ -24,7 +24,7 @@
                             :title="tab.title"
                             class="ml-4 cursor-pointer text-black9 text-base"
                             :class="{'text-indigo': currentTab === tab.comp,
-                          'hover:text-indigo-light': currentTab !== tab.comp}"
+                            'hover:text-indigo-light': currentTab !== tab.comp}"
                             @click="switchTab(tab.comp)"/>
               </a-badge>
             </div>
@@ -43,6 +43,7 @@ import TabLockConference from '../../../components/Conference/TabLockConference.
 import TabMemberView from '../../../components/Conference/TabMemberView.vue';
 import TabChatting from '../../../components/Conference/TabChatting.vue';
 import TabSetting from '../../../components/Conference/TabSetting.vue';
+import { $t } from '../../../i18n';
 
 export default {
   name       : 'ConferenceDrawer',
@@ -69,10 +70,10 @@ export default {
   computed : {
     tabList() {
       const tabList = [
-        { icon: 'icon-suoding', comp: 'TabLockConference', title: '锁定会议' },
-        { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: '成员列表' },
-        { icon: 'icon-liaotian', comp: 'TabChatting', title: '聊天' },
-        { icon: 'icon-kongzhi', comp: 'TabSetting', title: '会议设置' },
+        { icon: 'icon-suoding', comp: 'TabLockConference', title: $t('conversation.main.lockConference') },
+        { icon: 'icon-chengyuanliebiao', comp: 'TabMemberView', title: $t('conversation.main.memberList') },
+        { icon: 'icon-liaotian', comp: 'TabChatting', title: $t('conversation.main.chat') },
+        { icon: 'icon-kongzhi', comp: 'TabSetting', title: $t('conversation.main.setting') },
       ];
 
       const { currentUser } = this.$model.conference;

@@ -117,9 +117,9 @@ export function formatCalendar(data) {
     if (!cal['start-time']) return;
 
     cal.startMoment = moment(cal['start-time']);
-    cal.startTime = cal.startMoment.format('YYYY-MM-DD HH:mm');
+    cal.startTime = cal.startMoment.format('YYYY/MM/DD HH:mm');
     cal.expiryMoment = moment(cal['expiry-time']);
-    cal.expiryTime = cal.expiryMoment.format('YYYY-MM-DD HH:mm');
+    cal.expiryTime = cal.expiryMoment.format('YYYY/MM/DD HH:mm');
 
     cal.updateStatus = function() {
       this.status = genMeetingStatus(this.startTime,

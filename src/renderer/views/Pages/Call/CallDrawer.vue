@@ -6,7 +6,9 @@
       <div class="h-10">
         <div class="header flex w-full h-full border-b px-4">
           <div class="flex flex-grow h-full items-center">
-            <a-iconfont type="icon-guanbi" class="cursor-pointer hover:text-red text-base"
+            <a-iconfont type="icon-guanbi"
+                        class="cursor-pointer hover:text-red text-base"
+                        :title="$t('common.controls.close')"
                         @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
@@ -21,6 +23,7 @@
                        :dot="hasNewMessage && index === 0">
                 <a-iconfont v-if="isConnected || index !== 0"
                             :key="index" :type="tab.icon"
+                            :title="tab.title"
                             class="ml-4 cursor-pointer text-black9 text-base"
                             :class="{'text-indigo': currentTab === tab.is,
                             'hover:text-indigo-light': currentTab !== tab.is}"
@@ -40,6 +43,7 @@
 <script>
 import TabSetting from '../../../components/Call/TabSetting.vue';
 import TabChatting from '../../../components/Call/TabChatting.vue';
+import { $t } from '../../../i18n';
 
 export default {
   name       : 'CallDrawer',
@@ -64,8 +68,8 @@ export default {
 
   data() {
     const tabList = [
-      { icon: 'icon-liaotian', is: 'TabChatting' },
-      { icon: 'icon-kongzhi', is: 'TabSetting' },
+      { icon: 'icon-liaotian', is: 'TabChatting', title: $t('conversation.main.chat') },
+      { icon: 'icon-kongzhi', is: 'TabSetting', title: $t('conversation.main.setting') },
     ];
 
     return {

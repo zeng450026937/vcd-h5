@@ -30,7 +30,7 @@ export function getDate(date = new Date()) {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  return `${year}-${genDouble(month)}-${genDouble(day)}`;
+  return `${year}/${genDouble(month)}/${genDouble(day)}`;
 }
 
 export function getTime(time) {
