@@ -37,7 +37,7 @@
         <div class="meeting-form-content">
           <div class="join-meeting-form" v-show="!showSetting">
             <div class="join-meeting-form-header">
-              <div>{{$t('join.title.inputConferenceId')}}</div>
+              <div>{{$t('join.title.joinMeeting')}}</div>
               <div>
                 <a-iconfont
                     type="icon-kongzhi"
