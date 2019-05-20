@@ -134,12 +134,13 @@ export default class Store {
 
   genRootGroup(regenerate = false) {
     this.rootGroup.forEach((n) => {
-      if (!groupMap.hasOwnProperty(n.attributes.name)) return;
+      if (!groupMap.hasOwnProperty(n.attributes.name)) return; // 常用联系人在这里返回
 
       const groupInfo = this.clone(groupMap[n.attributes.name]);
 
       Object.assign(n, groupInfo);
       delete groupInfo.name;
+      delete groupInfo.i18n;
       const offspring = this.genOffspring(this.getNodeId(n), regenerate);
 
       offspring.forEach((i) => {
@@ -147,8 +148,11 @@ export default class Store {
       });
     });
 
-    if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) {
-      const groupInfo = groupMap[this.rootNode.attributes.name];
+
+    if (this.rootNode.attributes && groupMap.hasOwnProperty(this.rootNode.attributes.name)) { // 常用联系人
+      const groupInfo = this.clone(groupMap[this.rootNode.attributes.name]);
+
+      delete groupInfo.i18n;
 
       this.originTree.forEach((n) => {
         n = { ...groupInfo, ...n };
