@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-16 17:46:09 
+// 最新导入时间为 2019-5-20 18:33:09 
 module.exports = {
   name : 'login',
   lang : {
@@ -12,7 +12,7 @@ module.exports = {
       join               : '加入会议',
       forgetPassword     : '忘记密码',
       regist             : '注册账号',
-      firstLogin         : '首次登陆请先设置服务器',
+      firstLogin         : '首次登录请先设置服务器',
       serverSetting      : '服务器设置',
       proxyServerSetting : '代理服务器设置',
       proxyServerAddress : '代理服务器地址',
@@ -28,7 +28,7 @@ module.exports = {
         password     : '密码',
       },
       header : {
-        cloud    : '亿联云服务',
+        cloud    : '亿联云视讯',
         yms      : '亿联YMS',
         help     : '帮助',
         feedback : '反馈',
@@ -38,7 +38,7 @@ module.exports = {
         cancel  : '取消',
       },
       tips : {
-        isLogin : '登陆中...',
+        isLogin : '正在登录…',
       },
     },
     en : {
@@ -77,7 +77,7 @@ module.exports = {
         cancel  : 'Cancel',
       },
       tips : {
-        isLogin : 'Connecting...',
+        isLogin : 'Connecting…',
       },
     },
   },

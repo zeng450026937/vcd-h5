@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-16 17:46:09 
+// 最新导入时间为 2019-5-20 18:33:09 
 module.exports = {
   name : 'feedback',
   lang : {
@@ -7,7 +7,7 @@ module.exports = {
       submit             : '提交',
       cancel             : '取消',
       problemDescription : '请提出您的宝贵意见（必填）',
-      contactWay         : '联系方式 （选填）',
+      contactWay         : '联系方式（选填）',
       uploadImage        : '上传图片（可选）',
       requried           : '必填',
       optional           : '选填',
@@ -19,7 +19,7 @@ module.exports = {
       inputContactWay    : '请输入您的手机或邮箱',
       uploadLog          : '上传日志',
       uploadFailed       : '提交失败',
-      uploadSucceed      : '提交成功，感谢您的反馈',
+      uploadSucceed      : '提交成功，感谢您的反馈。',
     },
     en : {
       title              : 'Submit Feedback',
@@ -38,7 +38,7 @@ module.exports = {
       inputContactWay    : 'Please enter your phone number or email',
       uploadLog          : 'Upload Logs',
       uploadFailed       : 'Submission Failed',
-      uploadSucceed      : 'Submitted successfully, thank you for your feedback',
+      uploadSucceed      : 'Submitted successfully, thank you for your feedback.',
     },
   },
 };

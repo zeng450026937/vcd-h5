@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-16 17:46:09 
+// 最新导入时间为 2019-5-20 18:33:09 
 module.exports = {
   name : 'dial',
   lang : {
@@ -14,10 +14,10 @@ module.exports = {
       },
       dialpad : {
         clear     : '清空',
-        backspace : '退格',
+        backspace : '回删',
         addLocal  : '添加为本地联系人',
         videoCall : '视频呼叫',
-        audioCall : '音频呼叫',
+        audioCall : '语音呼叫',
         more      : '更多',
         del       : '删除',
       },
@@ -33,7 +33,7 @@ module.exports = {
       },
       button : {
         video : '视频通话',
-        audio : '音频通话',
+        audio : '语音通话',
       },
     },
     en : {

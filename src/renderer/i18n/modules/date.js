@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-16 17:46:09 
+// 最新导入时间为 2019-5-20 18:33:09 
 module.exports = {
   name : 'date',
   lang : {
@@ -24,7 +24,6 @@ module.exports = {
       Saturday  : 'Saturday',
       year      : '/',
       month     : '/',
-      day       : '',
     },
   },
 };
