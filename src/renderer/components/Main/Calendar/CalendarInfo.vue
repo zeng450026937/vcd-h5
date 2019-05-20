@@ -74,7 +74,9 @@
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.liveLink')}}</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
-                    <a class="truncate" @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
+                    <a class="truncate"
+                       :title="currentEvent.liveShareUrl"
+                       @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
                   <a class="text-xs text-indigo cursor-pointer ml-2"
                         @click="copyLiveShareUrl">{{$t('schedule.copy')}}</a>
@@ -259,11 +261,15 @@ export default {
       shell.openExternal(this.currentEvent.liveShareUrl);
     },
     copyLiveShareUrl() {
-      copy(this.currentEvent.liveShareUrl);
+      copy(this.currentEvent.liveShareUrl).then(() => {
+        this.$message.success(this.$t('schedule.copySucceed'));
+      });
     },
     copyShareUrl() {
       this.$model.schedule.fetchMailTemplate(this.currentEvent.recordId).then((val) => {
-        copy(val);
+        copy(val).then(() => {
+          this.$message.success(this.$t('schedule.copySucceed'));
+        });
       });
     },
   },
