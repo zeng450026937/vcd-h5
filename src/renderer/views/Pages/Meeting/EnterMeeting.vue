@@ -270,14 +270,14 @@ export default {
       this.modifiedAccounts = this.rawAccounts
         .sort((account1, account2) => account2.lastDate - account1.lastDate);
       this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
-      const account = this.modifiedAccounts[0] || {};
+      // const account = this.modifiedAccounts[0] || {};
 
-      this.meetingInfo = {
-        number       : account.number,
-        pin          : account.pin,
-        initialVideo : true,
-        initialAudio : false,
-      };
+      // this.meetingInfo = {
+      //   number       : account.number,
+      //   pin          : account.pin,
+      //   initialVideo : true,
+      //   initialAudio : false,
+      // };
       this.dSearch();
     },
   },

@@ -228,7 +228,7 @@ export default {
 
       this.tags.splice(index, 1);
 
-      this.$message.success(`${tag} ${this.$t('setting.common.deletePropertyNotice')}`);
+      this.$message.success(this.$t('setting.common.deletePropertyNotice'));
     },
   },
 };

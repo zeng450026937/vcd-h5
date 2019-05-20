@@ -76,8 +76,8 @@
                   <span class="text-indigo w-1 flex flex-grow truncate">
                     <a class="truncate" @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
                   </span>
-                  <span class="text-xs text-indigo cursor-pointer ml-2"
-                        @click="copyLiveShareUrl">{{$t('schedule.copy')}}</span>
+                  <a class="text-xs text-indigo cursor-pointer ml-2"
+                        @click="copyLiveShareUrl">{{$t('schedule.copy')}}</a>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">

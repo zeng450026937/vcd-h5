@@ -54,7 +54,7 @@ model.provide({
 
       if (!from) {
         from = new Date();
-        from.setHours(-7 * 24);
+        from.setHours(-8 * 24);
       }
       if (!to) {
         to = new Date();

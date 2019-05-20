@@ -1,17 +1,20 @@
 <template>
   <a-layout id="calendar-list" class="bg-white h-full">
-    <div class="px-2 h-full bg-white">
-      <div v-for="(event, index) in currentDateEvents" :key="index" class="mt-2">
-        <div class="flex flex-col p-3
-                    cursor-pointer rounded border hover:border-indigo"
+    <div class="p-2 h-full bg-white">
+      <div v-for="(event, index) in currentDateEvents" :key="index"
+           class="py-2 hover:bg-list-hover"
+           :class="{
+                  'border-b': index !== currentDateEvents.length - 1,
+                  'bg-expired': event.status.isEnded,
+                  'bg-white': !event.status.isEnded,
+                  'bg-list-select': event.scheduleId === currentEvent.scheduleId,
+               }">
+        <div class="flex flex-col p-3 cursor-pointer"
              :class="{
-               'border-indigo': event.scheduleId === currentEvent.scheduleId,
-               'bg-expired': event.status.isEnded,
-               'bg-white': !event.status.isEnded,
                'border-l-4 border-l-indigo': event.status.isRunning,
              }"
              @click="clickCalendar(event)">
-          <div class="text-sm flex w-full">
+          <div class="text-sm flex w-full leading-none">
             <div class="flex flex-grow w-1">
               <span class="truncate"
                     :title="event.subject">{{event.subject}}</span>

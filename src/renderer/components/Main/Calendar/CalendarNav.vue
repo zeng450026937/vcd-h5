@@ -63,7 +63,7 @@ export default {
   methods : {
     disabledStartDate(startValue) {
       startValue = moment(`${startValue.format('YYYY-MM-DD')} 00:00`);
-      const preWeek = new Date().setHours(-7 * 24);
+      const preWeek = new Date().setHours(-8 * 24);
       const afterWeek = new Date().setHours(7 * 24);
 
       return !startValue.isBetween(preWeek, afterWeek);
