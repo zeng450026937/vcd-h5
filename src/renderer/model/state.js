@@ -67,6 +67,7 @@ model.provide({
           });
         }
       }
+      else if (once && val === 'disconnected' && this.loginPopup) popup.destroy(this.loginPopup);
       // else if (this.loginPopup) popup.destroy(this.loginPopup);
     },
     handleEnterMeeting(val, once) {

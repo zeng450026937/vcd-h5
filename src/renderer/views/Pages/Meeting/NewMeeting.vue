@@ -128,9 +128,14 @@ export default {
 
       let noFinished = this.calendar.filter((ev) => this.getTimestamp(ev.expiryTime) - now >= 0);
 
-      noFinished = sortBy(noFinished, (n) => this.getTimestamp(n.startTime))[0] || {};
+      noFinished = sortBy(noFinished, (n) => this.getTimestamp(n.startTime))[0];
+      if (!noFinished) return {};
 
-      return noFinished || {};
+      if (noFinished.status.isEnded && !noFinished.startMoment.isSame(new Date())) {
+        noFinished = {};
+      }
+
+      return noFinished;
     },
     status() {
       return this.recentScheduleEvent.status || {};

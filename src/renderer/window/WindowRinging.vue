@@ -8,7 +8,10 @@
       </div>
       <div class="flex flex-grow content mt-3">
         <div class="flex h-12 w-full">
-          <a-avatar :size="48" class="target-avatar">{{this.displayName.substr(-2,2)}}</a-avatar>
+          <a-avatar :size="48" class="target-avatar">
+            <span v-if="conferenceInviter">{{this.displayName.substr(-2,2)}}</span>
+            <a-iconfont v-else type="icon-huiyishi"/>
+          </a-avatar>
           <div class="flex flex-col ml-5 truncate w-1 flex-grow">
             <div class="truncate text-base leading-none font-bold">
               {{this.displayName}}
@@ -20,10 +23,13 @@
 
       <div class="flex justify-center mt-4 self-end mb-4 mr-4">
         <!--麦克风（接听）-->
-        <a-button v-if="isVideoCall || conferenceInviter" class="text-base w-36"
+        <a-button v-if="isVideoCall || conferenceInviter"
+                  class="text-base flex items-center"
+                  style="max-width: 160px"
+                  :title="$t('conversation.controls.changeToAudio')"
                   @click="transferToAudio">
           <a-iconfont type="icon-qiehuan"/>
-          {{$t('conversation.controls.changeToAudio')}}
+          <span class="truncate">{{$t('conversation.controls.changeToAudio')}}</span>
         </a-button>
         <!--麦克风（接听）-->
         <a-button class="text-base w-14 ml-3 text-white border-transparent"
@@ -45,11 +51,17 @@
 import { remote } from 'electron';
 
 export default {
-  name     : 'WindowRinging',
+  name : 'WindowRinging',
+  data() {
+    return {
+      subject : '',
+      number  : '',
+    };
+  },
   computed : {
     ringText() {
       return this.conferenceInviter
-        ? this.$t('conversation.invite.videoConferenceInvite')
+        ? this.number
         : this.isVideoCall
           ? this.$t('conversation.invite.videoCallInvite')
           : this.$t('conversation.invite.audioCallInvite');
@@ -64,6 +76,7 @@ export default {
       return (window.opener && window.opener.kom) || window.kom;
     },
     displayName() {
+      if (this.conferenceInviter) return this.subject;
       const { remoteIdentity } = this.rtc.call.incoming[0];
 
       return (remoteIdentity && (remoteIdentity.display_name
@@ -86,6 +99,13 @@ export default {
     setInterval(() => {
       this.checkStatus();
     }, 1000);
+    if (this.conferenceInviter) {
+      this.number = this.rtc.account.newChannel[0].request.headers['Apollo-Conference-Number'][0].raw;
+
+      this.rtc.conference.cm.command('getConferenceByConfNumber')(this.number).then((val) => {
+        this.subject = val['conference-info']['conference-description'].subject;
+      });
+    }
   },
   beforeDestroy() {
     window.updatePosition = null;

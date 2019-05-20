@@ -47,8 +47,8 @@ module.exports = {
         with          : '与',
         communicating : '通话中',
         unknownUser   : '未知用户',
-        audioSubject  : '{target} 的会议',
-        videoSubject  : '{target} 的会议',
+        audioSubject  : '{target} 的音频会议',
+        videoSubject  : '{target} 的视频会议',
       },
       statistics : {
         send              : '发送',
@@ -282,8 +282,8 @@ module.exports = {
         with          : 'Call with ',
         communicating : ' ',
         unknownUser   : 'Unknown user',
-        audioSubject  : "{target}'s meeting",
-        videoSubject  : "{target}'s meeting",
+        audioSubject  : "{target}'s audio meeting",
+        videoSubject  : "{target}'s video meeting",
       },
       statistics : {
         send              : 'Sent',
