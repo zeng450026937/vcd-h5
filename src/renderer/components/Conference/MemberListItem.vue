@@ -128,24 +128,51 @@
       <div class="w-full h-full flex px-4 py-2 text-xs border-b">
         <div class="flex flex-col w-1/3 justify-between">
           <span class="opacity-0">/</span>
-          <span>{{$t('conversation.statistics.bitrate')}}</span>
-          <span>{{$t('conversation.statistics.ratio')}}</span>
-          <span>{{$t('conversation.statistics.frameRate')}}</span>
-          <span>{{$t('conversation.statistics.codec')}}</span>
+          <span :title="$t('conversation.statistics.bitrate')">
+            {{$t('conversation.statistics.bitrate')}}
+          </span>
+          <template v-if="isVideoConference">
+            <span :title="$t('conversation.statistics.ratio')">
+              {{$t('conversation.statistics.ratio')}}
+            </span>
+            <span :title="$t('conversation.statistics.frameRate')">
+              {{$t('conversation.statistics.frameRate')}}</span>
+          </template>
+          <span :title="$t('conversation.statistics.codec')">
+            {{$t('conversation.statistics.codec')}}</span>
+          <template v-if="!isVideoConference">
+            <span :title="$t('conversation.statistics.packetsLost')">
+              {{$t('conversation.statistics.packetsLost')}}</span>
+            <span class="truncate"
+                  :title="$t('conversation.statistics.packetsLostRate')">
+              {{$t('conversation.statistics.packetsLostRate')}}</span>
+          </template>
         </div>
         <div class="flex flex-col w-1/3 justify-between">
           <span>{{$t('conversation.statistics.send')}}</span>
           <span>{{deviceInfo.recv.bitrate}}</span>
-          <span>{{deviceInfo.recv.ratio}}</span>
-          <span>{{deviceInfo.recv.frameRate}}</span>
+          <template v-if="isVideoConference">
+            <span>{{deviceInfo.recv.ratio}}</span>
+            <span>{{deviceInfo.recv.frameRate}}</span>
+          </template>
           <span>{{deviceInfo.recv.codec}}</span>
+          <template v-if="!isVideoConference">
+            <span>{{deviceInfo.recv.packetlost}}</span>
+            <span>{{deviceInfo.recv.lossrate}}</span>
+          </template>
         </div>
         <div class="flex flex-col w-1/3 justify-between">
           <span>{{$t('conversation.statistics.receive')}}</span>
           <span>{{deviceInfo.send.bitrate}}</span>
-          <span>{{deviceInfo.send.ratio}}</span>
-          <span>{{deviceInfo.send.frameRate}}</span>
+          <template v-if="isVideoConference">
+            <span>{{deviceInfo.send.ratio}}</span>
+            <span>{{deviceInfo.send.frameRate}}</span>
+          </template>
           <span>{{deviceInfo.send.codec}}</span>
+          <template v-if="!isVideoConference">
+            <span>{{deviceInfo.send.packetlost}}</span>
+            <span>{{deviceInfo.send.lossrate}}</span>
+          </template>
         </div>
       </div>
 
@@ -216,7 +243,7 @@ export default {
   },
   sketch : {
     ns    : 'conference.sketch',
-    props : [ 'filterText', 'selectedMember' ],
+    props : [ 'filterText', 'selectedMember', 'isVideoConference' ],
   },
   computed : {
     // 几种操作项相应的规则
@@ -399,16 +426,24 @@ export default {
     updateDeviceInfo() {
       this.isUpdating = true;
       this.item.getStatistics().then((result) => {
-        const videoInfo = result['main-video'];
+        const statInfo = result[this.isVideoConference ? 'main-video' : 'main-audio'];
 
-        this.deviceInfo.recv.bitrate = prettyBytes(videoInfo.recv.bitrate);
-        this.deviceInfo.send.bitrate = prettyBytes(videoInfo.send.bitrate);
-        this.deviceInfo.recv.ratio = `${videoInfo.recv.width} x ${videoInfo.recv.height}`;
-        this.deviceInfo.send.ratio = `${videoInfo.send.width} x ${videoInfo.send.height}`;
-        this.deviceInfo.recv.frameRate = `${videoInfo.recv.fr} fps`;
-        this.deviceInfo.send.frameRate = `${videoInfo.send.fr} fps`;
-        this.deviceInfo.recv.codec = videoInfo.recv.codec;
-        this.deviceInfo.send.codec = videoInfo.send.codec;
+        this.deviceInfo.recv.bitrate = prettyBytes(statInfo.recv.bitrate);
+        this.deviceInfo.send.bitrate = prettyBytes(statInfo.send.bitrate);
+        this.deviceInfo.recv.codec = statInfo.recv.codec;
+        this.deviceInfo.send.codec = statInfo.send.codec;
+        this.deviceInfo.recv.frameRate = `${statInfo.recv.fr} fps`;
+        this.deviceInfo.send.frameRate = `${statInfo.send.fr} fps`;
+        if (this.isVideoConference) {
+          this.deviceInfo.recv.ratio = `${statInfo.recv.width} x ${statInfo.recv.height}`;
+          this.deviceInfo.send.ratio = `${statInfo.send.width} x ${statInfo.send.height}`;
+        }
+        else {
+          this.deviceInfo.recv.packetlost = statInfo.recv.packetlost;
+          this.deviceInfo.send.packetlost = statInfo.send.packetlost;
+          this.deviceInfo.recv.lossrate = `${statInfo.recv.lossrate}%`;
+          this.deviceInfo.send.lossrate = `${statInfo.send.lossrate}%`;
+        }
         this.isUpdating = false;
       }).catch(() => {
         this.$message.error(this.$t('conversation.statistics.message.fetchFailed'));
