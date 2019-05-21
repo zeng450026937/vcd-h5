@@ -1,6 +1,5 @@
 import Vuem from '../vuem';
 import { Phonebook } from './phonebook';
-import { getTemporaryToken } from './token';
 import rtc from '../../rtc';
 
 
@@ -24,7 +23,6 @@ const CONTACT_TYPES = [
 model.provide({
   data() {
     return {
-      token     : null,
       phonebook : {
         dataLoaded : false,
         loadFailed : false,
@@ -47,14 +45,33 @@ model.provide({
     isRegistered() {
       return rtc.account.status === 'registered';
     },
+    digest() {
+      return this.$getVM('digest');
+    },
+    token() {
+      return this.digest.token;
+    },
+    domain() {
+      return this.digest.domain;
+    },
   },
-  beforeCreate() {
-    this.$phonebook = new Phonebook();
+  watch : {
+    isRegistered(val) {
+      if (!val) this.reset();
+    },
+    token(val) {
+      if (val && this.$phonebook) {
+        this.$phonebook.updateToken(val);
+      }
+    },
+    domain(val) {
+      if (val && this.$phonebook) {
+        this.$phonebook.updateDomain(val);
+      }
+    },
   },
   async created() {
-    // if (this.isCloud) {
-    //   this.token = await this.getToken();
-    // }
+    this.$phonebook = new Phonebook({ domain: this.domain });
 
     rtc.account.$on('negotiateUrlUpdated', this.initNegotiate);
     rtc.account.$on('phonebookUpdated', this.initNegotiate);
@@ -68,46 +85,34 @@ model.provide({
       };
       this.$phonebook.reset();
     },
-    async getToken() {
-      return getTemporaryToken();
-    },
     format(contacts) {
       contacts.forEach((n) => {
         n.node.type = CONTACT_TYPES[n.node.type];
       });
     },
     async initNegotiate() {
-      // this.phonebook.dataLoaded = false;
-      // this.phonebook.dataLoadFailed = false;
-      //
-      // if (this.isCloud) {
-      //   this.$phonebook.negotiate();
-      //
-      //   return this.$phonebook.sync()
-      //     .then((list) => {
-      //       list._isVue = true;
-      //       this.format(list);
-      //       this.phonebook.list = list;
-      //       this.phonebook.dataLoaded = true;
-      //     }).catch((e) => {
-      //       this.phonebook.dataLoadFailed = true;
-      //     });
-      // }
+      this.phonebook.dataLoaded = false;
+      this.phonebook.dataLoadFailed = false;
+
+      if (this.isCloud) {
+        this.$phonebook.negotiate();
+
+        return this.$phonebook.sync()
+          .then((list) => {
+            list._isVue = true;
+            this.format(list);
+            this.phonebook.list = list;
+            this.phonebook.dataLoaded = true;
+          }).catch((e) => {
+            this.phonebook.dataLoadFailed = true;
+          });
+      }
 
       return rtc.contact.initNegotiate().catch(() => {});
     },
 
   },
-  watch : {
-    isRegistered(val) {
-      if (!val) this.reset();
-    },
-    token(val) {
-      if (val && this.$phonebook) {
-        this.$phonebook.updateToken(val);
-      }
-    },
-  },
+
 
 });
 

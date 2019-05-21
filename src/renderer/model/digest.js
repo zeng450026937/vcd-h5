@@ -21,6 +21,22 @@ model.provide({
 
     };
   },
+  computed : {
+    domain() {
+      return `${this.protocol}${this.address}:${this.port}`;
+    },
+    uri() {
+      return `${this.protocol}${this.address}${this.port}`;
+    },
+    nc() {
+      const str = String(this.count);
+
+      return Array((8 - str.length))
+        .fill(0)
+        .map(() => 0)
+        .join('') + str;
+    },
+  },
   middleware : {
     async loadAccount(ctx, next) {
       await next();
@@ -189,19 +205,7 @@ model.provide({
   created() {
     this.updateCnonce();
   },
-  computed : {
-    uri() {
-      return `${this.protocol}${this.address}${this.port}`;
-    },
-    nc() {
-      const str = String(this.count);
 
-      return Array((8 - str.length))
-        .fill(0)
-        .map(() => 0)
-        .join('') + str;
-    },
-  },
   watch : {
 
   },

@@ -25,6 +25,11 @@ model.provide({
       server    : '',
     };
   },
+  computed : {
+    isCloud() {
+      return this.serverType === 'cloud';
+    },
+  },
   middleware : {
     async login(ctx, next) {
       await next();

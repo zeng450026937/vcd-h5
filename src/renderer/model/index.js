@@ -6,6 +6,7 @@ import updater from './updater';
 import ytms from './ytms';
 import media from './media';
 import account from './account';
+import digest from './digest';
 import state from './state';
 import contact from './contact';
 import schedule from './schedule';
@@ -19,7 +20,7 @@ import errorMessage from './middleware/error-message';
 import i18n from './i18n';
 import notify from './notify';
 import fetchContact from './fetchContact';
-import digest from './digest';
+
 
 Vue.use(Vuem);
 
@@ -32,6 +33,7 @@ model.mount('updater', updater);
 model.mount('ytms', ytms);
 model.mount('media', media);
 model.mount('account', account);
+model.mount('digest', digest);
 model.mount('contact', contact);
 model.mount('schedule', schedule);
 model.mount('meeting', meeting);
@@ -43,7 +45,6 @@ model.mount('ui', ui);
 model.mount('streamManager', streamManager);
 model.mount('notify', notify);
 model.mount('fetchContact', fetchContact);
-model.mount('digest', digest);
 
 // logging middleware must be the first one
 model.use(async(ctx, next) => {

@@ -6,14 +6,18 @@ const port = '9996';
 
 
 export class Phonebook {
-  constructor(token) {
+  constructor({ token, domain }) {
     this.token = token;
+    this.domain = domain;
     this.init();
   }
 
-
   updateToken(token) {
     this.token = token;
+  }
+
+  updateDomain(domain) {
+    this.domain = domain;
   }
 
   init() {
@@ -30,7 +34,7 @@ export class Phonebook {
   }
 
   async negotiate() {
-    const path = `${protocol}${address}:${port}/negotiate`;
+    const path = `${this.domain}/negotiate`;
 
     const res = await Axios(
       {
@@ -85,7 +89,7 @@ export class Phonebook {
       type              : this.type.join(','),
     };
 
-    const path = `${protocol}${address}:${port}/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
+    const path = `${this.domain}/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
 
     let res;
 

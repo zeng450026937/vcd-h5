@@ -1,3 +1,6 @@
+/*
+* 测试用 获取临时token
+* */
 import Axios from 'axios';
 
 const ADDRESS = '10.5.200.209';
