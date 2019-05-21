@@ -49,6 +49,9 @@
 <script>
 import { remote } from 'electron';
 
+const kom = (window.opener && window.opener.kom) || window.kom;
+const $t = kom.vm.i18n.t;
+
 export default {
   name : 'notification',
   data() {
@@ -61,21 +64,21 @@ export default {
       if (!startTime) return '';
 
       const now = Date.now();
-      const start = startTime.valueOf();
+      const start = new Date(startTime).valueOf();
 
-      if (start - now > 1000 * 60 * 4) return this.$t('schedule.tip.confStartFiveMin');
+      if (start - now > 1000 * 60 * 4) return $t('schedule.tip.confStartFiveMin');
 
-      if (start - now < 1000 * 60 * 4 && start - now > 0) return this.$t('schedule.tip.confStartFiveMin');
+      if (start - now < 1000 * 60 * 4 && start - now > 0) return $t('schedule.tip.confStartFiveMin');
 
-      if (start - now < 0) return this.$t('schedule.tip.confIsRunning');
+      if (start - now < 0) return $t('schedule.tip.confIsRunning');
     },
   },
   computed : {
     $t() {
-      return this.kom.vm.i18n.t;
+      return $t;
     },
     kom() {
-      return (window.opener && window.opener.kom) || window.kom;
+      return kom;
     },
     conference() {
       return this.scheduleEvents[0] || {};
