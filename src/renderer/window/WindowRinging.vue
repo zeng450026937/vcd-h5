@@ -24,8 +24,8 @@
       <div class="flex justify-center mt-4 self-end mb-4 mr-4">
         <!--麦克风（接听）-->
         <a-button v-if="isVideoCall || conferenceInviter"
-                  class="text-base flex items-center"
-                  style="max-width: 160px"
+                  class="flex items-center"
+                  style="max-width: 160px;font-size: 14px"
                   :title="$t('conversation.controls.changeToAudio')"
                   @click="transferToAudio">
           <a-iconfont type="icon-qiehuan"/>

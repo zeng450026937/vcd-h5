@@ -330,7 +330,7 @@ module.exports = {
         more                    : 'More',
         toAudio                 : 'Switch to audio call',
         toAudioCall             : 'Switch to audio call',
-        changeToAudio           : 'Switch to audio call',
+        changeToAudio           : 'Switch to audio',
         toAudioConference       : 'Switch to audio meeting',
         plate                   : 'Keyboard',
         exitConference          : 'Leave Meeting',

@@ -19,7 +19,7 @@
             <div class="text-base leading-none font-bold truncate" :title="conference.subject">
               {{conference.subject}}
             </div>
-            <div class="leading-none mt-4 truncate flex justify-between" >
+            <div class="leading-none mt-3 truncate flex justify-between" style="height: 24px">
               <span class="text-xs">
                 {{conference['conference-number']}}
               </span>
