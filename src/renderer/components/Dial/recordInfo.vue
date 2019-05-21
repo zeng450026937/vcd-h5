@@ -1,10 +1,10 @@
 <template>
   <div class="h-full w-full">
     <div class="h-full  bg-white flex items-center flex-col" v-if="ready">
-      <div class="flex w-3/4 flex-col h-full">
+      <div class="flex w-full px-20 flex-col h-full">
         <div v-if="!this.recordInfo.isConference">
-          <div class="flex py-5 items-center w-full border-b">
-            <div class="flex flex-col truncate" style="max-width: 600px">
+          <div class="flex py-5 items-center w-full border-b justify-between">
+            <div class="flex flex-col flex-grow w-1 truncate">
               <div class="font-semibold leading-normal text-base items-center truncate">
                 {{contact.name}}
               </div>
@@ -12,12 +12,11 @@
                 {{$t('contact.label.unknownInfo')}}
               </div>
             </div>
-            <div class="flex flex-grow"></div>
             <div class="ml-16">
-              <a-avatar :size="72" v-if="!contact.unknown">
+              <a-avatar :size="80" v-if="!contact.unknown">
                 <span class="text-lg">{{contact.name}}</span>
               </a-avatar>
-              <a-avatar :size="72" v-else class="bg-indigo" icon="team"></a-avatar>
+              <a-avatar :size="80" v-else class="bg-indigo" icon="team"></a-avatar>
             </div>
           </div>
         </div>
@@ -33,7 +32,7 @@
             </div>
             <div class="flex flex-grow"></div>
             <div class="ml-16">
-              <a-avatar :size="72" class="bg-indigo">
+              <a-avatar :size="80" class="bg-indigo">
                 <a-iconfont class="text-3xl" type="icon-huiyishi"></a-iconfont>
               </a-avatar>
             </div>
@@ -43,26 +42,27 @@
         <div>
           <div class="flex flex-col py-5 border-b" v-if="!this.recordInfo.isConference">
             <div v-if="!contact.unknown">
-              <a-row class="text-xs">
-                <a-col :span="24" class="leading-tight">
-                  <a-row>
-                    <a-col :span="2">{{$t('contact.label.name')}}</a-col>
-                    <a-col :span="8">{{contact.number}}</a-col>
-                    <a-col :span="2">{{$t('contact.label.email')}}</a-col>
-                    <a-col :span="8">{{contact.email}}</a-col>
-                  </a-row>
-                </a-col>
-                <a-col :span="24" class="mt-3 leading-tight">
-                  <a-row>
-                    <a-col :span="2">{{$t('contact.label.phone')}}</a-col>
-                    <a-col :span="8">{{contact.phone}}</a-col>
-                    <a-col :span="2">{{$t('contact.label.department')}}</a-col>
-                    <a-col :span="8" class="text-indigo">
-                      {{contact.parentNode}}{{contact.isLocal ? $t('contact.local.describe') : ''}}
-                    </a-col>
-                  </a-row>
-                </a-col>
-              </a-row>
+              <div class="flex leading-tight text-sm">
+                <div class="flex flex-col text-black6">
+                  <span>{{$t('contact.label.account')}}</span>
+                  <span class="mt-5">{{$t('contact.label.phone')}}</span>
+                </div>
+                <div class="flex flex-col ml-4 w-1/3 justify-between">
+                  <span>{{contact.number}}</span>
+                  <span class="mt-5">{{contact.phone}}</span>
+                </div>
+                <div class="flex flex-col ml-10 text-black6">
+                  <span>{{$t('contact.label.email')}}</span>
+                  <span class="mt-5">{{$t('contact.label.department')}}</span>
+                </div>
+                <div class="flex flex-col ml-4 justify-between w-1/3">
+                  <span>{{contact.email}}</span>
+                  <span class="text-indigo mt-5">
+                    {{contact.parentNode}}{{contact.isLocal ? $t('contact.local.describe') : ''}}
+                  </span>
+                </div>
+              </div>
+
             </div>
             <div v-else>
               <div class="text-xs">
