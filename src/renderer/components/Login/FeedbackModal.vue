@@ -135,7 +135,7 @@ export default {
       return input;
     },
     getLogFileName() {
-      return `vc-desktop.${getDate()}.log`;
+      return `vc-desktop.${getDate(new Date(), '-')}.log`;
     },
     reset() {
       this.fileList = [];

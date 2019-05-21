@@ -24,13 +24,13 @@ export function isYesterday(time) {
   return diff > 0 && diff < 24 * 60 * 60 * 1000;
 }
 
-export function getDate(date = new Date()) {
+export function getDate(date = new Date(), separator = '/') {
   date = new Date(date);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  return `${year}/${genDouble(month)}/${genDouble(day)}`;
+  return `${year}${separator}${genDouble(month)}${separator}${genDouble(day)}`;
 }
 
 export function getTime(time) {
