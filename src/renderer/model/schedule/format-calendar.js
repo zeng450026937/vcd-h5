@@ -1,33 +1,54 @@
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import { camelize } from '../../lib/string-transform';
+import { $t } from '../../i18n';
 
 const WEEK_MAP = {
-  Monday    : '星期一',
-  Tuesday   : '星期二',
-  Wednesday : '星期三',
-  Thursday  : '星期四',
-  Friday    : '星期五',
-  Saturday  : '星期六',
-  Sunday    : '星期日',
+  Monday    : 'schedule.info.monday',
+  Tuesday   : 'schedule.info.tuesday',
+  Wednesday : 'schedule.info.wednesday',
+  Thursday  : 'schedule.info.thursday',
+  Friday    : 'schedule.info.friday',
+  Saturday  : 'schedule.info.saturday',
+  Sunday    : 'schedule.info.sunday',
 };
 
 const DAY_MAP = {
-  Sunday     : '星期日',
-  Monday     : '星期一',
-  Tuesday    : '星期二',
-  Wednesday  : '星期三',
-  Thursday   : '星期四',
-  Friday     : '星期五',
-  Saturday   : '星期六',
-  Day        : '日子',
-  Weekday    : '工作日',
-  WeekendDay : '周末',
+  Sunday     : 'schedule.info.sunday',
+  Monday     : 'schedule.info.monday',
+  Tuesday    : 'schedule.info.tuesday',
+  Wednesday  : 'schedule.info.wednesday',
+  Thursday   : 'schedule.info.thursday',
+  Friday     : 'schedule.info.friday',
+  Saturday   : 'schedule.info.saturday',
+  Day        : 'schedule.info.day',
+  Weekday    : 'schedule.info.weekday',
+  WeekendDay : 'schedule.info.weekendDay',
 };
 
-const INDEX_MAP = [ '', '第一个', '第二个', '第三个', '第四个' ];
+const INDEX_MAP = [
+  '',
+  'schedule.info.first',
+  'schedule.info.second',
+  'schedule.info.third',
+  'schedule.info.fourth',
+];
 
-const MONTH_LIST = [ '', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二' ];
+const MONTH_LIST = [
+  '',
+  'schedule.info.one',
+  'schedule.info.two',
+  'schedule.info.three',
+  'schedule.info.four',
+  'schedule.info.five',
+  'schedule.info.six',
+  'schedule.info.seven',
+  'schedule.info.eight',
+  'schedule.info.nine',
+  'schedule.info.ten',
+  'schedule.info.eleven',
+  'schedule.info.twelve',
+];
 
 const genPattern = (decurs, recurrencePattern) => {
   const interval = recurrencePattern['@interval'] === 1 ? '' : recurrencePattern['@interval'];
@@ -36,33 +57,40 @@ const genPattern = (decurs, recurrencePattern) => {
 
   switch (decurs) {
     case 'RECURS_DAILY': {
-      title = `每${interval}天发生`;
+      title = $t('schedule.format.recursDaily', { interval });// `每${interval}天发生`;
       break;
     }
     case 'RECURS_WEEKLY': {
-      const daysOfWeek = recurrencePattern['@days-of-week'].split(',').map((_) => WEEK_MAP[_]).join(',');
+      const daysOfWeek = recurrencePattern['@days-of-week'].split(',').map((_) => $t(WEEK_MAP[_])).join(',');
 
-      title = `每${interval}周的${daysOfWeek}发生`;
+      title = $t('schedule.format.recursWeekly', { interval, daysOfWeek });
       break;
     }
     case 'RECURS_MONTHLY': {
-      title = `每${interval}个月的第${recurrencePattern['@day-of-month']}天发生`;
+      title = $t('schedule.format.recursMonthly', { interval, dayOfMonth: recurrencePattern['@day-of-month'] });
       break;
     }
     case 'RECURS_MONTH_NTH': {
       const index = recurrencePattern['@day-of-week-index'];
 
-      title = `每${interval}个月的${index > 0 ? INDEX_MAP[index] : '最后一个'}${DAY_MAP[recurrencePattern['@days-of-week']]}发生`;
+      const dayOfWeek = $t(index > 0 ? INDEX_MAP[index] : 'schedule.format.last') + $t(DAY_MAP[recurrencePattern['@days-of-week']]);
+
+      title = $t('schedule.format.recursMonthNth', { interval, dayOfWeek });
       break;
     }
     case 'RECURS_YEARLY': {
-      title = `每${interval}年的${MONTH_LIST[recurrencePattern['@month-of-year']]}月的第${recurrencePattern['@day-of-month']}天发生`;
+      const monthOfYear = $t(MONTH_LIST[recurrencePattern['@month-of-year']]);
+      const dayOfMonth = recurrencePattern['@day-of-month'];
+
+      title = $t('schedule.format.recursYearly', { interval, monthOfYear, dayOfMonth });
       break;
     }
     case 'RECURS_YEAR_NTH': {
       const index = recurrencePattern['@day-of-week-index'];
+      const monthOfYear = $t(MONTH_LIST[recurrencePattern['@month-of-year']]);
+      const daysOfWeek = $t(index > 0 ? INDEX_MAP[index] : 'schedule.format.last') + $t(DAY_MAP[recurrencePattern['@days-of-week']]);
 
-      title = `每${interval}年的${MONTH_LIST[recurrencePattern['@month-of-year']]}月${index > 0 ? INDEX_MAP[index] : '最后一个'}${DAY_MAP[recurrencePattern['@days-of-week']]}发生`;
+      title = $t('recursYearlyNth', { interval, monthOfYear, daysOfWeek });
       break;
     }
     default: break;
@@ -78,13 +106,34 @@ const genPattern = (decurs, recurrencePattern) => {
   const conferenceEndTime = recurrencePattern['@conference-end-time'];
 
   if (hasNoEndDate) { // 无结束时间
-    time = `${patternStartDate} 从 ${conferenceStartTime} 至 ${conferenceEndTime}`;
+    time = $t('schedule.format.fromTo',
+      {
+        start : patternStartDate,
+        from  : conferenceStartTime,
+        to    : conferenceEndTime,
+      });
+
+    // time = `${patternStartDate} 从 ${conferenceStartTime} 至 ${conferenceEndTime}`;
   }
   else if (occurrences > 0) {
-    time = `${patternStartDate}，重复${occurrences}次后结束 从 ${conferenceStartTime} 至 ${conferenceEndTime}`;
+    // time = `${patternStartDate}，重复${occurrences}次后结束 从 ${conferenceStartTime} 至 ${conferenceEndTime}`;
+    time = $t('schedule.format.repeatFromTo',
+      {
+        start : patternStartDate,
+        occurrences,
+        from  : conferenceStartTime,
+        to    : conferenceEndTime,
+      });
   }
   else {
-    time = `${patternStartDate} 至 ${patternEndDate} 从 ${conferenceStartTime} 至 ${conferenceEndTime}`;
+    // time = `${patternStartDate} 至 ${patternEndDate} 从 ${conferenceStartTime} 至 ${conferenceEndTime}`;
+    time = $t('schedule.format.toFromTo',
+      {
+        start : patternStartDate,
+        end   : patternEndDate,
+        from  : conferenceStartTime,
+        to    : conferenceEndTime,
+      });
   }
 
   return {

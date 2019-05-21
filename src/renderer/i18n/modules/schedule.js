@@ -27,6 +27,7 @@ module.exports = {
       emptySchedule   : '暂无会议日程',
       backToday       : '回到今天',
       reservation     : '预约会议',
+      copySucceed     : '复制成功',
       tip             : {
         confStartFiveMin : '5分钟后开始',
         confStartNow     : '即将开始',
@@ -40,7 +41,7 @@ module.exports = {
         friday     : '星期五',
         saturday   : '星期六',
         sunday     : '星期日',
-        day        : '日',
+        day        : '日', // 日子 ?
         weekday    : '工作日',
         weekendDay : '周末',
         first      : '第一个',
@@ -66,8 +67,11 @@ module.exports = {
         recursMonthly   : '每{interval}个月的第{dayOfMonth}天发生',
         recursMonthNth  : '每{interval}个月的{dayOfWeek}发生',
         recursYearly    : '每{interval}年的{monthOfYear}月的第{dayOfMonth}天发生',
-        recursYearlyNth : '每{interval}年的{monthOfYear}{daysOfWeek}发生',
+        recursYearlyNth : '每{interval}年的{monthOfYear}月{daysOfWeek}发生',
         last            : '最后一个',
+        fromTo          : '{start} 开始， {from} 至 {to}',
+        repeatFromTo    : '{start}开始，重复{occurrences}次后结束  {from} 至 {to}',
+        toFromTo        : '{start} 开始至{end} 结束，{from} 至 {to}',
       },
     },
     en : {
@@ -95,6 +99,7 @@ module.exports = {
       emptySchedule   : 'No Scheduled Meetings',
       backToday       : 'Today',
       reservation     : 'Schedule a Meeting',
+      copySucceed     : 'Copied',
       tip             : {
         confStartFiveMin : 'Starts in 5 minutes',
         confStartNow     : 'Now',
@@ -136,6 +141,9 @@ module.exports = {
         recursYearly    : 'Occurs every {interval} years {monthOfYear} month on the {dayOfMonth}',
         recursYearlyNth : 'Occurs every {interval} years {monthOfYear} month on the {daysOfWeek}',
         last            : 'Last',
+        fromTo          : 'Starts on {start} from {from} to {to}',
+        repeatFromTo    : 'Starts on {start}，{occurrences} occurrences, from {from} to {to}',
+        toFromTo        : 'Starts on {start} until {end} , from {from} to {to}',
       },
     },
   },

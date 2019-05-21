@@ -131,7 +131,7 @@ export default {
       noFinished = sortBy(noFinished, (n) => this.getTimestamp(n.startTime))[0];
       if (!noFinished) return {};
 
-      if (noFinished.status.isEnded && !noFinished.startMoment.isSame(new Date())) {
+      if (noFinished.status.isEnded || !noFinished.startMoment.isSame(new Date())) {
         noFinished = {};
       }
 

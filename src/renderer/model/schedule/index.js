@@ -38,10 +38,13 @@ model.provide({
 
       return this.merged;
     },
-
+    language() {
+      return this.$parent.i18n.language;
+    },
     calendar() {
       /* eslint-disable no-unused-expressions */
       this.lastUpdated;
+      // this.$getVM('i18n').language;
       /* eslint-enable no-unused-expressions */
 
       return formatCalendar(this.merged);
@@ -267,6 +270,15 @@ model.provide({
         this.currentDateEvents = [];
         this.currentEvent = {};
       }
+    },
+    language() {
+      if (!this.currentEvent || !this.currentEvent.isRecurrence) return;
+      const planId = this.currentEvent['@planId'];
+
+      this.currentEvent = {};
+      Promise.resolve().then(() => {
+        this.currentEvent = this.calendar.find((event) => event['@planId'] === planId) || {};
+      });
     },
   },
 
