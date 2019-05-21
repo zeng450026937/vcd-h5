@@ -33,7 +33,7 @@ model.provide({
       return this.isVideoConference && rtc.conference.connecting;
     },
     acquireDetachedStreamInConference() {
-      return this.$parent.conference.sketch.isVideoConference && rtc.conference.connected;
+      return this.$parent.conference.sketch.isVideoConference && rtc.conference.connected && !this.enableLocalVideo;
     },
     // 会议中是否需要释放本地视频流
     releaseStreamInConference() {
@@ -79,7 +79,7 @@ model.provide({
         rtc.media.localMedia.acquireStream();
         console.warn('获取通话视频流');
         setTimeout(() => {
-          if (this.$parent.call.isVideoCall) {
+          if (this.$parent.call.isVideoCall && !this.enableLocalVideo) {
             rtc.media.localMedia.acquireDetachedStream().then((s) => {
               rtc.call.channel.replaceLocalStream(s);
             });
