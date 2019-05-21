@@ -181,6 +181,10 @@ model.provide({
       { immediate: true }
     );
 
+    setTimeout(() => {
+      this.checkForUpdates();
+    }, 1000 * 60);
+
     this.checkTimer = setInterval(this.checkForUpdates, this.checkInterval);
   },
 

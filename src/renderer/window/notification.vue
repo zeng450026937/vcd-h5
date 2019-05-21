@@ -63,12 +63,11 @@ export default {
       const now = Date.now();
       const start = startTime.valueOf();
 
-      switch (true) {
-        case start - now > 1000 * 60 * 4: return this.$t('schedule.tip.confStartFiveMin');
-        case start - now < 1000 * 60 * 4 && start - now > 0: return this.$t('schedule.tip.confStartFiveMin');
-        case start - now < 0: return this.$t('schedule.tip.confIsRunning');
-        default: break;
-      }
+      if (start - now > 1000 * 60 * 4) return this.$t('schedule.tip.confStartFiveMin');
+
+      if (start - now < 1000 * 60 * 4 && start - now > 0) return this.$t('schedule.tip.confStartFiveMin');
+
+      if (start - now < 0) return this.$t('schedule.tip.confIsRunning');
     },
   },
   computed : {
