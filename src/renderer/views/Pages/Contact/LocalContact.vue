@@ -127,7 +127,9 @@ export default {
     },
     deleteContact(item) {
       this.ensureModal = this.$popup.prepared('ensureModal', { content: this.$t('contact.message.confirmDelete', { name: item.name }) });
-      this.ensureModal.vm.$on('cancel', () => {});
+      this.ensureModal.vm.$on('cancel', () => {
+        this.$popup.destroyInVisible();
+      });
       this.ensureModal.vm.$on('ok', () => {
         this.$dispatch('contact.local.deleteData', { id: item.id }).then(() => {
           this.$refs.localContactDrawer.visible = false;

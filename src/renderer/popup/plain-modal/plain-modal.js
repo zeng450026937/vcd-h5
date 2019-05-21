@@ -110,10 +110,7 @@ const plainModal = {
       if (!this.hideOk) {
         children.push(h('a-button', {
           staticClass : 'mx-2 min-w-35% bg-red-light border-red-light text-white rounded',
-          props       : {
-            ghost : true,
-          },
-          on : {
+          on          : {
             click : this.handleOk,
           },
         }, this.okText || $t('common.controls.ensure')));
@@ -121,10 +118,7 @@ const plainModal = {
       if (!this.hideCancel) {
         children.push(h('a-button', {
           staticClass : 'mx-2 min-w-35% border-grey text-black3 rounded',
-          props       : {
-            ghost : true,
-          },
-          on : {
+          on          : {
             click : this.handleCancel,
           },
         }, this.cancelText || $t('common.controls.cancel')));
