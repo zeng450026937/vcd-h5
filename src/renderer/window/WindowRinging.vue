@@ -9,7 +9,7 @@
       <div class="flex flex-grow content mt-3">
         <div class="flex h-12 w-full">
           <a-avatar :size="48" class="target-avatar">
-            <span v-if="conferenceInviter">{{this.displayName.substr(-2,2)}}</span>
+            <span v-if="!conferenceInviter">{{this.displayName.substr(-2,2)}}</span>
             <a-iconfont v-else type="icon-huiyishi"/>
           </a-avatar>
           <div class="flex flex-col ml-5 truncate w-1 flex-grow">
@@ -23,9 +23,9 @@
 
       <div class="flex justify-center mt-4 self-end mb-4 mr-4">
         <!--麦克风（接听）-->
-        <a-button v-if="isVideoCall || conferenceInviter"
-                  class="flex items-center"
-                  style="max-width: 160px;font-size: 14px"
+        <a-button v-if="isVideoCall && !conferenceInviter"
+                  class="text-base flex items-center"
+                  style="max-width: 160px; font-size: 14px"
                   :title="$t('conversation.controls.changeToAudio')"
                   @click="transferToAudio">
           <a-iconfont type="icon-qiehuan"/>
@@ -35,7 +35,7 @@
         <a-button class="text-base w-14 ml-3 text-white border-transparent"
                   type="primary"
                   @click="answerCall(false)">
-          <a-iconfont type="icon-yuyin"/>
+          <a-iconfont :type="isVideoCall || conferenceInviter ? 'icon-shipin' : 'icon-yuyin'"/>
         </a-button>
         <!--挂断-->
         <a-button class="text-base w-14 text-white ml-3 bg-red-light border-transparent"
