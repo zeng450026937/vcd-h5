@@ -1,4 +1,4 @@
-// 最新导入时间为 2019-5-20 18:33:09 
+// 最新导入时间为 2019-5-21 09:13:26 
 module.exports = {
   name : 'conversation',
   lang : {
@@ -127,7 +127,7 @@ module.exports = {
         audioCallInvite       : '邀请您进行语音通话',
         message               : {
           alreadyExist  : '该成员已在会议中',
-          invited       : '已邀请',
+          invited       : '已发送邀请',
           inviteSucceed : '邀请成功',
           inviteFailed  : '邀请失败，请重试。',
         },
@@ -362,7 +362,7 @@ module.exports = {
         audioCallInvite       : 'invites you to a audio call',
         message               : {
           alreadyExist  : 'This participant is already in the meeting',
-          invited       : 'Invited',
+          invited       : 'Invitation Sent',
           inviteSucceed : 'Invited successfully',
           inviteFailed  : 'Invite failed, please try again.',
         },
@@ -431,7 +431,7 @@ module.exports = {
         lockTips    : 'The following new participants can directly join the meeting once it is locked, everyone else has to wait until admitted： ',
         invitedUser : 'Invited participants',
         presenter   : 'Moderators',
-        all         : 'Anyone from enterprise contacts',
+        all         : 'All enterprise contacts',
         lock        : 'Lock Meeting',
         unLock      : 'Unlock Meeting',
       },
@@ -439,7 +439,7 @@ module.exports = {
         conference     : 'Meeting',
         media          : 'Devices',
         layout         : 'Switch Layout',
-        conferenceTips : 'Tips for joining and leaving meeting',
+        conferenceTips : 'Tips for joining and leaving',
         noDevice       : 'No device detected',
         camera         : 'Camera',
         microphone     : 'Microphone',
