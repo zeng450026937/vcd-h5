@@ -11,7 +11,8 @@
                         @click="closeDrawer"/>
           </div>
           <div class="flex h-full items-center">
-            <a-iconfont type="icon-tianjialianxiren"
+            <a-iconfont v-if="isRegistered"
+                        type="icon-tianjialianxiren"
                         :title="$t('conversation.main.inviteMember')"
                         class="ml-4 cursor-pointer text-black9 hover:text-indigo-light text-base"
                         @click="showInviteModal"/>
@@ -85,6 +86,9 @@ export default {
     },
     hasNewApply() {
       return this.hasNewMeetingApply || this.hasNewSpeakApply;
+    },
+    isRegistered() {
+      return this.$rtc.account.connected;
     },
   },
   async mounted() {

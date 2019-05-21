@@ -17,6 +17,7 @@
                         @click="maxConferenceContent"/>
             <template v-if="isInConferenceMain">
               <a-tooltip
+                  v-if="isRegistered"
                   :visible="isInstanceConference"
                   placement="bottom"
                   overlayClassName="instance-conference-tooltip">
@@ -182,6 +183,9 @@ export default {
     },
     shareStreamStatus() {
       return this.$rtc.media.screenMedia.statusAnalyser.status.video;
+    },
+    isRegistered() {
+      return this.$rtc.account.connected;
     },
   },
   mounted() {

@@ -256,10 +256,10 @@ export default {
           errorNotice = this.$t('join.message.conferenceIdNoEmpty');
           break;
         case !this.meetingInfo.server:
-          errorNotice = this.$t('join.message.conferenceIdNoEmpty');
+          errorNotice = this.$t('join.message.serverAddressNoEmpty');
           break;
         case !this.meetingInfo.displayName:
-          errorNotice = this.$t('join.message.conferenceIdNoEmpty');
+          errorNotice = this.$t('join.message.displayNameNoEmpty');
           break;
         default: break;
       }
