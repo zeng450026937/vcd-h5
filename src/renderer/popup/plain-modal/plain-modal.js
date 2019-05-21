@@ -91,7 +91,7 @@ const plainModal = {
 
       if (this.showIcon) {
         children.push(h('a-icon', {
-          staticClass : `ext-base ${this.modalType.class}`,
+          staticClass : `text-base ${this.modalType.class}`,
           props       : {
             type : this.modalType.icon,
           },

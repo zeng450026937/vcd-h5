@@ -4,10 +4,10 @@
       <div v-for="(event, index) in currentDateEvents" :key="index"
            class="py-2 hover:bg-list-hover"
            :class="{
-                  'border-b': index !== currentDateEvents.length - 1,
-                  'bg-expired': event.status.isEnded,
-                  'bg-white': !event.status.isEnded,
                   'bg-list-select': event.scheduleId === currentEvent.scheduleId,
+                  'border-b': index !== currentDateEvents.length - 1,
+                  'bg-expired': event.status.isEnded && event.scheduleId !== currentEvent.scheduleId,
+                  'bg-white': !event.status.isEnded,
                }">
         <div class="flex flex-col p-3 cursor-pointer"
              :class="{
