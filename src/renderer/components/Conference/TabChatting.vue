@@ -1,10 +1,10 @@
 <template>
   <a-layout id="tab-chatting" class="h-full bg-white">
     <div class="flex flex-col h-full">
-      <div class="display-message-content" style="height: 75%">
+      <div class="display-message-content flex flex-grow h-1">
         <tab-chatting-message-content @select-target="selectTarget"/>
       </div>
-      <div class="send-message-content border-t" style="height: 25%">
+      <div class="send-message-content border-t" style="height: 140px">
         <div class="h-full p-3 flex flex-col">
           <div>
             <div class="flex items-center">

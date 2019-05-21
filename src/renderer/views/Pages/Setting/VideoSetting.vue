@@ -41,8 +41,8 @@
                       {{$t('setting.video.cameraNotice.restart')}}
                     </div>
                   </div>
-                  <a-divider></a-divider>
-                  <div class="text-xs mt-1 leading-tight">
+                  <a-divider class="my-2"></a-divider>
+                  <div class="text-xs leading-tight">
                     {{$t('setting.video.questionNotice')}}
                     <span
                       class="text-indigo cursor-pointer"

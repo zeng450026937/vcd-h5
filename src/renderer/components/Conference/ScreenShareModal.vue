@@ -22,12 +22,20 @@
             <a-checkbox class="text-xs" :checked="smoothMode" @change="smoothMode = !smoothMode">
               {{$t('conversation.share.preferVideoFluency')}}
             </a-checkbox>
-            <a-tooltip placement="right" >
-              <template slot="title">
-                <span>{{$t('conversation.share.preferVideoFluencyTips')}}</span>
-              </template>
-              <a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>
-            </a-tooltip>
+            <!--<a-tooltip placement="right" >-->
+              <!--<template slot="title">-->
+                <!--<span>{{$t('conversation.share.preferVideoFluencyTips')}}</span>-->
+              <!--</template>-->
+              <!--<a-iconfont type="icon-tishi" class="text-indigo text-base ml-2"/>-->
+            <!--</a-tooltip>-->
+            <a-popover placement="top" trigger="click">
+              <div slot="content" style="width: 250px">
+                <div class="text-xs leading-tight flex flex-col">
+                  {{$t('conversation.share.preferVideoFluencyTips')}}
+                </div>
+              </div>
+              <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>
+            </a-popover>
           </div>
         </div>
       </div>
