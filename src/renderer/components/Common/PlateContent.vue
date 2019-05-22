@@ -44,6 +44,7 @@
 
 <script>
 import LongPress from 'vue-directive-long-press';
+import DTMF from '../../utils/dtmf';
 
 export default {
   name       : 'PlateContent',
@@ -81,15 +82,20 @@ export default {
     showClickAnimation(val) {
       const ele = document.getElementById(`plate-${val}`);
 
-      if (ele) document.getElementById(`plate-${val}`).click();
+      if (ele) {
+        DTMF.ko_DTMF_button_down(val);
+        document.getElementById(`plate-${val}`).click();
+      }
       
       return !!ele;
     },
     clickPoint() {
+      DTMF.ko_DTMF_button_down('*');
       this.$emit('inputNumber', '.');
       this.showStarSwitch = false;
     },
     clickAt() {
+      DTMF.ko_DTMF_button_down('*');
       this.$emit('inputNumber', '@');
       this.showStarSwitch = false;
     },
@@ -97,6 +103,7 @@ export default {
       console.warn(alpha);
     },
     onLongPressed(num) {
+      DTMF.ko_DTMF_button_down(num.num);
       this.isLongPressed = true;
       this.isAfterLongPress = true;
       if (num.num === '0') {
@@ -113,6 +120,7 @@ export default {
       if (this.showStarSwitch && n.num === '*') return;
 
       if (!this.isLongPressed) {
+        DTMF.ko_DTMF_button_down(n.num);
         this.$emit('inputNumber', n.num);
       }
       this.isLongPressed = false;
