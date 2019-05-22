@@ -8,6 +8,7 @@ state.provide({
   data() {
     return {
       duration      : '00:00:00',
+      interval      : 0,
       signal        : 4,
       durationTimer : null,
     };
@@ -26,7 +27,7 @@ state.provide({
       const meetTime = new Date();
 
       this.durationTimer = setInterval(() => {
-        const time = (new Date().getTime() - meetTime.getTime()) / 1000;
+        this.interval = (new Date().getTime() - meetTime.getTime()) / 1000;
 
         if (checkTimes > checkInterval) checkTimes = 0;
         while (checkTimes++ === checkInterval) {
@@ -39,7 +40,7 @@ state.provide({
             this.signal = val.quality > 0 ? val.quality : '1';
           });
         }
-        this.duration = secondsToHms(time);
+        this.duration = secondsToHms(this.interval);
       }, 1000);
     },
   },

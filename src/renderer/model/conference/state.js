@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import Vuem from '../vuem';
 import { secondsToHms } from '../../utils';
 import rtc from '../../rtc';
@@ -9,6 +10,8 @@ state.provide({
   data() {
     return {
       duration      : '00:00:00',
+      interval      : 0,
+      callInterval  : 0, // 音频转视频情况
       signal        : 4,
       durationTimer : null,
       warningNotice : null,
@@ -28,7 +31,7 @@ state.provide({
       const meetTime = new Date();
 
       this.durationTimer = setInterval(() => {
-        const time = (new Date().getTime() - meetTime.getTime()) / 1000;
+        this.interval = this.callInterval + (new Date().getTime() - meetTime.getTime()) / 1000;
 
         if (checkTimes > checkInterval) checkTimes = 0;
         while (checkTimes++ === checkInterval) {
@@ -64,7 +67,7 @@ state.provide({
             this.signal = quality >= 1 ? quality : '1';
           });
         }
-        this.duration = secondsToHms(time);
+        this.duration = secondsToHms(this.interval);
       }, 1000);
     },
   },
@@ -72,11 +75,16 @@ state.provide({
     isConnected(val) {
       if (val) {
         this.initSignal();
+        const { _isRefer } = rtc.conference.mediaChannel.channel;
+
+        this.callInterval = rtc.call.connected || _isRefer
+          ? this.$getVM('call.state').interval : 0;
       }
       else if (this.durationTimer) {
         clearInterval(this.durationTimer);
         this.duration = '00:00:00';
         this.signal = 4;
+        this.interval = 0;
         if (typeof this.warningNotice === 'function') {
           this.warningNotice();
           this.warningNotice = null;
