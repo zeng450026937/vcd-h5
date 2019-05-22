@@ -1,26 +1,13 @@
 import Axios from 'axios';
 
-const protocol = 'http://';
-const address = '10.5.200.209';
-const port = '9996';
-
-
 export class Phonebook {
-  constructor({ token, domain }) {
+  constructor({ token, baseURL }) {
+    this.init({ token, baseURL });
+  }
+
+  init({ token, baseURL }) {
     this.token = token;
-    this.domain = domain;
-    this.init();
-  }
-
-  updateToken(token) {
-    this.token = token;
-  }
-
-  updateDomain(domain) {
-    this.domain = domain;
-  }
-
-  init() {
+    this.baseURL = baseURL;
     this.acceptVersion = 'v5';
     this.apiVersion = 'v5';
     this.permissionVersion = 0;
@@ -29,16 +16,25 @@ export class Phonebook {
     this.loadMode = 'AUTO';
   }
 
-  reset() {
-    this.init();
+  reset({ token, baseURL }) {
+    this.init({ token, baseURL });
+  }
+
+  updateToken(token) {
+    this.token = token;
+  }
+
+  updateBaseURL(baseURL) {
+    this.baseURL = baseURL;
   }
 
   async negotiate() {
-    const path = `${this.domain}/negotiate`;
+    const path = '/negotiate';
 
     const res = await Axios(
       {
         method  : 'post',
+        baseURL : this.baseURL,
         url     : path,
         data    : { phoneBookAcceptVersion: this.acceptVersion },
         headers : {
@@ -89,13 +85,14 @@ export class Phonebook {
       type              : this.type.join(','),
     };
 
-    const path = `${this.domain}/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
+    const path = `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
 
     let res;
 
     try {
       res = await Axios(
         {
+          baseURL : this.baseURL,
           url     : path,
           method  : 'get',
           params,
@@ -113,6 +110,8 @@ export class Phonebook {
 
         return this.sync();
       }
+
+      return Promise.reject(e);
     }
 
     if (res.data.ret < 0) return Promise.reject(res);
@@ -121,13 +120,14 @@ export class Phonebook {
   }
 
   async search({ key }) {
-    const path = `${protocol}${address}:${port}/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
+    const path = `/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
 
     const res = await Axios(
       {
-        url    : path,
-        method : 'get',
-        params : {
+        baseURL : this.baseURL,
+        url     : path,
+        method  : 'get',
+        params  : {
           key,
         },
         headers : {

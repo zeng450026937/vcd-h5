@@ -51,8 +51,11 @@ model.provide({
     token() {
       return this.digest.token;
     },
-    domain() {
-      return this.digest.domain;
+    port() {
+      return '9996';
+    },
+    baseURL() {
+      return `${this.digest.protocol}${this.digest.domain}:${this.port}`;
     },
   },
   watch : {
@@ -64,17 +67,24 @@ model.provide({
         this.$phonebook.updateToken(val);
       }
     },
-    domain(val) {
+    baseURL(val) {
       if (val && this.$phonebook) {
-        this.$phonebook.updateDomain(val);
+        this.$phonebook.updateBaseURL(val);
       }
     },
   },
   async created() {
-    this.$phonebook = new Phonebook({ domain: this.domain });
+    this.$phonebook = new Phonebook({ baseURL: this.baseURL });
 
     rtc.account.$on('negotiateUrlUpdated', this.initNegotiate);
     rtc.account.$on('phonebookUpdated', this.initNegotiate);
+  },
+  middleware : {
+    async sync(ctx, next) {
+      await next();
+
+      return this.$phonebook.sync();
+    },
   },
   methods : {
     reset() {
@@ -95,7 +105,7 @@ model.provide({
       this.phonebook.dataLoadFailed = false;
 
       if (this.isCloud) {
-        this.$phonebook.negotiate();
+        await this.$phonebook.negotiate();
 
         return this.$phonebook.sync()
           .then((list) => {

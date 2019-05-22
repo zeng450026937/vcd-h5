@@ -10,7 +10,7 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      address       : '10.200.112.137',
+      domain        : '10.200.112.137',
       protocol      : 'http://',
       port          : '9998',
       count         : 0,
@@ -22,11 +22,8 @@ model.provide({
     };
   },
   computed : {
-    domain() {
-      return `${this.protocol}${this.address}:${this.port}`;
-    },
-    uri() {
-      return `${this.protocol}${this.address}${this.port}`;
+    baseURL() {
+      return `${this.protocol}${this.domain}:${this.port}`;
     },
     nc() {
       const str = String(this.count);
@@ -53,6 +50,9 @@ model.provide({
 
       return this.getToken(account, username, password);
     },
+    async updateToken(ctx, next) {
+      await next();
+    },
   },
   methods : {
     async getToken(account, username, password, realm, nonce, response = '') {
@@ -62,9 +62,10 @@ model.provide({
 
       try {
         res = await Axios({
-          method : 'post',
-          url    : `${this.protocol}${this.address}:${this.port}${uri}`,
-          data   : {
+          method  : 'post',
+          baseURL : this.baseURL,
+          url     : uri,
+          data    : {
             partyId   : account.partyId,
             subjectId : account.subjectId,
           },
@@ -72,10 +73,10 @@ model.provide({
             Authorization : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
           },
         });
-
-        this.count++;
       }
       catch (e) {
+        this.count++;
+
         if (e.response.status !== 401 || this.count > 10) {
           this.count = 0;
 
@@ -111,15 +112,16 @@ model.provide({
       try {
         res = await Axios({
           method  : 'post',
-          url     : `${this.protocol}${this.address}:${this.port}${uri}`,
+          baseURL : this.baseURL,
+          url     : uri,
           headers : {
             Authorization : this.createDigest(username, realm, nonce, uri, this.cnonce, this.nc, response),
           },
         });
-
-        this.count++;
       }
       catch (error) {
+        this.count++;
+
         if (error.response.status !== 401 || this.count >= 10) {
           this.count = 0;
 
