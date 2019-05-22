@@ -253,7 +253,7 @@ class DTMFAudio {
     }
   }
 
-  ko_DTMF_button_down(key, once = true) {
+  ko_DTMF_button_down(key, interval = 100) {
     this.stop_dial_interval();
     if (this.var_source != null) {
       this.var_source.stop(0);
@@ -272,8 +272,8 @@ class DTMFAudio {
 
     this.var_source.buffer = this.var_DTMF_buffer[key];
     this.var_source.start(0);
-    if (once) {
-      setTimeout(this.stop_pure_dial.bind(this), 100);
+    if (interval !== 0) {
+      setTimeout(this.stop_pure_dial.bind(this), interval);
     }
   }
 
