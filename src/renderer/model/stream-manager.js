@@ -60,7 +60,7 @@ model.provide({
       if (val) {
         // FIXME TMP SOLUTION
         setTimeout(() => {
-          if (this.$parent.conference.sketch.isVideoConference) {
+          if (this.$parent.conference.sketch.isVideoConference && rtc.media.localMedia.stream) {
             rtc.media.localMedia.acquireDetachedStream().then((s) => {
               rtc.conference.mediaChannel.channel.replaceLocalStream(s);
             });
@@ -79,7 +79,7 @@ model.provide({
         rtc.media.localMedia.acquireStream();
         console.warn('获取通话视频流');
         setTimeout(() => {
-          if (this.$parent.call.isVideoCall && !this.enableLocalVideo) {
+          if (this.$parent.call.isVideoCall && !this.enableLocalVideo && rtc.media.localMedia.stream) {
             rtc.media.localMedia.acquireDetachedStream().then((s) => {
               rtc.call.channel.replaceLocalStream(s);
             });
