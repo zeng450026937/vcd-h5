@@ -157,6 +157,8 @@ model.provide({
       const account = this.accounts.accountInfos.find((acc) => acc.accountInfo.id === id);
 
       this.activeAccount = {
+        username  : this.accounts.username,
+        password  : this.accounts.password,
         partyId   : account.partyInfo.id,
         subjectId : account.subjectInfo.id,
       };

@@ -1,3 +1,4 @@
+import { screen } from 'electron';
 import { system } from 'systeminformation/lib/system';
 import { cpu } from 'systeminformation/lib/cpu';
 import { networkInterfaces } from 'systeminformation/lib/network';
@@ -67,4 +68,19 @@ export async function getOsInfo() {
   osInfo = await os();
 
   return osInfo;
+}
+
+let screenInfo = null;
+
+export async function getScreenInfo() {
+  if (screenInfo) return screenInfo;
+
+  const primaryDisplay = screen.getPrimaryDisplay();
+
+  screenInfo = {
+    x : primaryDisplay.size.width,
+    y : primaryDisplay.size.height,
+  };
+
+  return screenInfo;
 }

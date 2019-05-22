@@ -55,6 +55,7 @@ model.provide({
     const application = this.$getVM('application');
     const setting = this.$getVM('setting');
     const account = this.$getVM('account');
+    const contact = this.$getVM('contact');
 
     application.$watch('connection', async() => {
       await ipcProxy.getClientInfo();
@@ -120,17 +121,28 @@ model.provide({
       this.$dispatch('ytms.updateClientInfo', { data });
     });
 
+    contact.$watch('currentContact', (val) => {
+      const data = {
+        user : {
+          name : val.name,
+        },
+      };
+
+      this.$dispatch('ytms.updateClientInfo', { data });
+    });
+
     rtc.account.$watch('ua', (val) => {
       const configuration = val && val.configuration;
 
       const data = {
         user : {
-          account      : configuration && configuration.uri.user,
-          domain       : configuration && configuration.uri.host,
-          outbound     : account.proxy,
-          outboundPort : account.proxyPort,
-          type         : account.serverType,
-          status       : account.status,
+          account       : configuration && configuration.uri.user,
+          domain        : configuration && configuration.uri.host,
+          serverAddress : configuration && configuration.uri.host,
+          outbound      : account.proxy,
+          outboundPort  : account.proxyPort,
+          serverType    : account.serverType,
+          status        : account.status,
         },
       };
 

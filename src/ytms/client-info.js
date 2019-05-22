@@ -3,10 +3,12 @@ import {
 } from 'electron';
 import {
   getSystemId,
+  getSystemInfo,
   getCpuInfo,
   getNetInfo,
   getMemInfo,
   getOsInfo,
+  getScreenInfo,
 } from './system-info';
 import { newPlainUUID } from '../shared/uuid';
 
@@ -29,12 +31,14 @@ export const clientInfo = {
   clientPlatform : normalizePlatform(process.platform),
   customId       : process.env.VUE_APP_CUSTOMID,
   device         : {
-    ip       : '',
-    mac      : '',
-    hostname : '',
-    cpu      : '',
-    memory   : '',
-    os       : '',
+    model      : '',
+    resolution : '',
+    ip         : '',
+    mac        : '',
+    hostname   : '',
+    cpu        : '',
+    memory     : '',
+    os         : '',
   },
   enterprise : {
     id     : '',
@@ -63,12 +67,16 @@ export async function getClientInfo() {
     cpuInfo,
     netInfo, 
     memInfo, 
-    osInfo, 
+    osInfo,
+    sysInfo,
+    screenInfo,
   ] = await Promise.all([
     getCpuInfo(),
     getNetInfo(),
     getMemInfo(),
     getOsInfo(),
+    getSystemInfo(),
+    getScreenInfo(),
   ]);
 
   clientInfo.clientName = `${process.env.VUE_APP_VENDOR} ${process.env.VUE_APP_TITLE}`;
@@ -78,6 +86,8 @@ export async function getClientInfo() {
   clientInfo.device.cpu = cpuInfo.brand;
   clientInfo.device.memory = memInfo.total;
   clientInfo.device.os = osInfo.distro;
+  clientInfo.device.model = sysInfo.model;
+  clientInfo.device.resolution = `${screenInfo.x}*${screenInfo.y}`;
 
   return clientInfo;
 }

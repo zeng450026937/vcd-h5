@@ -211,4 +211,17 @@ export async function reportSessionState(baseURL, clientId, sessionId, data, exp
   return res.data.data;
 }
 
+export async function reportEvent(baseURL, clientId, data) {
+  const res = await inst({
+    method : 'post',
+    baseURL,
+    url    : `/clients/${clientId}/events`,
+    data,
+  });
+
+  throwIfError(res);
+
+  return res.data.data;
+}
+
 // 新增API必须保证前两个参数必须是 baseURL, clientId 不管有用没用
