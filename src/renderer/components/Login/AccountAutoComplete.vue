@@ -1,7 +1,7 @@
 <template>
   <div id="account-auto-complete">
     <a-auto-complete
-        :value="formattedAccount"
+        :value="formattedAccount()"
         @change="updateAccount"
         class="certain-category-search w-full overflow-x-hidden"
         :dropdownMatchSelectWidth="false"
@@ -68,16 +68,13 @@ export default {
       default : true,
     },
   },
-  data() {
-    return {
-      formattedAccount : '',
-    };
-  },
   methods : {
+    formattedAccount(val = this.account) {
+      return this.format
+        ? formatAccount(val, '*** **** ****') : val.replace(/\s+/g, '');
+    },
     updateAccount(val) {
-      this.formattedAccount = this.format
-        ? formatAccount(val) : val.replace(/\s+/g, '');
-      this.$emit('updateAccount', this.formattedAccount);
+      this.$emit('updateAccount', this.formattedAccount(val));
     },
     selectAccount(val) {
       this.$emit('selectAccount', val);
@@ -90,16 +87,6 @@ export default {
     },
     clearAccount() {
       this.$emit('clearAccount');
-    },
-  },
-  watch : {
-    account : {
-      handler(val) {
-        this.formattedAccount = this.format
-          ? formatAccount(this.account)
-          : this.account.replace(/\s+/g, '');
-      },
-      immediate : true,
     },
   },
 };

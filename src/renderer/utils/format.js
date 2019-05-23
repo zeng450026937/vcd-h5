@@ -15,13 +15,13 @@ export function genPattern(number) {
   return patternArray.join(' ');
 }
 
-export function formatAccount(str) {
+export function formatAccount(str, pattern) {
   str = `${str}`.replace(/\s+/g, '');
 
-  if (str.length <= 5) return str;
+  if (str.length <= 5 && !pattern) return str;
   let result = '';
 
-  const pattern = genPattern(str.length);
+  pattern = pattern || genPattern(str.length);
 
   for (let i = 0, j = 0; i < str.length; i++) {
     result += str[i];
