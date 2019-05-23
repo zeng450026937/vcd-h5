@@ -29,7 +29,7 @@ function initializeWinston() {
         datePattern      : 'YYYY-MM-DD',
         prepend          : true,
         maxFiles         : MaxLogFiles,
-        level            : 'info',
+        level            : 'debug',
         format           : prettyPrint(),
       });
 
