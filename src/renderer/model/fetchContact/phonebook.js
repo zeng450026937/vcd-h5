@@ -14,6 +14,7 @@ export class Phonebook {
     this.dataVersion = 0;
     this.type = [ 'STAFF', 'DEVICE', 'VMR', 'EXTERNAL_CONTACTS' ];
     this.loadMode = 'AUTO';
+    this.phoneBookUrl = null;
   }
 
   reset({ token, baseURL }) {
@@ -85,7 +86,9 @@ export class Phonebook {
       type              : this.type.join(','),
     };
 
-    const path = `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
+    const path = this.phoneBookUrl
+      ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/sync`
+      : `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
 
     let res;
 
@@ -120,7 +123,9 @@ export class Phonebook {
   }
 
   async search({ key }) {
-    const path = `/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
+    const path = this.phoneBookUrl
+      ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/search`
+      : `/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
 
     const res = await Axios(
       {

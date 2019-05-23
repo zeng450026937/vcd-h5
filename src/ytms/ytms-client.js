@@ -123,6 +123,14 @@ export class YTMSClient extends EventEmitter {
     return this.api.updateClientInfo(data);
   }
 
+  reportStartUp() {
+    this.api.reportEvent({
+      eventTime : Date.now(),
+      eventCode : 'E00001',
+      eventName : 'CLIENT_START_UP',
+    });
+  }
+
   onEnterpriseInfo(fn) {
     if (!fn) return;
     this.on('enterprise-info', fn);

@@ -46,7 +46,10 @@ function throwIfError(res) {
   const { data } = res;
 
   if (data.error || data.ret === -1) {
-    throw new Error(JSON.stringify(data.error || data));
+    throw new Error(JSON.stringify({
+      ...(data.error || data),
+      url : res.config.url,
+    }));
   }
 }
 
@@ -216,7 +219,10 @@ export async function reportEvent(baseURL, clientId, data) {
     method : 'post',
     baseURL,
     url    : `/clients/${clientId}/events`,
-    data,
+    data   : {
+      ...data,
+      clientId,
+    },
   });
 
   throwIfError(res);

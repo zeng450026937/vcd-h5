@@ -66,13 +66,19 @@ export class Job extends EventEmitter {
     this.report('stop');
   }
 
-  report(status) {
+  async report(status) {
     this.status = status;
+    let res;
+
     if (this.api) {
-      this.api.reportSessionState(this.id, { status }, this.expire).catch((e) => logger.warn('failed to report session state, error: %s', e));
+      res = await this.api.reportSessionState(this.id, { status }, this.expire).catch((e) => logger.warn('failed to report session state, error: %s', e));
     }
     this.emit(status, this);
     logger.info(`job: ${this.id} -- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
+   
+    if (status !== 'stop' && (res.status === 'sessionOutOfTime' || res.status === 'sessionFail')) {
+      this.stop();
+    }
   }
 
   // private

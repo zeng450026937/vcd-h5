@@ -72,6 +72,8 @@ export class YTMSService {
 
     // ignore error
     client.updateInfo(clientInfo).catch(() => {});
+
+    client.reportStartUp();
     
     // prepare push service
     const {
