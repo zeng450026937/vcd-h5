@@ -24,6 +24,10 @@ module.exports = {
       and                : '和',
       basicSetting       : '基本设置',
       placeholder        : {
+        account      : '账号',
+        phone        : '手机号',
+        email        : '邮箱',
+        cloud        : '云账号',
         phoneOrEmail : '手机/邮箱/云账号',
         password     : '密码',
       },

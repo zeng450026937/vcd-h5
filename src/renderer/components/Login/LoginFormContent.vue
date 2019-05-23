@@ -7,62 +7,69 @@
       </div>
 
       <div class="login-form flex flex-col" @keyup.enter="handleLogin">
-        <div class="mb-4">
-          <a-auto-complete
-              v-model="loginData.account"
-              class="certain-category-search w-full overflow-x-hidden"
-              :dropdownMatchSelectWidth="false"
-              optionLabelProp="value"
-              @select="selectAccount"
-              @search="searchAccount"
-          >
-            <template v-if="searchedAccounts.length > 0" slot="dataSource">
-              <a-select-opt-group>
-                <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                  <span>{{$t('login.history')}}</span>
-                  <span class="text-red cursor-pointer" @click="clearAccount">{{$t('login.clear')}}</span>
-                </div>
-                <a-select-option v-for="item in searchedAccounts"
-                                 :key="item.account" :value="item.account" class="group">
-                  <div class="flex items-center px-2 py-2">
-                    <span class="certain-search-item-count">{{item.account}}</span>
-                    <div class="flex flex-grow"></div>
-                    <a-iconfont
-                        type="icon-guanbi"
-                        class="flex text-red opacity-0 group-hover:opacity-100"
-                        @click.stop="deleteAccount(item)"
-                    ></a-iconfont>
-                  </div>
-                </a-select-option>
-              </a-select-opt-group>
-            </template>
-            <a-input maxlength="64" :placeholder="$t('login.placeholder.phoneOrEmail')">
-              <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
-            </a-input>
-          </a-auto-complete>
+        <div class="flex mb-6 select-none" v-if="serverType === 'cloud'">
+          <div class="cloud-tab-normal"
+               :class="{'cloud-tab-active': cloudType === 'phone'}"
+                @click="cloudType = 'phone'">
+            <span>手机登录</span>
+          </div>
+          <div class="cloud-tab-normal mx-6"
+               :class="{'cloud-tab-active': cloudType === 'email'}"
+               @click="cloudType = 'email'">
+            <span>邮箱登录</span>
+          </div>
+          <div class="cloud-tab-normal"
+               :class="{'cloud-tab-active': cloudType === 'cloud'}"
+               @click="cloudType = 'cloud'">
+            <span>云账号登录</span>
+          </div>
+        </div>
+        <div class="mb-4 flex">
+          <a-select v-if="serverType === 'cloud' && cloudType === 'phone'"
+                    defaultValue="+86"
+                    style="width: 80px"
+                    class="mr-3">
+              <a-select-option value="+86">+86</a-select-option>
+              <a-select-option value="+110">+110</a-select-option>
+              <a-select-option value="+114">+114</a-select-option>
+          </a-select>
+          <account-auto-complete
+              class="flex flex-grow"
+              :prefixIcon="accountInput.icon"
+              :placeholder="accountInput.placeholder"
+              :account="loginData.account"
+              :searched-accounts="searchedAccounts"
+              @clearAccount="clearAccount"
+              @updateAccount="updateAccount"
+              @selectAccount="selectAccount"
+              @searchAccount="searchAccount"
+              @deleteAccount="deleteAccount"
+          ></account-auto-complete>
         </div>
 
-        <div class="mb-4">
-          <a-input
-              v-model="loginData.pin"
-              maxlength="64"
-              @keypress="passwordInputted"
-              type="password"
-              :placeholder="$t('login.placeholder.password')">
-            <div slot="prefix">
-              <a-tooltip
-                  :visible="isCapsLockOn"
-                  trigger="focus"
-                  placement="bottomLeft">
-                <template slot="title">
-                  <span>{{$t('login.capitalLocked')}}</span>
-                </template>
-                <a-iconfont type='icon-mima' class="text-base text-black9"/>
-              </a-tooltip>
-            </div>
-          </a-input>
-        </div>
-        <div class="flex justify-between mt-24px">
+        <!--<template v-if="serverType === 'yms'">-->
+          <div class="mb-4">
+            <a-input
+                v-model="loginData.pin"
+                maxlength="64"
+                @keypress="passwordInputted"
+                type="password"
+                :placeholder="$t('login.placeholder.password')">
+              <div slot="prefix">
+                <a-tooltip
+                    :visible="isCapsLockOn"
+                    trigger="focus"
+                    placement="bottomLeft">
+                  <template slot="title">
+                    <span>{{$t('login.capitalLocked')}}</span>
+                  </template>
+                  <a-iconfont type='icon-mima' class="text-base text-black9"/>
+                </a-tooltip>
+              </div>
+            </a-input>
+          </div>
+
+        <div class="flex justify-between mt-6">
           <a-checkbox class="text-xs text-black6"
                       :checked="rmbPassword"
                       @change="rmbPassword = !rmbPassword"
@@ -88,7 +95,7 @@
 
       </div>
 
-      <div class="text-xs text-center text-black6 mt-48px h-28px">
+      <div class="text-xs text-center text-black6 mt-12 h-28px">
         <template v-if="serverType === 'cloud'">
           <span class="cursor-pointer leading-tight"
                 @click="toForget">{{$t('login.forgetPassword')}}</span>
@@ -138,11 +145,14 @@ import { cloneDeep, debounce } from 'lodash';
 import { LOGIN_STORAGE } from '../../storage';
 import { isCapsLockOn } from '../../utils';
 import LoginHeader from './LoginHeader.vue';
+import AccountAutoComplete from './AccountAutoComplete.vue';
+import { $t } from '../../i18n';
 
 export default {
   name       : 'YMSLoginFormContent',
   components : {
     LoginHeader,
+    AccountAutoComplete,
   },
   data() {
     const dSearch = debounce((val = '') => {
@@ -173,7 +183,8 @@ export default {
   sketch : [
     {
       ns    : 'account',
-      props : [ 'serverType', 'rmbPassword', 'autoLogin', 'autoLoginDisabled', 'loginType' ],
+      props : [ 'serverType', 'rmbPassword', 'autoLogin',
+        'autoLoginDisabled', 'loginType', 'cloudType' ],
     },
     {
       ns    : 'i18n',
@@ -190,9 +201,37 @@ export default {
     hasNewVersion() {
       return this.status === 1 || this.status === 3 || this.status === 4;
     },
+    accountInput() {
+      const INPUT_MAP = {
+        yms : {
+          icon        : 'icon-ren1',
+          placeholder : $t('login.placeholder.account'),
+        },
+        phone : {
+          icon        : 'icon-dianhua',
+          placeholder : $t('login.placeholder.phone'),
+        },
+        email : {
+          icon        : 'icon-mail',
+          placeholder : $t('login.placeholder.email'),
+        },
+        cloud : {
+          icon        : 'icon-cloud',
+          placeholder : $t('login.placeholder.cloud'),
+        },
+      };
+
+      
+      return INPUT_MAP[this.serverType === 'yms' ? 'yms' : this.cloudType];
+    },
   },
   methods : {
     handleLogin(e) {
+      if (this.serverType === 'cloud') {
+        if (this.cloudType === 'phone') {
+          // 电话
+        }
+      }
       this.$dispatch('account.login', this.loginData);
     },
     toForget() { // 跳转到忘记密码页面
@@ -226,6 +265,9 @@ export default {
       this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
       this.initRawAccounts();
     },
+    updateAccount(val) {
+      this.loginData.account = val;
+    },
     selectAccount(val) {
       this.updateForm(this.modifiedAccounts.find((a) => a.account === val));
     },
@@ -238,8 +280,11 @@ export default {
       this.modifyAccounts();
     },
     modifyAccounts() {
+      // account-type : yms phone email cloud
+      const key = this.serverType === 'yms' ? 'yms' : this.cloudType;
+
       this.modifiedAccounts = this.rawAccounts
-        .filter((account) => account.type === this.serverType)
+        .filter((account) => account.type === key)
         .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
       const otherAccounts = this.rawAccounts.filter((account) => account.type !== this.serverType);
 
@@ -280,6 +325,11 @@ export default {
         this.modifyAccounts();
       }
     },
+    cloudType() {
+      if (this.serverType === 'cloud') {
+        this.modifyAccounts();
+      }
+    },
     autoLogin(val) {
       if (val) {
         this.preRmbPassword = this.rmbPassword;
@@ -304,52 +354,38 @@ export default {
 
 <style lang="less">
   #login-form-content{
-    height: 100%;
-    .mt-48px{
-      margin-top: 48px;
-    }
-    .mt-24px {
-      margin-top: 24px;
-    }
+    @apply h-full;
     .h-28px {
       height: 28px;
     }
-    .content {
-      justify-content: center;
-      align-items: center;
-      height: 100%;
+    > .content {
+      @apply justify-center items-center h-1 flex-grow;
       .login-form {
         width: 55%;
+        .cloud-tab {
+          &-normal {
+            @apply pb-2 leading-loose cursor-pointer;
+          }
+          &-active {
+            @apply border-b-2 border-indigo text-indigo;
+          }
+        }
         .ant-form-item-control {
-          line-height: unset;
+          @apply leading-none;
         }
       }
     }
     .login-title {
-      font-size: 24px;
-      font-weight: bold;
-      display: flex;
-      align-items: flex-end;
-      justify-content: left;
       width: 55%;
       padding-bottom: 48px;
+      @apply text-2xl font-semibold flex items-end justify-start;
     }
 
     .login-footer {
-      height: 40px;
-      width: 100%;
-      background: #F0F2F8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      bottom: 0;
+      @apply h-10 w-full bg-under-painting flex items-center justify-center;
     }
-    .ant-form-item{
-      margin-bottom: 12px;
-      .ant-input {
-        padding-left: 36px;
-      }
+    .ant-input {
+      @apply pl-9;
     }
   }
   .first-start-tooltip {
@@ -359,10 +395,7 @@ export default {
       }
       .ant-tooltip-inner {
         background-color: #d7def3;
-        font-size: 12px;
-        color: #4A5FC4;
-        text-align: center;
-        line-height: 20px;
+        @apply text-xs text-indigo text-center leading-tight;
       }
     }
   }

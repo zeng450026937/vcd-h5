@@ -20,6 +20,7 @@ model.provide({
       autoLogin,
       autoLoginDisabled,
       loginType : 'login',
+      cloudType : 'phone', // cloud 的登陆类型 phone email cloud
       proxy     : '',
       proxyPort : '',
       server    : '',
@@ -59,7 +60,7 @@ model.provide({
           proxy         : this.proxy,
           proxyPort     : this.proxyPort,
           lastLoginDate : Date.now(),
-          type          : this.serverType,
+          type          : this.serverType === 'yms' ? 'yms' : this.cloudType,
         });
 
         if (this.rmbPassword) {

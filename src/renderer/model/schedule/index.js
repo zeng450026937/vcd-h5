@@ -178,7 +178,7 @@ model.provide({
       let template = '';
 
       await this.cm[C.GET_MAIL_TEMPLATE]({
-        enterpriseId   : rtc.account.enterpriseId,
+        enterpriseId   : '', // rtc.account.enterpriseId
         conferenceRecordId,
         isDST          : moment().isDST(),
         utcOffset      : moment().utcOffset() * 60,

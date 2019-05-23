@@ -11,47 +11,22 @@
                         class="text-lg cursor-pointer text-white"
                         @click="isInSetting = true"/>
           </div>
-          <div class="p-4">
+          <div class="p-4" @keyup.enter="joinMeeting">
             <h2 class="text-white">{{$t('nav.joinMeeting')}}</h2>
             <div class="mt-10 flex flex-col">
               <div class="input-with-icon">
-
-                <a-auto-complete
-                    class="certain-category-search w-full overflow-x-hidden"
-                    :value="meetingInfo.number"
-                    :dropdownMatchSelectWidth="false"
-                    optionLabelProp="value"
-                    @select="selectAccount"
-                    @search="searchAccount"
-                    @change="onAccountChange"
-                >
-                  <template v-if="searchedAccounts.length > 0" slot="dataSource">
-                    <a-select-opt-group>
-                      <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                        <span>{{$t('login.account.history')}}</span>
-                        <span class="text-red cursor-pointer" @click="clearAccount">{{$t('login.clear')}}</span>
-                      </div>
-                      <a-select-option v-for="item in searchedAccounts"
-                                       :key="item.number" :value="item.number" class="group">
-                        <div class="flex items-center px-2 py-2">
-                          <span class="certain-search-item-count">{{item.number}}</span>
-                          <div class="flex flex-grow"></div>
-                          <a-iconfont
-                              type="icon-guanbi"
-                              class="flex text-red opacity-0 group-hover:opacity-100"
-                              @click.stop="deleteAccount(item)"
-                          ></a-iconfont>
-                        </div>
-                      </a-select-option>
-                    </a-select-opt-group>
-                  </template>
-                  <a-input
-                      :placeholder="$t('join.placeholder.conferenceId')"
-                      maxlength="64"
-                      :class="{'meeting-error': meetingInfoError}">
-                    <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
-                  </a-input>
-                </a-auto-complete>
+                <account-auto-complete
+                    :account="meetingInfo.number"
+                    :searched-accounts="searchedAccounts"
+                    label="number"
+                    prefix-icon="icon-ID"
+                    :placeholder="$t('join.placeholder.conferenceId')"
+                    @clearAccount="clearAccount"
+                    @updateAccount="updateAccount"
+                    @selectAccount="selectAccount"
+                    @searchAccount="searchAccount"
+                    @deleteAccount="deleteAccount"
+                ></account-auto-complete>
 
               </div>
               <div class="mt-4 input-with-icon">
@@ -167,6 +142,7 @@ import LoginHeader from '../../components/Login/LoginHeader.vue';
 import VideoView from '../../components/Common/VideoView.vue';
 import { LOGIN_STORAGE } from '../../storage/constants';
 import { debounceNotice } from '../../model/middleware/error-message';
+import AccountAutoComplete from '../../components/Login/AccountAutoComplete.vue';
 
 export default {
   name       : 'YMAMeeting',
@@ -174,6 +150,7 @@ export default {
     TabSettingMedia,
     VideoView,
     LoginHeader,
+    AccountAutoComplete,
   },
   data() {
     const dSearch = debounce((val = '') => {
@@ -323,6 +300,9 @@ export default {
     clearAccount() {
       this.$storage.deleteItem(LOGIN_STORAGE.ANON_MEETING_ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
       this.initRawAccounts();
+    },
+    updateAccount(val) {
+      this.meetingInfo.number = val;
     },
     selectAccount(val) {
       Object.assign(this.meetingInfo, {

@@ -86,8 +86,8 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column;
-      .content {
-        height: calc(100% - 36px );
+      > .content {
+        @apply h-1 flex-grow;
       }
     }
   }

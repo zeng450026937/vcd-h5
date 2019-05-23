@@ -3,8 +3,7 @@
     <app-header :title="$t('join.title.joinMeeting')"/>
     <div class="flex justify-center items-center h-full" style="padding: 16px;">
       <div style="width: 480px;height: 518px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.12);"
-           class="flex flex-col bg-white w-full h-full relative"
-           @keyup.enter="enterMeeting">
+           class="flex flex-col bg-white w-full h-full relative">
         <div class="flex bg-media h-full">
           <video-view v-if="meetingInfo.initialVideo" class="w-full h-full"
                       muted
@@ -46,40 +45,21 @@
                 </a-iconfont>
               </div>
             </div>
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center"
+                 @keyup.enter="enterMeeting">
               <div class="mt-5 w-full">
-                <a-auto-complete
-                    :value="meetingInfo.number"
-                    class="certain-category-search w-full overflow-x-hidden"
-                    :dropdownMatchSelectWidth="false"
-                    optionLabelProp="value"
-                    @select="selectAccount"
-                    @search="searchAccount"
-                >
-                  <template v-if="searchedAccounts.length > 0" slot="dataSource">
-                    <a-select-opt-group>
-                      <div class="select-opt-label flex justify-between px-3 border-b" slot="label">
-                        <span>{{$t('join.account.history')}}</span>
-                        <span class="text-red cursor-pointer" @click="clearAccount">{{$t('join.account.clear')}}</span>
-                      </div>
-                      <a-select-option v-for="(item, index) in searchedAccounts"
-                                       :key="index" :value="item.number" class="group">
-                        <div class="flex items-center px-2 py-2">
-                          <span class="certain-search-item-count">{{item.number}}</span>
-                          <div class="flex flex-grow"></div>
-                          <a-iconfont
-                              type="icon-guanbi"
-                              class="flex text-red opacity-0 group-hover:opacity-100"
-                              @click.stop="deleteAccount(item)"
-                          ></a-iconfont>
-                        </div>
-                      </a-select-option>
-                    </a-select-opt-group>
-                  </template>
-                  <a-input :placeholder="$t('join.placeholder.conferenceId')" maxlength="64" @change="onNumberChange">
-                    <a-iconfont slot="prefix" type="icon-dianhua" class="text-base text-black9"/>
-                  </a-input>
-                </a-auto-complete>
+                <account-auto-complete
+                    :account="meetingInfo.number"
+                    :searched-accounts="searchedAccounts"
+                    prefix-icon="icon-ID"
+                    :placeholder="$t('join.placeholder.conferenceId')"
+                    label="number"
+                    @clearAccount="clearAccount"
+                    @updateAccount="updateAccount"
+                    @selectAccount="selectAccount"
+                    @searchAccount="searchAccount"
+                    @deleteAccount="deleteAccount"
+                ></account-auto-complete>
               </div>
 
               <div class="mt-5 w-full">
@@ -128,6 +108,7 @@ import AppHeader from '../../../components/Main/MainHeader.vue';
 import MediaContent from '../../../components/Conference/TabSettingMedia.vue';
 import VideoView from '../../../components/Common/VideoView.vue';
 import { debounceNotice } from '../../../model/middleware/error-message';
+import AccountAutoComplete from '../../../components/Login/AccountAutoComplete.vue';
 
 export default {
   name       : 'EnterMeeting',
@@ -135,6 +116,7 @@ export default {
     AppHeader,
     MediaContent,
     VideoView,
+    AccountAutoComplete,
   },
   computed : {
     isCloud() {
@@ -240,6 +222,9 @@ export default {
     deleteAccount(val) {
       this.$storage.deleteItem(`MEETING_INFO_RECORD_${this.$rtc.account.username}`, val.number, 'number');
       this.initRawAccounts();
+    },
+    updateAccount(val) {
+      this.meetingInfo.number = val;
     },
     clearAccount() {
       this.$storage.deleteItem(`MEETING_INFO_RECORD_${this.$rtc.account.username}`, this.rawAccounts.map((account) => account.id));

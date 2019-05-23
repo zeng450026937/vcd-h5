@@ -211,7 +211,7 @@ export default {
       return Object.keys(this.currentEvent).length > 0;
     },
     enterpriseId() {
-      return this.$rtc.account.enterpriseId;
+      return '';
     },
     liveQRCode() {
       return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
