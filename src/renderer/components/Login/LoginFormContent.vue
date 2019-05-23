@@ -204,7 +204,7 @@ export default {
     accountInput() {
       const INPUT_MAP = {
         yms : {
-          icon        : 'icon-ren1',
+          icon        : 'icon-ren2',
           placeholder : $t('login.placeholder.account'),
         },
         phone : {
