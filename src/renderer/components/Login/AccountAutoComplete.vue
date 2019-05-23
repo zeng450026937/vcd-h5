@@ -1,7 +1,7 @@
 <template>
   <div id="account-auto-complete">
     <a-auto-complete
-        :value="account"
+        :value="formattedAccount"
         @change="updateAccount"
         class="certain-category-search w-full overflow-x-hidden"
         :dropdownMatchSelectWidth="false"
@@ -38,6 +38,7 @@
 
 <script>
 import { $t } from '../../i18n';
+import { formatAccount } from '../../utils/format';
 
 export default {
   name  : 'AccountAutoComplete',
@@ -62,22 +63,43 @@ export default {
       type    : String,
       default : $t('login.placeholder.account'),
     },
+    format : {
+      type    : Boolean,
+      default : true,
+    },
+  },
+  data() {
+    return {
+      formattedAccount : '',
+    };
   },
   methods : {
     updateAccount(val) {
-      this.$emit('updateAccount', val);
+      this.formattedAccount = this.format
+        ? formatAccount(val) : val.replace(/\s+/g, '');
+      this.$emit('updateAccount', this.formattedAccount);
     },
     selectAccount(val) {
       this.$emit('selectAccount', val);
     },
     searchAccount(val) {
-      this.$emit('searchAccount', val.trim());
+      this.$emit('searchAccount', val.replace(/\s+/g, ''));
     },
     deleteAccount(val) {
-      this.$emit('deleteAccount', val);
+      this.$emit('deleteAccount', val.replace(/\s+/g, ''));
     },
     clearAccount() {
       this.$emit('clearAccount');
+    },
+  },
+  watch : {
+    account : {
+      handler(val) {
+        this.formattedAccount = this.format
+          ? formatAccount(this.account)
+          : this.account.replace(/\s+/g, '');
+      },
+      immediate : true,
     },
   },
 };

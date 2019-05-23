@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="mb-4 flex">
-          <a-select v-if="serverType === 'cloud' && cloudType === 'phone'"
+          <a-select v-if="accountType === 'phone'"
                     defaultValue="+86"
                     style="width: 80px"
                     class="mr-3">
@@ -35,6 +35,7 @@
           </a-select>
           <account-auto-complete
               class="flex flex-grow"
+              :format="accountType !== 'email'"
               :prefixIcon="accountInput.icon"
               :placeholder="accountInput.placeholder"
               :account="loginData.account"
@@ -201,6 +202,10 @@ export default {
     hasNewVersion() {
       return this.status === 1 || this.status === 3 || this.status === 4;
     },
+    accountType() {
+      // 账号类型 yms phone email cloud
+      return this.serverType === 'yms' ? 'yms' : this.cloudType;
+    },
     accountInput() {
       const INPUT_MAP = {
         yms : {
@@ -222,8 +227,9 @@ export default {
       };
 
       
-      return INPUT_MAP[this.serverType === 'yms' ? 'yms' : this.cloudType];
+      return INPUT_MAP[this.accountType];
     },
+
   },
   methods : {
     handleLogin(e) {
@@ -280,11 +286,8 @@ export default {
       this.modifyAccounts();
     },
     modifyAccounts() {
-      // account-type : yms phone email cloud
-      const key = this.serverType === 'yms' ? 'yms' : this.cloudType;
-
       this.modifiedAccounts = this.rawAccounts
-        .filter((account) => account.type === key)
+        .filter((account) => account.type === this.accountType)
         .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
       const otherAccounts = this.rawAccounts.filter((account) => account.type !== this.serverType);
 
