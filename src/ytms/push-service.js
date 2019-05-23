@@ -167,6 +167,7 @@ export class PushService extends EventEmitter {
     const { type, body } = this.parseJSON(content);
 
     // null & undefined
+
     if (type == null) return;
 
     this.emit('notify', type, body);

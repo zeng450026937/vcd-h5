@@ -75,7 +75,7 @@ export class Job extends EventEmitter {
     }
     this.emit(status, this);
     logger.info(`job: ${this.id} -- ${status} ${this.duration ? `duration: ${this.duration / 1000} s` : ''} `);
-   
+
     if (status !== 'stop' && (res.status === 'sessionOutOfTime' || res.status === 'sessionFail')) {
       this.stop();
     }

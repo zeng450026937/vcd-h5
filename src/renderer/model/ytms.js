@@ -40,6 +40,11 @@ model.provide({
 
       await this.api.doAlarm(formdata);
     },
+    async pollConfig(ctx, next) {
+      await next();
+
+      return await this.api.pollConfig();
+    },
   },
   
   methods : {
@@ -176,16 +181,14 @@ model.use(async(ctx, next) => {
 
   // is not api method
   if (apis.indexOf(method) === -1) {
-    await next();
-
-    return;
+    return next();
   }
 
   // redirect to apiChecker
   ctx.redirect = method;
   ctx.method = 'apiChecker';
 
-  await next();
+  return next();
 });
 
 model.register('apiChecker', async function(ctx, next) {
@@ -199,7 +202,7 @@ model.register('apiChecker', async function(ctx, next) {
 
   ctx.method = ctx.redirect;
 
-  await next();
+  return next();
 });
 
 export default model;

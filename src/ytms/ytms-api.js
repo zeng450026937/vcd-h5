@@ -230,4 +230,20 @@ export async function reportEvent(baseURL, clientId, data) {
   return res.data.data;
 }
 
+export async function pollConfig(baseURL, clientId) {
+  const res = await inst({
+    method : 'post',
+    baseURL,
+    url    : `/clients/${clientId}/pollConfig`,
+    data   : {
+      clientId,
+    },
+  });
+
+  throwIfError(res);
+  console.log(res.data);
+
+  return res.data.data;
+}
+
 // 新增API必须保证前两个参数必须是 baseURL, clientId 不管有用没用

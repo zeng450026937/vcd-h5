@@ -242,12 +242,7 @@ export class AppWindow extends BaseWindow {
     this.window.webContents.send('launch-timing-stats', { stats });
   }
 
-  sendSystemConfig(config) {
-    logger.info(
-      'system-config updateChannel: %s, ytmsHostAddress: %s',
-      config.updateChannel,
-      config.ytmsHostAddress,
-    );
-    this.window.webContents.send('system-config', { config });
+  requestSystemConfig() {
+    this.window.webContents.send('request-system-config');
   }
 }

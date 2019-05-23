@@ -205,11 +205,9 @@ if (!handlingSquirrelEvent) {
       createWindow();
 
       // setup ipcMain
-      ipcMain.on('send-system-config', (event) => {
-        const { config } = event;
-        
+      ipcMain.on('request-system-config', (event) => {
         if (mainWindow) {
-          mainWindow.sendSystemConfig(config);
+          mainWindow.requestSystemConfig();
         }
       });
     });

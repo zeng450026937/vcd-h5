@@ -75,11 +75,7 @@ export function handlePushMessage(pushService, hook) {
         break;
 
       case MESSAGE_TYPE.PUT_CONFIG:
-        axios(body.downloadUrl)
-          .then((res) => {
-            ipcMain.emit('send-system-config', { config: res.data });
-          })
-          .catch((e) => logger.warn('download config file failed, error: %s', e));
+        ipcMain.emit('request-system-config');
         break;
 
       default:

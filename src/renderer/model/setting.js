@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import Axios from 'axios';
 import storage, { SETTING_STORAGE } from '../storage';
 import Vuem from './vuem';
 import rtc from '../rtc';
@@ -76,6 +77,20 @@ model.provide({
 
       this.save();
     },
+
+    async downloadConfig(ctx, next) {
+      await next();
+
+      const {
+        configId,
+        configName,
+        downloadUrl,
+        fileMd5,
+        configRemark,
+      } = await this.$dispatch('ytms.pollConfig');
+
+      return Axios.get(downloadUrl);
+    },
   },
 
   methods : {
@@ -114,14 +129,17 @@ model.provide({
     this.load();
 
     ipcRenderer.on(
-      'system-config',
-      async(event, { config }) => {    
+      'request-system-config',
+      async() => {
+        const res = await this.$dispatch('setting.downloadConfig');
+
         const {
           pushUpdateChannelFlag,
           pushYtmsHostFlag,
           updateChannel,
           ytmsHostAddress,
-        } = config;
+        } = res.data;
+
     
         if (pushYtmsHostFlag && ytmsHostAddress) {
           this.ytmsHostAddress = ytmsHostAddress;
