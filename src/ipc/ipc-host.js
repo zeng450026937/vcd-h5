@@ -48,4 +48,8 @@ export const ipcHost = {
   updateClientInfo() {
     ytms.updateInfo();
   },
+
+  updatePushServiceToken(token) {
+    ytms.updateToken(token);
+  },
 };

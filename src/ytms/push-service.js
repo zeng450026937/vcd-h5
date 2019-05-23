@@ -42,6 +42,7 @@ export class PushService extends EventEmitter {
     this.retryTimes = 0;
     this.maxRetryTimes = 0;
     this.cancelToken = null;
+    this.token = null;
   }
 
   stop(stop = true) {
@@ -120,6 +121,12 @@ export class PushService extends EventEmitter {
     try {
       this.cancelToken = axios.CancelToken.source();
 
+      console.log(JSON.stringify({
+        ...body,
+        url,
+        token : this.token,
+      }));
+
       res = await axios({
         method  : 'post',
         url,
@@ -129,6 +136,7 @@ export class PushService extends EventEmitter {
           'Content-Type' : contentType,
           Authorization  : auth,
           subscribe      : sub,
+          token          : this.token,
         },
         timeout     : 30000,
         cancelToken : this.cancelToken.token,
@@ -143,6 +151,11 @@ export class PushService extends EventEmitter {
     this.cancelToken = null;
 
     return res.data;
+  }
+
+  updateToken(token) {
+    logger.info('login cloud v30 succeed, token is', token);
+    this.token = token;
   }
 
   analyze(value = []) {

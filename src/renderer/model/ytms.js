@@ -11,9 +11,19 @@ model.provide({
   },
 
   computed : {
+    token() {
+      const digest = this.$getVM('digest');
+
+      return digest ? digest.token : null;
+    },
   },
 
   watch : {
+    token(val) {
+      if (val) {
+        ipcProxy.updatePushServiceToken(val);
+      }
+    },
   },
 
   middleware : {

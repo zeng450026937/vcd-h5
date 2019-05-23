@@ -107,4 +107,8 @@ export class YTMSService {
 
     this.url = default_url;
   }
+
+  updateToken(token) {
+    if (this.push) this.push.updateToken(token);
+  }
 }
