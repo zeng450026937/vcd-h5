@@ -52,9 +52,9 @@ model.provide({
     this.$phonebook = new Phonebook();
   },
   async created() {
-    if (this.isCloud) {
-      this.token = await this.getToken();
-    }
+    // if (this.isCloud) {
+    //   this.token = await this.getToken();
+    // }
 
     rtc.account.$on('negotiateUrlUpdated', this.initNegotiate);
     rtc.account.$on('phonebookUpdated', this.initNegotiate);
