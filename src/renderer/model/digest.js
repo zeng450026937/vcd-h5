@@ -151,7 +151,7 @@ model.provide({
         accountInfos : res.data.data.accountInfos,
       };
 
-      return res;
+      return res.data.data;
     },
     selectAccount(id) {
       const account = this.accounts.accountInfos.find((acc) => acc.accountInfo.id === id);

@@ -35,7 +35,8 @@
           </a-select>
           <account-auto-complete
               class="flex flex-grow"
-              :format="accountType !== 'email'"
+              :format="accountType === 'phone'"
+              :pattern="accountType"
               :prefixIcon="accountInput.icon"
               :placeholder="accountInput.placeholder"
               :account="loginData.account"
@@ -164,6 +165,7 @@ export default {
       dSearch,
       isCapsLockOn     : false,
       isFirstStart     : false,
+      isMultiAccount   : false,
       preRmbPassword   : true,
       rawAccounts      : [],
       modifiedAccounts : [],
@@ -233,12 +235,40 @@ export default {
   },
   methods : {
     handleLogin(e) {
-      if (this.serverType === 'cloud') {
-        if (this.cloudType === 'phone') {
-          // 电话
+      this.$model.digest.$dispatch('digest.loadAccount', {
+        username : this.loginData.account,
+        password : this.loginData.pin,
+      }).then(async(val) => {
+        if (val.accountInfos.length === 0) {
+          throw this.$message.warning('账号输入错误');
         }
-      }
-      this.$dispatch('account.login', this.loginData);
+        if (val.accountInfos.length > 1) {
+          this.isMultiAccount = true;
+          throw new Error();
+        }
+        
+        return val.accountInfos[0];
+      })
+        .then((info) => {
+          this.$model.digest.$dispatch('digest.getToken', { id: info.accountInfo.id });
+          
+          return info;
+        })
+        .then((info) => this.$dispatch('account.login',
+          {
+            account   : info.accountInfo.extension,
+            pin       : this.loginData.pin,
+            server    : info.partyInfo.domain,
+            proxy     : '10.200.112.65',
+            principle : info.accountInfo.principle,
+          }))
+        .catch(() => {});
+      // if (this.serverType === 'cloud') {
+      //   if (this.cloudType === 'phone') {
+      //     // 电话
+      //   }
+      // }
+      // this.$dispatch('account.login', this.loginData);
     },
     toForget() { // 跳转到忘记密码页面
       this.$dispatch('application.openExternal', { path: 'https://meeting.ylyun.com/meeting/forget' });

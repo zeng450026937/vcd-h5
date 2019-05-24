@@ -34,7 +34,10 @@ model.provide({
   middleware : {
     async login(ctx, next) {
       await next();
-      const { account, pin } = ctx.payload;
+      const { account, pin, server, proxy, principle } = ctx.payload;
+
+      this.server = server || this.server;
+      this.proxy = this.proxy || proxy;
 
       this.validateForm({
         ...ctx.payload,
@@ -46,6 +49,7 @@ model.provide({
 
       rtc.account.uri = `${account}@${this.server}`;
       rtc.account.password = pin;
+      rtc.account.authorizationUser = principle;
       rtc.account.servers = await formatServers({
         server : this.server,
         protocol,
@@ -55,7 +59,7 @@ model.provide({
       rtc.account.protocol = protocol;
       this.autoLoginDisabled = true;
       await rtc.account.signin().then(() => {
-        const loginData = Object.assign({}, { account }, {
+        const loginData = Object.assign({}, { account: principle }, {
           server        : this.server,
           proxy         : this.proxy,
           proxyPort     : this.proxyPort,
@@ -91,13 +95,15 @@ model.provide({
     validateForm(values) {
       let errorText = '';
 
-      if (!values.account) errorText = 'ACCOUNT_NOT_EMPTY';
-      else if (values.account.length > 128) errorText = 'ACCOUNT_TOO_LONG';
-      else if (!values.pin) errorText = 'PASSWORD_NOT_EMPTY';
-      else if (!values.pin.length > 128) errorText = 'PASSWORD_TOO_LONG';
-      else if (!values.server) errorText = 'SERVER_NOT_EMPTY';
-      else if (!IP_REG.test(values.server)
-        && !DOMAIN_REG.test(values.server)) errorText = 'SERVER_FORMAT_ERROR';
+      const { account, server, pin, ha1 } = values;
+
+      if (!account) errorText = 'ACCOUNT_NOT_EMPTY';
+      else if (account.length > 128) errorText = 'ACCOUNT_TOO_LONG';
+      else if (!pin) errorText = 'PASSWORD_NOT_EMPTY';
+      else if (ha1 && ha1.length > 128) errorText = 'PASSWORD_TOO_LONG';
+      else if (!server) errorText = 'SERVER_NOT_EMPTY';
+      else if (!IP_REG.test(server)
+        && !DOMAIN_REG.test(server)) errorText = 'SERVER_FORMAT_ERROR';
 
       if (errorText) throw new Error(errorText);
     },

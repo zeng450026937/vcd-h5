@@ -65,19 +65,24 @@ export default {
     },
     format : {
       type    : Boolean,
-      default : true,
+      default : false,
+    },
+    pattern : {
+      type    : String,
+      default : '',
     },
   },
   methods : {
-    formattedAccount(val = this.account) {
+    formattedAccount() {
       return this.format
-        ? formatAccount(val, '*** **** ****') : val.replace(/\s+/g, '');
+        ? formatAccount(this.account, this.pattern)
+        : this.account.replace(/\s+/g, '');
     },
     updateAccount(val) {
-      this.$emit('updateAccount', this.formattedAccount(val));
+      this.$emit('updateAccount', val.replace(/\s+/g, ''));
     },
     selectAccount(val) {
-      this.$emit('selectAccount', val);
+      this.$emit('selectAccount', val.replace(/\s+/g, ''));
     },
     searchAccount(val) {
       this.$emit('searchAccount', val.replace(/\s+/g, ''));

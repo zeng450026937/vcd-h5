@@ -77,7 +77,9 @@ model.provide({
     this.$phonebook = new Phonebook({ baseURL: this.baseURL });
 
     rtc.account.$on('negotiateUrlUpdated', this.initNegotiate);
-    rtc.account.$on('phonebookUpdated', this.initNegotiate);
+    if (!this.isCloud) {
+      rtc.account.$on('phonebookUpdated', this.initNegotiate);
+    }
   },
   middleware : {
     async sync(ctx, next) {

@@ -1,3 +1,15 @@
+const PATTERN = {
+  phone : {
+    start   : 3,
+    pattern : 'XXX XXXX XXXX',
+  },
+  cloud : {
+    start   : 3,
+    pattern : 'XXXX ',
+    loop    : true,
+  },
+};
+
 export function genPattern(number) {
   const patternArray = [];
 
@@ -17,11 +29,12 @@ export function genPattern(number) {
 
 export function formatAccount(str, pattern) {
   str = `${str}`.replace(/\s+/g, '');
+  const format = PATTERN[pattern] || { start: 5 };
 
-  if (str.length <= 5 && !pattern) return str;
+  if (str.length <= format.start) return str;
   let result = '';
 
-  pattern = pattern || genPattern(str.length);
+  pattern = format.pattern || genPattern(str.length);
 
   for (let i = 0, j = 0; i < str.length; i++) {
     result += str[i];
@@ -29,7 +42,8 @@ export function formatAccount(str, pattern) {
       result += ' ';
       j++;
     }
+    if (format.loop && j >= pattern.length) j = 0;
   }
 
-  return result;
+  return result.trim();
 }
