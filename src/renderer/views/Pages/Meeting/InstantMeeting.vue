@@ -59,7 +59,7 @@ export default {
   },
   computed : {
     isCloud() {
-      return this.$model.account.serverType === 'cloud';
+      return this.$model.login.sketch.isCloud;
     },
     dataLoaded() {
       if (this.isCloud) return this.$model.contact.phoneBookLoaded;

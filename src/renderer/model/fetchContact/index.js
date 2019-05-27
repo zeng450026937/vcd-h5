@@ -38,9 +38,7 @@ model.provide({
   },
   computed : {
     isCloud() {
-      const account = this.$getVM('account');
-
-      return account.serverType === 'cloud';
+      return this.$getVM('login.sketch').isCloud;
     },
     isRegistered() {
       return rtc.account.status === 'registered';
@@ -61,6 +59,7 @@ model.provide({
   watch : {
     isRegistered(val) {
       if (!val) this.reset();
+      this.initNegotiate();
     },
     token(val) {
       if (val && this.$phonebook) {

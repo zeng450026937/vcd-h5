@@ -1,5 +1,5 @@
 <template>
-  <div id="login-form-content" class="flex flex-col bg-white shadow w-full h-full relative">
+  <div id="login-form-content">
 
     <div class="flex flex-col content">
       <div class="login-title">
@@ -7,39 +7,40 @@
       </div>
 
       <div class="login-form flex flex-col" @keyup.enter="handleLogin">
-        <div class="flex mb-6 select-none" v-if="serverType === 'cloud'">
+        <div class="flex mb-6 select-none" v-if="isCloud">
           <div class="cloud-tab-normal"
-               :class="{'cloud-tab-active': cloudType === 'phone'}"
-                @click="cloudType = 'phone'">
+               :class="{'cloud-tab-active': isLoginByPhone}"
+               @click="toLoginByPhone">
             <span>手机登录</span>
           </div>
           <div class="cloud-tab-normal mx-6"
-               :class="{'cloud-tab-active': cloudType === 'email'}"
-               @click="cloudType = 'email'">
+               :class="{'cloud-tab-active': isLoginByEmail}"
+               @click="toLoginByEmail">
             <span>邮箱登录</span>
           </div>
           <div class="cloud-tab-normal"
-               :class="{'cloud-tab-active': cloudType === 'cloud'}"
-               @click="cloudType = 'cloud'">
+               :class="{'cloud-tab-active': isLoginByCloud}"
+               @click="toLoginByCloud">
             <span>云账号登录</span>
           </div>
         </div>
         <div class="mb-4 flex">
-          <a-select v-if="accountType === 'phone'"
+          <a-select v-if="isLoginByPhone"
                     defaultValue="+86"
                     style="width: 80px"
                     class="mr-3">
-              <a-select-option value="+86">+86</a-select-option>
-              <a-select-option value="+110">+110</a-select-option>
-              <a-select-option value="+114">+114</a-select-option>
+            <a-select-option value="+86">+86</a-select-option>
+            <a-select-option value="+110">+110</a-select-option>
+            <a-select-option value="+114">+114</a-select-option>
           </a-select>
           <account-auto-complete
               class="flex flex-grow"
-              :format="accountType === 'phone'"
+              label="principle"
+              :format="isLoginByPhone"
               :pattern="accountType"
               :prefixIcon="accountInput.icon"
               :placeholder="accountInput.placeholder"
-              :account="loginData.account"
+              :account="loginData.principle"
               :searched-accounts="searchedAccounts"
               @clearAccount="clearAccount"
               @updateAccount="updateAccount"
@@ -50,26 +51,26 @@
         </div>
 
         <!--<template v-if="serverType === 'yms'">-->
-          <div class="mb-4">
-            <a-input
-                v-model="loginData.pin"
-                maxlength="64"
-                @keypress="passwordInputted"
-                type="password"
-                :placeholder="$t('login.placeholder.password')">
-              <div slot="prefix">
-                <a-tooltip
-                    :visible="isCapsLockOn"
-                    trigger="focus"
-                    placement="bottomLeft">
-                  <template slot="title">
-                    <span>{{$t('login.capitalLocked')}}</span>
-                  </template>
-                  <a-iconfont type='icon-mima' class="text-base text-black9"/>
-                </a-tooltip>
-              </div>
-            </a-input>
-          </div>
+        <div class="mb-4">
+          <a-input
+              v-model="loginData.pin"
+              maxlength="64"
+              @keypress="passwordInputted"
+              type="password"
+              :placeholder="$t('login.placeholder.password')">
+            <div slot="prefix">
+              <a-tooltip
+                  :visible="isCapsLockOn"
+                  trigger="focus"
+                  placement="bottomLeft">
+                <template slot="title">
+                  <span>{{$t('login.capitalLocked')}}</span>
+                </template>
+                <a-iconfont type='icon-mima' class="text-base text-black9"/>
+              </a-tooltip>
+            </div>
+          </a-input>
+        </div>
 
         <div class="flex justify-between mt-6">
           <a-checkbox class="text-xs text-black6"
@@ -90,21 +91,21 @@
               <a-button type="primary" block @click="handleLogin">{{$t('login.login')}}</a-button>
             </div>
             <div class="w-1/2 ml-2">
-              <a-button @click="toMeeting" block>{{$t('login.join')}}</a-button>
+              <a-button @click="toJoinConferencePage" block>{{$t('login.join')}}</a-button>
             </div>
           </div>
         </div>
 
       </div>
 
-      <div class="text-xs text-center text-black6 mt-12 h-28px">
-        <template v-if="serverType === 'cloud'">
+      <div class="text-xs text-center text-black6 mt-12 h-7">
+        <template v-if="isCloud">
           <span class="cursor-pointer leading-tight"
                 @click="toForget">{{$t('login.forgetPassword')}}</span>
-          <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
+          <a-divider type="vertical" class="mx-5 bg-divider h-7"/>
           <span class="cursor-pointer leading-tight"
                 @click="toRegister">{{$t('login.regist')}}</span>
-          <a-divider type="vertical" class="mx-5 bg-divider h-28px"/>
+          <a-divider type="vertical" class="mx-5 bg-divider h-7"/>
         </template>
         <a-tooltip
             :visible="isFirstStart"
@@ -144,99 +145,95 @@
 
 <script>
 import { cloneDeep, debounce } from 'lodash';
-import { LOGIN_STORAGE } from '../../storage';
 import { isCapsLockOn } from '../../utils';
-import LoginHeader from './LoginHeader.vue';
 import AccountAutoComplete from './AccountAutoComplete.vue';
 import { $t } from '../../i18n';
 
 export default {
   name       : 'YMSLoginFormContent',
   components : {
-    LoginHeader,
     AccountAutoComplete,
   },
   data() {
     const dSearch = debounce((val = '') => {
-      this.searchedAccounts = this.modifiedAccounts.filter((a) => a.account.indexOf(val) >= 0);
+      this.searchedAccounts = this.modifiedAccounts.filter((a) => a.principle.indexOf(val) !== -1);
     }, 200);
 
     return {
       dSearch,
       isCapsLockOn     : false,
-      isFirstStart     : false,
       isMultiAccount   : false,
       preRmbPassword   : true,
       rawAccounts      : [],
       modifiedAccounts : [],
       searchedAccounts : [],
-      loginData        : {
-        account : '',
-        pin     : '',
-      },
     };
   },
-
-  async mounted() {
-    this.initRawAccounts();
-    await this.$nextTick();
-    if (this.isAutoLogin) this.handleLogin();
-    this.isFirstStart = this.$storage.query(this.$storage.FIRST_START);
+  sketch : {
+    computed : [
+      {
+        ns    : 'login.account',
+        props : [ 'loginData', 'rmbPassword' ],
+      },
+      {
+        ns    : 'login.sketch',
+        props : [ 'isCloud', 'isYMS', 'serverType', 'cloudType', 'accountType', 'isLoginByPhone', 'isLoginByEmail', 'isLoginByCloud' ],
+      },
+      {
+        ns    : 'login.state',
+        props : [ 'isFirstStart', 'autoLogin', 'autoLoginDisabled' ],
+      },
+      {
+        ns    : 'updater',
+        props : [ 'hasNewVersion' ],
+      },
+    ],
+    methods : [
+      {
+        ns    : 'login.sketch',
+        props : [ 'toLoginByPhone', 'toLoginByEmail', 'toLoginByCloud', 'toJoinConferencePage' ],
+      },
+    ],
   },
-  sketch : [
-    {
-      ns    : 'account',
-      props : [ 'serverType', 'rmbPassword', 'autoLogin',
-        'autoLoginDisabled', 'loginType', 'cloudType' ],
-    },
-    {
-      ns    : 'i18n',
-      props : [ 'language' ],
-    },
-  ],
   computed : {
     isAutoLogin() {
       return this.autoLogin && !this.autoLoginDisabled && this.rmbPassword;
     },
-    status() {
-      return this.$model.updater.status;
-    },
-    hasNewVersion() {
-      return this.status === 1 || this.status === 3 || this.status === 4;
-    },
-    accountType() {
-      // 账号类型 yms phone email cloud
-      return this.serverType === 'yms' ? 'yms' : this.cloudType;
-    },
     accountInput() {
       const INPUT_MAP = {
-        yms : {
+        YMS : {
           icon        : 'icon-ren2',
           placeholder : $t('login.placeholder.account'),
         },
-        phone : {
+        PHONE : {
           icon        : 'icon-dianhua',
           placeholder : $t('login.placeholder.phone'),
         },
-        email : {
+        EMAIL : {
           icon        : 'icon-mail',
           placeholder : $t('login.placeholder.email'),
         },
-        cloud : {
+        CLOUD : {
           icon        : 'icon-cloud',
           placeholder : $t('login.placeholder.cloud'),
         },
       };
 
-      
-      return INPUT_MAP[this.accountType];
+      return INPUT_MAP[this.accountType.toUpperCase()];
     },
-
+  },
+  async mounted() {
+    this.initRawAccounts();
+    await this.$nextTick();
+    if (this.isAutoLogin) this.handleLogin();
   },
   methods : {
     handleLogin(e) {
+      if (this.isYMS) {
+        return this.$dispatch('login.login');
+      }
       this.$model.digest.$dispatch('digest.loadAccount', {
-        username : this.loginData.account,
+        username : this.loginData.principle,
         password : this.loginData.pin,
       }).then(async(val) => {
         if (val.accountInfos.length === 0) {
@@ -244,31 +241,72 @@ export default {
         }
         if (val.accountInfos.length > 1) {
           this.isMultiAccount = true;
-          throw new Error();
+          throw new Error('multi account');
         }
-        
+
         return val.accountInfos[0];
       })
         .then((info) => {
           this.$model.digest.$dispatch('digest.getToken', { id: info.accountInfo.id });
-          
-          return info;
-        })
-        .then((info) => this.$dispatch('account.login',
-          {
+          this.loginData = {
             account   : info.accountInfo.extension,
             pin       : this.loginData.pin,
             server    : info.partyInfo.domain,
             proxy     : '10.200.112.65',
             principle : info.accountInfo.principle,
-          }))
+          };
+        })
+        .then(() => this.$dispatch('login.login'))
         .catch(() => {});
-      // if (this.serverType === 'cloud') {
-      //   if (this.cloudType === 'phone') {
-      //     // 电话
-      //   }
-      // }
-      // this.$dispatch('account.login', this.loginData);
+    },
+    clearAccount() {
+      this.$dispatch('login.account.clearAccount', this.modifiedAccounts.map((account) => account.id)).then(this.initRawAccounts);
+    },
+    updateAccount(val) {
+      this.loginData.principle = val;
+    },
+    selectAccount(val) {
+      this.updateForm(this.modifiedAccounts.find((a) => a.principle === val));
+    },
+    searchAccount(val) {
+      this.dSearch(val.trim());
+    },
+    deleteAccount(val) {
+      this.$dispatch('login.account.deleteAccount', val.principle).then(this.initRawAccounts);
+    },
+    initRawAccounts() {
+      this.$dispatch('login.account.getRawAccounts').then((val) => {
+        this.rawAccounts = val;
+        this.modifyAccounts();
+      });
+    },
+    modifyAccounts() {
+      this.modifiedAccounts = this.rawAccounts
+        .filter((account) => account.type === this.accountType)
+        .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
+      const otherAccounts = this.rawAccounts.filter((account) => account.type !== this.accountType);
+
+      if (this.modifiedAccounts.length > 10 || otherAccounts.length > 10) {
+        this.$dispatch('login.account.updateAccounts', [ ...this.modifiedAccounts.slice(0, 10), ...otherAccounts ]);
+      }
+      this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
+      this.updateForm(this.modifiedAccounts[0]);
+      this.dSearch();
+    },
+    updateForm(data) {
+      if (!data) data = {};
+      Object.keys(this.loginData).forEach((k) => this.loginData[k] = data[k]);
+      this.$model.login.account.proxy = data.proxy;
+      this.$model.login.account.proxyPort = data.proxyPort;
+      this.loginData.server = this.loginData.server || (this.isCloud ? 'yealinkvc.com' : '');
+    },
+    passwordInputted(event) {
+      this.isCapsLockOn = isCapsLockOn(event);
+    },
+    openSetting() {
+      this.isFirstStart = false;
+      this.isCapsLockOn = false;
+      this.$emit('openSetting');
     },
     toForget() { // 跳转到忘记密码页面
       this.$dispatch('application.openExternal', { path: 'https://meeting.ylyun.com/meeting/forget' });
@@ -290,76 +328,13 @@ export default {
 
       this.$dispatch('application.openExternal', { path });
     },
-    toMeeting() {
-      this.loginType = 'meeting';
-    },
-    deleteAccount(val) {
-      this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, val.account, 'account');
-      this.initRawAccounts();
-    },
-    clearAccount() {
-      this.$storage.deleteItem(LOGIN_STORAGE.ACCOUNT_LIST, this.rawAccounts.map((account) => account.id));
-      this.initRawAccounts();
-    },
-    updateAccount(val) {
-      this.loginData.account = val;
-    },
-    selectAccount(val) {
-      this.updateForm(this.modifiedAccounts.find((a) => a.account === val));
-    },
-    searchAccount(val) {
-      this.dSearch(val.trim());
-    },
-
-    initRawAccounts() {
-      this.rawAccounts = (this.$storage.query(LOGIN_STORAGE.ACCOUNT_LIST) || []); // 得到最初的登陆历史记录
-      this.modifyAccounts();
-    },
-    modifyAccounts() {
-      this.modifiedAccounts = this.rawAccounts
-        .filter((account) => account.type === this.accountType)
-        .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
-      const otherAccounts = this.rawAccounts.filter((account) => account.type !== this.serverType);
-
-      if (this.modifiedAccounts.length > 10 || otherAccounts.length > 10) {
-        this.$storage.insert(LOGIN_STORAGE.ACCOUNT_LIST, [ ...this.modifiedAccounts.slice(0, 10), ...otherAccounts ]);
-      }
-      this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
-      this.updateForm(this.modifiedAccounts[0]);
-      this.dSearch();
-    },
-    updateForm(data) {
-      if (!data) data = {};
-      this.loginData = {
-        account : data.account,
-        pin     : data.pin,
-      };
-      this.$model.account.proxy = data.proxy;
-      this.$model.account.proxyPort = data.proxyPort;
-      this.$model.account.server = this.serverType === 'cloud' ? data.server || 'yealinkvc.com' : data.server;
-    },
-    passwordInputted(event) {
-      this.isCapsLockOn = isCapsLockOn(event);
-    },
-    openSetting() {
-      this.$storage.update(this.$storage.FIRST_START, false);
-      this.isFirstStart = false;
-      this.isCapsLockOn = false;
-      this.$emit('openSetting');
-    },
-
   },
   watch : {
-    serverType() { // f服务器类型发生变化
+    accountType() { // f服务器类型发生变化
       if (this.modifiedAccounts.length <= 0) { // 没有联系人则从数据库重新获取
         this.initRawAccounts();
       }
       else { // 重新设置 searchResult
-        this.modifyAccounts();
-      }
-    },
-    cloudType() {
-      if (this.serverType === 'cloud') {
         this.modifyAccounts();
       }
     },
@@ -379,7 +354,6 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$storage.update(this.$storage.FIRST_START, false);
     this.isFirstStart = false;
   },
 };
@@ -387,12 +361,9 @@ export default {
 
 <style lang="less">
   #login-form-content{
-    @apply h-full;
-    .h-28px {
-      height: 28px;
-    }
+    @apply h-full flex flex-col bg-white shadow w-full relative;
     > .content {
-      @apply justify-center items-center h-1 flex-grow;
+    @apply justify-center items-center h-1 flex-grow;
       .login-form {
         width: 55%;
         .cloud-tab {
@@ -404,21 +375,21 @@ export default {
           }
         }
         .ant-form-item-control {
-          @apply leading-none;
+        @apply leading-none;
         }
       }
     }
     .login-title {
       width: 55%;
       padding-bottom: 48px;
-      @apply text-2xl font-semibold flex items-end justify-start;
+    @apply text-2xl font-semibold flex items-end justify-start;
     }
 
     .login-footer {
-      @apply h-10 w-full bg-under-painting flex items-center justify-center;
+    @apply h-10 w-full bg-under-painting flex items-center justify-center;
     }
     .ant-input {
-      @apply pl-9;
+    @apply pl-9;
     }
   }
   .first-start-tooltip {
@@ -428,8 +399,9 @@ export default {
       }
       .ant-tooltip-inner {
         background-color: #d7def3;
-        @apply text-xs text-indigo text-center leading-tight;
+      @apply text-xs text-indigo text-center leading-tight;
       }
     }
   }
+
 </style>

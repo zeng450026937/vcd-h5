@@ -76,7 +76,7 @@ export default {
         : this.$t('contact.modal.title.updateGroup');
     },
     isCloud() {
-      return this.$model.account.serverType === 'cloud';
+      return this.$model.login.sketch.isCloud;
     },
     dataLoaded() {
       if (this.isCloud) return this.$model.contact.phoneBookLoaded;

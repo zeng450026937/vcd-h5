@@ -193,10 +193,16 @@ export default class Store {
       node.amount = 0;
     }
 
-    if (node.number === rtc.account.username) {
-      node.isSelf = true;
-      kom.vm.contact.currentContact = node;
+    // 考虑短号情况
+    if (/^(\w*)\.?(\w*)/.test(node.number)) {
+      const number = RegExp.$2 || RegExp.$1;
+
+      if (number === rtc.account.username) {
+        node.isSelf = true;
+        kom.vm.contact.currentContact = node;
+      }
     }
+
     node.phone = node.attributes.extension || '';
     node.email = node.attributes.email || '';
     node.id = node.node.id;

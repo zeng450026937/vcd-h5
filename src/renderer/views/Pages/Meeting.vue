@@ -90,7 +90,7 @@
             <div class="mt-5 flex flex-col">
               <a-button type="primary"
                         @click="joinMeeting">{{$t('join.title.join')}}</a-button>
-              <a-button block class="mt-4" @click="returnLogin">{{$t('join.title.backToLogin')}}</a-button>
+              <a-button block class="mt-4" @click="toLoginPage">{{$t('join.title.backToLogin')}}</a-button>
             </div>
           </div>
         </div>
@@ -179,19 +179,22 @@ export default {
     };
   },
   sketch : {
-    ns    : 'account',
-    props : [ 'loginType' ],
+    computed : [
+      {
+        ns    : 'login.sketch',
+        props : [ 'isCloud', 'isYMS', 'serverType' ],
+      },
+    ],
+    methods : [ {
+      ns    : 'login.sketch',
+      props : [ 'toLoginPage' ],
+    },
+    ],
   },
   mounted() {
     this.initRawAccounts();
   },
   computed : {
-    isCloud() {
-      return this.$model.account.serverType === 'cloud';
-    },
-    serverType() {
-      return this.$model.account.serverType;
-    },
     localStream() {
       return this.$rtc.media.localMedia.stream;
     },
@@ -216,9 +219,6 @@ export default {
         icon  : 'icon-maikefengjinyong',
         color : 'red-light',
       };
-    },
-    meetingBtnClasses() {
-      return {};
     },
     isConnecting() {
       return this.$rtc.conference.connecting;
@@ -282,9 +282,6 @@ export default {
         await this.$dispatch('meeting.anonymousJoin', this.meetingInfo);
       }
     },
-    returnLogin() {
-      this.loginType = 'login';
-    },
     handleMeeting() {
     },
     triggerAudio() {
@@ -308,7 +305,7 @@ export default {
       Object.assign(this.meetingInfo, {
         number      : '',
         pin         : '',
-        server      : this.serverType === 'cloud' ? 'yealinkcloud.cc' : '',
+        server      : this.isCloud ? 'yealinkcloud.cc' : '',
         displayName : '',
         proxy       : '',
         proxyPort   : '',
@@ -333,7 +330,7 @@ export default {
       this.meetingInfo = {
         number       : '',
         pin          : '',
-        server       : this.serverType === 'cloud' ? 'yealinkcloud.cc' : '',
+        server       : this.isCloud ? 'yealinkcloud.cc' : '',
         displayName  : '',
         proxy        : '',
         proxyPort    : '',

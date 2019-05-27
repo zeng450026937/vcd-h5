@@ -141,9 +141,9 @@ model.provide({
 
       this.targetInfo = phoneBookStore.getNodeByNumber(number);
       if (!this.targetInfo) {
-        const account = this.$getVM('account');
+        const { isYMS } = this.$getVM('login.sketch');
 
-        if (contact.loadMode === 'SPLIT' && account.serverType !== 'cloud') {
+        if (contact.loadMode === 'SPLIT' && isYMS) {
           contact.findContacts(number).then((val) => {
             if (val && val.length === 1) {
               this.targetInfo = val[0];

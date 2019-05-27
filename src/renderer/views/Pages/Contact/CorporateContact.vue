@@ -100,7 +100,7 @@ export default {
   },
   computed : {
     isCloud() {
-      return this.$model.account.serverType === 'cloud';
+      return this.$model.login.sketch.isCloud;
     },
     LOAD_MODE() {
       return this.$model.contact.LOAD_MODE;

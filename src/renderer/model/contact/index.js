@@ -55,9 +55,7 @@ model.provide({
     },
     loginStatus : () => rtc.account.status,
     isCloud() {
-      const account = this.$getVM('account');
-
-      return account.serverType === 'cloud';
+      return this.$getVM('login.sketch').isCloud;
     },
     contact() {
       const fetchContact = this.$getVM('fetchContact');
@@ -187,8 +185,13 @@ model.provide({
       if (val === 'SPLIT') {
         this.findContacts(this.username).then((result) => {
           result.every((contact) => {
-            if (contact.number === this.username) {
-              this.currentContact = contact;
+            // 考虑短号情况
+            if (/^(\w*)\.?(\w*)/.test(contact.number)) {
+              const number = RegExp.$2 || RegExp.$1;
+
+              if (number === this.username) {
+                this.currentContact = contact;
+              }
             }
 
             return contact.number !== this.username;

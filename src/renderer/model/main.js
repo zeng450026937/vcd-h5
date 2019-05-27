@@ -36,7 +36,7 @@ const genSidebarNavs = (routes) => {
 };
 
 const initialSidebar = () => {
-  const isCloud = kom.vm.account.serverType === 'cloud';
+  const { isCloud } = kom.vm.login.sketch;
   const routes = findAllRoutes(router.options.routes);
   const sideNavs = genSidebarNavs(routes);
 
@@ -166,8 +166,8 @@ model.provide({
     },
     isConferenceDisConnected(val) {
       if (this.isConferenceDisConnected && this.isCallDisConnected) {
-        const { loginType } = this.$parent.account;
-        const route = loginType === 'login' ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
+        const { isInLogin } = this.$getVM('login.sketch');
+        const route = isInLogin ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
 
         router.push(this.isRegistered ? this.currentNav.path : route);
       }

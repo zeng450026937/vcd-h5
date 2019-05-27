@@ -168,9 +168,6 @@ export default {
     loadMode() {
       return this.$model.contact.loadMode;
     },
-    isCloud() {
-      return this.$model.account.serverType === 'cloud';
-    },
   },
   filters : {
     getDate,
@@ -248,7 +245,7 @@ export default {
       this.contact = contact;
 
       if (!contact) {
-        if (this.loadMode === 'SPLIT' && !this.isCloud) {
+        if (this.loadMode === 'SPLIT' && this.$model.login.sketch.isYMS) {
           const contacts = await this.$model.contact.findContacts(val).catch(() => Promise.resolve(null));
 
           contact = contacts.find((n) => n.number === val);

@@ -92,9 +92,6 @@ export default {
     loadMode() {
       return this.$model.contact.loadMode;
     },
-    isCloud() {
-      return this.$model.account.serverType === 'cloud';
-    },
   },
   methods : {
     handleMeeting(type) {

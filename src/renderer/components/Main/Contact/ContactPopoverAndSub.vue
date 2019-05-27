@@ -53,9 +53,6 @@ export default {
     loadMode() {
       return this.$model.contact.loadMode;
     },
-    isCloud() {
-      return this.$model.account.serverType === 'cloud';
-    },
   },
   methods : {
     handleCall(data) {
@@ -65,7 +62,7 @@ export default {
       let contact = this.store.getNodeByNumber(val);
 
       if (!contact) {
-        if (this.loadMode === 'SPLIT' && !this.isCloud) {
+        if (this.loadMode === 'SPLIT' && !this.$model.login.sketch.isCloud) {
           const contacts = await this.$model.contact.findContacts(val).catch(() => Promise.resolve(null));
 
           contact = contacts.find((n) => n.number === val);

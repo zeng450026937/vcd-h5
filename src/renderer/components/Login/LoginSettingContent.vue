@@ -48,18 +48,17 @@ export default {
       tmpProxy     : '',
       tmpProxyPort : '',
       tmpServer    : '',
-      errorQueue   : Promise.resolve(),
       activeKey    : '1',
     };
   },
   mounted() {
     this.tmpProxy = this.proxy;
     this.tmpProxyPort = this.proxyPort;
-    this.tmpServer = this.server;
+    this.tmpServer = this.loginData.server;
   },
   sketch : {
-    ns    : 'account',
-    props : [ 'proxy', 'proxyPort', 'server' ],
+    ns    : 'login.account',
+    props : [ 'proxy', 'proxyPort', 'loginData' ],
   },
   methods : {
     validateProxy() {
@@ -70,11 +69,11 @@ export default {
       if (this.validateProxy()) {
         this.proxy = this.tmpProxy;
         this.proxyPort = this.tmpProxyPort;
-        this.server = this.tmpServer;
+        this.loginData.server = this.tmpServer;
         this.closeSetting();
       }
       else {
-        this.errorQueue = this.errorQueue.then(() => this.$message.error('代理服务器格式错误'));
+        this.$message.error('代理服务器格式错误');
       }
     },
     closeSetting() {
@@ -83,7 +82,7 @@ export default {
   },
   watch : {
     tmpProxyPort(val) {
-      if (val) this.tmpProxyPort = val.replace(/\D+/, '');
+      if (val && typeof val !== 'number') this.tmpProxyPort = val.replace(/\D+/, '');
     },
   },
 };

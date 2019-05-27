@@ -23,7 +23,7 @@
       <div class="flex">
         <div class="flex flex-col">
           <span class="text-black6 account-item">{{$t('setting.account.username')}}</span>
-          <span class="text-black6 account-item">{{$t('setting.account.phone')}}</span>
+          <span v-if="user.phone" class="text-black6 account-item">{{$t('setting.account.phone')}}</span>
           <span v-if="user.email" class="text-black6 account-item">{{$t('setting.account.email')}}</span>
           <template v-if="fullPath && fullPath.length > 0">
             <span class="whitespace-no-wrap text-black6 account-item">{{$t('setting.account.group')}}</span>
@@ -32,7 +32,7 @@
         </div>
         <div class="flex flex-col">
           <span class="ml-3 account-item">{{user.number}}</span>
-          <span class="ml-3 account-item">{{user.phone}}</span>
+          <span v-if="user.phone" class="ml-3 account-item">{{user.phone}}</span>
           <span v-if="user.email" class="ml-3 account-item">{{user.email}}</span>
           <template v-if="fullPath && fullPath.length > 0">
             <span class="ml-3 account-item">{{fullPath | fullName}}</span>
@@ -119,7 +119,7 @@ export default {
     },
 
     onSignOutClicked() {
-      this.$dispatch('account.logout');
+      this.$dispatch('login.logout');
     },
   },
   filters : {

@@ -120,10 +120,10 @@ export default {
   },
   computed : {
     isCloud() {
-      return this.$model.account.serverType === 'cloud';
+      return this.$model.login.sketch.isCloud;
     },
     server() {
-      return this.$model.account.loginData.server;
+      return this.$model.login.account.loginData.server;
     },
     isConnected() {
       return this.$rtc.conference.connected;

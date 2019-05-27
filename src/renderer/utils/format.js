@@ -1,9 +1,9 @@
 const PATTERN = {
-  phone : {
+  PHONE : {
     start   : 3,
     pattern : 'XXX XXXX XXXX',
   },
-  cloud : {
+  CLOUD : {
     start   : 3,
     pattern : 'XXXX ',
     loop    : true,
@@ -29,7 +29,7 @@ export function genPattern(number) {
 
 export function formatAccount(str, pattern) {
   str = `${str}`.replace(/\s+/g, '');
-  const format = PATTERN[pattern] || { start: 5 };
+  const format = PATTERN[pattern] || PATTERN[pattern.toUpperCase()] || { start: 5 };
 
   if (str.length <= format.start) return str;
   let result = '';

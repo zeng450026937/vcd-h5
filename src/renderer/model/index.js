@@ -5,7 +5,6 @@ import setting from './setting';
 import updater from './updater';
 import ytms from './ytms';
 import media from './media';
-import account from './account';
 import digest from './digest';
 import state from './state';
 import contact from './contact';
@@ -21,10 +20,13 @@ import i18n from './i18n';
 import notify from './notify';
 import fetchContact from './fetchContact';
 
+import login from './login';
 
 Vue.use(Vuem);
 
 const model = new Vuem();
+
+model.mount('login', login);
 
 model.mount('i18n', i18n);
 model.mount('application', application);
@@ -32,7 +34,6 @@ model.mount('setting', setting);
 model.mount('updater', updater);
 model.mount('ytms', ytms);
 model.mount('media', media);
-model.mount('account', account);
 model.mount('digest', digest);
 model.mount('contact', contact);
 model.mount('schedule', schedule);

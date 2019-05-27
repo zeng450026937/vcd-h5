@@ -114,7 +114,7 @@ export default {
       },
     },
     isCloud() {
-      return this.$model.account.serverType === 'cloud';
+      return this.$model.login.sketch.isCloud;
     },
     protocols() {
       const protocols = [ 'SIP', 'H.323', 'RTMP', 'SFB(Lync)' ];

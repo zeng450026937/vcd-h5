@@ -39,6 +39,9 @@ model.provide({
     appVersion() {
       return autoUpdater.appVersion;
     },
+    hasNewVersion() {
+      return this.status === 1 || this.status === 3 || this.status === 4;
+    },
   },
 
   watch : {

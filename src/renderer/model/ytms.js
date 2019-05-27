@@ -69,7 +69,8 @@ model.provide({
 
     const application = this.$getVM('application');
     const setting = this.$getVM('setting');
-    const account = this.$getVM('account');
+    const account = this.$getVM('login.account');
+    const login = this.$getVM('login.sketch');
     const contact = this.$getVM('contact');
 
     application.$watch('connection', async() => {
@@ -110,7 +111,7 @@ model.provide({
             domain       : configuration && configuration.uri.host,
             outbound     : account.proxy,
             outboundPort : account.proxyPort,
-            type         : account.serverType,
+            type         : login.serverType,
             status,
           };
         }
@@ -137,6 +138,8 @@ model.provide({
     });
 
     contact.$watch('currentContact', (val) => {
+      if (!val) return;
+
       const data = {
         user : {
           name : val.name,
@@ -156,8 +159,8 @@ model.provide({
           serverAddress : configuration && configuration.uri.host,
           outbound      : account.proxy,
           outboundPort  : account.proxyPort,
-          serverType    : account.serverType,
-          status        : account.status,
+          serverType    : login.serverType,
+          status        : rtc.account.status,
         },
       };
 

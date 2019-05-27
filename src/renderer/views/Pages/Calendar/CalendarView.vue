@@ -13,7 +13,7 @@
       </a-row>
       </template>
       <template v-else>
-        <div class="flex flex-grow h-1 justify-center items-center m-4 border bg-white">
+        <div class="flex h-full justify-center items-center m-4 border bg-white">
           <common-empty class="text-grey" :text="$t('schedule.emptySchedule')"/>
         </div>
       </template>

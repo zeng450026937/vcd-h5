@@ -16,11 +16,8 @@ meeting.provide({
     };
   },
   computed : {
-    serverType() {
-      return this.$parent.account.serverType;
-    },
-    loginType() {
-      return this.$parent.account.loginType;
+    isCloud() {
+      return this.$getVM('login.sketch').isCloud;
     },
     isRegistered() {
       return rtc.account.registered;
@@ -87,7 +84,7 @@ meeting.provide({
       conference.number = number;
       conference.pin = pin;
 
-      const port = proxyPort || (this.serverType === 'cloud' && protocol === 'wss' ? 7443 : 5061);
+      const port = proxyPort || (this.isCloud && protocol === 'wss' ? 7443 : 5061);
 
       let servers;
 
@@ -111,7 +108,7 @@ meeting.provide({
       }).then(() => {
         const meetingData = Object.assign({
           lastLoginDate : Date.now(),
-          type          : this.serverType,
+          type          : this.$getVM('login.sketch').serverType,
         }, { number,
           pin,
           server,

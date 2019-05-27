@@ -101,7 +101,7 @@ export default {
       return formattedPhoneBook && formattedPhoneBook.items;
     },
     currentContact() {
-      return this.$model.account.currentContact;
+      return this.$model.contact.currentContact;
     },
   },
   watch : {

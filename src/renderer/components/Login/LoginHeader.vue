@@ -46,7 +46,6 @@
 <script>
 import CommonHeader from '../Shared/CommonHeader.vue';
 import FeedbackModal from './FeedbackModal.vue';
-import { LOGIN } from '../../router/constants';
 
 export default {
   name       : 'LoginHeader',
@@ -83,14 +82,12 @@ export default {
     };
   },
   sketch : {
-    ns    : 'account',
-    props : [ 'serverType', 'loginType' ],
+    ns    : 'login.sketch',
+    props : [ 'isCloud', 'toYMS', 'toCloud' ],
   },
   computed : {
     serverText() {
-      return this.serverType === 'cloud'
-        ? this.$t('login.header.cloud')
-        : this.$t('login.header.yms');
+      return this.isCloud ? this.$t('login.header.cloud') : this.$t('login.header.yms');
     },
   },
   methods : {
@@ -105,31 +102,18 @@ export default {
     },
     handleHelpClick() {},
     handleMenuClick({ key }) {
-      this.serverType = key;
+      const method = key === 'yms' ? this.toYMS : this.toCloud;
+
+      method();
       this.menuStatus = false;
     },
     reportIssues() {
       this.$refs.headerModal.visible = true;
       this.helpStatus = false;
     },
-    updateRoute() {
-      const ROUTE = this.loginType === 'login' ? LOGIN.LOGIN_CONTENT : LOGIN.MEETING_CONTENT;
-
-      this.$router.push(ROUTE);
-    },
     goHelp() {
       this.helpStatus = false;
       this.$dispatch('application.openExternal', { path: 'http://support.yealink.com' });
-    },
-  },
-  watch : {
-    serverType : {
-      handler   : 'updateRoute',
-      immediate : true,
-    },
-    loginType : {
-      handler   : 'updateRoute',
-      immediate : true,
     },
   },
 };

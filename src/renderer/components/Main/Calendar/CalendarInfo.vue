@@ -217,8 +217,8 @@ export default {
       return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
     },
     shareUrl() {
-      const domain = this.$model.account.proxy || this.$model.account.loginData.server;
-      const isCloud = this.$model.account.serverType === 'cloud';
+      const domain = this.$model.login.account.proxy || this.$model.login.account.loginData.server;
+      const { isCloud } = this.$model.login.sketch;
 
       if (isCloud) {
         return `http://${domain}/meeting/mailDetail?conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
