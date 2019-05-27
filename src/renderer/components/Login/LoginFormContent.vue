@@ -260,7 +260,6 @@ export default {
         pin     : this.loginData.pin,
         server  : partyInfo.domain,
       });
-      const { isLoginByPhone, isLoginByEmail } = this.$getVM('login.sketch');
       this.loginData.authorization = accountInfo.principle;
 
       this.$model.login.account.proxy = '10.200.112.65';
