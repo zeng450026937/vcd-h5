@@ -140,6 +140,7 @@
         <span class="text-indigo-light cursor-pointer" @click="goPrivacy">{{$t('login.privacyPolicy')}}</span>
       </div>
     </div>
+    <enterprise-selector ref="enterpriseSelector" @selected="loginWithEnterprise"/>
   </div>
 </template>
 
@@ -147,12 +148,14 @@
 import { cloneDeep, debounce } from 'lodash';
 import { isCapsLockOn } from '../../utils';
 import AccountAutoComplete from './AccountAutoComplete.vue';
+import EnterpriseSelector from './EnterpriseSelector.vue';
 import { $t } from '../../i18n';
 
 export default {
   name       : 'YMSLoginFormContent',
   components : {
     AccountAutoComplete,
+    EnterpriseSelector,
   },
   data() {
     const dSearch = debounce((val = '') => {
@@ -228,36 +231,40 @@ export default {
     if (this.isAutoLogin) this.handleLogin();
   },
   methods : {
-    handleLogin(e) {
+    async handleLogin(e) {
       if (this.isYMS) {
         return this.$dispatch('login.login');
       }
-      this.$model.digest.$dispatch('digest.loadAccount', {
+
+      const { accountInfos } = await this.$model.digest.$dispatch('digest.loadAccount', {
         username : this.loginData.principle,
         password : this.loginData.pin,
-      }).then(async(val) => {
-        if (val.accountInfos.length === 0) {
-          throw this.$message.warning('账号输入错误');
-        }
-        if (val.accountInfos.length > 1) {
-          this.isMultiAccount = true;
-          throw new Error('multi account');
-        }
+      });
 
-        return val.accountInfos[0];
-      })
-        .then((info) => {
-          this.$model.digest.$dispatch('digest.getToken', { id: info.accountInfo.id });
-          this.loginData = {
-            account   : info.accountInfo.extension,
-            pin       : this.loginData.pin,
-            server    : info.partyInfo.domain,
-            proxy     : '10.200.112.65',
-            principle : info.accountInfo.principle,
-          };
-        })
-        .then(() => this.$dispatch('login.login'))
-        .catch(() => {});
+      if (accountInfos.length === 0) {
+        return this.$message.warning('账号输入错误');
+      }
+      if (accountInfos.length > 1) {
+        this.$refs.enterpriseSelector.accountInfos = accountInfos;
+
+        return this.$refs.enterpriseSelector.visible = true;
+      }
+      this.loginWithEnterprise(accountInfos[0]);
+    },
+    async loginWithEnterprise(info) {
+      const { accountInfo, partyInfo } = info;
+
+      await this.$model.digest.$dispatch('digest.getToken', { id: accountInfo.id });
+      Object.assign(this.loginData, {
+        account : accountInfo.extension,
+        pin     : this.loginData.pin,
+        server  : partyInfo.domain,
+      });
+      const { isLoginByPhone, isLoginByEmail } = this.$getVM('login.sketch');
+      this.loginData.authorization = accountInfo.principle;
+
+      this.$model.login.account.proxy = '10.200.112.65';
+      this.$dispatch('login.login');
     },
     clearAccount() {
       this.$dispatch('login.account.clearAccount', this.modifiedAccounts.map((account) => account.id)).then(this.initRawAccounts);

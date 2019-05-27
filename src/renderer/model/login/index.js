@@ -19,7 +19,7 @@ model.provide({
       const { loginData, proxy, proxyPort } = this.account;
 
       if (this.sketch.isYMS) {
-        loginData.account = loginData.principle;
+        loginData.account = loginData.authorization;
       }
 
       this.validateForm({ ...loginData });
@@ -29,7 +29,7 @@ model.provide({
 
       rtc.account.uri = `${loginData.account}@${loginData.server}`;
       rtc.account.password = loginData.pin;
-      rtc.account.authorizationUser = loginData.principle;
+      rtc.account.authorizationUser = loginData.authorization;
       rtc.account.servers = await formatServers({
         server : loginData.server,
         protocol,
