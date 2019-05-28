@@ -213,7 +213,7 @@ if (!handlingSquirrelEvent) {
 
       ipcMain.on('ypush-notify', (event) => {
         if (mainWindow) {
-          mainWindow.notify('phonebook');
+          mainWindow.notify(event);
         }
       });
     });
