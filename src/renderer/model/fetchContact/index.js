@@ -108,7 +108,6 @@ model.provide({
     async initNegotiate() {
       this.phonebook.dataLoaded = false;
       this.phonebook.dataLoadFailed = false;
-      debugger
 
       if (this.isCloud) {
         await this.$phonebook.negotiate();

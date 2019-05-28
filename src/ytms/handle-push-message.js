@@ -27,11 +27,6 @@ export function handlePushMessage(pushService, hook) {
 
     let job = null;
 
-    console.log({
-      type,
-      messageType : MESSAGE_TYPE.PHONEBOOK_UPDATE,
-    });
-
     switch (type) {
       case MESSAGE_TYPE.START_NETLOG:
         ({ sessionId } = body);
