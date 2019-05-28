@@ -21,6 +21,9 @@ MESSAGE_TYPE[MESSAGE_TYPE.GET_LOG = 3] = 'GET_LOG';
 MESSAGE_TYPE[MESSAGE_TYPE.GET_CONFIG = 4] = 'GET_CONFIG';
 MESSAGE_TYPE[MESSAGE_TYPE.START_NETLOG = 5] = 'START_NETLOG';
 MESSAGE_TYPE[MESSAGE_TYPE.STOP_NETLOG = 6] = 'STOP_NETLOG';
+MESSAGE_TYPE.PHONEBOOK_UPDATE = 'PHONEBOOK_UPDATE';
+MESSAGE_TYPE.PHONEBOOK_DELETE = 'PHONEBOOK_DELETE';
+MESSAGE_TYPE.PHONEBOOK_INSTER = 'PHONEBOOK_INSTER';
 
 export { MESSAGE_TYPE };
 
@@ -42,7 +45,7 @@ export class PushService extends EventEmitter {
     this.retryTimes = 0;
     this.maxRetryTimes = 0;
     this.cancelToken = null;
-    this.token = null;
+    this.token = 'null';
   }
 
   stop(stop = true) {
@@ -94,6 +97,8 @@ export class PushService extends EventEmitter {
 
     res = await this.post(PUSH_ACTION.SYNC, sids);
 
+    console.log('sids res', JSON.stringify(res));
+
     // something error
     if (!res || res.code !== undefined) return 1000;
 
@@ -121,7 +126,7 @@ export class PushService extends EventEmitter {
     try {
       this.cancelToken = axios.CancelToken.source();
 
-      console.log(JSON.stringify({
+      console.log('request params:', JSON.stringify({
         ...body,
         url,
         token : this.token,
@@ -150,23 +155,29 @@ export class PushService extends EventEmitter {
 
     this.cancelToken = null;
 
+    console.log('response is:', JSON.stringify(res.data));
+
     return res.data;
   }
 
   updateToken(token) {
-    logger.info('login cloud v30 succeed, token is', token);
+    console.log('update token :', token);
     this.token = token;
   }
 
   analyze(value = []) {
     let maxSeqId = 0;
 
-    value.forEach((data) => {
+    console.log('analyze', value);
+
+    value.items.forEach((data) => {
       if (!data) return;
 
       const { seqId = 0, content } = data;
 
       if (seqId > maxSeqId) maxSeqId = seqId;
+
+      console.log('analyze data is', data);
 
       this.analyzeConent(content);
     });
@@ -175,9 +186,13 @@ export class PushService extends EventEmitter {
   }
 
   analyzeConent(content) {
+    console.log('content', content);
+
     if (!content) return;
 
     const { type, body } = this.parseJSON(content);
+
+    console.log({ type, body });
 
     // null & undefined
 

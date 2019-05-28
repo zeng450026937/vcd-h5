@@ -245,4 +245,13 @@ export class AppWindow extends BaseWindow {
   requestSystemConfig() {
     this.window.webContents.send('request-system-config');
   }
+
+  notify(type) {
+    const types = {
+      phonebook : 'phone-book-update',
+      schedule  : 'schedule-update',
+    };
+
+    this.window.webContents.send(types[type]);
+  }
 }

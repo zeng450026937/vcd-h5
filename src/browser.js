@@ -210,6 +210,12 @@ if (!handlingSquirrelEvent) {
           mainWindow.requestSystemConfig();
         }
       });
+
+      ipcMain.on('ypush-notify', (event) => {
+        if (mainWindow) {
+          mainWindow.notify('phonebook');
+        }
+      });
     });
     
     app.on('gpu-process-crashed', (event, killed) => { 

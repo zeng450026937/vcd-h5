@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import Vuem from '../vuem';
 import { Phonebook } from './phonebook';
 import rtc from '../../rtc';
@@ -79,6 +80,9 @@ model.provide({
     if (!this.isCloud) {
       rtc.account.$on('phonebookUpdated', this.initNegotiate);
     }
+    else {
+      ipcRenderer.on('phone-book-update', this.initNegotiate);
+    }
   },
   middleware : {
     async sync(ctx, next) {
@@ -104,6 +108,7 @@ model.provide({
     async initNegotiate() {
       this.phonebook.dataLoaded = false;
       this.phonebook.dataLoadFailed = false;
+      debugger
 
       if (this.isCloud) {
         await this.$phonebook.negotiate();

@@ -27,6 +27,11 @@ export function handlePushMessage(pushService, hook) {
 
     let job = null;
 
+    console.log({
+      type,
+      messageType : MESSAGE_TYPE.PHONEBOOK_UPDATE,
+    });
+
     switch (type) {
       case MESSAGE_TYPE.START_NETLOG:
         ({ sessionId } = body);
@@ -78,6 +83,9 @@ export function handlePushMessage(pushService, hook) {
         ipcMain.emit('request-system-config');
         break;
 
+      case MESSAGE_TYPE.PHONEBOOK_UPDATE || MESSAGE_TYPE.PHONEBOOK_DELETE || MESSAGE_TYPE.PHONEBOOK_INSTER:
+        ipcMain.emit('ypush-notify', 'phonebook');
+        break;
       default:
         break;
     }
