@@ -80,6 +80,7 @@ export class AppWindow extends BaseWindow {
           case trayMenu.language.id:
             buildMenu([
               trayMenu.showAppWindow,
+              trayMenu.exportLog,
               trayMenu.language,
               trayMenu.separator,
               trayMenu.quit,
