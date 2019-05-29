@@ -233,6 +233,8 @@ export default {
   methods : {
     async handleLogin(e) {
       if (this.isYMS) {
+        this.loginData.authorization = this.loginData.principle;
+
         return this.$dispatch('login.login');
       }
 

@@ -36,7 +36,7 @@ export default {
   sketch : [
     {
       ns    : 'i18n',
-      props : [ 'language', ],
+      props : [ 'language' ],
     },
   ],
   watch : {
@@ -124,7 +124,7 @@ export default {
       return result;
     },
     getAvatar(node) {
-      if (node.isUser) return `${/^(.*)\\\\\\\\(.*\\\\\\\\)$/.test(node.name) ? RegExp.$1.substr(-2, 2) : node.name.substr(-2, 2)}`;
+      if (node.isUser) return `${/^(.*)\(.*\)$/.test(node.name) ? RegExp.$1.substr(-2, 2) : node.name.substr(-2, 2)}`;
 
       const iconType = node.isDevice
         ? 'icon-huiyishishebei'

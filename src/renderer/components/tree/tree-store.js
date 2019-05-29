@@ -491,16 +491,20 @@ export default class TreeStore {
     return this.offspringMap[id] = offspring;
   }
 
-  getOffspring(id, offsprings = []) {
-    const childes = this.getChild(id);
+  getOffspring(id) {
+    const offsprings = [];
+    const queue = [];
 
-    if (childes == null) return offsprings;
+    queue.push(...(this.getChild(id) || []));
 
-    offsprings.push(...childes);
+    while (queue.length > 0) {
+      const child = queue.pop();
 
-    childes.forEach((node) => {
-      this.getOffspring(node.node.id, offsprings);
-    });
+      if (this.isORG(child)) {
+        queue.push(...(this.getChild(this.getNodeId(child)) || []));
+      }
+      offsprings.push(child);
+    }
 
     return offsprings;
   }
@@ -565,8 +569,12 @@ export default class TreeStore {
   }
 
   search(text, max = 200) {
-    return this.originTree
+    let result = this.originTree
       .filter((n) => (n.name.indexOf(text) > -1 || n.number.indexOf(text) > -1) && !n.isGroup)
-      .slice(0, max);
+      .map((r) => this.getNodeId(r));
+
+    result = [ ...new Set(result) ].slice(0, max);
+
+    return result.map((r) => this.getNode(r));
   }
 }

@@ -106,7 +106,7 @@ export class Phonebook {
       );
     }
     catch (e) {
-      if (e.response.status === 503) {
+      if (e.response && e.response.status === 503) {
         const retryAfter = Number(e.response.headers['retry-after']) * 1000;
 
         await this.wait(retryAfter);
