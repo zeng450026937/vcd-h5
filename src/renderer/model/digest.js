@@ -2,6 +2,7 @@ import Axios from 'axios';
 import uuid from 'uuid';
 import md5 from 'md5';
 import Vuem from './vuem';
+import rtc from '../rtc';
 
 
 const model = new Vuem();
@@ -22,6 +23,7 @@ model.provide({
     };
   },
   computed : {
+    registered : () => rtc.account.registered,
     baseURL() {
       return `${this.protocol}${this.domain}:${this.port}`;
     },
@@ -45,18 +47,15 @@ model.provide({
     async getToken(ctx, next) {
       await next();
 
-      const { id } = ctx.payload;
-      const { username, password, account } = this.selectAccount(id);
-
-      return this.getToken(account, username, password);
+      return this.selectAccount(ctx.payload.id);
     },
     async updateToken(ctx, next) {
       await next();
     },
   },
   methods : {
-    async getToken(account, username, password, realm, nonce, response = '') {
-      const uri = '/user/api/v1/external/digest/selectAccount';
+    async getToken(account, username, password, realm, nonce, response = '') { // 此接口废弃
+      const uri = '/api/v10/external/digest/selectAccount';
 
       let res;
 
@@ -105,7 +104,7 @@ model.provide({
       return this.token;
     },
     async loadAccount(username, password, realm, nonce, response = '') {
-      const uri = '/user/api/v1/external/digest/login';
+      const uri = '/api/v10/external/digest/login';
 
       let res;
 
@@ -161,12 +160,16 @@ model.provide({
         password  : this.accounts.password,
         partyId   : account.partyInfo.id,
         subjectId : account.subjectInfo.id,
+        accountId : account.accountInfo.id,
       };
+
+      this.token = account.token;
 
       return {
         username : this.accounts.username,
         password : this.accounts.password,
         account  : this.activeAccount,
+        token    : this.token,
       };
     },
     getQueryStr(name) {
@@ -204,14 +207,31 @@ model.provide({
         this.cnonce = uuid.v4().replace(/-/g, '');
       }, 5 * 60 * 1000);
     },
+    updateToken() {
+      this.timer = setInterval(() => {
+        this.$dispatch('digest.getToken', { id: this.activeAccount.accountId });
+      }, 30 * 60 * 1000);
+    },
+    reset() {
+      clearInterval(this.timer);
+      this.token = null;
+      this.accounts = [];
+      this.activeAccount = null;
+    },
 
   },
   created() {
     this.updateCnonce();
   },
-
+  beforeDestroy() {
+    this.reset();
+  },
   watch : {
+    registered(val) {
+      if (val) return this.updateToken();
 
+      this.reset();
+    },
   },
 });
 
