@@ -134,6 +134,7 @@ model.provide({
         const res = await this.$dispatch('setting.downloadConfig');
 
         const {
+          fileId,
           pushUpdateChannelFlag,
           pushYtmsHostFlag,
           updateChannel,
@@ -148,6 +149,10 @@ model.provide({
         if (pushUpdateChannelFlag && updateChannel) {
           this.updateChannel = updateChannel;
         }
+
+        this.$dispatch('ytms.updateClientInfo', {
+          data : { configFiledId: fileId },
+        });
       }
     );
   },
