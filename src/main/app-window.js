@@ -6,6 +6,7 @@ import { formatPathAsUrl } from './utils';
 import { buildMenu } from './menu/build-menu';
 import * as trayMenu from './menu/tray-menu';
 import { getLanguage, setLanguage } from './language';
+import {packLog} from '../logger/pack-log';
 
 const minWidth = 1120;
 const minHeight = 630;
@@ -49,6 +50,7 @@ export class AppWindow extends BaseWindow {
 
     buildMenu([
       trayMenu.showAppWindow,
+      trayMenu.exportLog,
       trayMenu.language,
       trayMenu.separator,
       trayMenu.quit,
@@ -87,6 +89,8 @@ export class AppWindow extends BaseWindow {
             setLanguage(event.menuItem.lang);
             this.window.webContents.send('menu-event', event);
             break;
+          case trayMenu.exportLog.id:
+            this.window.webContents.send('menu-event', event);
           default:
             break;
         }
@@ -140,6 +144,12 @@ export class AppWindow extends BaseWindow {
 
 
       event.sender.send('request-locale-reply', lang);
+    });
+
+    ipcMain.on('pack-log', async(event) => {
+      const path = await packLog();
+
+      event.sender.send('pack-log-reply', path);
     });
 
     // on macOS, when the user closes the window we really just hide it. This

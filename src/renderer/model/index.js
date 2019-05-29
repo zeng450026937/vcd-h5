@@ -19,6 +19,7 @@ import errorMessage from './middleware/error-message';
 import i18n from './i18n';
 import notify from './notify';
 import fetchContact from './fetchContact';
+import exportLog from './export-log';
 
 import login from './login';
 
@@ -46,6 +47,8 @@ model.mount('ui', ui);
 model.mount('streamManager', streamManager);
 model.mount('notify', notify);
 model.mount('fetchContact', fetchContact);
+model.mount('exportLog', exportLog);
+
 
 // logging middleware must be the first one
 model.use(async(ctx, next) => {

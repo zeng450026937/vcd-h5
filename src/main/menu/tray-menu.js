@@ -28,6 +28,12 @@ export const logout = {
   id    : 'logout',
 };
 
+export const exportLog = {
+  label : '导出日志',
+  i18n  : 'exportlog',
+  id    : 'export-log',
+};
+
 export const language = {
   label   : 'Language',
   i18n    : 'language',

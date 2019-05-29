@@ -32,6 +32,16 @@ export function setLocale(lang) {
   });
 }
 
+export function sendPackLog() {
+  ipcRenderer.send('pack-log');
+
+  return new Promise((resolve) => {
+    ipcRenderer.once('pack-log-reply', (event, args) => {
+      resolve(args);
+    });
+  });
+}
+
 export function restoreWindow() {
   ipcRenderer.send('request-restore-window');
 }

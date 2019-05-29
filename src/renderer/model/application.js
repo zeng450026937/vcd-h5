@@ -147,8 +147,13 @@ model.provide({
         // this.$dispatch('menu-event', name);
 
         if (name === 'language') {
-          this.$dispatch('i18n.setRendererLocale', { lang: menuItem.lang });
+          return this.$dispatch('i18n.setRendererLocale', { lang: menuItem.lang });
         }
+
+        if (name === 'export-log') {
+          return this.$dispatch('exportLog.downloadLogs');
+        }
+
       }
     );
 
