@@ -52,7 +52,7 @@
                           :title="$t('home.cycleMeeting')"
                           type="icon-xunhuanhuiyi"></a-iconfont>
                       <a-iconfont
-                          v-if="recentScheduleEvent.isLive"
+                          v-if="recentScheduleEvent.isRTMP"
                           :title="$t('home.live')"
                           type="icon-zhibo"
                           class="text-indigo ml-3">
@@ -61,10 +61,10 @@
 
                   </div>
                   <div class="conference-id item">
-                    ID : {{recentScheduleEvent.conferenceNumber}}
+                    ID : {{recentScheduleEvent.number}}
                   </div>
                   <div class="duration item">
-                    {{recentScheduleEvent.startTime}} ~ {{recentScheduleEvent.expiryTime}}
+                    {{recentScheduleEvent.startTime | formatTime}} ~ {{recentScheduleEvent.endTime | formatTime}}
                     <a-button @click="goMeetingDetail">{{$t('home.detail')}}</a-button>
                   </div>
                 </div>
@@ -96,6 +96,7 @@
 <script>
 
 import { sortBy } from 'lodash';
+import moment from 'moment';
 import AppHeader from '../../../components/Main/MainHeader.vue';
 import CommonEmpty from '../../../components/Shared/CommonEmpty.vue';
 import { formatDate } from '../../../utils/date';
@@ -114,24 +115,27 @@ export default {
   },
   sketch : {
     ns    : 'schedule',
-    props : [ 'calendar' ],
+    props : [ 'schedules' ],
   },
   created() {
     this.startClock();
   },
   filters : {
     formatDate,
+    formatTime(val) {
+      return moment(val).format('YYYY/MM/DD HH:mm');
+    },
   },
   computed : {
     recentScheduleEvent() {
       const now = Date.now();
 
-      let noFinished = this.calendar.filter((ev) => this.getTimestamp(ev.expiryTime) - now >= 0);
+      let noFinished = this.schedules.filter((ev) => ev.endTime - now >= 0);
 
-      noFinished = sortBy(noFinished, (n) => this.getTimestamp(n.startTime))[0];
+      noFinished = sortBy(noFinished, (n) => n.startTime)[0];
       if (!noFinished) return {};
 
-      if (noFinished.status.isEnded || !noFinished.startMoment.isSame(new Date())) {
+      if (noFinished.status.isEnded || !moment(noFinished.startTime).isSame(new Date(), 'day')) {
         noFinished = {};
       }
 
@@ -172,14 +176,10 @@ export default {
       this.$router.push({ name: 'schedule' });
       this.$dispatch('main.setCurrentSidebar', { name: 'schedule' });
     },
-    genDouble(num) {
-      return num < 10 ? `0${num}` : `${num}`;
-    },
     getTime() {
       const time = new Date();
-      const hour = this.genDouble(time.getHours());
-      const minutes = this.genDouble(time.getMinutes());
-      // const seconds = this.genDouble(time.getSeconds());
+      const hour = `${time.getHours()}`.padStart(2, ' ');
+      const minutes = `${time.getMinutes()}`.padStart(2, ' ');
 
       return `${hour}:${minutes}`;
     },
@@ -197,19 +197,15 @@ export default {
     },
     join() {
       this.$dispatch('meeting.joinMeeting', {
-        number       : this.recentScheduleEvent.conferenceNumber,
-        pin          : this.recentScheduleEvent.attendeePin,
+        number       : this.recentScheduleEvent.number,
+        pin          : this.recentScheduleEvent.password,
         initialVideo : true,
         initialAudio : true,
       });
     },
     goMeetingDetail() {
-      this.$router.push({
-        name  : 'schedule',
-        query : {
-          planId : this.recentScheduleEvent['@planId'],
-        },
-      });
+      this.$model.schedule.selectedSchedule = this.recentScheduleEvent;
+      this.$router.push({ name: 'schedule' });
       this.$dispatch('main.setCurrentSidebar', { name: 'schedule' });
     },
 

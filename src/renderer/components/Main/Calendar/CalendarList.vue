@@ -1,12 +1,12 @@
 <template>
   <a-layout id="calendar-list" class="bg-white h-full">
     <div class="p-2 h-full bg-white">
-      <div v-for="(event, index) in currentDateEvents" :key="index"
+      <div v-for="(event, index) in displaySchedules" :key="index"
            class="py-2 hover:bg-list-hover"
            :class="{
-                  'bg-list-select': event.scheduleId === currentEvent.scheduleId,
-                  'border-b': index !== currentDateEvents.length - 1,
-                  'bg-expired': event.status.isEnded && event.scheduleId !== currentEvent.scheduleId,
+                  'bg-list-select': event.uuid === selectedSchedule.uuid,
+                  'border-b': index !== displaySchedules.length - 1,
+                  'bg-expired': event.status.isEnded && event.uuid !== selectedSchedule.uuid,
                   'bg-white': !event.status.isEnded,
                }">
         <div class="flex flex-col p-3 cursor-pointer"
@@ -21,14 +21,14 @@
             </div>
             <div class="ml-1 text-base text-indigo">
               <a-iconfont v-if="event.isRecurrence" :title="$t('schedule.cycleMeeting')" type="icon-xunhuanhuiyi"/>
-              <a-iconfont v-if="event.isLive" :title="$t('schedule.live')" type="icon-zhibo" class="ml-3"/>
+              <a-iconfont v-if="event.isRTMP" :title="$t('schedule.live')" type="icon-zhibo" class="ml-3"/>
             </div>
           </div>
-          <div class="mt-3 text-xs truncate">ID: {{event.conferenceNumber}}</div>
-          <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.expiryTime}}</div>
+          <div class="mt-3 text-xs truncate">ID: {{event.number}}</div>
+          <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.endTime}}</div>
         </div>
       </div>
-      <div v-if="!currentDateEvents || currentDateEvents.length <= 0" class="h-full flex items-center justify-center">
+      <div v-if="!displaySchedules || displaySchedules.length <= 0" class="h-full flex items-center justify-center">
         <common-empty class="text-grey" :text="$t('schedule.emptySchedule')"/>
       </div>
     </div>
@@ -50,40 +50,25 @@ export default {
   },
   sketch : {
     ns    : 'schedule',
-    props : [ 'currentEvent', 'currentDateEvents' ],
+    props : [ 'selectedSchedule', 'displaySchedules' ],
   },
   mounted() {
-    const { planId } = this.$route.query;
-
-    if (this.$route.name === 'schedule' && planId) {
-      this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
-      console.warn(this.currentEvent);
-    }
   },
   methods : {
     clickCalendar(event) {
-      this.currentEvent = event;
+      this.selectedSchedule = event;
     },
   },
   watch : {
-    currentDateEvents(val, once) {
-      if ((!once || once.length <= 0) && !this.currentEvent.scheduleId) {
-        this.currentEvent = this.currentDateEvents[0] || {};
+    displaySchedules(val, once) {
+      if ((!once || once.length <= 0) && !this.selectedSchedule.planId) {
+        this.selectedSchedule = this.displaySchedules[0] || {};
       }
       else if (!val || val.length <= 0) {
-        this.currentEvent = {};
-      }
-    },
-    $route(val) {
-      const { planId } = val.query;
-
-      if (val.name === 'schedule' && planId) {
-        this.currentEvent = this.currentDateEvents.find((event) => event['@planId'] === planId) || {};
-        console.warn(this.currentEvent);
+        this.selectedSchedule = {};
       }
     },
   },
-
 };
 </script>
 

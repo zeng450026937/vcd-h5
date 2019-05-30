@@ -63,11 +63,11 @@ module.exports = {
       },
       format : {
         recursDaily     : '每{interval}天发生',
-        recursWeekly    : '每{interval}周的{daysOfWeek}发生',
+        recursWeekly    : '每{interval}周的{dayOfWeek}发生',
         recursMonthly   : '每{interval}个月的第{dayOfMonth}天发生',
         recursMonthNth  : '每{interval}个月的{dayOfWeek}发生',
         recursYearly    : '每{interval}年的{monthOfYear}月的第{dayOfMonth}天发生',
-        recursYearlyNth : '每{interval}年的{monthOfYear}月{daysOfWeek}发生',
+        recursYearlyNth : '每{interval}年的{monthOfYear}月{dayOfWeek}发生',
         last            : '最后一个',
         fromTo          : '{start} 开始， {from} 至 {to}',
         repeatFromTo    : '{start}开始，重复{occurrences}次后结束  {from} 至 {to}',

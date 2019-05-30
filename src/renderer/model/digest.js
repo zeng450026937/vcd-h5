@@ -54,7 +54,7 @@ model.provide({
     },
   },
   methods : {
-    async getToken(account, username, password, realm, nonce, response = '') { // 此接口废弃
+    async getToken(account, username, password, realm, nonce, response = '') {
       const uri = '/api/v10/external/digest/selectAccount';
 
       let res;

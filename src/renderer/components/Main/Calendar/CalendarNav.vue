@@ -12,7 +12,7 @@
             <div class="ant-calendar-date rounded-full text-xs">
               {{current.date()}}
             </div>
-            <a-badge class="event-pointer" :status="getNoticeInfo(current).type" />
+            <a-badge class="event-pointer" :status="getNoticeType(current)" />
           </div>
         </template>
       </plain-calendar>
@@ -48,12 +48,12 @@ export default {
     };
   },
   computed : {
-    eventList() {
-      return this.$model.schedule.calendar || [];
+    schedules() {
+      return this.$model.schedule.schedules || [];
     },
     selectedDate : {
       get() {
-        return this.$model.schedule.selectedDate || new Date();
+        return this.$model.schedule.selectedDate || Date.now();
       },
       set(val) {
         this.$model.schedule.selectedDate = val;
@@ -74,27 +74,19 @@ export default {
     reserveMeeting() {
       this.$router.push({ name: 'reservation' });
     },
-    getNoticeInfo(value) {
-      let noticeInfo;
+    getNoticeType(value) {
+      if (value < new Date().setHours(-8 * 24) || value > new Date().setHours(7 * 24)) return;
 
-      if (this.eventList.some((e) => this.isDateMatched(e.startMoment, value))) {
-        noticeInfo = { type: 'error' };
+      if (this.schedules.some((s) => value.isSame(s.startTime, 'day'))) {
+        return 'error';
       }
-
-      return noticeInfo || {};
-    },
-    isDateMatched(date1, date2) {
-      return date1.date() === date2.date()
-        && date1.month() === date2.month()
-        && date1.year() === date2.year();
     },
     selectDate(date) {
-      this.selectedDate = date.raw;
-      this.$model.schedule.currentDateEvents = [];
-      this.eventList.forEach((e) => {
-        if (e.expiryMoment.toDate() >= this.selectedDate.toDate()
-          || e.startMoment.toDate() >= this.selectedDate.toDate()) {
-          this.$model.schedule.currentDateEvents.push(e);
+      this.selectedDate = date.raw.toDate().getTime();
+      this.$model.schedule.displaySchedules = [];
+      this.schedules.forEach((schedule) => {
+        if (schedule.endTime >= this.selectedDate || schedule.startTime >= this.selectedDate) {
+          this.$model.schedule.displaySchedules.push(schedule);
         }
       });
     },
@@ -107,7 +99,7 @@ export default {
     }
   },
   watch : {
-    eventList : {
+    schedules : {
       async handler(val) {
         await this.$nextTick();
         await this.$refs.calendar.$nextTick();

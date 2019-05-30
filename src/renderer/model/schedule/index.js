@@ -283,11 +283,11 @@ model.provide({
   },
 
   async created() {
-    this.db = new ScheduleDatabse('ScheduleDatabse');
-    this.cm = new ConferenceManager();
-
-    this.conferences = Object.create(null);
-    this.conferences._isVue = true; // prevent object to be observed by vue
+    // this.db = new ScheduleDatabse('ScheduleDatabse');
+    // this.cm = new ConferenceManager();
+    //
+    // this.conferences = Object.create(null);
+    // this.conferences._isVue = true; // prevent object to be observed by vue
     this.templates = Object.create(null);
     this.templates._isVue = true;
     this.merged = [];
@@ -339,7 +339,7 @@ model.provide({
     this.db = null;
     this.cm = null;
 
-    this.conferences = null;
+    // this.conferences = null;
     this.templates = null;
     this.merged = null;
   },

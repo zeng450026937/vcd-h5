@@ -8,10 +8,10 @@
               <div class="flex items-center">
                 <div class="w-1 text-base text-black flex flex-grow truncate">
                   <span class="truncate leading-loose"
-                        :title="currentEvent.subject">{{currentEvent.subject}}</span>
+                        :title="selectedSchedule.subject">{{selectedSchedule.subject}}</span>
                 </div>
                 <span class="text-xs text-indigo cursor-pointer whitespace-no-wrap ml-2"
-                      @click="copyShareUrl">{{$t('schedule.copyInfo')}}</span>
+                      @click="copyInfo">{{$t('schedule.copyInfo')}}</span>
                 <a-popover placement="bottomRight" trigger="click"
                            overlayClassName="calendar-info-popover">
                   <template slot="content">
@@ -24,7 +24,7 @@
                              :src="shareQRCode"/>
                       </div>
                       <div class="flex flex-col items-center select-none h-full mt-3"
-                           v-if="currentEvent.isLive" >
+                           v-if="selectedSchedule.isRTMP" >
                         <span class="text-xs leading-tight">{{$t('schedule.watchLive')}}</span>
                         <img style="width: 120px; height: 120px;"
                              class="mt-2"
@@ -38,45 +38,45 @@
               <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.time')}}</span>
-                  <span>{{currentEvent.startTime}} - {{currentEvent.expiryTime}}</span>
+                  <span>{{selectedSchedule.startTime | formatTime}} - {{selectedSchedule.endTime | formatTime}}</span>
                 </div>
               </div>
-              <div v-if="currentEvent.isRecurrence" class="flex flex-col text-xs mt-4">
+              <div v-if="selectedSchedule.pattern" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.cycle')}}</span>
                   <div class="flex flex-col">
-                    <span>{{currentEvent.pattern.title}}</span>
-                    <span>{{currentEvent.pattern.time}}</span>
+                    <span>{{selectedSchedule.pattern.title}}</span>
+                    <span>{{selectedSchedule.pattern.time}}</span>
                   </div>
                 </div>
               </div>
-              <div v-if="currentEvent.locations" class="flex flex-col text-xs mt-4">
+              <div v-if="selectedSchedule.locations" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
                     <div class="w-20 text-black6">{{$t('schedule.meetingRoom')}}</div>
                   </div>
-                  <span style="word-break: break-all">{{currentEvent.locations.location.join('、')}}</span>
+                  <span style="word-break: break-all">{{selectedSchedule.roomNames.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.conferenceId')}}</span>
-                  <span class="select-text">{{currentEvent.conferenceNumber}}</span>
+                  <span class="select-text">{{selectedSchedule.number}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.password')}}</span>
-                  <span class="select-text">{{currentEvent.attendeePin}}</span>
+                  <span class="select-text">{{selectedSchedule.password}}</span>
                 </div>
               </div>
-              <div v-if="currentEvent.isLive" class="flex flex-col text-xs mt-4">
+              <div v-if="selectedSchedule.isLive" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.liveLink')}}</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
                     <a class="truncate"
-                       :title="currentEvent.liveShareUrl"
-                       @click="toLiveShareUrl">{{currentEvent.liveShareUrl}}</a>
+                       :title="selectedSchedule.rtmpUrl"
+                       @click="toLiveShareUrl">{{selectedSchedule.rtmpUrl}}</a>
                   </span>
                   <a class="text-xs text-indigo cursor-pointer ml-2"
                         @click="copyLiveShareUrl">{{$t('schedule.copy')}}</a>
@@ -88,7 +88,7 @@
                     <div class="w-20 text-black6">{{$t('schedule.remark')}}</div>
                   </div>
                   <span style="word-break: break-all"
-                        class="w-1 flex flex-grow">{{currentEvent.note || $t('schedule.emptyRemark')}}</span>
+                        class="w-1 flex flex-grow">{{selectedSchedule.remark || $t('schedule.emptyRemark')}}</span>
                 </div>
               </div>
             </div>
@@ -96,18 +96,18 @@
               <div class="flex w-full leading-tight">
                 <span class="w-20 text-black6">{{$t('schedule.meetingMember')}}</span>
                 <div class="flex flex-col flex-grow">
-                  <div class="w-full" v-if="currentEvent.invitees">
+                  <div class="w-full" v-if="selectedSchedule.participants">
                     <template v-for="(item, index ) in sortedInvitee">
                       <div :key="index" class="flex items-center mb-2">
                         <div class="h-6 w-6 rounded-full flex items-center justify-center"
-                             :class="{[`bg-${item.role}`]: true}">
+                             :class="{[`bg-${item.roleText}`]: true}">
                           <a-iconfont type="icon-ren" class="text-white text-base"/>
                         </div>
                         <div class="flex leading-tight flex-grow w-1">
                           <span class="ml-1 mr-2 truncate">
-                            {{item['display-text']}}
+                            {{item.showName}}
                           </span>
-                          <span v-if="item.phone">（{{item.phone}}）</span>
+                          <span v-if="item.extension">（{{item.extension}}）</span>
                         </div>
                       </div>
                     </template>
@@ -146,7 +146,7 @@
       <div>
         <plain-modal ref="deleteModal"
                      type="warning"
-                     :content="$t('confirmDel')"
+                     :content="$t('schedule.confirmDel')"
                      @ok="clickOk">
         </plain-modal>
       </div>
@@ -160,6 +160,8 @@
 <script>
 import jrQrcode from 'jr-qrcode';
 import copy from 'clipboard-copy';
+import { sortBy } from 'lodash';
+import moment from 'moment';
 import { RecycleScroller } from 'vue-virtual-scroller';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
@@ -191,41 +193,37 @@ export default {
   beforeDestroy() {
     if (this.updateTimer) clearInterval(this.updateTimer);
   },
+  created() {
+    // 生成周期会议信息
+    if (this.hasEvent) this.selectedSchedule.genRecurrence();
+  },
   computed : {
     sortedInvitee() {
-      const { invitee } = this.currentEvent.invitees;
+      const { participants } = this.selectedSchedule;
 
-      return [
-        ...invitee.filter((i) => i.role === 'organizer'),
-        ...invitee.filter((i) => i.role === 'presenter'),
-        ...invitee.filter((i) => i.role === 'attendee'),
-      ];
+      return sortBy(participants, (n) => n.role);
     },
-    currentEvent() {
-      return this.$model.schedule.currentEvent || {};
+    selectedSchedule() {
+      return this.$model.schedule.selectedSchedule || {};
     },
     status() {
-      return this.currentEvent.status || {};
+      return this.selectedSchedule.status || {};
     },
     hasEvent() {
-      return Object.keys(this.currentEvent).length > 0;
+      return this.selectedSchedule.number;
     },
     enterpriseId() {
       return '';
     },
     liveQRCode() {
-      return jrQrcode.getQrBase64(this.currentEvent.liveShareUrl);
+      return jrQrcode.getQrBase64(this.selectedSchedule.rtmpUrl);
+    },
+    isCloud() {
+      return this.$model.login.sketch.isCloud;
     },
     shareUrl() {
-      const domain = this.$model.login.account.proxy || this.$model.login.account.loginData.server;
-      const { isCloud } = this.$model.login.sketch;
-
-      if (isCloud) {
-        return `http://${domain}/meeting/mailDetail?conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
-      }
-      else {
-        return `http://${domain}/user/extend/mail/detail?type=detail&conferencePlanId=${this.currentEvent['@planId']}&enterpriseId=${this.enterpriseId}`;
-      }
+      // this.$message.error('cannot get url in because of empty enterprise id');
+      return '';
     },
     shareQRCode() {
       return jrQrcode.getQrBase64(this.shareUrl);
@@ -237,8 +235,8 @@ export default {
     },
     enterMeeting() {
       this.meetingRecord = {
-        number       : this.currentEvent.conferenceNumber,
-        pin          : this.currentEvent.attendeePin,
+        number       : this.selectedSchedule.number,
+        pin          : this.selectedSchedule.password,
         initialVideo : true,
         initialAudio : true,
         video        : true,
@@ -258,32 +256,33 @@ export default {
       });
     },
     toLiveShareUrl() {
-      shell.openExternal(this.currentEvent.liveShareUrl);
+      shell.openExternal(this.selectedSchedule.rtmpUrl);
     },
     copyLiveShareUrl() {
-      copy(this.currentEvent.liveShareUrl).then(() => {
+      copy(this.selectedSchedule.rtmpUrl).then(() => {
         this.$message.success(this.$t('schedule.copySucceed'));
       });
     },
-    copyShareUrl() {
-      this.$model.schedule.fetchMailTemplate(this.currentEvent.recordId).then((val) => {
-        copy(val).then(() => {
-          this.$message.success(this.$t('schedule.copySucceed'));
-        });
-      });
+    copyInfo() {
+      this.$message.error('cannot get details in because of empty enterprise id');
     },
   },
   watch : {
-    currentEvent : {
+    selectedSchedule : {
       handler(val, oldVal) {
         if (this.updateTimer) clearInterval(this.updateTimer);
-        if (val.conferenceNumber && (!oldVal || !oldVal.conferenceNumber)) {
+        if (val.number && (!oldVal || !oldVal.number)) {
           this.updateTimer = setInterval(() => {
-            this.currentEvent.updateStatus();
+            this.selectedSchedule.updateStatus();
           }, 1000);
         }
       },
       immediate : true,
+    },
+  },
+  filters : {
+    formatTime(val) {
+      return moment(val).format('YYYY/MM/DD HH:mm');
     },
   },
 };

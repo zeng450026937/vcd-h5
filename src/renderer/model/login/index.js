@@ -38,18 +38,18 @@ model.provide({
       });
       rtc.account.protocol = protocol;
 
-      this.account.autoLoginDisabled = true;
+      this.state.autoLoginDisabled = true;
       await rtc.account.signin().then(() => {
         this.account.saveData();
-        this.account.autoLoginDisabled = false;
+        this.state.autoLoginDisabled = false;
       }).catch((err) => {
-        this.account.autoLoginDisabled = true;
+        this.state.autoLoginDisabled = true;
         throw err;
       });
     },
     async logout(ctx, next) {
       await next();
-      this.account.autoLoginDisabled = true;
+      this.state.autoLoginDisabled = true;
 
       return rtc.account.signout();
     },

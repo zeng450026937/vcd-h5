@@ -14,14 +14,17 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      loginPopup          : null, // 登录中的 popup 提示
-      enterPopup          : null, // 正在进入会议的 popup 提示
-      isInMiniConference  : false, // 记录当前页面是否在会议的小窗口
-      isInMiniCall        : false, // 记录当前页面是否在P2P通话的小窗口
-      currentConferenceId : null,
-      recordUpdate        : null,
-      scheduleEvents      : [],
-      isOpenNotify        : false,
+      loginPopup            : null, // 登录中的 popup 提示
+      enterPopup            : null, // 正在进入会议的 popup 提示
+      isInMiniConference    : false, // 记录当前页面是否在会议的小窗口
+      isInMiniCall          : false, // 记录当前页面是否在P2P通话的小窗口
+      currentConferenceId   : null,
+      recordUpdate          : null,
+      scheduleEvents        : [],
+      isOpenNotify          : false,
+      // 用于检测是否登陆成功
+      isContactInitialized  : false, // 联系人信息是否被初始化
+      isScheduleInitialized : false, // 日程信息是否被初始化完成
     };
   },
   computed : {

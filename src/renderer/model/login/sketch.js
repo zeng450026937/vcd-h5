@@ -37,8 +37,14 @@ model.provide({
     isYMS() {
       return !this.isCloud;
     },
-    accountType() {
-      return this.isYMS ? this.serverType : this.cloudType;
+    accountType : {
+      get() {
+        return this.isYMS ? this.serverType : this.cloudType;
+      },
+      set(val) {
+        if (val === SERVER_TYPE.YMS) return this.serverType = val;
+        this.cloudType = val;
+      },
     },
     isLoginByPhone() {
       return this.isCloud && this.cloudType === CLOUD_TYPE.PHONE;
@@ -59,7 +65,9 @@ model.provide({
   methods : {
     initData() {
       this.serverType = storage.query(LOGIN_STORAGE.SERVER_TYPE) || SERVER_TYPE.CLOUD;
+      this.accountType = storage.query(LOGIN_STORAGE.ACCOUNT_TYPE) || SERVER_TYPE.CLOUD;
       this.$watch('serverType', (val) => storage.insert(LOGIN_STORAGE.SERVER_TYPE, val));
+      this.$watch('accountType', (val) => storage.insert(LOGIN_STORAGE.ACCOUNT_TYPE, val));
     },
     toYMS() {
       this.serverType = SERVER_TYPE.YMS;

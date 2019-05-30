@@ -2,7 +2,7 @@
   <a-layout id="calendar-view" class="h-full w-full">
     <div class="flex flex-col h-full w-full">
       <main-header :title="$t('schedule.meetingSchedule')"/>
-      <template v-if="currentDateEvents && currentDateEvents.length > 0">
+      <template v-if="displaySchedules && displaySchedules.length > 0">
       <a-row class="flex h-full m-4 border bg-white">
         <a-col :span="9" class="h-full overflow-y-auto border-r">
           <calendar-list/>
@@ -36,8 +36,8 @@ export default {
     CommonEmpty,
   },
   computed : {
-    currentDateEvents() {
-      return this.$model.schedule.currentDateEvents;
+    displaySchedules() {
+      return this.$model.schedule.displaySchedules;
     }
   },
 };
