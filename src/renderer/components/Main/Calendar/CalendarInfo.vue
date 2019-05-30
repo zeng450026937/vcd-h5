@@ -37,6 +37,12 @@
               </div>
               <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
+                  <span class="w-20 text-black6">组织者</span>
+                  <span v-if="selectedSchedule.organizer">{{selectedSchedule.organizer.showName}}</span>
+                </div>
+              </div>
+              <div class="flex flex-col text-xs mt-4">
+                <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.time')}}</span>
                   <span>{{selectedSchedule.startTime | formatTime}} - {{selectedSchedule.endTime | formatTime}}</span>
                 </div>
@@ -194,12 +200,14 @@ export default {
     if (this.updateTimer) clearInterval(this.updateTimer);
   },
   created() {
-    // 生成周期会议信息
-    if (this.hasEvent) this.selectedSchedule.genRecurrence();
   },
   computed : {
     sortedInvitee() {
       const { participants } = this.selectedSchedule;
+
+      if (!participants) return;
+
+      participants.forEach((p) => p.roleText = [ 'organizer', 'presenter', 'attendee' ][p.role]);
 
       return sortBy(participants, (n) => n.role);
     },

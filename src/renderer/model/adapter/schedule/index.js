@@ -65,6 +65,8 @@ model.provide({
         queryStartTime,
       });
 
+      conference._isVue = true;
+
       this.rawSchedules = conference.getTimeRangeResult(
         this.timeRange.start,
         this.timeRange.end
@@ -121,8 +123,13 @@ model.provide({
 
     },
 
-    async getScheduleDetails() {
+    async fetchScheduleInfo(schedule, force) {
+      schedule.genRecurrence(force);
+      if (schedule.hasDetails && !force) return;
 
+      const { data } = await this.fetch.getScheduleInfo(schedule.planId, schedule.sequence);
+
+      return schedule.setDetails(data);
     },
 
     async getTemplate() {
@@ -152,6 +159,11 @@ model.provide({
         this.selectedDate = Date.now(); // 当前选中的时间
         this.selectedSchedule = {}; // 当前选中的日程
         this.displaySchedules = []; // 在页面上展示的日程列表
+      }
+    },
+    selectedSchedule(val) {
+      if (val && val.planId && this.isCloud) {
+        this.fetchScheduleInfo(val);
       }
     },
   },

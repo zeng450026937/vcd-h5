@@ -10,6 +10,9 @@ export default class Schedule {
     this.schedule = schedule;
     this.updateStatus();
     this.uuid = uuid.v1();
+    // for vue
+    this.schedule.participants = this.schedule.participants || [];
+    this.schedule.organizer = this.schedule.organizer || {};
   }
 
   get planId() { return this.schedule.planId; }
@@ -37,7 +40,9 @@ export default class Schedule {
 
   get isRTMP() { return this.schedule.isRTMP; }
 
-  get participants() { return this.schedule.participants; }
+  get organizer() { return this.schedule.organizer; }
+
+  get participants() { return this.schedule.participants || []; }
 
   get recurrence() {
     if (!this.isRecurrence) return null;
@@ -48,7 +53,7 @@ export default class Schedule {
       type           : this.schedule.recurrenceType,
       dailyType      : this.schedule.dailyType,
       interval       : this.schedule.recurrenceInterval,
-      dayOfWeek      : Array.isArray(dayOfWeek) ? dayOfWeek : dayOfWeek.split(','),
+      dayOfWeek      : Array.isArray(dayOfWeek) ? dayOfWeek.split(',') : [ dayOfWeek ],
       dayOfMonth     : this.schedule.dayOfMonth,
       dayOfWeekIndex : this.schedule.dayOfWeekIndex,
       monthOfYear    : this.schedule.monthOfYear,
@@ -84,5 +89,5 @@ export default class Schedule {
     this.pattern = formatSchedule(this.recurrence);
   }
 
-  genInvitee() {}
+  getScheduleInfo() {}
 }

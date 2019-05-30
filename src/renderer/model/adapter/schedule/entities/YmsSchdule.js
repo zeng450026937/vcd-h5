@@ -45,7 +45,13 @@ export default class YmsSchedule extends Schedule {
       subject       : schedule.subject,
       roomNames     : schedule.locations,
       remark        : schedule.note,
-      organizerName : schedule.organizer['display-text'],
+      organizer     : {
+        identifier : schedule.organizer.uid,
+        role       : 0,
+        type       : !schedule.organizer.domain ? 0 : 1, // 0：内部参会者，1：外部参会者
+        showName   : schedule.organizer['display-text'],
+        extension  : schedule.organizer.phone,
+      },
       // 会议时间
       startDateTime : new Date(`${schedule['start-time']} GMT`).getTime(),
       endDateTime   : new Date(`${schedule['expiry-time']} GMT`).getTime(),
@@ -60,7 +66,9 @@ export default class YmsSchedule extends Schedule {
       options.rtmpUrl = schedule.rtmpInvitees['rtmp-invitee'][0].session[0]['web-share-url'];
     }
 
-    return Object.assign(options, this.formatRecurrence(schedule['recurrence-pattern']), this.formatParticipants(schedule.invitees.invitee));
+    const participants = this.formatParticipants(schedule.invitees.invitee);
+
+    return Object.assign(options, this.formatRecurrence(schedule['recurrence-pattern']), { participants });
   }
 
   formatRecurrence(pattern) {
@@ -92,17 +100,12 @@ export default class YmsSchedule extends Schedule {
     const participants = invitees.map((invitee) => ({
       identifier : invitee.uid,
       role       : invitee.role === 'organizer' ? 0 : invitee.role === 'attendee' ? 2 : 1, // 目前没有观众 3,
-      roleText   : invitee.role,
       type       : !invitee.domain ? 0 : 1, // 0：内部参会者，1：外部参会者
       showName   : invitee['display-text'],
       extension  : invitee.phone,
     }));
 
 
-    return { participants };
-  }
-
-  genDetails() {
-    return this.genRecurrence();
+    return participants;
   }
 }

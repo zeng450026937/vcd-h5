@@ -17,9 +17,9 @@ export default class CloudSchedule extends Schedule {
     return schedule;
   }
 
-  genDetails() {
-    this.genRecurrence();
-    // 获取详情
-    
+  setDetails(details) {
+    this.hasDetails = true; // 下发日程更新时间的时候重置为false
+    Object.assign(this.schedule, details);
+    this.schedule.participants.push(details.organizer);
   }
 }

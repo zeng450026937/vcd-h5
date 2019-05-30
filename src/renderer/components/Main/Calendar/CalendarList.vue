@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="mt-3 text-xs truncate">ID: {{event.number}}</div>
-          <div class="mt-2 text-xs truncate">{{event.startTime}} - {{event.endTime}}</div>
+          <div class="mt-2 text-xs truncate">{{event.startTime | formatTime}} - {{event.endTime| formatTime}}</div>
         </div>
       </div>
       <div v-if="!displaySchedules || displaySchedules.length <= 0" class="h-full flex items-center justify-center">
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import CommonEmpty from '../../Shared/CommonEmpty.vue';
 
 export default {
@@ -67,6 +68,11 @@ export default {
       else if (!val || val.length <= 0) {
         this.selectedSchedule = {};
       }
+    },
+  },
+  filters : {
+    formatTime(val) {
+      return moment(val).format('YYYY/MM/DD HH:mm');
     },
   },
 };

@@ -52,6 +52,27 @@ model.provide({
 
       return res.data;
     },
+
+    async getScheduleInfo(planId, sequence = 1) {
+      if (!planId) return Promise.reject();
+      const params = {
+        planId,
+        sequence,
+      };
+      const res = await Axios({
+        method  : 'get',
+        baseURL : API.BASE_URL,
+        url     : API.GET_SCHEDULE_INFO,
+        params,
+        headers : {
+          token : this.$getVM('digest').token,
+        },
+      });
+
+      
+      return res.data;
+    },
+
   },
 });
 
