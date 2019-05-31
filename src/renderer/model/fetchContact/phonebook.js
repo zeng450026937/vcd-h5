@@ -5,7 +5,7 @@ export class Phonebook {
     this.init({ token, baseURL });
   }
 
-  init({ token, baseURL }) {
+  init({ token, baseURL } = {}) {
     this.token = token;
     this.baseURL = baseURL;
     this.acceptVersion = 'v5';
@@ -17,7 +17,7 @@ export class Phonebook {
     this.phoneBookUrl = null;
   }
 
-  reset({ token, baseURL }) {
+  reset({ token, baseURL } = {}) {
     this.init({ token, baseURL });
   }
 

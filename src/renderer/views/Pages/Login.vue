@@ -1,6 +1,6 @@
 <template>
   <div id="login-content" class="h-full flex">
-    <div class="h-full">
+    <div class="h-full select-none">
       <div class="side h-full">
       <login-header class="header" :useOperationBar="false" />
       <img  ondragstart="return false;" class="bg" src="../../assets/login-bg.png"/>

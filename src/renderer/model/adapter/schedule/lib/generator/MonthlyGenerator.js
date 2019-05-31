@@ -10,7 +10,7 @@ import BaseGenerator from './BaseGenerator';
 class MonthlyGenerator extends BaseGenerator {
   constructor(plan) {
     super(plan);
-    this.cacheCurrent = moment(this.current).date(this.plan.dayOfMonth);
+    this.cacheCurrent = this.plan.dayOfMonth ? moment(this.current).date(this.plan.dayOfMonth) : moment(this.current);
     this.cacheRecurrenceInterval = 0;
   }
 

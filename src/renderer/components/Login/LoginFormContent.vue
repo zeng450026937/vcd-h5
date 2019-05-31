@@ -1,138 +1,138 @@
 <template>
   <div id="login-form-content">
-
-    <div class="flex flex-col content">
-      <div class="login-title">
-        <span>{{$t('login.login')}}</span>
-      </div>
-
-      <div class="login-form flex flex-col" @keyup.enter="handleLogin">
-        <div class="flex mb-6 select-none" v-if="isCloud">
-          <div class="cloud-tab-normal"
-               :class="{'cloud-tab-active': isLoginByPhone}"
-               @click="toLoginByPhone">
-            <span>手机登录</span>
-          </div>
-          <div class="cloud-tab-normal mx-6"
-               :class="{'cloud-tab-active': isLoginByEmail}"
-               @click="toLoginByEmail">
-            <span>邮箱登录</span>
-          </div>
-          <div class="cloud-tab-normal"
-               :class="{'cloud-tab-active': isLoginByCloud}"
-               @click="toLoginByCloud">
-            <span>云账号登录</span>
-          </div>
-        </div>
-        <div class="mb-4 flex">
-          <a-select v-if="isLoginByPhone"
-                    defaultValue="+86"
-                    style="width: 80px"
-                    class="mr-3">
-            <a-select-option value="+86">+86</a-select-option>
-            <a-select-option value="+110">+110</a-select-option>
-            <a-select-option value="+114">+114</a-select-option>
-          </a-select>
-          <account-auto-complete
-              class="flex flex-grow"
-              label="principle"
-              :format="isLoginByPhone"
-              :pattern="accountType"
-              :prefixIcon="accountInput.icon"
-              :placeholder="accountInput.placeholder"
-              :account="loginData.principle"
-              :searched-accounts="searchedAccounts"
-              @clearAccount="clearAccount"
-              @updateAccount="updateAccount"
-              @selectAccount="selectAccount"
-              @searchAccount="searchAccount"
-              @deleteAccount="deleteAccount"
-          ></account-auto-complete>
+    <div class="login-form-wrapper" v-show="!showEnterpriseSelector">
+      <div class="flex flex-col content">
+        <div class="login-title">
+          <span>{{$t('login.login')}}</span>
         </div>
 
-        <!--<template v-if="serverType === 'yms'">-->
-        <div class="mb-4">
-          <a-input
-              v-model="loginData.pin"
-              maxlength="64"
-              @keypress="passwordInputted"
-              type="password"
-              :placeholder="$t('login.placeholder.password')">
-            <div slot="prefix">
-              <a-tooltip
-                  :visible="isCapsLockOn"
-                  trigger="focus"
-                  placement="bottomLeft">
-                <template slot="title">
-                  <span>{{$t('login.capitalLocked')}}</span>
-                </template>
-                <a-iconfont type='icon-mima' class="text-base text-black9"/>
-              </a-tooltip>
+        <div class="login-form flex flex-col" @keyup.enter="handleLogin">
+          <div class="flex mb-6 select-none" v-if="isCloud">
+            <div class="cloud-tab-normal"
+                 :class="{'cloud-tab-active': isLoginByPhone}"
+                 @click="toLoginByPhone">
+              <span>手机登录</span>
             </div>
-          </a-input>
-        </div>
-
-        <div class="flex justify-between mt-6">
-          <a-checkbox class="text-xs text-black6"
-                      :checked="rmbPassword"
-                      @change="rmbPassword = !rmbPassword"
-          >{{$t('login.rememberPassword')}}
-          </a-checkbox>
-          <a-checkbox class="text-xs text-black6"
-                      :checked="autoLogin"
-                      @change="autoLogin = !autoLogin"
-          > {{$t('login.autoLogin')}}
-          </a-checkbox>
-        </div>
-
-        <div class="mt-9">
-          <div class="flex">
-            <div class="w-1/2 mr-2">
-              <a-button type="primary" block @click="handleLogin">{{$t('login.login')}}</a-button>
+            <div class="cloud-tab-normal mx-6"
+                 :class="{'cloud-tab-active': isLoginByEmail}"
+                 @click="toLoginByEmail">
+              <span>邮箱登录</span>
             </div>
-            <div class="w-1/2 ml-2">
-              <a-button @click="toJoinConferencePage" block>{{$t('login.join')}}</a-button>
+            <div class="cloud-tab-normal"
+                 :class="{'cloud-tab-active': isLoginByCloud}"
+                 @click="toLoginByCloud">
+              <span>云账号登录</span>
             </div>
           </div>
+          <div class="mb-4 flex">
+            <a-select v-if="isLoginByPhone"
+                      defaultValue="+86"
+                      style="width: 80px"
+                      class="mr-3">
+              <a-select-option value="+86">+86</a-select-option>
+              <a-select-option value="+110">+110</a-select-option>
+              <a-select-option value="+114">+114</a-select-option>
+            </a-select>
+            <account-auto-complete
+                class="flex flex-grow"
+                label="principle"
+                :format="isLoginByPhone"
+                :pattern="accountType"
+                :prefixIcon="accountInput.icon"
+                :placeholder="accountInput.placeholder"
+                :account="loginData.principle"
+                :searched-accounts="searchedAccounts"
+                @clearAccount="clearAccount"
+                @updateAccount="updateAccount"
+                @selectAccount="selectAccount"
+                @searchAccount="searchAccount"
+                @deleteAccount="deleteAccount"
+            ></account-auto-complete>
+          </div>
+
+          <!--<template v-if="serverType === 'yms'">-->
+          <div class="mb-4">
+            <a-input
+                v-model="loginData.pin"
+                maxlength="64"
+                @keypress="passwordInputted"
+                type="password"
+                :placeholder="$t('login.placeholder.password')">
+              <div slot="prefix">
+                <a-tooltip
+                    :visible="isCapsLockOn"
+                    trigger="focus"
+                    placement="bottomLeft">
+                  <template slot="title">
+                    <span>{{$t('login.capitalLocked')}}</span>
+                  </template>
+                  <a-iconfont type='icon-mima' class="text-base text-black9"/>
+                </a-tooltip>
+              </div>
+            </a-input>
+          </div>
+
+          <div class="flex justify-between mt-6">
+            <a-checkbox class="text-xs text-black6"
+                        :checked="rmbPassword"
+                        @change="rmbPassword = !rmbPassword"
+            >{{$t('login.rememberPassword')}}
+            </a-checkbox>
+            <a-checkbox class="text-xs text-black6"
+                        :checked="autoLogin"
+                        @change="autoLogin = !autoLogin"
+            > {{$t('login.autoLogin')}}
+            </a-checkbox>
+          </div>
+
+          <div class="mt-9">
+            <div class="flex">
+              <div class="w-1/2 mr-2">
+                <a-button type="primary" block @click="handleLogin">{{$t('login.login')}}</a-button>
+              </div>
+              <div class="w-1/2 ml-2">
+                <a-button @click="toJoinConferencePage" block>{{$t('login.join')}}</a-button>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-      </div>
-
-      <div class="text-xs text-center text-black6 mt-12 h-7">
-        <template v-if="isCloud">
-          <span class="cursor-pointer leading-tight"
-                @click="toForget">{{$t('login.forgetPassword')}}</span>
-          <a-divider type="vertical" class="mx-5 bg-divider h-7"/>
-          <span class="cursor-pointer leading-tight"
-                @click="toRegister">{{$t('login.regist')}}</span>
-          <a-divider type="vertical" class="mx-5 bg-divider h-7"/>
-        </template>
-        <a-tooltip
-            :visible="isFirstStart"
-            placement="bottom"
-            overlayClassName="first-start-tooltip">
-          <template slot="title">
-            <span>{{$t('login.firstLogin')}}</span>
+        <div class="text-xs text-center text-black6 mt-12 h-7">
+          <template v-if="isCloud">
+            <span class="cursor-pointer leading-tight"
+                  @click="toForget">{{$t('login.forgetPassword')}}</span>
+            <a-divider type="vertical" class="mx-5 bg-divider h-7"/>
+            <span class="cursor-pointer leading-tight"
+                  @click="toRegister">{{$t('login.regist')}}</span>
+            <a-divider type="vertical" class="mx-5 bg-divider h-7"/>
           </template>
-          <a-badge v-if="hasNewVersion">
-              <span slot="count"
-                    class="text-white bg-active rounded-lg h-2 leading-none"
-                    style="transform: translate(50%, -250%);font-size: 10px;width: 8px;">
-                <span class="leading-tightest"></span>
+          <a-tooltip
+              :visible="isFirstStart"
+              placement="bottom"
+              overlayClassName="first-start-tooltip">
+            <template slot="title">
+              <span>{{$t('login.firstLogin')}}</span>
+            </template>
+            <a-badge v-if="hasNewVersion">
+                <span slot="count"
+                      class="text-white bg-active rounded-lg h-2 leading-none"
+                      style="transform: translate(50%, -250%);font-size: 10px;width: 8px;">
+                  <span class="leading-tightest"></span>
+                </span>
+              <span class="cursor-pointer leading-tight text-xs" @click="openSetting">
+                {{$t('login.serverSetting')}}
               </span>
-            <span class="cursor-pointer leading-tight text-xs" @click="openSetting">
+            </a-badge>
+            <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">
               {{$t('login.serverSetting')}}
             </span>
-          </a-badge>
-          <span v-else class="cursor-pointer leading-tight text-xs" @click="openSetting">
-            {{$t('login.serverSetting')}}
-          </span>
-        </a-tooltip>
+          </a-tooltip>
+        </div>
+
+
       </div>
-
-
-    </div>
-    <div class="login-footer flex  items-center">
+      <div class="login-footer flex  items-center">
       <div class="text-xs flex text-center leading-tight text-black9">
         {{$t('login.clickAgree')}}
         <span class="text-indigo-light cursor-pointer" @click="goUserProtocol">{{$t('login.userProtocol')}}</span>
@@ -140,7 +140,11 @@
         <span class="text-indigo-light cursor-pointer" @click="goPrivacy">{{$t('login.privacyPolicy')}}</span>
       </div>
     </div>
-    <enterprise-selector ref="enterpriseSelector" @selected="loginWithEnterprise"/>
+    </div>
+    <enterprise-selector v-show="showEnterpriseSelector"
+                         :account-infos="accountInfos"
+                         @selected="loginWithEnterprise"
+                         @cancel="showEnterpriseSelector = false"/>
   </div>
 </template>
 
@@ -164,12 +168,14 @@ export default {
 
     return {
       dSearch,
-      isCapsLockOn     : false,
-      isMultiAccount   : false,
-      preRmbPassword   : true,
-      rawAccounts      : [],
-      modifiedAccounts : [],
-      searchedAccounts : [],
+      showEnterpriseSelector : false,
+      isCapsLockOn           : false,
+      isMultiAccount         : false,
+      preRmbPassword         : true,
+      rawAccounts            : [],
+      modifiedAccounts       : [],
+      searchedAccounts       : [],
+      accountInfos           : [],
     };
   },
   sketch : {
@@ -243,13 +249,14 @@ export default {
         password : this.loginData.pin,
       });
 
+      this.accountInfos = accountInfos;
+
       if (accountInfos.length === 0) {
         return this.$message.warning('账号输入错误');
       }
       if (accountInfos.length > 1) {
-        this.$refs.enterpriseSelector.accountInfos = accountInfos;
-
-        return this.$refs.enterpriseSelector.visible = true;
+        // this.$refs.enterpriseSelector.accountInfos = accountInfos;
+        return this.showEnterpriseSelector = true;
       }
       this.loginWithEnterprise(accountInfos[0]);
     },
@@ -264,7 +271,7 @@ export default {
       });
       this.loginData.authorization = accountInfo.principle;
 
-      this.$model.login.account.proxy = '10.200.112.65';
+      this.$model.login.account.proxy = '10.200.112.134';
       this.$dispatch('login.login');
     },
     clearAccount() {
@@ -369,35 +376,38 @@ export default {
 
 <style lang="less">
   #login-form-content{
-    @apply h-full flex flex-col bg-white shadow w-full relative;
-    > .content {
-    @apply justify-center items-center h-1 flex-grow;
-      .login-form {
-        width: 55%;
-        .cloud-tab {
-          &-normal {
-            @apply pb-2 leading-loose cursor-pointer;
+  @apply h-full flex;
+    >.login-form-wrapper {
+      @apply h-full flex flex-col bg-white shadow w-full relative;
+      > .content {
+      @apply justify-center items-center h-1 flex-grow;
+        .login-form {
+          width: 55%;
+          .cloud-tab {
+            &-normal {
+              @apply pb-2 leading-loose cursor-pointer;
+            }
+            &-active {
+              @apply border-b-2 border-indigo text-indigo;
+            }
           }
-          &-active {
-            @apply border-b-2 border-indigo text-indigo;
+          .ant-form-item-control {
+          @apply leading-none;
           }
-        }
-        .ant-form-item-control {
-        @apply leading-none;
         }
       }
-    }
-    .login-title {
-      width: 55%;
-      padding-bottom: 48px;
-    @apply text-2xl font-semibold flex items-end justify-start;
-    }
+      .login-title {
+        width: 55%;
+        padding-bottom: 48px;
+      @apply text-2xl font-semibold flex items-end justify-start;
+      }
 
-    .login-footer {
-    @apply h-10 w-full bg-under-painting flex items-center justify-center;
-    }
-    .ant-input {
-    @apply pl-9;
+      .login-footer {
+      @apply h-10 w-full bg-under-painting flex items-center justify-center;
+      }
+      .ant-input {
+      @apply pl-9;
+      }
     }
   }
   .first-start-tooltip {

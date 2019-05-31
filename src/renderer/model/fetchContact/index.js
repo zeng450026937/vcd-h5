@@ -59,17 +59,15 @@ model.provide({
   },
   watch : {
     isRegistered(val) {
-      if (!val) this.reset();
+      if (!val) return this.reset();
+      if (this.$phonebook && this.baseURL) {
+        this.$phonebook.updateBaseURL(this.baseURL);
+      }
       this.initNegotiate();
     },
     token(val) {
       if (val && this.$phonebook) {
         this.$phonebook.updateToken(val);
-      }
-    },
-    baseURL(val) {
-      if (val && this.$phonebook) {
-        this.$phonebook.updateBaseURL(val);
       }
     },
   },

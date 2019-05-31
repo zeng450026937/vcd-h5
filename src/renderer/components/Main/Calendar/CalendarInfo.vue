@@ -47,7 +47,7 @@
                   <span>{{selectedSchedule.startTime | formatTime}} - {{selectedSchedule.endTime | formatTime}}</span>
                 </div>
               </div>
-              <div v-if="selectedSchedule.pattern" class="flex flex-col text-xs mt-4">
+              <div v-if="selectedSchedule.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <span class="w-20 text-black6">{{$t('schedule.cycle')}}</span>
                   <div class="flex flex-col">

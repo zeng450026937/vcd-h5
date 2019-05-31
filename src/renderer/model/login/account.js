@@ -69,7 +69,7 @@ model.provide({
       this.saveConfig();
     },
     saveLoginData(loginData) {
-      storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'account');
+      storage.insertOrUpdate('ACCOUNT_LIST', loginData, 'principle');
       storage.update('CURRENT_ACCOUNT', loginData);
     },
     saveConfig() {

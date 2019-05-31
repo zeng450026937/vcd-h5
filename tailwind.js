@@ -680,8 +680,9 @@ module.exports = {
     8    : '2rem',
     9    : '2.25rem', // 36px
     10   : '2.5rem',
-    12   : '3rem',
-    16   : '4rem',
+    12   : '3rem', // 48px
+    14   : '3.5rem', // 48px
+    16   : '4rem', // 64px
     20   : '5rem',
     24   : '6rem',
     32   : '8rem',
