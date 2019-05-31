@@ -19,8 +19,8 @@ model.provide({
   methods : {
     async getScheduleList(from, to) {
       const params = {
-        queryStartTime : from || new Date().setHours(-6 * 24),
-        queryEndTime   : to || Date.now(),
+        queryStartTime : from || Date.now(),
+        queryEndTime   : to || new Date().setHours(7 * 24),
       };
 
       const res = await Axios({
