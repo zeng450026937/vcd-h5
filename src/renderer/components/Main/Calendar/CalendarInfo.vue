@@ -3,7 +3,7 @@
     <div v-if="hasEvent" class="h-full flex flex-col">
       <div class="h-full flex flex-grow">
         <div class="w-full">
-          <div class="flex flex-col px-5 h-full overflow-y-auto">
+          <div class="flex flex-col px-10 h-full overflow-y-auto">
             <div class="py-5 border-b">
               <div class="flex items-center">
                 <div class="w-1 text-base text-black flex flex-grow truncate">
@@ -37,19 +37,19 @@
               </div>
               <div class="flex flex-col text-xs mt-2">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">组织者</span>
+                  <span class="w-20 text-black9">组织者</span>
                   <span v-if="selectedSchedule.organizer">{{selectedSchedule.organizer.showName}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">{{$t('schedule.time')}}</span>
+                  <span class="w-20 text-black9">{{$t('schedule.time')}}</span>
                   <span>{{selectedSchedule.startTime | formatTime}} - {{selectedSchedule.endTime | formatTime}}</span>
                 </div>
               </div>
               <div v-if="selectedSchedule.isRecurrence" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">{{$t('schedule.cycle')}}</span>
+                  <span class="w-20 text-black9">{{$t('schedule.cycle')}}</span>
                   <div class="flex flex-col">
                     <span>{{selectedSchedule.pattern.title}}</span>
                     <span>{{selectedSchedule.pattern.time}}</span>
@@ -59,26 +59,26 @@
               <div v-if="selectedSchedule.roomNames" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
-                    <div class="w-20 text-black6">{{$t('schedule.meetingRoom')}}</div>
+                    <div class="w-20 text-black9">{{$t('schedule.meetingRoom')}}</div>
                   </div>
                   <span style="word-break: break-all">{{selectedSchedule.roomNames.join('、')}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">{{$t('schedule.conferenceId')}}</span>
+                  <span class="w-20 text-black9">{{$t('schedule.conferenceId')}}</span>
                   <span class="select-text">{{selectedSchedule.number}}</span>
                 </div>
               </div>
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">{{$t('schedule.password')}}</span>
+                  <span class="w-20 text-black9">{{$t('schedule.password')}}</span>
                   <span class="select-text">{{selectedSchedule.password}}</span>
                 </div>
               </div>
               <div v-if="selectedSchedule.isLive" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
-                  <span class="w-20 text-black6">{{$t('schedule.liveLink')}}</span>
+                  <span class="w-20 text-black9">{{$t('schedule.liveLink')}}</span>
                   <span class="text-indigo w-1 flex flex-grow truncate">
                     <a class="truncate"
                        :title="selectedSchedule.rtmpUrl"
@@ -91,7 +91,7 @@
               <div class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
-                    <div class="w-20 text-black6">{{$t('schedule.remark')}}</div>
+                    <div class="w-20 text-black9">{{$t('schedule.remark')}}</div>
                   </div>
                   <span style="word-break: break-all"
                         class="w-1 flex flex-grow">{{selectedSchedule.remark || $t('schedule.emptyRemark')}}</span>
@@ -100,7 +100,7 @@
             </div>
             <div class="flex flex-col text-xs my-5">
               <div class="flex w-full leading-tight">
-                <span class="w-20 text-black6">{{$t('schedule.meetingMember')}}</span>
+                <span class="w-20 text-black9">{{$t('schedule.meetingMember')}}</span>
                 <div class="flex flex-col flex-grow">
                   <div class="w-full" v-if="selectedSchedule.participants">
                     <template v-for="(item, index ) in sortedInvitee">

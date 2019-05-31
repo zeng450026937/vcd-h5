@@ -3,7 +3,16 @@
     <div class="flex flex-col h-full w-full">
       <main-header :title="$t('schedule.meetingSchedule')"/>
       <template v-if="displaySchedules && displaySchedules.length > 0">
-      <a-row class="flex h-full m-4 border bg-white">
+        <div class="flex h-full m-4 border bg-white">
+          <div style="width: 36%;" class="h-full overflow-y-auto border-r">
+            <calendar-list/>
+          </div>
+          <div class="h-full overflow-y-auto flex flex-grow">
+            <calendar-info/>
+          </div>
+        </div>
+      <!--
+        <a-row class="flex h-full m-4 border bg-white">
         <a-col :span="9" class="h-full overflow-y-auto border-r">
           <calendar-list/>
         </a-col>
@@ -11,6 +20,7 @@
           <calendar-info/>
         </a-col>
       </a-row>
+      -->
       </template>
       <template v-else>
         <div class="flex h-full justify-center items-center m-4 border bg-white">

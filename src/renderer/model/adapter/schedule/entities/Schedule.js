@@ -13,6 +13,7 @@ export default class Schedule {
     // for vue
     this.schedule.participants = this.schedule.participants || [];
     this.schedule.organizer = this.schedule.organizer || {};
+    this.pattern = {};
   }
 
   get planId() { return this.schedule.planId; }
@@ -53,7 +54,7 @@ export default class Schedule {
       type           : this.schedule.recurrenceType,
       dailyType      : this.schedule.dailyType,
       interval       : this.schedule.recurrenceInterval,
-      dayOfWeek      : Array.isArray(dayOfWeek) ? dayOfWeek.split(',') : [ dayOfWeek ],
+      dayOfWeek      : Array.isArray(dayOfWeek) ? dayOfWeek : [ dayOfWeek ] ,
       dayOfMonth     : this.schedule.dayOfMonth,
       dayOfWeekIndex : this.schedule.dayOfWeekIndex,
       monthOfYear    : this.schedule.monthOfYear,
@@ -85,7 +86,7 @@ export default class Schedule {
 
   // 用户查看详情的时候手动去调用
   genRecurrence(force = false) {
-    if (!this.isRecurrence && this.pattern && !force) return;
+    if (!this.isRecurrence && this.pattern.title && !force) return;
     this.pattern = formatSchedule(this.recurrence);
   }
 

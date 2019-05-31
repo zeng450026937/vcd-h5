@@ -81,7 +81,7 @@ export default class YmsSchedule extends Schedule {
       recurrenceType : RECU_TYPE[type],
       dailyType      : DAILY_TYPE.EVERY_NTH_DAY,
       interval       : pattern['@interval'],
-      dayOfWeek      : pattern['@days-of-week'].split(',').map((w) => WEEK_MAP[w]), // 返回数组
+      dayOfWeek      : pattern['@days-of-week'] && pattern['@days-of-week'].split(',').map((w) => WEEK_MAP[w]), // 返回数组
       dayOfMonth     : pattern['@day-of-month'],
       dayOfWeekIndex : pattern['@day-of-week-index'],
       monthOfYear    : pattern['@month-of-year'],

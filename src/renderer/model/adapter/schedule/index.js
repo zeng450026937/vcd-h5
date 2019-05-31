@@ -124,7 +124,6 @@ model.provide({
     },
 
     async fetchScheduleInfo(schedule, force) {
-      schedule.genRecurrence(force);
       if (schedule.hasDetails && !force) return;
 
       const { data } = await this.fetch.getScheduleInfo(schedule.planId, schedule.sequence);
@@ -162,7 +161,9 @@ model.provide({
       }
     },
     selectedSchedule(val) {
-      if (val && val.planId && this.isCloud) {
+      if (!val || !val.planId) return;
+      val.genRecurrence();
+      if (this.isCloud) {
         this.fetchScheduleInfo(val);
       }
     },
