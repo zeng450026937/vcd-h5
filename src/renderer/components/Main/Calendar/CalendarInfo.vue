@@ -56,7 +56,7 @@
                   </div>
                 </div>
               </div>
-              <div v-if="selectedSchedule.locations" class="flex flex-col text-xs mt-4">
+              <div v-if="selectedSchedule.roomNames" class="flex flex-col text-xs mt-4">
                 <div class="flex w-full leading-tight">
                   <div>
                     <div class="w-20 text-black6">{{$t('schedule.meetingRoom')}}</div>
