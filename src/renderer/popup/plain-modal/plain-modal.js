@@ -44,6 +44,14 @@ const plainModal = {
       type    : Boolean,
       default : true,
     },
+    width : {
+      type    : Number,
+      default : 240,
+    },
+    wrapClassName : {
+      type    : String,
+      default : '',
+    },
   },
   data() {
     return {
@@ -109,7 +117,7 @@ const plainModal = {
 
       if (!this.hideOk) {
         children.push(h('a-button', {
-          staticClass : 'mx-2 min-w-35% bg-red-light border-red-light text-white rounded',
+          staticClass : 'mx-2 rounded bg-red-light border-red-light text-white',
           on          : {
             click : this.handleOk,
           },
@@ -117,7 +125,7 @@ const plainModal = {
       }
       if (!this.hideCancel) {
         children.push(h('a-button', {
-          staticClass : 'mx-2 min-w-35% border-grey text-black3 rounded',
+          staticClass : 'mx-2 border-grey text-black3 rounded',
           on          : {
             click : this.handleCancel,
           },
@@ -144,7 +152,7 @@ const plainModal = {
       slot        : 'footer',
     }, this.genFooter());
 
-    const content = this.content ? h('div', { staticClass: 'text-center' }, this.content) : '';
+    const content = this.content ? h('div', { staticClass: 'modal-content text-center' }, this.content) : '';
 
     children.push(footerSlot);
     if (content) children.push(content);
@@ -155,10 +163,10 @@ const plainModal = {
         id : 'plain-modal',
       },
       props : {
-        wrapClassName  : 'plain-modal-wrapper',
+        wrapClassName  : `${this.wrapClassName} plain-modal-wrapper`,
         centered       : true,
         closable       : false,
-        width          : 240,
+        width          : this.width,
         visible        : this.visible,
         maskClosable   : this.maskClosable,
         destroyOnClose : this.destroyOnClose,

@@ -76,9 +76,9 @@ export class YTMSService {
     client.reportStartUp();
     
     // prepare push service
-    const { tenantId } = client.enterpriseInfo.pushService;
+    const { tenantId, url : _pushUrl } = client.enterpriseInfo.pushService;
 
-    const pushURL = process.env.VUE_APP_YPUSH_URL;
+    const pushURL = _pushUrl || process.env.VUE_APP_YPUSH_URL;
 
     const push = this.push = new PushService(
       pushURL, clientId, Number.parseInt(tenantId, 10)

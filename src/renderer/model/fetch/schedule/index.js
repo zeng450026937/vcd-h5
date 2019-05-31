@@ -73,6 +73,10 @@ model.provide({
       return res.data;
     },
 
+    async deleteSchedule(deleteType, planId, sequence) {
+      return Promise.resolve();
+    },
+
   },
 });
 

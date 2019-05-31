@@ -150,6 +150,9 @@ model.provide({
       if (val) { // 登陆成功
         // 初始化日程列表
         this.fetchSchedules();
+        if (!this.isCloud) {
+          rtc.account.$on('bookConferenceUpdated', this.fetchYmsSchedules);
+        }
       }
       else {
         // 还原数据
