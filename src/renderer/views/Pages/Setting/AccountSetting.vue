@@ -36,8 +36,13 @@
           <span v-if="user.email" class="ml-3 account-item">{{user.email}}</span>
           <template v-if="fullPath && fullPath.length > 0">
             <span class="ml-3 account-item">{{fullPath | fullName}}</span>
-            <span class="ml-3 account-item">{{fullPath[0].text}}</span>
+              <span class="ml-3 account-item">{{fullPath[0].text}}</span>
           </template>
+        </div>
+        <div class="flex flex-col justify-end">
+          <a-button v-if="hasMultiEnterprise"
+          class="ml-2"
+          @click="switchEnterprise">切换企业</a-button>
         </div>
       </div>
       <div class="mt-20">
@@ -95,6 +100,9 @@ export default {
     };
   },
   computed : {
+    hasMultiEnterprise() {
+      return this.$model.login.account.hasMultiEnterprise;
+    },
     user() {
       return this.$model.contact.currentContact;
     },
@@ -117,7 +125,10 @@ export default {
     },
     clickOk() {
     },
-
+    switchEnterprise() {
+      this.$model.login.sketch.isSwitchEnterprise = true;
+      this.$dispatch('login.logout');
+    },
     onSignOutClicked() {
       this.$dispatch('login.logout');
     },

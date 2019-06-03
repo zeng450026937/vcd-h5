@@ -24,13 +24,20 @@ model.provide({
         server    : '', // 服务器cr
         protocol  : PROTOCOL.DEFAULT,
       },
-      proxy       : '10.200.112.134', // 代理服务器
-      proxyPort   : PORT.DEFAULT, // 代理服务器端口
-      rmbPassword : false,
+      proxy              : '10.200.112.134', // 代理服务器
+      proxyPort          : PORT.DEFAULT, // 代理服务器端口
+      rmbPassword        : false,
+      accountInfo        : {},
+      hasMultiEnterprise : false,
     };
   },
   created() {
     this.initData();
+  },
+  computed : {
+    registered() {
+      return rtc.account.registered;
+    },
   },
   middleware : {
     getRawAccounts() {
@@ -74,6 +81,14 @@ model.provide({
     },
     saveConfig() {
       storage.insert(S.REMEMBER_PASSWORD, this.rmbPassword);
+    },
+  },
+  watch : {
+    registered(val) {
+      if (!val) {
+        this.hasMultiEnterprise = false;
+        this.accountInfo = {};
+      }
     },
   },
 });

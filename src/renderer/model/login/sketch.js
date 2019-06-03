@@ -22,9 +22,10 @@ const PAGE_TYPE = {
 model.provide({
   data() {
     return {
-      serverType : SERVER_TYPE.CLOUD, // 服务器类型 CLOUD YMS
-      cloudType  : CLOUD_TYPE.PHONE, // cloud 服务器下的登陆类型 phone email cloud
-      pageType   : PAGE_TYPE.LOGIN, // 页面类型 login conference
+      serverType         : SERVER_TYPE.CLOUD, // 服务器类型 CLOUD YMS
+      cloudType          : CLOUD_TYPE.PHONE, // cloud 服务器下的登陆类型 phone email cloud
+      pageType           : PAGE_TYPE.LOGIN, // 页面类型 login conference
+      isSwitchEnterprise : false,
     };
   },
   created() {

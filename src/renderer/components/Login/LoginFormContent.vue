@@ -1,6 +1,6 @@
 <template>
   <div id="login-form-content">
-    <div class="login-form-wrapper" v-show="!showEnterpriseSelector">
+    <div class="login-form-wrapper" v-show="!hasMultiEnterprise">
       <div class="flex flex-col content">
         <div class="login-title">
           <span>{{$t('login.login')}}</span>
@@ -141,10 +141,10 @@
       </div>
     </div>
     </div>
-    <enterprise-selector v-show="showEnterpriseSelector"
+    <enterprise-selector v-show="hasMultiEnterprise"
                          :account-infos="accountInfos"
                          @selected="loginWithEnterprise"
-                         @cancel="showEnterpriseSelector = false"/>
+                         @cancel="hasMultiEnterprise = false"/>
   </div>
 </template>
 
@@ -168,25 +168,26 @@ export default {
 
     return {
       dSearch,
-      showEnterpriseSelector : false,
-      isCapsLockOn           : false,
-      isMultiAccount         : false,
-      preRmbPassword         : true,
-      rawAccounts            : [],
-      modifiedAccounts       : [],
-      searchedAccounts       : [],
-      accountInfos           : [],
+      isCapsLockOn     : false,
+      isMultiAccount   : false,
+      preRmbPassword   : true,
+      rawAccounts      : [],
+      modifiedAccounts : [],
+      searchedAccounts : [],
+      accountInfos     : [],
     };
   },
   sketch : {
     computed : [
       {
         ns    : 'login.account',
-        props : [ 'loginData', 'rmbPassword' ],
+        props : [ 'loginData', 'rmbPassword', 'hasMultiEnterprise', 'accountInfo' ],
       },
       {
         ns    : 'login.sketch',
-        props : [ 'isCloud', 'isYMS', 'serverType', 'cloudType', 'accountType', 'isLoginByPhone', 'isLoginByEmail', 'isLoginByCloud' ],
+        props : [ 'isCloud', 'isYMS', 'serverType',
+          'cloudType', 'accountType', 'isLoginByPhone',
+          'isLoginByEmail', 'isLoginByCloud', 'isSwitchEnterprise' ],
       },
       {
         ns    : 'login.state',
@@ -231,6 +232,11 @@ export default {
       return INPUT_MAP[this.accountType.toUpperCase()];
     },
   },
+  created() {
+    if (this.isSwitchEnterprise) {
+      this.handleLogin();
+    }
+  },
   async mounted() {
     this.initRawAccounts();
     await this.$nextTick();
@@ -255,12 +261,12 @@ export default {
         return this.$message.warning('账号输入错误');
       }
       if (accountInfos.length > 1) {
-        // this.$refs.enterpriseSelector.accountInfos = accountInfos;
-        return this.showEnterpriseSelector = true;
+        return this.hasMultiEnterprise = true;
       }
       this.loginWithEnterprise(accountInfos[0]);
     },
     async loginWithEnterprise(info) {
+      this.accountInfo = info;
       const { accountInfo, partyInfo } = info;
 
       await this.$model.digest.$dispatch('digest.getToken', { id: accountInfo.id });

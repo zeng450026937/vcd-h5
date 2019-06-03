@@ -3,7 +3,8 @@
     <div class="flex flex-col" style="width: 320px">
       <span class="leading-loose text-2xl">Hi，请选择您想登陆的企业</span>
 
-      <a-select placeholder="请选择"
+      <a-select v-model="defaultValue"
+                placeholder="请选择"
                 class="mt-8"
                 @change="handleChange">
         <a-select-option v-for="(account, index) in accountInfos"
@@ -35,10 +36,17 @@ export default {
       required : true,
     },
   },
+  sketch : {
+    ns    : 'login.sketch',
+    props : [ 'isSwitchEnterprise' ],
+  },
   data() {
     return {
       selectedAccount : '',
+      defaultValue    : 0,
     };
+  },
+  created() {
   },
   methods : {
     handleOk() {
@@ -52,6 +60,21 @@ export default {
     },
     onChange() {
 
+    },
+  },
+  watch : {
+    accountInfos(val) {
+      // if (this.isSwitchEnterprise) {
+      //   this.isSwitchEnterprise = false;
+      //   const partyId = this.$model.login.account.accountInfo.partyInfo.id;
+      //
+      //   this.defaultValue = val.findIndex((v) => v.partyInfo.id === partyId);
+      // }
+      // if (this.defaultValue < 0) {
+      //   if (!val || val.length <= 0) return;
+      //   this.defaultValue = 0;
+      // }
+      this.selectedAccount = val[this.defaultValue];
     },
   },
 };

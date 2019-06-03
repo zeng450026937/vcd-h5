@@ -2,7 +2,6 @@ import Axios from 'axios';
 import API from './api';
 
 import Vuem from '../../vuem';
-import rtc from '../../../rtc';
 
 const model = new Vuem();
 
