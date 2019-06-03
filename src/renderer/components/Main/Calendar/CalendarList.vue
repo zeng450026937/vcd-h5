@@ -2,9 +2,10 @@
   <a-layout id="calendar-list" class="bg-white h-full">
     <div class="p-2 h-full bg-white">
       <div v-for="(event, index) in displaySchedules" :key="index"
-           class="py-2 hover:bg-list-hover"
+           class="py-2"
            :class="{
                   'bg-list-select': event.uuid === selectedSchedule.uuid,
+                  'hover:bg-list-hover' : event.uuid !== selectedSchedule.uuid,
                   'border-b': index !== displaySchedules.length - 1,
                   'bg-expired': event.status.isEnded && event.uuid !== selectedSchedule.uuid,
                   'bg-white': !event.status.isEnded,

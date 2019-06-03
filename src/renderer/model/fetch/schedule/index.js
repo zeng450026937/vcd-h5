@@ -23,6 +23,8 @@ model.provide({
         queryEndTime   : to || new Date().setHours(7 * 24),
       };
 
+      console.time('getScheduleList total');
+
       const res = await Axios({
         method  : 'get',
         baseURL : API.BASE_URL,
@@ -33,6 +35,8 @@ model.provide({
         },
       });
 
+      console.timeEnd('getScheduleList total');
+      
       return res.data;
     },
     async getExceptionList(planIds) {
@@ -40,6 +44,7 @@ model.provide({
       if (!Array.isArray(planIds)) planIds = [ planIds ];
       const data = { planIds };
 
+      console.time('getExceptionList total');
       const res = await Axios({
         method  : 'post',
         baseURL : API.BASE_URL,
@@ -50,6 +55,8 @@ model.provide({
         },
       });
 
+      console.timeEnd('getExceptionList total');
+
       return res.data;
     },
 
@@ -59,6 +66,8 @@ model.provide({
         planId,
         sequence,
       };
+
+      console.time('getScheduleInfo total');
       const res = await Axios({
         method  : 'get',
         baseURL : API.BASE_URL,
@@ -68,6 +77,8 @@ model.provide({
           token : this.$getVM('digest').token,
         },
       });
+
+      console.timeEnd('getScheduleInfo total');
 
       
       return res.data;

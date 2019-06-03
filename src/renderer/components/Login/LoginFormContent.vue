@@ -271,7 +271,7 @@ export default {
       });
       this.loginData.authorization = accountInfo.principle;
 
-      this.$model.login.account.proxy = '10.200.112.134';
+      // this.$model.login.account.proxy = '';
       this.$dispatch('login.login');
     },
     clearAccount() {

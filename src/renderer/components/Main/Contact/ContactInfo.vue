@@ -24,9 +24,11 @@
       <div class="flex flex-col flex-grow text-sm px-10">
         <div class="flex leading-normal">
           <div class="flex flex-col">
-            <span class="mt-5 mr-3 truncate text-black6">{{user.isUser ? $t('contact.label.account') : $t('contact.label.number')}}</span>
+            <span class="mt-5 mr-3 truncate text-black6">
+              {{user.isUser ||user.isLocal ? $t('contact.label.account') : $t('contact.label.number')}}
+            </span>
             <span v-if="user.isVMR" class="mt-5 mr-3 text-black6">{{$t('contact.label.organizer')}}</span>
-            <template v-if="user.isUser">
+            <template v-if="user.isUser || user.isLocal">
               <span v-if="user.phone" class="mt-5 mr-3 text-black6">{{$t('contact.label.phone')}}</span>
               <span v-if="user.email" class="mt-5 mr-3 text-black6">{{$t('contact.label.email')}}</span>
             </template>
@@ -35,7 +37,7 @@
           <div class="flex flex-col">
             <span class="mt-5">{{user.number}}</span>
             <span v-if="user.isVMR" class="text-black9 mt-5">{{$t('contact.label.unknownOrganizer')}}</span>
-            <template v-if="user.isUser">
+            <template v-if="user.isUser || user.isLocal">
               <span v-if="user.phone" class="mt-5">{{user.phone}}</span>
               <span v-if="user.email" class="mt-5">{{user.email}}</span>
             </template>
