@@ -187,7 +187,6 @@ model.provide({
 
   watch : {
     registered(val) {
-      console.warn({ name: val ? 'registered' : 'disconnected' })
       ipcRenderer.send('account-event', { name: val ? 'registered' : 'disconnected' });
     },
   },
