@@ -3,11 +3,12 @@ module.exports = {
   name : 'main',
   lang : {
     zh : {
-      showWindow     : '打开',
+      showWindow     : '显示主面板',
       quit           : '退出',
       joinConference : '加入会议',
       logout         : '注销',
       language       : '切换语言',
+      setting        : '设置',
     },
     en : {
       showWindow     : 'Open',
@@ -15,6 +16,7 @@ module.exports = {
       joinConference : 'Join a Meeting',
       logout         : 'Log Out',
       language       : 'Switch Languages',
+      setting        : 'Setting',
     },
   },
 };

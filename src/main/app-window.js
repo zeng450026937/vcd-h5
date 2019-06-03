@@ -6,7 +6,7 @@ import { formatPathAsUrl } from './utils';
 import { buildMenu } from './menu/build-menu';
 import * as trayMenu from './menu/tray-menu';
 import { getLanguage, setLanguage } from './language';
-import {packLog} from '../logger/pack-log';
+import { packLog } from '../logger/pack-log';
 
 const minWidth = 1120;
 const minHeight = 630;
@@ -62,6 +62,33 @@ export class AppWindow extends BaseWindow {
 
     ipcMain.on('request-restore-window', () => this.restoreWindow());
 
+    ipcMain.on('account-event', (event, args) => {
+      switch (args.name) {
+        case 'registered':
+          buildMenu([
+            trayMenu.showAppWindow,
+            trayMenu.setting,
+            trayMenu.exportLog,
+            trayMenu.language,
+            trayMenu.separator,
+            trayMenu.logout,
+            trayMenu.quit,
+          ]).then((menus) => {
+            this.tray.setContextMenu(menus);
+          }); break;
+        case 'disconnected':
+          buildMenu([
+            trayMenu.showAppWindow,
+            trayMenu.exportLog,
+            trayMenu.language,
+            trayMenu.separator,
+            trayMenu.quit,
+          ]).then((menus) => {
+            this.tray.setContextMenu(menus);
+          }); break;
+        default: break;
+      }
+    });
     ipcMain.on(
       'menu-event',
       (event) => {
@@ -75,6 +102,7 @@ export class AppWindow extends BaseWindow {
             break;
           case trayMenu.joinConference.id:
           case trayMenu.logout.id:
+          case trayMenu.setting.id:
             this.window.webContents.send('menu-event', event);
             break;
           case trayMenu.language.id:

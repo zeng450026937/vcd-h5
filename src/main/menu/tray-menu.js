@@ -10,6 +10,12 @@ export const showAppWindow = {
   id    : 'show-app-window',
 };
 
+export const setting = {
+  label : 'Setting',
+  i18n  : 'setting',
+  id    : 'setting',
+};
+
 export const quit = {
   label : 'Quit',
   i18n  : 'quit',

@@ -41,6 +41,9 @@ model.provide({
     offLine() {
       return !this.onLine;
     },
+    registered() {
+      return rtc.account.registered;
+    },
   },
 
   middleware : {
@@ -146,14 +149,17 @@ model.provide({
         console.warn('menu-event', name);
         // this.$dispatch('menu-event', name);
 
-        if (name === 'language') {
-          return this.$dispatch('i18n.setRendererLocale', { lang: menuItem.lang });
-        }
+        switch (name) {
+          case 'language': this.$dispatch('i18n.setRendererLocale', { lang: menuItem.lang }); break;
+          case 'export-log': this.$dispatch('exportLog.downloadLogs'); break;
+          case 'logout': this.$dispatch('login.logout'); break;
+          case 'setting': {
+            const main = this.$getVM('main');
 
-        if (name === 'export-log') {
-          return this.$dispatch('exportLog.downloadLogs');
+            main.currentSidebar = main.sidebarMap.setting;
+          } break;
+          default: break;
         }
-
       }
     );
 
@@ -177,6 +183,13 @@ model.provide({
     );
 
     setting.autoStart = await this.autoLauncher.isEnabled();
+  },
+
+  watch : {
+    registered(val) {
+      console.warn({ name: val ? 'registered' : 'disconnected' })
+      ipcRenderer.send('account-event', { name: val ? 'registered' : 'disconnected' });
+    },
   },
 
   beforeDestroy() {
