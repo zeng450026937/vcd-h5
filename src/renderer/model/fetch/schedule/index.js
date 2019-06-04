@@ -73,6 +73,7 @@ model.provide({
         url     : API.GET_SCHEDULE_INFO,
         params,
         headers : {
+          // Authorization  : auth,
           token : this.$getVM('digest').token,
         },
       });

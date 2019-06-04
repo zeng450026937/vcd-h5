@@ -19,6 +19,11 @@ export default async function errorMessage(ctx, next) {
     else {
       let key = error.cause || (error.data && error.data.cause) || error.message;
 
+      if (!key) {
+        console.warn(error);
+        debounceNotice(ctx.vm, $t('common.message.unKnownError'));
+      }
+
       if (key.startsWith('getaddrinfo ENOTFOUND')) {
         key = 'ENOTFOUND';
       }

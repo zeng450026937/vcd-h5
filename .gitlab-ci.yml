@@ -74,7 +74,7 @@ build_linux:
   # 下述定义了  $TGZ_PACKAGE_PATH_LINUX 这个 linux 平台的制品在gitlab 上保留 60 分钟
   artifacts:
     name: $MODULE_NAME
-    expire_in: 60 mins
+    expire_in: 1 day
     paths:
       - $CI_PROJECT_DIR/$TGZ_PACKAGE_PATH_LINUX
 
@@ -91,7 +91,7 @@ build_macos:
     - macos_232
   artifacts:
     name: $MODULE_NAME
-    expire_in: 60 mins
+    expire_in: 1 day
     paths:
       - $CI_PROJECT_DIR/$TGZ_PACKAGE_PATH_MACOS
 
@@ -109,7 +109,7 @@ build_windows:
     - win10_233
   artifacts:
     name: $MODULE_NAME
-    expire_in: 60 mins
+    expire_in: 1 day
     paths:
       - "%TGZ_PACKAGE_PATH_WINDOWS%"
 

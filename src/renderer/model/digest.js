@@ -122,7 +122,7 @@ model.provide({
         this.count++;
 
         if (error.response.status !== 401 || this.count >= 10) {
-          if(this.count === 10) this.$message.error('账号或密码错误');
+          if (this.count === 10) this.$message.error('账号或密码错误');
           this.count = 0;
 
           return Promise.reject(error);
