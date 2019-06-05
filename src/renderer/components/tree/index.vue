@@ -64,7 +64,7 @@ export default {
 
       if (type == null) return;
 
-      const isOrg = type.indexOf('ORG') > -1;
+      const isOrg = /.*(ORG|GROUP).*/.test(type);
 
       if (isHalfCheck) return this.checkGroup(id, true); // 选中分组节点
 
@@ -203,7 +203,7 @@ export default {
       return tree.map((n) => (this.isOrg(n) ? this.createGroupRow(n) : this.createEntityRow(n)));
     },
     isOrg(node) {
-      return node.node.type.indexOf('ORG') > -1;
+      return /.*(ORG|GROUP).*/.test(node.node.type);
     },
     toggleGroup(id) {
       this.treeStore.toggle(id, this.getChild, true).then(() => {

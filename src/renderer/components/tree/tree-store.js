@@ -527,7 +527,7 @@ export default class TreeStore {
   isORG(node) {
     const type = this.getNodeType(node);
 
-    return type.indexOf('ORG') > -1 || type.indexOf('GROUP') > -1;
+    return /.*(ORG|GROUP).*/.test(type);
   }
 
   getChecked() {
