@@ -1,4 +1,6 @@
 import Axios from 'axios';
+import querystring from 'querystring';
+import auth from '../fetch/auth';
 
 export class Phonebook {
   constructor({ token, baseURL }) {
@@ -39,6 +41,11 @@ export class Phonebook {
         url     : path,
         data    : { phoneBookAcceptVersion: this.acceptVersion },
         headers : {
+          Authorization : auth({
+            appId  : 'phonebook-manager',
+            method : 'POST',
+            path,
+          }),
           token : this.token,
         },
       }
@@ -90,16 +97,22 @@ export class Phonebook {
       ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/sync`
       : `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
 
+    const url = `${path}?${querystring.stringify(params)}`;
+
     let res;
 
     try {
       res = await Axios(
         {
           baseURL : this.baseURL,
-          url     : path,
+          url,
           method  : 'get',
-          params,
           headers : {
+            Authorization : auth({
+              appId  : 'phonebook-manager',
+              method : 'GET',
+              path   : url,
+            }),
             token : this.token,
           },
         }
@@ -127,15 +140,21 @@ export class Phonebook {
       ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/search`
       : `/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
 
+    const url = `${path}?${querystring.stringify({
+      key,
+    })}`;
+
     const res = await Axios(
       {
         baseURL : this.baseURL,
-        url     : path,
+        url,
         method  : 'get',
-        params  : {
-          key,
-        },
         headers : {
+          Authorization : auth({
+            appId  : 'phonebook-manager',
+            method : 'GET',
+            path   : url,
+          }),
           token : this.token,
         },
       }

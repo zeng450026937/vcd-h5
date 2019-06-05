@@ -1,5 +1,7 @@
 import Axios from 'axios';
+import querystring from 'querystring';
 import API from './api';
+import auth from '../auth';
 
 import Vuem from '../../vuem';
 
@@ -21,18 +23,42 @@ model.provide({
         queryStartTime : from || Date.now(),
         queryEndTime   : to || new Date().setHours(7 * 24),
       };
+      const url = `${API.GET_SCHEDULE_LIST}?${querystring.stringify(params)}`;
+
+      console.warn(url);
 
       console.time('getScheduleList total');
 
       const res = await Axios({
         method  : 'get',
         baseURL : API.BASE_URL,
-        url     : API.GET_SCHEDULE_LIST,
-        params,
+        url,
         headers : {
+          'Sec-Metadata' : '{}',
+          Authorization  : auth({
+            appId  : 'conference-manager',
+            method : 'GET',
+            path   : url,
+          }),
           token : this.$getVM('digest').token,
         },
       });
+
+      // console.warn(API.BASE_URL + url)
+      // const res = await fetch(API.BASE_URL + url, {
+      //   method  : 'GET',
+      //   headers : {
+      //     Authorization : auth({
+      //       appId  : 'conference-manager',
+      //       method : 'GET',
+      //       path   : url,
+      //     }),
+      //     token : this.$getVM('digest').token,
+      //   },
+      // }).then((res) => console.warn(res))
+      //   .catch((error) => console.warn(error));
+      //
+      // console.warn(res);
 
       console.timeEnd('getScheduleList total');
       
@@ -50,6 +76,11 @@ model.provide({
         url     : API.GET_EXCEPTION_LIST,
         data,
         headers : {
+          Authorization : auth({
+            appId  : 'conference-manager',
+            method : 'POST',
+            path   : API.GET_EXCEPTION_LIST,
+          }),
           token : this.$getVM('digest').token,
         },
       });
@@ -66,14 +97,20 @@ model.provide({
         sequence,
       };
 
+      const url = `${API.GET_SCHEDULE_INFO}?${querystring.stringify(params)}`;
+
       console.time('getScheduleInfo total');
       const res = await Axios({
         method  : 'get',
         baseURL : API.BASE_URL,
-        url     : API.GET_SCHEDULE_INFO,
-        params,
+        url,
         headers : {
           // Authorization  : auth,
+          Authorization : auth({
+            appId  : 'conference-manager',
+            method : 'GET',
+            path   : url,
+          }),
           token : this.$getVM('digest').token,
         },
       });

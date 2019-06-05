@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import Vuem from '../vuem';
 import { Phonebook } from './phonebook';
 import rtc from '../../rtc';
-
+import { BASE_URL } from '../fetch/config';
 
 const model = new Vuem();
 
@@ -51,10 +51,10 @@ model.provide({
       return this.digest.token;
     },
     port() {
-      return '9996';
+      return '9444';
     },
     baseURL() {
-      return `${this.digest.protocol}${this.digest.domain}:${this.port}`;
+      return BASE_URL;
     },
   },
   watch : {

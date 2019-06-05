@@ -11,7 +11,7 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      domain        : '10.200.112.137',
+      domain        : '10.120.3.50',
       protocol      : 'http://',
       port          : '9998',
       count         : 0,
@@ -119,6 +119,7 @@ model.provide({
         });
       }
       catch (error) {
+        console.warn(error.response)
         this.count++;
 
         if (error.response.status !== 401 || this.count >= 10) {
