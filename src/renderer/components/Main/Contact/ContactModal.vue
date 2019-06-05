@@ -25,7 +25,7 @@
           </transfer>
         </div>
 
-        <div class="w-full flex h-12 border-t justify-center items-center pt-5">
+        <div class="w-full flex h-12 justify-center items-center pt-5">
           <a-button type="primary" class="mx-2" @click="confirm">{{$t('contact.button.meetingNow')}}</a-button>
           <a-button class="mx-2" @click="visible = false">{{$t('contact.button.cancel')}}</a-button>
         </div>

@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <div class="operate-bar">
-      <span class="number">
-        {{list.length}}{{maxChecked ? `/${maxChecked}`: ''}}
+    <div v-if="!hideTitle" class="operate-bar">
+      <span class="number font-bold">
+        已选择（{{list.length}}{{maxChecked ? `/${maxChecked}`: ''}}）
       </span>
       <span class="clear" @click="clear">
         {{$t('contact.tree.clearAll')}}
@@ -66,6 +66,10 @@ export default {
     maxChecked : {
       type : Number,
     },
+    hideTitle : {
+      type: Boolean,
+      default: false
+    }
   },
   components : {
     RecycleScroller,
@@ -114,21 +118,15 @@ export default {
   font-size: 1.5em;
 }
 .content {
-  user-select: none;
-  border:1px solid #E0E0E0;
-  height: 100%;
-  width: 100%;
+  @apply flex flex-col h-full w-full select-none;
 
   .operate-bar{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
+    @apply w-full flex justify-between items-center px-3;
     .number {
-      flex-grow: 1;
+      @apply flex-grow;
     }
     .clear {
+      font-size: 12px;
       color:  #4A5FC4;
       cursor: pointer;
       &:active {
@@ -141,15 +139,12 @@ export default {
   }
 
   .operate-bar {
-    height: 40px;
-    border-bottom: 1px solid #E0E0E0;
+    @apply h-10;
   }
   .list-scroll-content {
-    height: calc( 100% - 40px );
+    @apply flex h-1 flex-grow flex-col;
     .list-item{
-      height: 56px;
-      display: flex;
-      align-items: center;
+      @apply h-14 flex items-center;
       padding: 0 10px;
       &:hover{
         background: #E1E5F2;
@@ -161,22 +156,16 @@ export default {
         display: none;
       }
       .avatar{
-        height: 32px;
-        width: 32px;
+        @apply h-10 w-10 rounded-full flex text-xs items-center justify-center text-white flex-no-shrink;
         background: #55638C;
-        border-radius: 50%;
-        margin: 0 10px;
-        color: #fff;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        margin: 0;
+        font-size: 16px;
+        .icon {
+          font-size: 24px;
+        }
       }
       .name-content{
-        display: flex;
-        flex-grow: 1;
-        flex-direction: column;
-        justify-content: center;
+        @apply flex flex-grow flex-col justify-center ml-3;
         width: 75%;
         overflow: hidden;
 

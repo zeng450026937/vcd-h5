@@ -137,13 +137,30 @@
 
         </div>
         <div class="reserve-member">
-          <div class="flex items-center">
+          <div class="flex items-center flex-no-shrink">
             <span>参会成员(0/100)</span>
             <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>
           </div>
+          <a-button block class="mt-2 flex-no-shrink"
+                    @click="addMember">
+            <a-iconfont type="icon-tianjia"></a-iconfont>
+            添加参会成员
+          </a-button>
+          <checked-list
+              class="mt-2"
+              :max-checked="100"
+              hide-title
+              ref="checkedList"
+          ></checked-list>
         </div>
       </div>
+      <div class="reserve-footer">
+        <a-button type="primary" class="mx-1"
+                  @click="reserveConference">确定</a-button>
+        <a-button class="mx-1">取消</a-button>
+      </div>
     </div>
+    <contact-modal ref="contactModal" @confirm="onConfirm"></contact-modal>
   </a-layout>
 </template>
 
@@ -152,8 +169,8 @@
 
 import moment from 'moment';
 import AppHeader from '../../../components/Main/MainHeader.vue';
-import ContactTree from '../../../components/Main/Contact/ContactTree.vue';
-import ContactList from '../../../components/Main/Contact/ContactList.vue';
+import ContactModal from './CalendarModal.vue';
+import CheckedList from '../../../components/transfer/checkedList.vue';
 
 const recurrenceModes = [
   { mode: 'everyDay', text: '每天' },
@@ -164,18 +181,18 @@ export default {
   name       : 'CalendarReserve',
   components : {
     AppHeader,
-    ContactTree,
-    ContactList,
+    ContactModal,
+    CheckedList,
   },
   data() {
     return {
       recurrenceMode : '',
       recurrenceModes,
       weeks          : [ '日', '一', '二', '三', '四', '五', '六' ],
-      showDrawer     : false,
       checkedKeys    : [],
       isRecurrence   : false,
       selectedWeeks  : [],
+      selectedMember : [],
     };
   },
   mounted() {
@@ -187,7 +204,8 @@ export default {
       this.$router.back();
     },
     addMember() {
-      this.showDrawer = true;
+      this.selectedMember = this.$refs.checkedList.list;
+      this.$refs.contactModal.open(this.selectedMember);
     },
     genEnsurePopup(content, ensureFn, cancelFn) {
       this.$popup.destroy(this.ensureModal);
@@ -203,12 +221,6 @@ export default {
       });
       this.ensureModal.display();
     },
-    addEnsure() {
-      this.showDrawer = false;
-    },
-    addCancel() {
-      this.showDrawer = false;
-    },
     selectWeek(week) {
       const index = this.selectedWeeks.findIndex((w) => w === week);
 
@@ -216,6 +228,13 @@ export default {
         return this.selectedWeeks.splice(index, 1);
       }
       this.selectedWeeks.push(week);
+    },
+    onConfirm(checked) {
+      this.selectedMember = checked;
+      this.$refs.checkedList.update(checked);
+    },
+    reserveConference() {
+      console.warn(this.$refs.checkedList.list);
     },
   },
 };
@@ -252,10 +271,13 @@ export default {
         }
       }
       .reserve-member {
-        @apply flex flex-col flex-no-shrink p-6;
+        @apply flex flex-col flex-no-shrink px-6 pt-6;
         min-width: 334px;
         margin-left: 0px;
       }
+    }
+    .reserve-footer {
+      @apply flex h-14 flex flex-no-shrink justify-center items-center bg-white;
     }
   }
 </style>

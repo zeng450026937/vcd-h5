@@ -491,23 +491,38 @@ export default class TreeStore {
     return this.offspringMap[id] = offspring;
   }
 
-  getOffspring(id) {
-    const offsprings = [];
-    const queue = [];
+  getOffspring(id, offsprings = []) {
+    const childes = this.getChild(id);
 
-    queue.push(...(this.getChild(id) || []));
+    if (childes == null) return offsprings;
 
-    while (queue.length > 0) {
-      const child = queue.pop();
+    offsprings.push(...childes);
 
-      if (this.isORG(child)) {
-        queue.push(...(this.getChild(this.getNodeId(child)) || []));
-      }
-      offsprings.push(child);
-    }
+    childes.forEach((node) => {
+      this.getOffspring(node.node.id, offsprings);
+    });
 
     return offsprings;
   }
+
+
+  // getOffspring(id) {
+  //   const offSprings = [];
+  //   const queue = [];
+  //
+  //   queue.push(...(this.getChild(id) || []));
+  //
+  //   while (queue.length > 0) {
+  //     const child = queue.shift();
+  //
+  //     if (this.isORG(child)) {
+  //       queue.push(...(this.getChild(this.getNodeId(child)) || []));
+  //     }
+  //     offSprings.push(child);
+  //   }
+  //
+  //   return offSprings;
+  // }
 
   isORG(node) {
     const type = this.getNodeType(node);

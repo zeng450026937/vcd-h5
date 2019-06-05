@@ -63,7 +63,7 @@ model.provide({
       return this.isCloud ? fetchContact || {} : rtc.contact;
     },
     loadMode() {
-      return this.contact.loadMode;
+      return this.contact.loadMode || LOAD_MODE.AUTO;
     },
     currentUser() {
       return this.currentContact;

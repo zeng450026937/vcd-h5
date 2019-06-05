@@ -24,7 +24,8 @@
       <Load-failed-panel v-if="loadFailed"></Load-failed-panel>
     </div>
     <div class="arrow">
-      <a-iconfont type="icon-right" class="text-3xl cursor-pointer"></a-iconfont>
+      <div></div>
+      <!--<a-iconfont type="icon-right" class="text-3xl cursor-pointer"></a-iconfont>-->
     </div>
     <div class="list-content">
       <checked-list
@@ -181,22 +182,23 @@ export default {
     .tree-content {
       width: 45%;
       height: 100%;
-      border: 1px solid #E0E0E0;
       background: #fff;
       .tree-list {
         height: calc( 100% - 40px ) !important;
       }
     }
     .arrow {
-      width: 10%;
-      text-align: center;
-      color :#cccccc
+      @apply text-center h-full w-14;
+      >div {
+        @apply h-full inline-block;
+        width: 1px;
+        background-color: #E0E0E0;
+      }
     }
 
     .list-content {
+      @apply h-full bg-white;
       width: 45%;
-      height: 100%;
-      background: #fff;
     }
   }
 

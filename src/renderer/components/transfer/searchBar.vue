@@ -39,13 +39,12 @@ export default {
 
 <style lang="less">
 .transfer-search-content {
-  height: 40px;
-  border-bottom: 1px solid #E0E0E0;
+  @apply h-8;
   .search-area{
-    width: 100%;
-    height: 100%;
+    @apply h-full w-full;
     .ant-input {
       border: none !important;
+      background: #F0F0F0;
     }
   }
 }
