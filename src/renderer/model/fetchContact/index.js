@@ -59,11 +59,23 @@ model.provide({
   },
   watch : {
     isRegistered(val) {
-      if (!val) return this.reset();
-      if (this.$phonebook && this.baseURL) {
-        this.$phonebook.updateBaseURL(this.baseURL);
+      if (val) { // 登陆成功
+        if (!this.isCloud) {
+          rtc.account.$on('negotiateUrlUpdated', this.initNegotiate);
+          rtc.account.$on('phonebookUpdated', this.initNegotiate);
+        }
+        else {
+          ipcRenderer.on('phone-book-update', this.initNegotiate);
+        }
+        if (this.$phonebook && this.baseURL) {
+          this.$phonebook.updateBaseURL(this.baseURL);
+        }
+        this.initNegotiate();
       }
-      this.initNegotiate();
+      else {
+        ipcRenderer.removeListener('phone-book-update', this.initNegotiate);
+        this.reset();
+      }
     },
     token(val) {
       if (val && this.$phonebook) {
@@ -73,14 +85,6 @@ model.provide({
   },
   async created() {
     this.$phonebook = new Phonebook({ baseURL: this.baseURL });
-
-    rtc.account.$on('negotiateUrlUpdated', this.initNegotiate);
-    if (!this.isCloud) {
-      rtc.account.$on('phonebookUpdated', this.initNegotiate);
-    }
-    else {
-      ipcRenderer.on('phone-book-update', this.initNegotiate);
-    }
   },
   middleware : {
     async sync(ctx, next) {

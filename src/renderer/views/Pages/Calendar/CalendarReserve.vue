@@ -7,13 +7,13 @@
           <div class="form-content">
             <div class="form-item">
               <span class="label">会议主题</span>
-              <a-input placeholder="请输入会议名称"/>
+              <a-input placeholder="请输入会议名称" v-model="conferenceInfo.subject"/>
             </div>
             <div class="form-item flex">
               <div>
                 <span class="label">开始时间</span>
                 <div class="flex">
-                  <a-date-picker style="width: 200px"></a-date-picker>
+                  <a-date-picker style="width: 200px" ></a-date-picker>
                   <a-time-picker style="width: 126px"
                                  class="ml-2"
                                  :defaultValue="moment('12:08', 'HH:mm')"
@@ -193,6 +193,21 @@ export default {
       isRecurrence   : false,
       selectedWeeks  : [],
       selectedMember : [],
+      recurrenceInfo : {
+        recurrenceType : '',
+        interval       : '',
+        dayOfWeeks     : '',
+        rangeEndDate   : '',
+      },
+      conferenceInfo : {
+        subject        : '',
+        startDate      : '',
+        startTime      : '',
+        durationHour   : '',
+        durationMinute : '',
+        remark         : '',
+        participants   : [],
+      },
     };
   },
   mounted() {
@@ -234,10 +249,9 @@ export default {
       this.$refs.checkedList.update(checked);
     },
     reserveConference() {
-      // console.warn(this.$refs.checkedList.list);
-      this.$dispatch('schedule.addSchedule', {
-
-      }).then((res) => this.$message.success('预约成功'));
+      this.$dispatch('schedule.addSchedule',
+        Object.assign({}, this.recurrenceInfo, this.conferenceInfo)
+      ).then((res) => this.$message.success('预约成功'));
     },
   },
 };

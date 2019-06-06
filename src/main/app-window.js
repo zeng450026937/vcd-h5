@@ -285,12 +285,12 @@ export class AppWindow extends BaseWindow {
     this.window.webContents.send('request-system-config');
   }
 
-  notify(type) {
+  notify(args) {
     const types = {
       phonebook : 'phone-book-update',
       schedule  : 'schedule-update',
     };
 
-    this.window.webContents.send(types[type]);
+    this.window.webContents.send(types[args.event]);
   }
 }

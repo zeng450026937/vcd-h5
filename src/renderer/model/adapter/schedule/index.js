@@ -1,5 +1,6 @@
 import { chunk } from 'lodash';
 import moment from 'moment';
+import { ipcRenderer } from 'electron';
 import Vuem from '../../vuem';
 import rtc from '../../../rtc';
 import { Conference } from './lib/Conference';
@@ -40,7 +41,7 @@ model.provide({
       return this.schedules;
     },
   },
-  create() {
+  created() {
     this.rawSchedules._isVue = true;
   },
   methods : {
@@ -157,10 +158,6 @@ model.provide({
       // const options = {};
       //
       // switch (recurrenceType) {
-      //   case undefined:
-      //   case null: // 非周期会议
-      //
-      //     break;
       //   case RECU_TYPE.RECURS_DAILY: // 按天循环
       //
       //     break;
@@ -168,7 +165,7 @@ model.provide({
       //     break;
       //   case RECU_TYPE.RECURS_MONTHLY: // 按月的第几天循环
       //     break;
-      //   default:
+      //   default: // 非周期会议
       //     break;
       // }
       //
@@ -186,6 +183,9 @@ model.provide({
         if (!this.isCloud) {
           rtc.account.$on('bookConferenceUpdated', this.fetchYmsSchedules);
         }
+        else {
+          ipcRenderer.on('schedule-update', this.fetchSchedules);
+        }
       }
       else {
         // 还原数据
@@ -194,6 +194,9 @@ model.provide({
         this.selectedDate = Date.now(); // 当前选中的时间
         this.selectedSchedule = {}; // 当前选中的日程
         this.displaySchedules = []; // 在页面上展示的日程列表
+        if (this.isCloud) {
+          ipcRenderer.removeListener('schedule-update', this.fetchSchedules);
+        }
       }
     },
     selectedSchedule(val) {

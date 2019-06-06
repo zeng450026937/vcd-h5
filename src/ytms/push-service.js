@@ -25,6 +25,10 @@ MESSAGE_TYPE[MESSAGE_TYPE.PHONEBOOK_UPDATE = 'phonebook_update'] = 'PHONEBOOK_UP
 MESSAGE_TYPE[MESSAGE_TYPE.PHONEBOOK_DELETE = 'phonebook_delete'] = 'PHONEBOOK_DELETE';
 MESSAGE_TYPE[MESSAGE_TYPE.PHONEBOOK_INSTER = 'phonebook_inster'] = 'PHONEBOOK_INSTER';
 
+MESSAGE_TYPE[MESSAGE_TYPE.SCHEDULE_UPDATE = 'SCHEDULE_1'] = 'SCHEDULE_1';
+MESSAGE_TYPE[MESSAGE_TYPE.SCHEDULE_DELETE = 'SCHEDULE_2'] = 'SCHEDULE_2';
+MESSAGE_TYPE[MESSAGE_TYPE.SCHEDULE_ADD = 'SCHEDULE_3'] = 'SCHEDULE_3';
+
 export { MESSAGE_TYPE };
 
 export class PushService extends EventEmitter {
@@ -78,7 +82,7 @@ export class PushService extends EventEmitter {
     }
 
     // poll with other error
-    if (res.code !== '60600') {
+    if (res.code !== '720602') {
       this.retryTimes += 1;
 
       if (this.maxRetryTimes && this.maxRetryTimes < this.retryTimes) {
@@ -104,11 +108,6 @@ export class PushService extends EventEmitter {
 
     console.log('response is:', JSON.stringify(res.data));
 
-    console.warn('=======================================');
-    console.warn('=======================================');
-    console.warn(res);
-
-
     Object.keys(res).forEach((sid) => {
       const lastSeqId = res[sid];
       const maxSeqId = this.analyze(res[sid]);
@@ -130,7 +129,6 @@ export class PushService extends EventEmitter {
     
     try {
       this.cancelToken = axios.CancelToken.source();
-
       console.log('request:', JSON.stringify({
         ...body,
         url,
@@ -158,6 +156,12 @@ export class PushService extends EventEmitter {
       return;
     }
 
+    console.log('response:', JSON.stringify({
+      ...res.data,
+      url,
+      token : this.token,
+    }));
+
     this.cancelToken = null;
 
     return res.data;
@@ -168,11 +172,12 @@ export class PushService extends EventEmitter {
     this.token = token;
   }
 
-  analyze(value = { items: [] }) {
+  analyze(value = {}) {
     let maxSeqId = 0;
 
-    console.warn('--------------------------------------------');
-    console.warn(value);
+    const { msgType } = value;
+
+    if (!msgType) return maxSeqId;
 
     value.items.forEach((data) => {
       if (!data) return;
@@ -181,24 +186,38 @@ export class PushService extends EventEmitter {
 
       if (seqId > maxSeqId) maxSeqId = seqId;
 
-      this.analyzeConent(content);
+      this.analyzeContent(content, msgType);
     });
 
     return maxSeqId;
   }
 
-  analyzeConent(content) {
+  analyzeContent(content, msgType) {
     if (!content) return;
 
-    const { type, body } = this.parseJSON(content);
+    const option = {};
 
-    console.log({ type, body });
+    switch (msgType) {
+      case 262146: { // 日程
+        const { operationType, planId, sequence } = this.parseJSON(content);
 
-    // null & undefined
+        option.type = `SCHEDULE_${operationType}`;
+        option.body = {
+          planId, sequence,
+        };
+      }
+        break;
+      case 262145: { // 联系人
+        const { type, body } = this.parseJSON(content);
 
-    if (type == null) return;
+        option.type = type;
+        option.body = body;
+      }
+        break;
+      default: return;
+    }
 
-    this.emit('notify', type, body);
+    this.emit('notify', option.type, option.body);
   }
 
   genPath(action) {

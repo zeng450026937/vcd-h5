@@ -79,8 +79,12 @@ export function handlePushMessage(pushService, hook) {
         break;
 
       case MESSAGE_TYPE.PHONEBOOK_UPDATE || MESSAGE_TYPE.PHONEBOOK_DELETE || MESSAGE_TYPE.PHONEBOOK_INSTER:
-        ipcMain.emit('ypush-notify', 'phonebook');
+        ipcMain.emit('ypush-notify', { event: 'phonebook', options: { type, body } });
         break;
+      case MESSAGE_TYPE.SCHEDULE_UPDATE:
+      case MESSAGE_TYPE.SCHEDULE_DELETE:
+      case MESSAGE_TYPE.SCHEDULE_ADD:
+        ipcMain.emit('ypush-notify', { event: 'schedule', options: { type, body } }); break;
       default:
         break;
     }
