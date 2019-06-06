@@ -102,6 +102,13 @@ export class PushService extends EventEmitter {
 
     sids.length = 0;
 
+    console.log('response is:', JSON.stringify(res.data));
+
+    console.warn('=======================================');
+    console.warn('=======================================');
+    console.warn(res);
+
+
     Object.keys(res).forEach((sid) => {
       const lastSeqId = res[sid];
       const maxSeqId = this.analyze(res[sid]);
@@ -161,8 +168,11 @@ export class PushService extends EventEmitter {
     this.token = token;
   }
 
-  analyze(value = []) {
+  analyze(value = { items: [] }) {
     let maxSeqId = 0;
+
+    console.warn('--------------------------------------------');
+    console.warn(value);
 
     value.items.forEach((data) => {
       if (!data) return;

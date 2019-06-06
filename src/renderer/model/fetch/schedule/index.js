@@ -9,10 +9,16 @@ const model = new Vuem();
 
 model.provide({
   data() {
+    return {
+      appId : 'conference-manager',
+    };
   },
   computed : {
     scheduleList() {
       return [];
+    },
+    token() {
+      return this.$getVM('digest').token;
     },
   },
   middleware : {
@@ -34,31 +40,14 @@ model.provide({
         baseURL : API.BASE_URL,
         url,
         headers : {
-          'Sec-Metadata' : '{}',
-          Authorization  : auth({
-            appId  : 'conference-manager',
+          Authorization : auth({
+            appId  : this.appId,
             method : 'GET',
             path   : url,
           }),
-          token : this.$getVM('digest').token,
+          token : this.token,
         },
       });
-
-      // console.warn(API.BASE_URL + url)
-      // const res = await fetch(API.BASE_URL + url, {
-      //   method  : 'GET',
-      //   headers : {
-      //     Authorization : auth({
-      //       appId  : 'conference-manager',
-      //       method : 'GET',
-      //       path   : url,
-      //     }),
-      //     token : this.$getVM('digest').token,
-      //   },
-      // }).then((res) => console.warn(res))
-      //   .catch((error) => console.warn(error));
-      //
-      // console.warn(res);
 
       console.timeEnd('getScheduleList total');
       
@@ -77,11 +66,11 @@ model.provide({
         data,
         headers : {
           Authorization : auth({
-            appId  : 'conference-manager',
+            appId  : this.appId,
             method : 'POST',
             path   : API.GET_EXCEPTION_LIST,
           }),
-          token : this.$getVM('digest').token,
+          token : this.token,
         },
       });
 
@@ -107,11 +96,11 @@ model.provide({
         headers : {
           // Authorization  : auth,
           Authorization : auth({
-            appId  : 'conference-manager',
+            appId  : this.appId,
             method : 'GET',
             path   : url,
           }),
-          token : this.$getVM('digest').token,
+          token : this.token,
         },
       });
 
@@ -123,6 +112,28 @@ model.provide({
 
     async deleteSchedule(deleteType, planId, sequence) {
       return Promise.resolve();
+    },
+
+    async addSchedule(options) { // 这里不再检测options的合法性，所以传过来的数据必须有保证
+      console.time('addSchedule total');
+      const res = await Axios({
+        method  : 'post',
+        baseURL : API.BASE_URL,
+        url     : API.ADD_SCHEDULE,
+        data    : options,
+        headers : {
+          Authorization : auth({
+            appId  : this.appId,
+            method : 'POST',
+            path   : API.ADD_SCHEDULE,
+          }),
+          token : this.token,
+        },
+      });
+
+      console.timeEnd('addSchedule total');
+
+      return res.data;
     },
 
   },

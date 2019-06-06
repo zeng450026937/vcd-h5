@@ -93,10 +93,11 @@ export class Phonebook {
       type              : this.type.join(','),
     };
 
-    const path = this.phoneBookUrl
-      ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/sync`
-      : `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
+    // const path = this.phoneBookUrl
+    //   ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/sync`
+    //   : `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
 
+    const path = `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
     const url = `${path}?${querystring.stringify(params)}`;
 
     let res;

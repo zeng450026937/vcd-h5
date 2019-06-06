@@ -8,6 +8,8 @@ const GET_EXCEPTION_LIST = '/api/v10/external/conference/scheduled/exception/lis
 const GET_SCHEDULE_INFO = '/api/v10/external/conference/scheduled/info';
 // // 删除日程
 const DELETE_SCHEDULE = '/api/v10/external/conference/scheduled/delete';
+// 新建预约会议
+const ADD_SCHEDULE = '/api/v10/external/conference/scheduled/add';
 
 export default {
   BASE_URL,
@@ -15,4 +17,5 @@ export default {
   GET_EXCEPTION_LIST,
   GET_SCHEDULE_INFO,
   DELETE_SCHEDULE,
+  ADD_SCHEDULE,
 };

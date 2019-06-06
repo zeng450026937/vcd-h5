@@ -234,7 +234,10 @@ export default {
       this.$refs.checkedList.update(checked);
     },
     reserveConference() {
-      console.warn(this.$refs.checkedList.list);
+      // console.warn(this.$refs.checkedList.list);
+      this.$dispatch('schedule.addSchedule', {
+
+      }).then((res) => this.$message.success('预约成功'));
     },
   },
 };

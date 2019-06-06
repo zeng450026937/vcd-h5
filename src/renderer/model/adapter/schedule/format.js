@@ -1,14 +1,14 @@
 import moment from 'moment';
 import { $t } from '../../../i18n';
 
-const CONF_PROFILE = {
+export const CONF_PROFILE = {
   MEETING    : 0, // 会议模式
   TEACHING   : 1, // 授课模式
   CONFERENCE : 2, //  '研讨会模式',
 };
 
 // 当前会议预约操作仅支持预约0,1,2 三种类型的周期会议
-const RECU_TYPE = {
+export const RECU_TYPE = {
   RECURS_DAILY     : 0,
   RECURS_WEEKLY    : 1,
   RECURS_MONTHLY   : 2,

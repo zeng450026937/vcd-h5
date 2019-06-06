@@ -5,6 +5,7 @@ import rtc from '../../../rtc';
 import { Conference } from './lib/Conference';
 import CloudSchedule from './entities/CloudSchedule';
 import YmsSchedule from './entities/YmsSchdule';
+import { RECU_TYPE, CONF_PROFILE } from './format';
 
 const model = new Vuem();
 
@@ -120,7 +121,7 @@ model.provide({
     },
 
     async updateSchedule() {
-
+      //
     },
 
     async fetchScheduleInfo(schedule, force) {
@@ -132,7 +133,7 @@ model.provide({
     },
 
     async getTemplate() {
-
+      //
     },
 
     checkAndNotify() {
@@ -143,6 +144,38 @@ model.provide({
 
     },
 
+  },
+  middleware : {
+    async addSchedule(ctx, next) {
+      console.warn(ctx.payload);
+      // const {
+      //   profile = CONF_PROFILE.MEETING, subject, zoneId,
+      //   startDate, startTime, durationHour, durationMinute,
+      //   recurrenceType, interval, dayOfWeeks, rangeEndDate,
+      //   remark, participants,
+      // } = ctx.payload;
+      // const options = {};
+      //
+      // switch (recurrenceType) {
+      //   case undefined:
+      //   case null: // 非周期会议
+      //
+      //     break;
+      //   case RECU_TYPE.RECURS_DAILY: // 按天循环
+      //
+      //     break;
+      //   case RECU_TYPE.RECURS_WEEKLY: // 按周循环
+      //     break;
+      //   case RECU_TYPE.RECURS_MONTHLY: // 按月的第几天循环
+      //     break;
+      //   default:
+      //     break;
+      // }
+      //
+      // const { data } = await this.fetch.addSchedule(options);
+      //
+      // console.warn(data);
+    },
   },
 
   watch : {
