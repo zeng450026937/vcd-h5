@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import Vuem from '../vuem';
 import rtc from '../../rtc';
 import storage, { LOGIN_STORAGE as S } from '../../storage';
@@ -58,6 +59,7 @@ model.provide({
     initData() {
       this.rmbPassword = storage.query(S.REMEMBER_PASSWORD);
       this.pushUrl = storage.query(S.PUSH_URL);
+      ipcRenderer.send('push-update', { url: this.pushUrl });
     },
     saveData() {
       const loginData = Object.assign(

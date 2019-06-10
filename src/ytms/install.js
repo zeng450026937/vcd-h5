@@ -13,10 +13,13 @@ ytms.getClientInfo()
 
 ipcMain.on('push-update', (event, args) => {
   const { url } = args;
+  const fullUrl = url.startsWith('http://') ? url : `http://${url}`;
+
+  YTMSService.VUE_APP_YPUSH_URL = fullUrl;
 
   if (url && ytms.push) {
-    ytms.push.baseURL = url.startsWith('http://') ? url : `http://${url}`;
-    console.warn(`New URL: ${ytms.push.baseURL}`);
+    ytms.push.baseURL = fullUrl;
+    console.warn(`New URL: ${fullUrl}`);
   }
 });
 
