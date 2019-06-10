@@ -20,6 +20,13 @@ model.provide({
     token() {
       return this.$getVM('digest').token;
     },
+    baseUrl() {
+      const { pushUrl } = this.$getVM('login.account');
+
+      if (!pushUrl) return API.BASE_URL;
+
+      return pushUrl.startsWith('http://') ? pushUrl : `http://${pushUrl}`;
+    },
   },
   middleware : {
   },
@@ -61,7 +68,7 @@ model.provide({
       console.time('getExceptionList total');
       const res = await Axios({
         method  : 'post',
-        baseURL : API.BASE_URL,
+        baseURL : this.baseUrl,
         url     : API.GET_EXCEPTION_LIST,
         data,
         headers : {
@@ -91,7 +98,7 @@ model.provide({
       console.time('getScheduleInfo total');
       const res = await Axios({
         method  : 'get',
-        baseURL : API.BASE_URL,
+        baseURL : this.baseUrl,
         url,
         headers : {
           // Authorization  : auth,
@@ -118,7 +125,7 @@ model.provide({
       console.time('addSchedule total');
       const res = await Axios({
         method  : 'post',
-        baseURL : API.BASE_URL,
+        baseURL : this.baseUrl,
         url     : API.ADD_SCHEDULE,
         data    : options,
         headers : {

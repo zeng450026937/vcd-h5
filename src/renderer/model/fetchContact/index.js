@@ -54,7 +54,11 @@ model.provide({
       return '9444';
     },
     baseURL() {
-      return BASE_URL;
+      const { pushUrl } = this.$getVM('login.account');
+
+      if (!pushUrl) return BASE_URL;
+
+      return pushUrl.startsWith('http://') ? pushUrl : `http://${pushUrl}`;
     },
   },
   watch : {

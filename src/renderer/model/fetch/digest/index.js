@@ -18,10 +18,16 @@ model.provide({
       token         : null,
       accounts      : [],
       activeAccount : null,
-
     };
   },
   computed : {
+    baseUrl() {
+      const { pushUrl } = this.$getVM('login.account');
+
+      if (!pushUrl) return API.BASE_URL;
+      
+      return pushUrl.startsWith('http://') ? pushUrl : `http://${pushUrl}`;
+    },
     registered : () => rtc.account.registered,
     nc() {
       const str = String(this.count);
@@ -58,7 +64,7 @@ model.provide({
       try {
         res = await Axios({
           method  : 'post',
-          baseURL : API.BASE_URL,
+          baseURL : this.baseUrl,
           url     : API.SELECT_ACCOUNT,
           data    : {
             partyId   : account.partyId,
@@ -129,7 +135,7 @@ model.provide({
       try {
         res = await Axios({
           method  : 'post',
-          baseURL : API.BASE_URL,
+          baseURL : this.baseUrl,
           url     : uri,
           headers : {
             'Y-Authorization' : auth({
