@@ -28,7 +28,7 @@ model.provide({
     };
   },
   computed : {
-    // 登录状态 disconnected connecting registering registered disconnected
+    // 登录状态 disconnected connecting registering registered disconnected unregistered
     loginStatus : () => rtc.account.status,
     isPreparing : {
       get() {

@@ -84,7 +84,7 @@ model.provide({
     },
   },
   async created() {
-    this.$phonebook = new Phonebook({ baseURL: this.baseURL });
+    this.$phonebook = new Phonebook({ token: this.token, baseURL: this.baseURL });
   },
   middleware : {
     async sync(ctx, next) {
@@ -100,7 +100,7 @@ model.provide({
         loadFailed : false,
         list       : [],
       };
-      this.$phonebook.reset();
+      // this.$phonebook.reset({ baseURL: this.baseURL });
     },
     format(contacts) {
       contacts.forEach((n) => {

@@ -174,7 +174,7 @@ model.provide({
 
   watch : {
     loginStatus(val) {
-      if (val === 'disconnected') {
+      if (val === 'disconnected' || val === 'unregistered') {
         this.currentContact = null;
         this.favoriteStore.destroy();
         this.phoneBookStore.destroy();

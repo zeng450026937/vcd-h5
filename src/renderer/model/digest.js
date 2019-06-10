@@ -216,7 +216,7 @@ model.provide({
     },
     reset() {
       clearInterval(this.timer);
-      this.token = null;
+      // this.token = null;
       this.accounts = [];
       this.activeAccount = null;
     },

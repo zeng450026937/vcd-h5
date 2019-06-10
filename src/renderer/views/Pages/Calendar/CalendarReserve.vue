@@ -138,7 +138,7 @@
         </div>
         <div class="reserve-member">
           <div class="flex items-center flex-no-shrink">
-            <span>参会成员(0/100)</span>
+            <span>{{`参会成员(${this.selectedMember.length}/100`}})</span>
             <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>
           </div>
           <a-button block class="mt-2 flex-no-shrink"

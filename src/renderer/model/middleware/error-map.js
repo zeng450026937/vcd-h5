@@ -1,10 +1,11 @@
 const ERROR_MAP = {
   // meeting
-  'Has End'              : 'common.message.hasEnd',
-  'Unallocated Number'   : 'common.message.unallocatedNumber',
-  'Miss Book Info By ID' : 'common.message.missBookInfoByID',
-  'Invalid PIN'          : 'common.message.invalidPIN',
-  Unavailable            : {
+  'Has End'                : 'common.message.hasEnd',
+  'Unallocated Number'     : 'common.message.unallocatedNumber',
+  'Miss Book Info By ID'   : 'common.message.missBookInfoByID',
+  'Conference uri unknown' : 'common.message.missBookInfoByID',
+  'Invalid PIN'            : 'common.message.invalidPIN',
+  Unavailable              : {
     call       : 'common.message.unavailableCall',
     conference : 'common.message.unavailableConference',
   }, // P2P 通话
