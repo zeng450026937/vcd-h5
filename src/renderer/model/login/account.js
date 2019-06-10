@@ -24,6 +24,7 @@ model.provide({
         server    : '', // 服务器cr
         protocol  : PROTOCOL.DEFAULT,
       },
+      pushUrl            : 'http://10.120.3.59:9444', // 接入服务地址
       proxy              : '10.200.112.134', // 代理服务器
       proxyPort          : PORT.DEFAULT, // 代理服务器端口
       rmbPassword        : false,
@@ -56,6 +57,7 @@ model.provide({
   methods : {
     initData() {
       this.rmbPassword = storage.query(S.REMEMBER_PASSWORD);
+      this.pushUrl = storage.query(S.PUSH_URL);
     },
     saveData() {
       const loginData = Object.assign(
@@ -81,6 +83,7 @@ model.provide({
     },
     saveConfig() {
       storage.insert(S.REMEMBER_PASSWORD, this.rmbPassword);
+      storage.insert(S.PUSH_URL, this.pushUrl);
     },
   },
   watch : {

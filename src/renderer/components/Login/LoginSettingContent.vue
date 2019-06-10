@@ -7,14 +7,18 @@
             <span class="mb-3 leading-normal">{{$t('login.serverSetting')}}</span>
             <a-input maxlength="64" v-model="tmpServer" :placeholder="$t('login.serverSetting')">
             </a-input>
-            <div class="mt-4"></div>
           </div>
-          <div class="flex h-full flex-col px-20">
+          <div class="flex flex-col px-20 mt-4">
             <span class="mb-3 leading-normal">{{$t('login.proxyServerSetting')}}</span>
             <a-input  maxlength="64"  v-model="tmpProxy" :placeholder="$t('login.proxyServerAddress')">
             </a-input>
             <div class="mt-4"></div>
             <a-input v-model="tmpProxyPort" :placeholder="$t('login.port')">
+            </a-input>
+          </div>
+          <div class="flex h-full flex-col px-20 mt-4">
+            <span class="mb-3 leading-normal">接入服务器地址</span>
+            <a-input  maxlength="64"  v-model="pushUrl" placeholder="接入服务器地址">
             </a-input>
           </div>
         </a-tab-pane>
@@ -58,7 +62,7 @@ export default {
   },
   sketch : {
     ns    : 'login.account',
-    props : [ 'proxy', 'proxyPort', 'loginData' ],
+    props : [ 'pushUrl', 'proxy', 'proxyPort', 'loginData' ],
   },
   methods : {
     validateProxy() {
@@ -66,6 +70,9 @@ export default {
         || (IP_REG.test(this.tmpProxy) || DOMAIN_REG.test(this.tmpProxy));
     },
     handlerEnsure() {
+      if (IP_REG.test(this.pushUrl) || DOMAIN_REG.test(this.pushUrl)) {
+        this.$dispatch('login.updatePushServiceUrl', { url: this.pushUrl });
+      }
       if (this.validateProxy()) {
         this.proxy = this.tmpProxy;
         this.proxyPort = this.tmpProxyPort;

@@ -2,6 +2,7 @@ export const LOGIN_STORAGE = {
   SERVER_TYPE               : 'SERVER_TYPE',
   ACCOUNT_TYPE              : 'ACCOUNT_TYPE',
   REMEMBER_PASSWORD         : 'REMEMBER_PASSWORD',
+  PUSH_URL                  : 'PUSH_URL',
   AUTO_LOGIN                : 'AUTO_LOGIN',
   AUTO_LOGIN_DISABLED       : 'AUTO_LOGIN_DISABLED',
   ACCOUNT_LIST              : 'ACCOUNT_LIST',

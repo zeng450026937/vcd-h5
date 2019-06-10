@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import Vuem from '../vuem';
 import rtc from '../../rtc';
 import sketch from './sketch';
@@ -52,6 +53,11 @@ model.provide({
       this.state.autoLoginDisabled = true;
 
       return rtc.account.signout();
+    },
+    updatePushServiceUrl(ctx, next) {
+      const { payload } = ctx;
+
+      ipcRenderer.send('push-update', payload);
     },
   },
   async created() {

@@ -1,3 +1,4 @@
+import { ipcMain } from 'electron';
 import { YTMSService } from './ytms-service';
 
 const ytms = new YTMSService();
@@ -9,5 +10,13 @@ ytms.getClientInfo()
       ytms.updateInfo();
     }
   });
+
+ipcMain.on('push-update', (event, args) => {
+  const { url } = args;
+
+  if (url && ytms.push) {
+    ytms.push.baseURL = url.startsWith('http://') ? url : `http://${url}`;
+  }
+});
 
 global.ytms = ytms;
