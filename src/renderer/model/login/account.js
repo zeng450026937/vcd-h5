@@ -24,7 +24,7 @@ model.provide({
         server    : '', // 服务器cr
         protocol  : PROTOCOL.DEFAULT,
       },
-      pushUrl            : 'http://10.120.3.59:9444', // 接入服务地址
+      pushUrl            : 'http://10.120.2.198:9444', // 接入服务地址
       proxy              : '10.200.112.134', // 代理服务器
       proxyPort          : PORT.DEFAULT, // 代理服务器端口
       rmbPassword        : false,

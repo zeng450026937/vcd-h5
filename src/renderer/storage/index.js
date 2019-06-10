@@ -42,7 +42,7 @@ const storage = new VueStorage({
     { // 是否记住密码
       store   : LOGIN_STORAGE.PUSH_URL,
       type    : String,
-      default : 'http://10.120.3.59:9444', // cloud yms
+      default : 'http://10.120.2.198:9444', // cloud yms
     },
     { // 是否自动登录
       store   : LOGIN_STORAGE.AUTO_LOGIN,

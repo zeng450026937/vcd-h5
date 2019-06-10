@@ -6,8 +6,8 @@ export const isCapsLockOn = (e) => {
     || ((valueCapsLock >= 97 && valueCapsLock <= 122) && valueShift);
 };
 
-export const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
-export const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
+export const IP_REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}(:[0-9]{1,5})?$/;
+export const DOMAIN_REG = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$/;
 
 export const wait = async(timeout = 0) => new Promise((resolve) => {
   if (timeout) {

@@ -16,6 +16,7 @@ ipcMain.on('push-update', (event, args) => {
 
   if (url && ytms.push) {
     ytms.push.baseURL = url.startsWith('http://') ? url : `http://${url}`;
+    console.warn(`New URL: ${ytms.push.baseURL}`);
   }
 });
 
