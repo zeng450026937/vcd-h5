@@ -57,13 +57,15 @@ model.provide({
   },
   methods : {
     async getToken(account, username, password, realm, nonce, response = '') {
+      const uri = API.SELECT_ACCOUNT;
+
       let res;
 
       try {
         res = await Axios({
           method  : 'post',
           baseURL : this.baseUrl,
-          url     : API.SELECT_ACCOUNT,
+          url     : uri,
           data    : {
             partyId   : account.partyId,
             subjectId : account.subjectId,
