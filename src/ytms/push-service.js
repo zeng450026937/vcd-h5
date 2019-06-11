@@ -73,7 +73,8 @@ export class PushService extends EventEmitter {
       return this.poll(wait);
     }
 
-    if (result.error && result.error.errorCode !== '720602') { // 720602 POLL_TIMEOUT
+    if (result.error && result.error.errorCode !== 720602) { // 720602 POLL_TIMEOUT
+      console.warn('! POLL_TIMEOUT !!!')
       this.retryTimes += 1;
 
       if (this.maxRetryTimes && this.maxRetryTimes < this.retryTimes) {
