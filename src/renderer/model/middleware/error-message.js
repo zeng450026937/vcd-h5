@@ -23,10 +23,10 @@ export default async function errorMessage(ctx, next) {
         console.warn(error);
         debounceNotice(ctx.vm, $t('common.message.unKnownError'));
       }
-
-      if (key.startsWith('getaddrinfo ENOTFOUND')) {
+      else if (key.startsWith('getaddrinfo ENOTFOUND')) {
         key = 'ENOTFOUND';
       }
+
       if (ERROR_MAP[key]) {
         debounceNotice(ctx.vm, $t(ERROR_MAP[key][error.origin] || ERROR_MAP[key]));
       }

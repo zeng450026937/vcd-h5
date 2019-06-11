@@ -22,7 +22,7 @@ model.provide({
   },
   computed : {
     baseUrl() {
-      const { pushUrl } = this.$getVM('login.account');
+      const { pushUrl } = {}; // this.$getVM('login.account');
 
       if (!pushUrl) return API.BASE_URL;
       
@@ -57,8 +57,6 @@ model.provide({
   },
   methods : {
     async getToken(account, username, password, realm, nonce, response = '') {
-      const uri = API.SELECT_ACCOUNT;
-
       let res;
 
       try {
@@ -135,7 +133,7 @@ model.provide({
       try {
         res = await Axios({
           method  : 'post',
-          baseURL : this.baseUrl,
+          baseURL : API.BASE_URL,
           url     : uri,
           headers : {
             'Y-Authorization' : auth({
@@ -196,6 +194,64 @@ model.provide({
       };
 
       return res.data.data;
+      // const uri = API.LOGIN;
+      //
+      // const { data, headers } = await Axios({
+      //   method  : 'post',
+      //   baseURL : this.baseUrl,
+      //   url     : uri,
+      //   headers : {
+      //     'Y-Authorization' : auth({
+      //       appId  : this.appId,
+      //       method : 'GET',
+      //       path   : uri,
+      //     }),
+      //     Authorization : genDigest({
+      //       uri,
+      //       realm,
+      //       nonce,
+      //       username,
+      //       response,
+      //       cNonce : this.cNonce,
+      //       nc     : this.nc,
+      //     }),
+      //   },
+      // });
+      //
+      // if (++this.count >= 10 || data.statusCode !== 401) {
+      //   this.count = 0;
+      //
+      //   return Promise.reject(data.error);
+      // }
+      // if (data.statusCode !== 200) {
+      //   const info = this.genDigestInfo(headers['www-authenticate']);
+      //   const HA1 = genHa1({ username, password, realm: info.realm });
+      //   const HA2 = genHa2({ uri });
+      //
+      //   return this.loadAccount(
+      //     username,
+      //     password,
+      //     info.realm,
+      //     info.nonce,
+      //     genResponse({
+      //       ha1    : HA1,
+      //       ha2    : HA2,
+      //       nc     : this.nc,
+      //       cNonce : this.cNonce,
+      //       qop    : info.qop,
+      //       nonce  : info.nonce,
+      //     })
+      //   );
+      // }
+      // this.count = 0;
+      //
+      // if (data.ret < 0) return Promise.reject(data);
+      //
+      // this.accounts = {
+      //   username,
+      //   password,
+      //   accountInfos : data.accountInfos,
+      // };
     },
     selectAccount(id) {
       const account = this.accounts.accountInfos.find((acc) => acc.accountInfo.id === id);

@@ -9,8 +9,8 @@ PUSH_ACTION[PUSH_ACTION.CHECK = 0] = 'checksync';
 PUSH_ACTION[PUSH_ACTION.SYNC = 1] = 'sync';
 PUSH_ACTION[PUSH_ACTION.ACK = 2] = 'ack';
 
-const POLLING_PATH = '/api/v1/polling';
-const GATEWAY_PATH = '/api/v1/gateway';
+const POLLING_PATH = '/ypush/api/v1/polling';
+const GATEWAY_PATH = '/ypush/api/v1/gateway';
 
 const MESSAGE_TYPE = {};
 
@@ -40,7 +40,7 @@ export class PushService extends EventEmitter {
     this.tenantId = tenantId;
     this.platform = process.platform;
     this.biz = 0; // default value
-    this.appid = 'ypush';
+    this.appid = 'vcs';
 
     this.algorithm = 'sha256';
     this.secretKey = 'yealink'; // fake value
@@ -61,56 +61,51 @@ export class PushService extends EventEmitter {
   }
 
   async poll(wait) {
-    if (wait) {
-      await waitFor(wait);
-    }
+    if (wait) await waitFor(wait);
 
-    // ignore anyway, we will check the respones
-    const res = await this.post(PUSH_ACTION.CHECK);
+    const result = await this.post(PUSH_ACTION.CHECK);
 
     if (this.isStop) return;
-
-    if (!res) {
-      return this.poll(1000);
-    }
-
-    // poll with result, got messages!
-    if (!res.code) {
-      wait = await this.sync(res);
-
+    if (!result) return this.poll(1000);
+    if (result.ret >= 0) {
+      wait = await this.sync(result); // TODO update sync
+      
       return this.poll(wait);
     }
 
-    // poll with other error
-    if (res.code !== '720602') {
+    if (result.error && result.error.errorCode !== '720602') { // 720602 POLL_TIMEOUT
       this.retryTimes += 1;
 
       if (this.maxRetryTimes && this.maxRetryTimes < this.retryTimes) {
         return;
       }
-
+      
       return this.poll(calcWaitingTime(this.retryTimes));
     }
+
+    this.retryTimes = 0;
 
     // poll timeout normally
     return this.poll();
   }
 
-  async sync(res) {
-    const sids = this.genSyncSid(res);
+  async sync(result) {
+    const sids = this.genSyncSid(result.data);
 
-    res = await this.post(PUSH_ACTION.SYNC, sids);
+    result = await this.post(PUSH_ACTION.SYNC, sids);
 
     // something error
-    if (!res || res.code !== undefined) return 1000;
+    if (!result || result.ret < 0 || !result.data) return 1000;
 
     sids.length = 0;
 
-    console.log('response is:', JSON.stringify(res.data));
+    console.log('response is:', JSON.stringify(result));
 
-    Object.keys(res).forEach((sid) => {
-      const lastSeqId = res[sid];
-      const maxSeqId = this.analyze(res[sid]);
+    const { data } = result;
+
+    Object.keys(data).forEach((sid) => {
+      const lastSeqId = data[sid];
+      const maxSeqId = this.analyze(data[sid]);
       
       sids.push({ sid, seqId: maxSeqId || lastSeqId });
     });
@@ -119,52 +114,42 @@ export class PushService extends EventEmitter {
   }
 
   async post(action, sids) {
-    let res;
+    // let res;
     const path = this.genPath(action);
     const url = this.baseURL + path;
     const body = this.genRequest(action, sids);
     const auth = this.sign(path);
-    const sub = this.appid;
     const contentType = 'application/json';
-    
-    try {
-      this.cancelToken = axios.CancelToken.source();
-      console.log('request:', JSON.stringify({
-        ...body,
-        url,
-        token : this.token,
-      }));
 
-      res = await axios({
-        method  : 'post',
-        url,
-        data    : JSON.stringify(body),
-        headers : {
-          Accept         : contentType,
-          'Content-Type' : contentType,
-          Authorization  : auth,
-          subscribe      : sub,
-          token          : this.token,
-        },
-        timeout     : 30000,
-        cancelToken : this.cancelToken.token,
-      });
-    }
-    catch (error) {
-      this.cancelToken = null;
+    this.cancelToken = axios.CancelToken.source();
 
-      return;
-    }
+    console.warn('request: ', url);
 
-    console.log('response:', JSON.stringify({
-      ...res.data,
+    const res = await axios({
+      method  : 'post',
       url,
-      token : this.token,
-    }));
+      data    : JSON.stringify(body),
+      headers : {
+        Accept            : contentType,
+        'Content-Type'    : contentType,
+        'Y-Authorization' : auth,
+        token             : this.token,
+      },
+      timeout     : 30000,
+      cancelToken : this.cancelToken.token,
+    }).catch(() => {
+      this.cancelToken = null;
+    });
+
+    if (!res || !res.data || this.cancelToken == null) return;
+
+    const { data } = res;
+
+    console.warn('response: ', JSON.stringify(data));
 
     this.cancelToken = null;
 
-    return res.data;
+    return data;
   }
 
   updateToken(token) {
@@ -180,9 +165,6 @@ export class PushService extends EventEmitter {
     if (!msgType) return maxSeqId;
 
     value.items.forEach((data) => {
-      console.warn('--------------------------')
-      console.warn(data)
-      console.warn('==========================')
       if (!data) return;
 
       const { seqId = 0, content } = data;
