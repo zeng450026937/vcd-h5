@@ -10,7 +10,8 @@ const model = new Vuem();
 model.provide({
   data() {
     return {
-      appId : 'conference-manager',
+      appId : 'vcs',
+      app   : 'conference-manager',
     };
   },
   computed : {
@@ -47,7 +48,7 @@ model.provide({
         baseURL : API.BASE_URL,
         url,
         headers : {
-          Authorization : auth({
+          'Y-Authorization' : auth({
             appId  : this.appId,
             method : 'GET',
             path   : url,
@@ -72,7 +73,7 @@ model.provide({
         url     : API.GET_EXCEPTION_LIST,
         data,
         headers : {
-          Authorization : auth({
+          'Y-Authorization' : auth({
             appId  : this.appId,
             method : 'POST',
             path   : API.GET_EXCEPTION_LIST,
@@ -102,7 +103,7 @@ model.provide({
         url,
         headers : {
           // Authorization  : auth,
-          Authorization : auth({
+          'Y-Authorization' : auth({
             appId  : this.appId,
             method : 'GET',
             path   : url,
@@ -129,7 +130,7 @@ model.provide({
         url     : API.ADD_SCHEDULE,
         data    : options,
         headers : {
-          Authorization : auth({
+          'Y-Authorization' : auth({
             appId  : this.appId,
             method : 'POST',
             path   : API.ADD_SCHEDULE,

@@ -5,7 +5,7 @@ import setting from './setting';
 import updater from './updater';
 import ytms from './ytms';
 import media from './media';
-import digest from './digest';
+import digest from './fetch/digest';
 import state from './state';
 import contact from './contact';
 import schedule from './adapter/schedule';

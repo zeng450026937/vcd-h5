@@ -32,7 +32,7 @@ export class Phonebook {
   }
 
   async negotiate() {
-    const path = '/negotiate';
+    const path = '/phonebook-manager/negotiate';
 
     const res = await Axios(
       {
@@ -41,8 +41,8 @@ export class Phonebook {
         url     : path,
         data    : { phoneBookAcceptVersion: this.acceptVersion },
         headers : {
-          Authorization : auth({
-            appId  : 'phonebook-manager',
+          'Y-Authorization' : auth({
+            appId  : 'vcs',
             method : 'POST',
             path,
           }),
@@ -97,7 +97,7 @@ export class Phonebook {
     //   ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/sync`
     //   : `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
 
-    const path = `/phonebook/api/${this.acceptVersion}/external/phonebook/sync`;
+    const path = `/phonebook-manager/api/${this.acceptVersion}/external/phonebook/sync`;
     const url = `${path}?${querystring.stringify(params)}`;
 
     let res;
@@ -109,8 +109,8 @@ export class Phonebook {
           url,
           method  : 'get',
           headers : {
-            Authorization : auth({
-              appId  : 'phonebook-manager',
+            'Y-Authorization' : auth({
+              appId  : 'vcs',
               method : 'GET',
               path   : url,
             }),
@@ -137,9 +137,11 @@ export class Phonebook {
   }
 
   async search({ key }) {
-    const path = this.phoneBookUrl
-      ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/search`
-      : `/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
+    // const path = this.phoneBookUrl
+    //   ? `${this.phoneBookUrl}${this.acceptVersion}/external/phonebook/search`
+    //   : `/phonebook-manager/phonebook/api/${this.acceptVersion}/external/phonebook/search`;
+
+    const path = `/phonebook-manager/api/${this.acceptVersion}/external/phonebook/search`;
 
     const url = `${path}?${querystring.stringify({
       key,
@@ -151,8 +153,8 @@ export class Phonebook {
         url,
         method  : 'get',
         headers : {
-          Authorization : auth({
-            appId  : 'phonebook-manager',
+          'Y-Authorization' : auth({
+            appId  : 'vcs',
             method : 'GET',
             path   : url,
           }),

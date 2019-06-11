@@ -180,6 +180,9 @@ export class PushService extends EventEmitter {
     if (!msgType) return maxSeqId;
 
     value.items.forEach((data) => {
+      console.warn('--------------------------')
+      console.warn(data)
+      console.warn('==========================')
       if (!data) return;
 
       const { seqId = 0, content } = data;

@@ -59,7 +59,7 @@
                   <div>
                     <span class="label">会议周期</span>
                     <a-select
-                        v-model="recurrenceMode"
+                        v-model="recurrenceInfo.recurrenceType"
                         style="width: 328px;">
                       <a-select-option
                           v-for="mode in recurrenceModes"
@@ -77,7 +77,8 @@
                     <a-date-picker ref="datePicker" style="width: 260px"></a-date-picker>
                   </div>
                 </div>
-                <div class="mt-4" v-if="recurrenceMode === 'everyDay'">
+                <!--每天-->
+                <div class="mt-4" v-if="recurrenceInfo.recurrenceType === 0">
                   <span>每</span>
                   <a-select defaultValue="1" style="width: 126px;margin: 0 10px;">
                     <a-select-option
@@ -89,7 +90,8 @@
                   </a-select>
                   <span>天</span>
                 </div>
-                <div class="recurrence-week mt-4 flex items-center" v-else-if="recurrenceMode === 'everyWeek'">
+                <!--每周-->
+                <div class="recurrence-week mt-4 flex items-center" v-else-if="recurrenceInfo.recurrenceType === 1">
                   <span>每</span>
                   <a-select defaultValue="1" style="width: 126px;margin: 0 10px;">
                     <a-select-option
@@ -103,15 +105,16 @@
                   <div class="flex ml-4 items-center">
                     <div class="week-item "
                          :class="{
-                          'bg-main-theme text-white': selectedWeeks.indexOf(week) > -1
+                          'bg-main-theme text-white': recurrenceInfo.dayOfWeeks.indexOf(week.value) > -1
                          }"
                          v-for="week in weeks"
-                         :key="week"
-                         @click="selectWeek(week)">{{week}}
+                         :key="week.value"
+                         @click="selectWeek(week.value)">{{week.text}}
                     </div>
                   </div>
                 </div>
-                <div class="mt-4"  v-else-if="recurrenceMode === 'everyMonth'">
+                <!--每月-->
+                <div class="mt-4"  v-else-if="recurrenceInfo.recurrenceType === 2">
                   <span>每月</span>
                   <a-select defaultValue="1" style="width: 126px;margin: 0 10px;">
                     <a-select-option
@@ -131,14 +134,14 @@
             </div>
             <div class="form-item">
               <span class="label">备注</span>
-              <a-textarea :rows="6"></a-textarea>
+              <a-textarea v-model="conferenceInfo.remark" :rows="6"></a-textarea>
             </div>
           </div>
 
         </div>
         <div class="reserve-member">
           <div class="flex items-center flex-no-shrink">
-            <span>{{`参会成员(${this.selectedMember.length}/100`}})</span>
+            <span>{{`参会成员(${this.conferenceInfo.participants.length}/100`}})</span>
             <a-iconfont type="icon-tishi" class="ml-2 text-indigo cursor-pointer"/>
           </div>
           <a-button block class="mt-2 flex-no-shrink"
@@ -173,9 +176,19 @@ import ContactModal from './CalendarModal.vue';
 import CheckedList from '../../../components/transfer/checkedList.vue';
 
 const recurrenceModes = [
-  { mode: 'everyDay', text: '每天' },
-  { mode: 'everyWeek', text: '每周' },
-  { mode: 'everyMonth', text: '每月' } ];
+  { mode: 0, text: '每天' },
+  { mode: 1, text: '每周' },
+  { mode: 2, text: '每月' } ];
+
+const weeks = [
+  { text: '日', value: 1 },
+  { text: '一', value: 2 },
+  { text: '二', value: 3 },
+  { text: '三', value: 4 },
+  { text: '四', value: 5 },
+  { text: '五', value: 6 },
+  { text: '六', value: 7 },
+];
 
 export default {
   name       : 'CalendarReserve',
@@ -186,17 +199,13 @@ export default {
   },
   data() {
     return {
-      recurrenceMode : '',
       recurrenceModes,
-      weeks          : [ '日', '一', '二', '三', '四', '五', '六' ],
-      checkedKeys    : [],
+      weeks,
       isRecurrence   : false,
-      selectedWeeks  : [],
-      selectedMember : [],
       recurrenceInfo : {
         recurrenceType : '',
         interval       : '',
-        dayOfWeeks     : '',
+        dayOfWeeks     : [],
         rangeEndDate   : '',
       },
       conferenceInfo : {
@@ -211,7 +220,7 @@ export default {
     };
   },
   mounted() {
-    this.recurrenceMode = this.recurrenceModes[0].mode;
+    this.recurrenceInfo.recurrenceType = this.recurrenceModes[0].mode;
   },
   methods : {
     moment,
@@ -219,8 +228,8 @@ export default {
       this.$router.back();
     },
     addMember() {
-      this.selectedMember = this.$refs.checkedList.list;
-      this.$refs.contactModal.open(this.selectedMember);
+      this.conferenceInfo.participants = this.$refs.checkedList.list;
+      this.$refs.contactModal.open(this.conferenceInfo.participants);
     },
     genEnsurePopup(content, ensureFn, cancelFn) {
       this.$popup.destroy(this.ensureModal);
@@ -245,13 +254,12 @@ export default {
       this.selectedWeeks.push(week);
     },
     onConfirm(checked) {
-      this.selectedMember = checked;
+      this.conferenceInfo.participants = checked;
       this.$refs.checkedList.update(checked);
     },
     reserveConference() {
       this.$dispatch('schedule.addSchedule',
-        Object.assign({}, this.recurrenceInfo, this.conferenceInfo)
-      ).then((res) => this.$message.success('预约成功'));
+        Object.assign({}, this.recurrenceInfo, this.conferenceInfo)).then((res) => this.$message.success('预约成功'));
     },
   },
 };

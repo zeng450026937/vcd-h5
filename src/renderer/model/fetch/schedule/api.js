@@ -1,15 +1,17 @@
 import { BASE_URL } from '../config';
 
+const APP = 'conference-manager';
+
 // 获取当前登陆用户的日程列表
-const GET_SCHEDULE_LIST = '/api/v10/external/conference/scheduled/calendar';
+const GET_SCHEDULE_LIST = `/${APP}/api/v10/external/conference/scheduled/calendar`;
 // // 查询预约会议特例列表
-const GET_EXCEPTION_LIST = '/api/v10/external/conference/scheduled/exception/list';
+const GET_EXCEPTION_LIST = `/${APP}/api/v10/external/conference/scheduled/exception/list`;
 // // 查询预约会议详情
-const GET_SCHEDULE_INFO = '/api/v10/external/conference/scheduled/info';
+const GET_SCHEDULE_INFO = `/${APP}/api/v10/external/conference/scheduled/info`;
 // // 删除日程
-const DELETE_SCHEDULE = '/api/v10/external/conference/scheduled/delete';
+const DELETE_SCHEDULE = `/${APP}/api/v10/external/conference/scheduled/delete`;
 // 新建预约会议
-const ADD_SCHEDULE = '/api/v10/external/conference/scheduled/add';
+const ADD_SCHEDULE = `/${APP}/api/v10/external/conference/scheduled/add`;
 
 export default {
   BASE_URL,
