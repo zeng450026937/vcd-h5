@@ -1,4 +1,4 @@
-const ERROR_MAP = {
+export const ERROR_MAP = {
   // meeting
   'Has End'                : 'common.message.hasEnd',
   'Unallocated Number'     : 'common.message.unallocatedNumber',
@@ -33,4 +33,6 @@ const ERROR_MAP = {
   // 会议
 };
 
-export default ERROR_MAP;
+export const ERROR_CODE_MAP = {
+  559500 : '服务器内部错误',
+};

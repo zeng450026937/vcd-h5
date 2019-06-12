@@ -22,7 +22,7 @@ model.provide({
   },
   computed : {
     baseUrl() {
-      const { pushUrl } = {}; // this.$getVM('login.account');
+      const { pushUrl } = this.$getVM('login.account');
 
       if (!pushUrl) return API.BASE_URL;
       
@@ -56,204 +56,70 @@ model.provide({
     },
   },
   methods : {
-    async getToken(account, username, password, realm, nonce, response = '') {
-      const uri = API.SELECT_ACCOUNT;
-
-      let res;
-
-      try {
-        res = await Axios({
-          method  : 'post',
-          baseURL : this.baseUrl,
-          url     : uri,
-          data    : {
-            partyId   : account.partyId,
-            subjectId : account.subjectId,
-          },
-          headers : {
-            'Y-Authorization' : auth({
-              appId  : this.appId,
-              method : 'GET',
-              path   : uri,
-            }),
-            Authorization : genDigest({
-              uri,
-              realm,
-              nonce,
-              username,
-              response,
-              cNonce : this.cNonce,
-              nc     : this.nc,
-            }),
-          },
-        });
-      }
-      catch (e) {
-        this.count++;
-
-        if (e.response.status !== 401 || this.count > 10) {
-          this.count = 0;
-
-          return Promise.reject(e);
-        }
-
-        const info = this.genDigestInfo(e.response.headers['www-authenticate']);
-        const HA1 = genHa1({
-          username, password, realm : info.realm,
-        });
-        const HA2 = genHa2({ uri });
-
-        return this.getToken(
-          account,
-          username,
-          password,
-          info.realm,
-          info.nonce,
-          genResponse({
-            ha1    : HA1,
-            ha2    : HA2,
-            nc     : this.nc,
-            cNonce : this.cNonce,
-            qop    : info.qop,
-            nonce  : info.nonce,
-          })
-        );
-      }
-      this.count = 0;
-
-      if (res.data.ret < 0) return Promise.reject(res.data);
-
-      this.token = res.data.data.token;
-
-      return this.token;
-    },
     async loadAccount(username, password, realm, nonce, response = '') {
       const uri = API.LOGIN;
 
-      let res;
+      const { data: result, headers } = await Axios({
+        method  : 'post',
+        baseURL : this.baseUrl,
+        url     : uri,
+        headers : {
+          'Y-Authorization' : auth({
+            appId  : this.appId,
+            method : 'POST',
+            path   : uri,
+          }),
+          Authorization : genDigest({
+            uri,
+            realm,
+            nonce,
+            username,
+            response,
+            cNonce : this.cNonce,
+            nc     : this.nc,
+          }),
+        },
+      });
 
-      try {
-        res = await Axios({
-          method  : 'post',
-          baseURL : API.BASE_URL,
-          url     : uri,
-          headers : {
-            'Y-Authorization' : auth({
-              appId  : this.appId,
-              method : 'GET',
-              path   : uri,
-            }),
-            Authorization : genDigest({
-              uri,
-              realm,
-              nonce,
-              username,
-              response,
-              cNonce : this.cNonce,
-              nc     : this.nc,
-            }),
-          },
-        });
-      }
-      catch (error) {
-        this.count++;
+      if (result.statusCode === 200) { // 获取成功
+        this.count = 0;
+        const { data } = result;
 
-        if (error.response.status !== 401 || this.count >= 10) {
-          if (this.count === 10) this.$message.error('账号或密码错误');
-          this.count = 0;
-
-          return Promise.reject(error);
-        }
-
-        const info = this.genDigestInfo(error.response.headers['www-authenticate']);
-        const HA1 = genHa1({ username, password, realm: info.realm });
-        const HA2 = genHa2({ uri });
-
-        return this.loadAccount(
+        if (result.ret < 0) return Promise.reject(data);
+        this.accounts = {
           username,
           password,
-          info.realm,
-          info.nonce,
-          genResponse({
-            ha1    : HA1,
-            ha2    : HA2,
-            nc     : this.nc,
-            cNonce : this.cNonce,
-            qop    : info.qop,
-            nonce  : info.nonce,
-          })
-        );
+          accountInfos : data.accountInfos,
+        };
+        
+        return data;
       }
 
-      this.count = 0;
+      if (++this.count >= 10 || result.statusCode !== 401) { // 获取失败
+        this.count = 0;
 
-      if (res.data.ret < 0) return Promise.reject(res.data);
+        return Promise.reject(result.error);
+      }
 
-      this.accounts = {
+      // 未认证
+      const info = this.genDigestInfo(headers['www-authenticate']);
+      const HA1 = genHa1({ username, password, realm: info.realm });
+      const HA2 = genHa2({ uri });
+
+      return this.loadAccount(
         username,
         password,
-        accountInfos : res.data.data.accountInfos,
-      };
-
-      return res.data.data;
-      // const uri = API.LOGIN;
-      //
-      // const { data, headers } = await Axios({
-      //   method  : 'post',
-      //   baseURL : this.baseUrl,
-      //   url     : uri,
-      //   headers : {
-      //     'Y-Authorization' : auth({
-      //       appId  : this.appId,
-      //       method : 'GET',
-      //       path   : uri,
-      //     }),
-      //     Authorization : genDigest({
-      //       uri,
-      //       realm,
-      //       nonce,
-      //       username,
-      //       response,
-      //       cNonce : this.cNonce,
-      //       nc     : this.nc,
-      //     }),
-      //   },
-      // });
-      //
-      // if (++this.count >= 10 || data.statusCode !== 401) {
-      //   this.count = 0;
-      //
-      //   return Promise.reject(data.error);
-      // }
-      // if (data.statusCode !== 200) {
-      //   const info = this.genDigestInfo(headers['www-authenticate']);
-      //   const HA1 = genHa1({ username, password, realm: info.realm });
-      //   const HA2 = genHa2({ uri });
-      //
-      //   return this.loadAccount(
-      //     username,
-      //     password,
-      //     info.realm,
-      //     info.nonce,
-      //     genResponse({
-      //       ha1    : HA1,
-      //       ha2    : HA2,
-      //       nc     : this.nc,
-      //       cNonce : this.cNonce,
-      //       qop    : info.qop,
-      //       nonce  : info.nonce,
-      //     })
-      //   );
-      // }
-      // this.count = 0;
-      //
-      // if (data.ret < 0) return Promise.reject(data);
-      //
-      // this.accounts = {
-      //   username,
-      //   password,
-      //   accountInfos : data.accountInfos,
-      // };
+        info.realm,
+        info.nonce,
+        genResponse({
+          ha1    : HA1,
+          ha2    : HA2,
+          nc     : this.nc,
+          cNonce : this.cNonce,
+          qop    : info.qop,
+          nonce  : info.nonce,
+        })
+      );
     },
     selectAccount(id) {
       const account = this.accounts.accountInfos.find((acc) => acc.accountInfo.id === id);

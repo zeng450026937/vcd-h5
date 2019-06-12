@@ -253,7 +253,9 @@ export default {
       const { accountInfos } = await this.$model.digest.$dispatch('digest.loadAccount', {
         username : this.loginData.principle,
         password : this.loginData.pin,
-      });
+      }) || {};
+
+      if (!accountInfos) return;
 
       this.accountInfos = accountInfos;
 
