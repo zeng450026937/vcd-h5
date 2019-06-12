@@ -141,7 +141,6 @@ import TabSettingMedia from '../../components/Conference/TabSettingMedia.vue';
 import LoginHeader from '../../components/Login/LoginHeader.vue';
 import VideoView from '../../components/Common/VideoView.vue';
 import { LOGIN_STORAGE } from '../../storage/constants';
-import { debounceNotice } from '../../model/middleware/error-message';
 import AccountAutoComplete from '../../components/Login/AccountAutoComplete.vue';
 
 export default {
@@ -241,7 +240,7 @@ export default {
         default: break;
       }
 
-      if (errorNotice) debounceNotice(this, errorNotice);
+      if (errorNotice) this.$message.error(errorNotice);
 
       return !errorNotice;
     },

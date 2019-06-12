@@ -1,6 +1,9 @@
 import { getClientId, getClientInfo, clientInfo } from './client-info';
 import { YTMSClient } from './ytms-client';
-import { PushService } from './push-service';
+// import { PushService } from './push-service';
+import YTMSPush from './push/ytms-push';
+import YConnectPush from './push/yconnect-push';
+
 import { handlePushMessage } from './handle-push-message';
 
 const default_url = process.env.YEALINK_YTMS_URL || process.env.VUE_APP_YTMS_URL;
@@ -10,6 +13,7 @@ export class YTMSService {
     this.url = url;
     this.client = null;
     this.push = null;
+    this.yconnect = null;
   }
 
   // use in yealink-provider
@@ -56,6 +60,7 @@ export class YTMSService {
   }
 
   async connect(url) {
+    console.warn('connect: ', url);
     // disconnect first
     this.disconnect();
     
@@ -76,18 +81,25 @@ export class YTMSService {
     client.reportStartUp();
     
     // prepare push service
-    const { tenantId, url : _pushUrl } = client.enterpriseInfo.pushService;
+    const { tenantId, url: baseURL } = client.enterpriseInfo.pushService;
 
-    // console.warn('PUSH URL', _pushUrl);
-    const pushURL = YTMSService.VUE_APP_YPUSH_URL;
+    const push = this.push = new YTMSPush({
+      baseURL,
+      clientId,
+      tenantId : Number.parseInt(tenantId, 10),
+    });
 
-    const push = this.push = new PushService(
-      pushURL, clientId, Number.parseInt(tenantId, 10)
-    );
-    
+    const yconnect = this.yconnect = new YConnectPush({
+      baseURL  : YTMSService.VUE_APP_YPUSH_URL,
+      clientId,
+      tenantId : Number.parseInt(tenantId, 10),
+    });
+
     push.poll();
+    yconnect.poll();
 
     handlePushMessage(push);
+    handlePushMessage(yconnect);
 
     return this;
   }
@@ -104,11 +116,17 @@ export class YTMSService {
       this.push.stop();
       this.push = null;
     }
+    if (this.yconnect) {
+      this.yconnect.removeAllListeners();
+      this.yconnect.stop();
+      this.yconnect = null;
+    }
 
     this.url = default_url;
   }
 
   updateToken(token) {
     if (this.push) this.push.updateToken(token);
+    if (this.yconnect) this.yconnect.updateToken(token);
   }
 }

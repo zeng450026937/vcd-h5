@@ -23,7 +23,7 @@ member.provide({
     memberList() {
       const { userList, broadcastUserCount } = rtc.conference.information.users;
       // 主持人
-      const presenterList = userList.filter((user) => user.isPresenter()
+      const presenterList = userList.filter((user) => (user.isPresenter() || user.isOrganizer())
         && (user.displayText.indexOf(this.filterText) > -1
           || user.phone.indexOf(this.filterText) > -1));
       // 访客

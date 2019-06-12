@@ -107,7 +107,6 @@ import { cloneDeep, debounce } from 'lodash';
 import AppHeader from '../../../components/Main/MainHeader.vue';
 import MediaContent from '../../../components/Conference/TabSettingMedia.vue';
 import VideoView from '../../../components/Common/VideoView.vue';
-import { debounceNotice } from '../../../model/middleware/error-message';
 import AccountAutoComplete from '../../../components/Login/AccountAutoComplete.vue';
 
 export default {
@@ -182,7 +181,7 @@ export default {
       let errorNotice = '';
 
       if (!this.meetingInfo.number) errorNotice = this.$t('join.message.conferenceIdNoEmpty');
-      if (errorNotice) debounceNotice(this, errorNotice);
+      if (errorNotice) this.$message.error(errorNotice);
       
       return !errorNotice;
     },
