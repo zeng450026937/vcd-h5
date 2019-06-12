@@ -58,7 +58,7 @@ model.provide({
       return rtc.conference.information.users.currentUser;
     },
     isPresenter() {
-      return this.currentUser && this.currentUser.isPresenter();
+      return this.currentUser && (this.currentUser.isPresenter() || this.currentUser.isOrganizer());
     },
     profile() {
       return rtc.conference.information.description.profile;

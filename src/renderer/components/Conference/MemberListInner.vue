@@ -7,7 +7,7 @@
         <a-iconfont v-if="l.list.length > 0" type="icon-right" class="anticon anticon-right"/>
       </div>
       <template v-for="(item, index) in l.list">
-        <member-list-item :group="l.group" :item="item" :key="item.entity + index"/>
+        <member-list-item :group="l.group" :item="item" :key="String(item.entity) + index"/>
       </template>
     </a-collapse-panel>
   </a-collapse>

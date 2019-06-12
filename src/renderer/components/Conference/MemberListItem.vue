@@ -288,6 +288,7 @@ export default {
       return /^(.*)['(', '（'].*[')', '）']|（$/.test(displayText) ? RegExp.$1.substr(-2, 2) : displayText.substr(-2, 2);
     },
     displayPhone() {
+      if(!this.item.phone) return 'CloudV30';
       return this.item.phone === 'unauth-web-client' ? 'WebRTC' : this.item.phone;
     },
     isSelected() {
