@@ -178,8 +178,8 @@ export default {
     },
     getTime() {
       const time = new Date();
-      const hour = `${time.getHours()}`.padStart(2, ' ');
-      const minutes = `${time.getMinutes()}`.padStart(2, ' ');
+      const hour = `${time.getHours()}`.padStart(2, '0');
+      const minutes = `${time.getMinutes()}`.padStart(2, '0');
 
       return `${hour}:${minutes}`;
     },

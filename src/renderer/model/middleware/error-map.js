@@ -34,5 +34,6 @@ export const ERROR_MAP = {
 };
 
 export const ERROR_CODE_MAP = {
+  401    : '账号或密码错误',
   559500 : '服务器内部错误',
 };

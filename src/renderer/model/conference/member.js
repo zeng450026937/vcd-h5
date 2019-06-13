@@ -27,7 +27,7 @@ member.provide({
         && (user.displayText.indexOf(this.filterText) > -1
           || user.phone.indexOf(this.filterText) > -1));
       // 访客
-      const visitorList = userList.filter((user) => !user.isPresenter()
+      const visitorList = userList.filter((user) => !user.isPresenter() && !user.isOrganizer()
         && !user.isOnHold() && !user.isCastViewer()
         && (user.displayText.indexOf(this.filterText) > -1
           || user.phone.indexOf(this.filterText) > -1));
