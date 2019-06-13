@@ -54,7 +54,7 @@ export default class PushService extends EventEmitter {
     }
 
     if (result.error && result.error.errorCode !== 720602) { // 720602 POLL_TIMEOUT
-      console.warn('!!! POLL_TIMEOUT !!!')
+      console.warn('!!! POLL_TIMEOUT !!!');
       this.retryTimes += 1;
 
       if (this.maxRetryTimes && this.maxRetryTimes < this.retryTimes) {
@@ -76,6 +76,7 @@ export default class PushService extends EventEmitter {
     result = await this.post(PUSH_ACTION.SYNC, sids);
 
     // something error
+    console.warn('result: ', result);
     if (!result || result.ret < 0 || !result.data) return 1000;
 
     sids.length = 0;
@@ -129,6 +130,8 @@ export default class PushService extends EventEmitter {
 
     this.cancelToken = null;
 
+    if (!data.data || Object.keys(data.data).length <= 0) await waitFor(10000); // TODO SERVER ERROR
+
     return data;
   }
 
@@ -137,7 +140,7 @@ export default class PushService extends EventEmitter {
 
     const { msgType } = value;
 
-    if (!msgType) return maxSeqId;
+    if (msgType == null) return maxSeqId; // msgType = 0
 
     value.items.forEach((data) => {
       if (!data) return;
@@ -205,5 +208,4 @@ export default class PushService extends EventEmitter {
       clientId : this.clientId,
     };
   }
-
 }

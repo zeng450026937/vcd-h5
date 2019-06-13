@@ -266,8 +266,8 @@ export default class Store {
     return this.parentMap[id];
   }
 
-  getNodeByNumber(number) {
-    return this.originTree.find((n) => n.number === number);
+  getNodeByNumber(number, withEnterprise = false) {
+    return this.originTree.find((n) => (withEnterprise ? n.number === number : n.number.endsWith(`.${number}`)));
   }
 
   findBranchWithSelf(node) {

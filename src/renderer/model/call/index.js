@@ -136,6 +136,7 @@ model.provide({
   methods : {
     async updateTarget(number) {
       if (this.targetInfo.number === number) return;
+
       const contact = this.$getVM('contact');
       const { phoneBookStore } = contact;
 
@@ -143,7 +144,12 @@ model.provide({
       if (!this.targetInfo) {
         const { isYMS } = this.$getVM('login.sketch');
 
-        if (contact.loadMode === 'SPLIT' && isYMS) {
+        if (!isYMS && number.indexOf('.') < 0) {
+          // 加上企业号
+          this.targetInfo = phoneBookStore.getNodeByNumber(number, true);
+        }
+
+        else if (contact.loadMode === 'SPLIT' && isYMS) {
           contact.findContacts(number).then((val) => {
             if (val && val.length === 1) {
               this.targetInfo = val[0];
