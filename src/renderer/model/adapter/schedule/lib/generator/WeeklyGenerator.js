@@ -1,10 +1,10 @@
-/** *
+/***
  * author:1494
  * date:2019/4/2
  * description:
  * use：
  */
-import BaseGenerator from './BaseGenerator';
+import BaseGenerator from "./BaseGenerator";
 import DayOfWeekType from '../model/DayOfWeekType';
 
 class WeeklyGenerator extends BaseGenerator {
@@ -12,7 +12,7 @@ class WeeklyGenerator extends BaseGenerator {
     super(plan);
   }
 
-  /** *
+  /***
    * ConferenceTime 执行周期会议序列生成操作
    * @returns {Array}
    */
@@ -22,22 +22,23 @@ class WeeklyGenerator extends BaseGenerator {
 
     while (this.continueEnable()) {
       const weekday = this.current.weekday();
-
       if (dayOfWeeks.has((weekday + 1).toString())) {
         this.createConference();
+      } else {
+        if (!this.list.length) {
+          //按周的第一条会议不再加入20190614
+          //this.createConference();
+        }
       }
-      else if (!this.list.length) {
-        this.createConference();
-      }
-      // weekday in moment rules
+      //weekday in moment rules
       if (weekday === DayOfWeekType.SATURDAY && this.plan.recurrenceInterval > 1) {
         this.current.add(this.plan.recurrenceInterval - 1, 'weeks');
       }
       this.addInterval();
     }
-    
     return this.list;
   }
+
 }
 
 export default WeeklyGenerator;

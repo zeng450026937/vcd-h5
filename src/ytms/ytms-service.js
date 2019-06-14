@@ -63,23 +63,21 @@ export class YTMSService {
     console.warn('connect: ', url);
     // disconnect first
     this.disconnect();
-    
+
     this.url = url || this.url;
-    
+
     // prepare client
     const clientId = await getClientId();
-    
+
     const client = this.client = new YTMSClient(this.url, clientId);
-    
+
     client.start();
-    
+
     await client.whenReady();
 
     // ignore error
-    client.updateInfo(clientInfo).catch(() => {});
+    client.updateInfo(clientInfo).then(() => client.reportStartUp()).catch(() => {});
 
-    client.reportStartUp();
-    
     // prepare push service
     const { tenantId, url: baseURL } = client.enterpriseInfo.pushService;
 

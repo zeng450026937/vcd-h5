@@ -1,4 +1,4 @@
-/** *
+/***
  * author:1494
  * date:2019/5/8
  * description: 模拟后端接口
@@ -23,8 +23,6 @@ export default class Paging {
   setSort(sort) {
     this.sort = sort;
   }
-
-
   /**
    * 过滤操作
    * @returns {any}
@@ -34,19 +32,20 @@ export default class Paging {
   }
 
   getPagedList(params) {
-    return new Promise((resolve) => {
+
+    return  new Promise(resolve => {
+
       this.params = params;
 
       const data = this.getFilter();
-      const { skip, limit } = this.params;
+      const {skip, limit} = this.params;
       const total = data.length;
-
       resolve({
-        ret  : total,
-        data : Object.assign({
+        ret: total,
+        data: Object.assign({
           total,
-          data : data.slice(skip, skip + limit),
-        }, this.params),
+          data: data.slice(skip, skip + limit)
+        }, this.params)
       });
     });
   }

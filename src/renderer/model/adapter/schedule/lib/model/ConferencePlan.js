@@ -1,4 +1,4 @@
-/** *
+/***
  * author:1494
  * date:2019/4/2
  * description:
@@ -6,17 +6,16 @@
  */
 
 export default class ConferencePlan {
+
   constructor(plan) {
     /**
      * 缓存信息
      */
     this._plan = plan;
-
     /**
      * 会议预约记录ID
      */
     this.planId = plan && plan.planId;
-
     /**
      * 会议序列号
      */
@@ -31,7 +30,6 @@ export default class ConferencePlan {
      * 会议结束时间
      */
     this.endDateTime = '';
-
     /**
      * 会议详情
      */
@@ -44,7 +42,6 @@ export default class ConferencePlan {
 
   setEndTime(endDateTime) {
     this.endDateTime = endDateTime;
-    
     return this;
   }
 
@@ -54,7 +51,6 @@ export default class ConferencePlan {
 
   setStartTime(startDateTime) {
     this.startDateTime = startDateTime;
-    
     return this;
   }
 
@@ -64,14 +60,14 @@ export default class ConferencePlan {
 
   setSequence(sequence) {
     this.sequence = sequence;
-    
     return this;
   }
 
-  // for test
+  //for test
   setTests(obj) {
     this._tests = obj;
-    
     return this;
   }
+
+
 }

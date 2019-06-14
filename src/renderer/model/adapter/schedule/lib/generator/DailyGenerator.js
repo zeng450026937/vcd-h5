@@ -1,4 +1,4 @@
-/** *
+/***
  * author:1494
  * date:2019/4/2
  * description:
@@ -6,14 +6,14 @@
  */
 
 
-import BaseGenerator from './BaseGenerator';
+import BaseGenerator from "./BaseGenerator";
 
 class DailyGenerator extends BaseGenerator {
   constructor(scheduled) {
     super(scheduled);
   }
 
-  /** *
+  /***
    * ConferenceTime 执行周期会议序列生成操作
    * @returns {Array}
    */
@@ -22,7 +22,6 @@ class DailyGenerator extends BaseGenerator {
       this.createConference();
       this.addInterval();
     }
-    
     return this.list;
   }
 

@@ -126,88 +126,84 @@
 import Conference from '../Conference';
 import moment from 'moment';
 
-import { getTimezoneList } from '@/api/modules/common';
+import {getTimezoneList} from '@/api/modules/common';
 import request from '@/api/request';
 
 export default {
-  name : 'Test',
+  name: "Test",
   data() {
     return {
-      timezoneList : [],
-      success      : null,
-      form         : {
-        dstEnable        : false,
-        planId           : '91d9feb555fa48459bc353b53394bf03',
-        partyId          : '418693e870d2424fa8c72e167ad7a0da',
-        startTime        : 1557797400000,
-        endTime          : 1557804600000,
-        zoneId           : 'China_Standard_Time',
-        type             : 0,
-        dailyType        : 1,
-        interval         : 5,
-        dayOfWeek        : '1,2,3,4,5,6',
-        dayOfMonth       : '31',
-        dayOfWeekIndex   : null,
-        monthOfYear      : null,
-        rangeStartDate   : 1557763200000,
-        rangeEndDate     : 1559278800000,
-        rangeType        : 3,
-        rangeOccurrences : null,
+      timezoneList: [],
+      success: null,
+      form: {
+        "dstEnable": false,
+        "planId": "91d9feb555fa48459bc353b53394bf03",
+        "partyId": "418693e870d2424fa8c72e167ad7a0da",
+        "startTime": 1557797400000,
+        "endTime": 1557804600000,
+        "zoneId": "China_Standard_Time",
+        "type": 0,
+        "dailyType": 1,
+        "interval": 5,
+        "dayOfWeek": "1,2,3,4,5,6",
+        "dayOfMonth": "31",
+        "dayOfWeekIndex": null,
+        "monthOfYear": null,
+        "rangeStartDate": 1557763200000,
+        "rangeEndDate": 1559278800000,
+        "rangeType": 3,
+        "rangeOccurrences": null
       },
-      leftInfo  : '',
-      rightInfo : '',
+      leftInfo: '',
+      rightInfo: '',
     };
   },
   async created() {
-    const { data } = await getTimezoneList({ withRule: true });
-
+    const {data} = await getTimezoneList({withRule:true});
     this.timezoneList = data;
   },
-  methods : {
+  methods: {
     async testing() {
-      const { startTime: startDateTime, endTime: endDateTime, zoneId, type, interval, dayOfWeek, dayOfMonth, rangeStartDate, rangeEndDate, planId, dstEnable } = this.form;
-      const offsetDisplayName = this.timezoneList.find((x) => x.zoneId === zoneId).offsetDisplayName;
-      const timeZoneConfig = this.timezoneList.find((x) => x.zoneId === zoneId);
 
+      let {startTime: startDateTime, endTime: endDateTime, zoneId, type, interval, dayOfWeek, dayOfMonth, rangeStartDate, rangeEndDate, planId,dstEnable} = this.form;
+      const offsetDisplayName = this.timezoneList.find(x => x.zoneId === zoneId).offsetDisplayName;
+      const timeZoneConfig = this.timezoneList.find(x => x.zoneId === zoneId);
       this.form.timeZoneConfig = timeZoneConfig;
-      this.form.rangeStartDate = moment(moment(this.form.startTime).format('YYYY-MM-DD 00:00:00') + offsetDisplayName).valueOf();
-      const ConferenceTime = {
+      this.form.rangeStartDate = moment(moment(this.form.startTime).format('YYYY-MM-DD 00:00:00')+offsetDisplayName).valueOf();
+      let ConferenceTime = {
         startDateTime,
         endDateTime,
         planId,
-        timeZoneConfig     : this.form.timeZoneConfig,
-        recurrenceType     : type,
-        recurrenceInterval : interval,
+        timeZoneConfig: this.form.timeZoneConfig ,
+        recurrenceType: type,
+        recurrenceInterval: interval,
         dayOfWeek,
         dayOfMonth,
-        rangeStartDate,
-        rangeEndDate,
+        rangeStartDate: rangeStartDate, rangeEndDate: rangeEndDate
       };
 
-      const conference = new Conference({ scheduleds: ConferenceTime, dstEnable });
-
+      const conference = new Conference({scheduleds:ConferenceTime,dstEnable});
       console.log(conference);
-      const right = conference.getResult().map(({ sequence, endDateTime, startDateTime }) => ({
-        startTime  : startDateTime,
-        endTime    : endDateTime,
-        sequence,
-        _startTime : moment(startDateTime).format('YYYY-MM-DD HH:mm'),
-        _endTime   : moment(endDateTime).format('YYYY-MM-DD HH:mm'),
-      }));
-      const res = await request.post('/cloud/conference/api/v1/fragile/conference/scheduled/expansion', this.form);
-
+      const right = conference.getResult().map(({sequence, endDateTime, startDateTime}) => {
+        return {
+          startTime: startDateTime,
+          endTime: endDateTime,
+          sequence,
+          _startTime: moment(startDateTime).format('YYYY-MM-DD HH:mm'),
+          _endTime: moment(endDateTime).format('YYYY-MM-DD HH:mm')
+        };
+      });
+      const res = await request.post('/cloud/conference-manager/api/v1/fragile/conference/scheduled/expansion', this.form);
       if (res.ret > -1) {
-        res.data.forEach((item) => {
+        res.data.forEach(item => {
           item._startTime = moment(item.startTime).format('YYYY-MM-DD HH:mm');
           item._endTime = moment(item.endTime).format('YYYY-MM-DD HH:mm');
         });
         this.leftInfo = res.data;
-      }
-      else {
+      } else {
         this.leftInfo = JSON.stringify(res);
       }
       this.rightInfo = right;
-
       /*
       this.success = true;
      for (let i = 0; i < right.length; i++) {
@@ -221,8 +217,8 @@ export default {
      }*/
       this.success = JSON.stringify(this.leftInfo) === JSON.stringify(right);
       if (this.leftInfo.length !== right.length) this.success = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

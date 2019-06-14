@@ -238,7 +238,7 @@ export default {
     }
   },
   async mounted() {
-    this.initRawAccounts();
+    await this.initRawAccounts();
     await this.$nextTick();
     if (this.isAutoLogin) this.handleLogin();
   },
@@ -297,20 +297,20 @@ export default {
     deleteAccount(val) {
       this.$dispatch('login.account.deleteAccount', val.principle).then(this.initRawAccounts);
     },
-    initRawAccounts() {
-      this.$dispatch('login.account.getRawAccounts').then((val) => {
+    async initRawAccounts() {
+      await this.$dispatch('login.account.getRawAccounts').then((val) => {
         this.rawAccounts = val;
-        this.modifyAccounts();
       });
+      await this.modifyAccounts();
     },
-    modifyAccounts() {
+    async modifyAccounts() {
       this.modifiedAccounts = this.rawAccounts
         .filter((account) => account.type === this.accountType)
         .sort((account1, account2) => account2.lastLoginDate - account1.lastLoginDate);
       const otherAccounts = this.rawAccounts.filter((account) => account.type !== this.accountType);
 
       if (this.modifiedAccounts.length > 10 || otherAccounts.length > 10) {
-        this.$dispatch('login.account.updateAccounts', [ ...this.modifiedAccounts.slice(0, 10), ...otherAccounts ]);
+        await this.$dispatch('login.account.updateAccounts', [ ...this.modifiedAccounts.slice(0, 10), ...otherAccounts ]);
       }
       this.modifiedAccounts = cloneDeep(this.modifiedAccounts.slice(0, 10)) || [];
       this.updateForm(this.modifiedAccounts[0]);

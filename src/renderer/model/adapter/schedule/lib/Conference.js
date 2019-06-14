@@ -25,7 +25,7 @@ class Conference {
    * @param utcOffset 当前浏览器时间偏移量
    */
   constructor({ scheduleds, exceptions, utcOffset, dstEnable, serverTime, queryEndTime, queryStartTime } = {
-    dstEnable  : false,
+    dstEnable  : true,
     scheduleds : [],
     exceptions : {},
   }) {
@@ -34,7 +34,7 @@ class Conference {
     /**
      * 是否开启夏令时
      */
-    this.dstEnable = dstEnable;
+    this.dstEnable = typeof dstEnable === 'boolean' ? dstEnable : true;
 
     /**
      * 服务器时间
@@ -99,7 +99,8 @@ class Conference {
     /** *
      * 夏令时处理
      */
-    if (this.dstEnable) this._daylightData();
+    // 夏令时规则不再处理，20190614
+    // if (this.dstEnable) this._daylightData();
 
     /** *
      * 按照时间排序
@@ -115,6 +116,16 @@ class Conference {
    */
   getResult() {
     return this.result;
+  }
+
+  getTimeRangeResult(start = 0, end = 0) {
+    if (!start && !end) return this.result;
+
+    return this.result.filter((r) => {
+      const notInRange = (r.endDateTime < start) || (r.startDateTime > end);
+
+      return !notInRange;
+    });
   }
 
   /** *
@@ -138,15 +149,15 @@ class Conference {
           map.set(plan.planId, plan);
         }
       }
-      
+
       return Array.from(map.values());
     }
-    
+
     return _result;
   }
 
   /** *
-   * 获取指定utcOffset下面的时间展示
+   * 获取指定utcOffset下面的时间展示 [未实现]
    * @param utcOffset
    * @param format
    * @returns {Array}
@@ -160,31 +171,22 @@ class Conference {
       plan.startDateTime = this._getUtcOffset(plan.startDateTime, utcOffset, format);
       plan.endDateTime = this._getUtcOffset(plan.endDateTime, utcOffset, format);
     }
-    
+
     return this.result;
   }
 
-  getTimeRangeResult(start = 0, end = 0) {
-    if (!start && !end) return this.result;
-
-    return this.result.filter((r) => {
-      const notInRange = (r.endDateTime < start) || (r.startDateTime > end);
-
-      return !notInRange;
-    });
-  }
-
   /** *
-   * 获取指定时间的前{number}条数据
+   * 获取指定时间的前{number}条数据 [未实现]
    * @param number
    * @param time
    * @param utcOffset
    * @returns {Array}
    */
-  getNowResult(number = -1, time = new Date().valueOf(), utcOffset = this.utcOffset) {
-    const len = utcOffset ? this.getResult() : this.result.length;
+  getNowResult(number = -1, time = new Date().valueOf()) {
+    const len = this.result.length;
 
     let temp = 0;
+
     const _result = [];
 
     for (let i = 0; i < len; i++) {
@@ -194,7 +196,7 @@ class Conference {
       }
       if (temp === number) break;
     }
-    
+
     return _result;
   }
 
@@ -227,6 +229,10 @@ class Conference {
     }
 
     this.result = [ ...this.plans.values() ];
+  }
+
+  static getDateValue(date, offsetDisplayName) {
+    return moment(date + offsetDisplayName).valueOf();
   }
 
   /**
@@ -284,7 +290,7 @@ class Conference {
     const _time = moment(time);
 
     _time.utcOffset(utcOffset);
-    
+
     return _time.format(format);
   }
 
