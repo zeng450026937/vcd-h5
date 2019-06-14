@@ -45,7 +45,7 @@ model.provide({
 
       const res = await Axios({
         method  : 'get',
-        baseURL : API.BASE_URL,
+        baseURL : this.baseUrl,
         url,
         headers : {
           'Y-Authorization' : auth({
@@ -58,7 +58,7 @@ model.provide({
       });
 
       console.timeEnd('getScheduleList total');
-      
+
       return res.data;
     },
     async getExceptionList(planIds) {
@@ -114,7 +114,7 @@ model.provide({
 
       console.timeEnd('getScheduleInfo total');
 
-      
+
       return res.data;
     },
 

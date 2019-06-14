@@ -25,7 +25,7 @@ model.provide({
       const { pushUrl } = this.$getVM('login.account');
 
       if (!pushUrl) return API.BASE_URL;
-      
+
       return pushUrl.startsWith('http://') ? pushUrl : `http://${pushUrl}`;
     },
     registered : () => rtc.account.registered,
@@ -59,7 +59,11 @@ model.provide({
     async loadAccount(username, password, realm, nonce, response = '') {
       const uri = API.LOGIN;
 
-      const { data: result, headers } = await Axios({
+      let result;
+
+      let headers;
+
+      await Axios({
         method  : 'post',
         baseURL : this.baseUrl,
         url     : uri,
@@ -79,6 +83,12 @@ model.provide({
             nc     : this.nc,
           }),
         },
+      }).then((val) => {
+        result = val.data;
+        headers = val.headers;
+      }).catch(({ response: res } = {}) => {
+        result = res.data;
+        headers = res.headers;
       });
 
       if (result.statusCode === 200) { // 获取成功
@@ -91,7 +101,7 @@ model.provide({
           password,
           accountInfos : data.accountInfos,
         };
-        
+
         return data;
       }
 
