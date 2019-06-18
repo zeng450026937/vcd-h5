@@ -118,6 +118,7 @@ model.provide({
 
           if (index === plainIdsList.length - 1) resolve(result);
         });
+        resolve(result);
       });
     },
 
@@ -205,6 +206,9 @@ model.provide({
       if (this.isCloud) {
         this.fetchScheduleInfo(val);
       }
+    },
+    rawSchedules(val) {
+      if (val.findIndex((v) => v.uuid === this.selectedSchedule.uuid) < 0) this.selectedSchedule = {};
     },
   },
 });
