@@ -53,6 +53,8 @@ model.provide({
     },
     async updateToken(ctx, next) {
       await next();
+      await this.loadAccount(this.activeAccount.username, this.activeAccount.password);
+      await this.selectAccount(this.activeAccount.accountId);
     },
   },
   methods : {
@@ -177,9 +179,10 @@ model.provide({
       genCNonce();
       this.timer = setInterval(genCNonce, 5 * 60 * 1000);
     },
-    updateToken() {
+    updateToken(now = false) {
+      if (now) return this.$dispatch('digest.updateToken', { id: this.activeAccount.accountId });
       this.timer = setInterval(() => {
-        this.$dispatch('digest.getToken', { id: this.activeAccount.accountId });
+        this.$dispatch('digest.updateToken', { id: this.activeAccount.accountId });
       }, 30 * 60 * 1000);
     },
     reset() {
